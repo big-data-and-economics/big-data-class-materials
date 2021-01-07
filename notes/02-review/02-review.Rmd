@@ -384,10 +384,8 @@ Let's repeat this **10,000 times**.
 (This exercise is called a (Monte Carlo) simulation.)
 
 ---
-layout: true
+layout: false
 # Population *vs.* sample
-
----
 
 ```{R, simulation scatter, echo = F, dev = "png", dpi = 300, cache = T}
 # Reshape sim_df
@@ -442,8 +440,6 @@ theme_empty
 ]
 
 ---
-
-**Question:** Why do we care about *population vs. sample*?
 
 --
 
