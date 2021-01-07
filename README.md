@@ -2,7 +2,7 @@
 
 Welcome to **Economics 421: Introduction to Econometrics** (Winter 2021) at the University of Oregon (taught by [Edward Rubin](https://edrub.in)).
 
-For information on the course specifics, please see the [syllabus](https://raw.githack.com/edrubin/EC421W21/master/Syllabus/syllabus.pdf).
+For information on the course specifics, please see the [syllabus](https://raw.githack.com/edrubin/EC421W21/master/syllabus/syllabus.pdf).
 
 ## Lecture slides
 
