@@ -565,7 +565,7 @@ where
 thus
 
 - $\beta_1$: the returns to an additional year of schooling (*ceteris paribus*)
-- $\beta_2$: the premium for being male (*ceteris paribus*)
+- $\beta_2$: the "premium" for being male (*ceteris paribus*)
 <br>If $\beta_2 > 0$, then there is discrimination against women—receiving less pay based upon gender.
 
 ---
@@ -589,9 +589,21 @@ where $\varepsilon_i = \beta_2 \text{Male}_i + u_i$.
 
 We used our exogeneity assumption to derive OLS' unbiasedness. But even if $\mathop{\boldsymbol{E}}\left[ u | X \right] = 0$, it is not true that $\mathop{\boldsymbol{E}}\left[ \varepsilon | X \right] = 0$ so long as $\beta_2 \neq 0$.
 
-Specifically, $\mathop{\boldsymbol{E}}\left[ \varepsilon | \text{Male} = 1 \right] = \beta_2 + \mathop{\boldsymbol{E}}\left[ u | \text{Male} = 1 \right] \neq 0$.
---
- **Now OLS is biased.**
+---
+
+From our population model
+
+$$ \text{Pay}_i = \beta_0 + \beta_1 \text{School}_i + \beta_2 \text{Male}_i + u_i $$
+
+If a study focuses on the relationship between pay and schooling, _i.e._,
+
+$$ \text{Pay}_i = \beta_0 + \beta_1 \text{School}_i + \left(\beta_2 \text{Male}_i + u_i\right) $$
+$$ \text{Pay}_i = \beta_0 + \beta_1 \text{School}_i + \varepsilon_i $$
+
+where $\varepsilon_i = \beta_2 \text{Male}_i + u_i$.
+
+Specifically, exogeneity requires that $\text{School}$ and $\text{Male}$ are unrelated.
+<br>**Otherwise OLS is biased.**
 
 ---
 
