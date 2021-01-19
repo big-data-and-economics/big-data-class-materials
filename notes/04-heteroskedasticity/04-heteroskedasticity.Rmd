@@ -162,13 +162,6 @@ Turn in .hi[2 files]<sup>†</sup>
 - **Do not copy.** (You .attn[will] receive a zero.)
 
 ---
-# Schedule
-## The future
-
-.hi[Next assignment:] Next week
-
-.hi[Midterm:] In two weeks
----
 layout: true
 # Heteroskedasticity
 ---
