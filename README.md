@@ -14,6 +14,8 @@ The slides below (linked by their topic) are .html files that will only work pro
 
 3. [Review of key topics from EC320](https://raw.githack.com/edrubin/EC421W21/master/notes/03-review/03-review.html)<br>(the first course in our intro-to-metrics sequence) <br> [PDF](https://raw.githack.com/edrubin/EC421W21/master/notes/03-review/03-review.pdf) | [.Rmd](https://github.com/edrubin/EC421W21/blob/master/notes/03-review/03-review.Rmd)
 
+4. [Heteroskedasticity: Tests and implications](https://raw.githack.com/edrubin/EC421S20/master/notes/04-heteroskedasticity/04-heteroskedasticity.html) <br> [PDF](https://raw.githack.com/edrubin/EC421S20/master/notes/04-heteroskedasticity/04-heteroskedasticity.pdf) | [.Rmd](https://github.com/edrubin/EC421S20/blob/master/notes/04-heteroskedasticity/04-heteroskedasticity.Rmd)
+
 ## Problem sets
 
 ## Midterm
