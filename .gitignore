@@ -3,11 +3,14 @@
 final/*
 midterm/*
 projects/*
-problem-sets/*
 other-docs/*
+problem-sets/001/001-solutions*
+problem-sets/001/001-questions.Rmd
+problem-sets/001/001-questions.html
+problem-sets/001/clean-data.R
 
 # Project-specific files
-
+problem-sets/001/acs-pull.dta
 
 # History files
 .Rhistory
