@@ -18,6 +18,9 @@ The slides below (linked by their topic) are .html files that will only work pro
 
 5. [Living with heteroskedasticity: Inference, WLS, and specification](https://raw.githack.com/edrubin/EC421W21/master/notes/05-heteroskedasticity/05-heteroskedasticity.html) <br> [PDF](https://raw.githack.com/edrubin/EC421W21/master/notes/05-heteroskedasticity/05-heteroskedasticity.pdf) | [.Rmd](https://github.com/edrubin/EC421W21/blob/master/notes/05-heteroskedasticity/05-heteroskedasticity.Rmd)
 
+6. [Consistency and OLS in asymptopia](https://raw.githack.com/edrubin/EC421W21/master/notes/06-consistency/06-consistency.html) <br> [PDF](https://raw.githack.com/edrubin/EC421W21/master/notes/06-consistency/06-consistency.pdf) | [.Rmd](https://github.com/edrubin/EC421W21/blob/master/notes/06-consistency/06-consistency.Rmd)
+
+
 ## Problem sets
 
 ## Midterm
