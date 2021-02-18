@@ -1,0 +1,496 @@
+---
+title: "Problem Set 1: OLS Review"
+subtitle: "EC 421: Introduction to Econometrics"
+# author: "Edward Rubin"
+# date: "Due *before* midnight on .b[Saturday, 30 January 2021]"
+date: ".it.biggest[Solutions]"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    # self_contained: true
+    nature:
+      ratio: '8.5:11'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+layout: true
+class: clear
+---
+
+```{r, setup, include = F}
+# Load magrittr
+library(magrittr)
+# Knitr options
+knitr::opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+knitr::opts_chunk$set(dev = "svg")
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+```
+
+.mono.b[DUE] Upload your answer on [Canvas](https://canvas.uoregon.edu/) *before* midnight on Saturday, 23 January 2021.
+
+.mono.b[IMPORTANT] You must submit .b[two files]:
+<br> .b.mono[1.] your typed responses/answers to the question (in a Word file or something similar)
+<br> .b.mono[2.] the .mono[R] script you used to generate your answers. Each student must turn in her/his own answers.
+
+If you are using RMarkdown, you can turn a single file, but it must be a `html` or `pdf` file with **both** your .mono[R] code **and** your answers.
+
+.mono.b[README!] The data in this problem set come from the 2018 American Community Survey (ACS), which I downloaded from [IPUMS](https://ipums.org/). The last page has a table that describes each variable in the dataset(s).
+
+.mono.b[OBJECTIVE] This problem set has three purposes: (1) reinforce the metrics topics we reviewed in class; (2) build your .mono[R] toolset; (3) start building your intuition about causality within econometrics/regression.
+
+.mono.b[INTEGRITY] If you are suspected of cheating, then you will receive a zero. We may report you to the dean. **Cheating includes copying from your classmates, from the internet, and from previous assignments.**
+
+## Setup 
+
+.b[Q01.] Load your .mono[R] packages. You're probably going to need/want `tidyverse` and `here` (among others).
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer01}
+# Load packages using 'pacman'
+library(pacman)
+p_load(tidyverse, patchwork, here)
+```
+
+<!-- </noscript> -->
+
+.b[Q02.] Now load the data. I saved the same dataset as two different formats:
+
+- an `.rds` file: use a function that reads `.rds` files—for example, `readRDS()` or `read_rds()` (from the `readr` package in the `tidyverse`.
+- a `.csv` file: use a function that reads `.csv` files—for example, `read.csv()` or `read_csv()` (from the `readr` package in the `tidyverse`.
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+ 
+```{r, answer02}
+# Load data: As .rds
+ps_df = here("001-data.rds") %>% read_rds()
+# Load data: As 'csv'
+ps_df = here("001-data.csv") %>% read_csv()
+```  
+
+<!-- </noscript> -->
+
+.b[Q03.] Check your dataset. How many observations and variables do you have? *Hint:* Try `dim()`, `ncol()`, `nrow()`.
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+  
+```{r, answer03}
+# Check dimensions
+dim(ps_df)
+```
+
+We have `r nrow(ps_df) %>% scales::comma()` observations (rows) on `r ncol(ps_df)` variables (columns).
+
+<!-- </noscript> -->
+
+---
+
+## Getting to know your data
+
+.b[Q04.] Plot a histogram of individuals' personal income (variable: `personal_income`). *Note:* Household income is in tens of thousands of dollars (so a value of `3` implies an income of $30,000.)
+
+Don't forget to label your plot's axes. A title wouldn't be be, either.
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer04, fig.height = 2.5}
+# Create the histogram of HH income using ggplot2
+ggplot(data = ps_df, aes(x = personal_income * 10000)) +
+geom_histogram(bins = 100) +
+scale_x_continuous("Household income", labels = scales::dollar) +
+scale_y_continuous("Count", labels = scales::comma) +
+ggtitle("Distribution of personal income", "2018 ACS") +
+theme_minimal(base_size = 10)
+```
+
+<!-- </noscript> -->
+
+.b[Q05.] Compare the distributions of personal income for (1) women .it[vs.] men and (2) black individuals .it[vs.] white individuals. Are the differences at the extremes of the distribution or at the center (*e.g.*, mean and median)?
+
+.it[Note:] Your answer should include four histograms (women, men, black, and white).
+
+.it[Hints]
+
+- There is an indicator for female in the data called `i_female`. There are also indicators for .it[black] and .it[white] names `i_black` and `i_white`.
+- You can take a subset of a variable using the `filter()` variable from the `tidyverse`. *E.g.*, to take find all married individuals in the `ex_df` dataset, you could use `filter(ex_df, i_married == 1)`.
+
+---
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer05a}
+# Summary of women
+ps_df %>% filter(i_female == 1) %>% select(personal_income) %>% summary()
+# Summary of men
+ps_df %>% filter(i_female == 0) %>% select(personal_income) %>% summary()
+# Summary of black
+ps_df %>% filter(i_black == 1) %>% select(personal_income) %>% summary()
+# Summary of white
+ps_df %>% filter(i_white == 1) %>% select(personal_income) %>% summary()
+```
+
+The personal income distributions (in this sample) for women and men differ throughout distribution. For example, at their means, we see a difference between women and men of $48,000 and $74,000, respectively. The distribution of income for men appears to be shifted right (to higher values).
+
+The distribution of income for black individuals in the sample is lower than the distribution of white individuals—across the distribution. The means of the two groups differ by approximately $16,000—*i.e.*, $48,000 *vs.* $64,000. 
+
+
+---
+
+```{r, answer05b, fig.height = 2.8, collapse = T}
+# Histogram: Women
+hist_female = ggplot(data = filter(ps_df, i_female == 1), aes(x = personal_income * 10000)) +
+geom_histogram(bins = 100) +
+scale_x_continuous("Household income", labels = scales::dollar) +
+scale_y_continuous("Count", labels = scales::comma) +
+ggtitle("Distribution of personal income", "Women") +
+theme_minimal(base_size = 10)
+# Histogram: Men
+hist_male = ggplot(data = filter(ps_df, i_male == 1), aes(x = personal_income * 10000)) +
+geom_histogram(bins = 100) +
+scale_x_continuous("Household income", labels = scales::dollar) +
+scale_y_continuous("Count", labels = scales::comma) +
+ggtitle("Distribution of personal income", "Men") +
+theme_minimal(base_size = 10)
+# Histogram: Black
+hist_black = ggplot(data = filter(ps_df, i_black == 1), aes(x = personal_income * 10000)) +
+geom_histogram(bins = 100) +
+scale_x_continuous("Household income", labels = scales::dollar) +
+scale_y_continuous("Count", labels = scales::comma) +
+ggtitle("Distribution of personal income", "Black") +
+theme_minimal(base_size = 10)
+# Histogram: White
+hist_white = ggplot(data = filter(ps_df, i_white == 1), aes(x = personal_income * 10000)) +
+geom_histogram(bins = 100) +
+scale_x_continuous("Household income", labels = scales::dollar) +
+scale_y_continuous("Count", labels = scales::comma) +
+ggtitle("Distribution of personal income", "White") +
+theme_minimal(base_size = 10)
+# Print the figures
+hist_female + hist_male & coord_cartesian(xlim = c(0, 1.1e6))
+hist_black + hist_white & coord_cartesian(xlim = c(0, 1.1e6))
+```
+
+---
+
+<!-- </noscript> -->
+
+.b[Q06.] Create a scatterplot (AKA: dot plot) with commute time (`time_commuting`, which the length of the individual's morning commute, in minutes) on the `y` axis and personal income on the `x` axis. 
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer06, fig.height = 3.5}
+# Create the histogram of HH income using ggplot2
+ggplot(data = ps_df, aes(x = personal_income * 10000, y = time_commuting)) +
+geom_point(alpha = 0.2) +
+geom_smooth(method = lm, se = F) +
+scale_x_continuous("Personal income", labels = scales::dollar) +
+scale_y_continuous("Commut time (minutes)", labels = scales::comma) +
+ggtitle("Commute time and income") +
+theme_minimal(base_size = 10)
+```
+
+<!-- </noscript> -->
+
+.b[Q07.] Based upon your plot in .b[Q06]: If we regressed commute time on income, do you think the coefficient on income would be *positive* or *negative*? **Explain** your answer.
+
+<!-- <noscript> -->
+
+.pink[**Answer:**] It's a bit difficult to say, but it looks like there are a lot of obsevations near the origin—*i.e.*, the regression line will start near the origin and then will slope slightly upward toward the extreme observations on the high end of the income distribution. That said, some individuals with lower incomes are making very long commutes that we basically do not observe at higher income levels.
+
+<!-- </noscript> -->
+
+.b[Q08.] Run a regression that helps summarize the relationship between commute length and personal income. Interpret the results of the regression—the meaning of the coefficient(s). Comment on the coefficient's statistical significance.
+
+<!-- <noscript> -->
+
+.pink[**Answer:**] You have a lot of options here. I'm going to regress the log of commute time on the level of personal income.
+
+```{r, answer08}
+# Regression
+est08 = lm(log(time_commuting) ~ personal_income, data = ps_df)
+# Results
+est08 %>% broom::tidy()
+```
+
+The estimated coefficient in this log-linear model suggests that a $10,000 increase in personal income is associated with a `r est08$coefficients[2] %>% scales::percent(accuracy = 0.001)` increase in commute time.
+
+<!-- </noscript> -->
+
+---
+
+.b[Q09.] Explain why you chose the specification you chose in the previous question.
+
+- Was it linear, log-linear, log-log?
+- What was the outcome variable?
+- What was the explanatory variable?
+- Why did you make these choices?
+
+<!-- <noscript> -->
+ 
+.pink[**Answer:**] I chose I log-linear specification to allow income to be associated with *percent* changes in commute length (rather than level changes)—and because logging a variable can compress its distribution (commute lengths appear to be skewed). Percent changes also help us put things "in perspective"—helping us understand whether a 5 minute increase is "big."
+
+<!-- </noscript> -->
+
+## Regression refresher: Varying the specification
+
+.note[Note:] In this section, when I ask you to "comment on the statistical significance," I want you to tell me whether the coefficient is significantly different from zero at the 5% level. You do not need write out the full hypothesis test.
+
+.b[Q10.] <b>Linear specification</b> Regress average commute time (`time_commuting`) on household income (`personal_income`). Interpret the coefficient and comment on its statistical significance.
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer11}
+# Regress commute time on income
+est11 = lm(time_commuting ~ personal_income, data = ps_df)
+# Results
+est11 %>% broom::tidy()
+```
+
+Our estimated coefficient suggests that a one-unit increase in personal income (an increase of $10,000) is associated with an increase in commute time of approximately `r est11$coefficients[2] %>% scales::comma(accuracy = 0.1)` minutes. This coefficient is statistically significant at the 5% level (though not very economically meaningful—the magnitude of the coefficient is quite small: about `r est11$coefficients[2] %>% multiply_by(60) %>% scales::comma(accuracy = 1)` seconds).
+
+<!-- </noscript> -->
+
+.b[Q11.] Did the sign of the coefficient on personal income surprise you based upon your figure in .b[06]? Explain.
+
+<!-- <noscript> -->
+
+.pink[Answer] Perhaps this surprised you a bit, but notice that there are **a lot** of observations down near the origin in .b[06].
+
+<!-- </noscript> -->
+
+.b[Q12.] <b>Log-linear specification</b> Regress the log of commute time on personal income. Interpret the slope coefficient and comment on its statistical significance.
+
+---
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer12}
+# Log-linear regression
+est12 = lm(log(time_commuting) ~ personal_income, data = ps_df)
+# Results
+est12 %>% broom::tidy()
+```
+
+With this log-linear specification, our coefficient estimate suggests that a one-unit increase in household income (an increase of $10,000 dollars) is associated with an increase in commute time of approximately `r est12$coefficients[2] %>% scales::percent(accuracy = 0.1)`. This coefficient is still statistically significant at the 5% level (and still small in absolute magnitude).
+
+<!-- </noscript> -->
+
+.b[Q13.] <b>Log-log specification</b> Regress the log of average commute time on the log of household income. Interpret the coefficient and comment on its statistical significance.
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer13}
+# Log-linear regression
+est13 = lm(log(time_commuting) ~ log(personal_income), data = ps_df)
+# Results
+est13 %>% broom::tidy()
+```
+
+With this log-log specification, our coefficient estimate suggests that a one-percent increase in household income is associated with an increase in commute time of approximately `r est13$coefficients[2] %>% scales::comma(accuracy = 0.001)` percent. This coefficient is still statistically significant at the 5% level (and still small in absolute magnitude).
+
+<!-- </noscript> -->
+
+
+## Multiple linear regression and indicator variables
+
+.note[Note:] We're now moving to thinking about the time at which an individual leaves her home to go to work (`time_depart`). This variable is measured in minutes from midnight (so smaller values are earlier in the day).
+
+.b[Q14.]  Regress departure time (`time_depart`) on the indicator for female (`i_female`) <b>and</b> the indicator for whether the individual was married at the time of the sample (`i_married`). Interpret the intercept and **both** coefficients (commenting on their statistical significances). 
+
+---
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer14}
+# Log-linear regression
+est14 = lm(time_depart ~ i_female + i_married, data = ps_df)
+# Results
+est14 %>% broom::tidy()
+```
+
+The intercept (approximately `r est14$coefficients[1] %>% scales::comma(accuracy = 0.1)` minutes past midnight, which is roughly `r est14$coefficients[1] %>% divide_by(60) %>% scales::comma(accuracy = 0.1)` hours past midnight) tells us the expected time of departure when the other explanatory variables are 0. Thus, the intercept tells us the expected time of departure for unmarried men (when `i_married = 0` and `i_female = 0`).
+
+Our coefficient for female (`i_female`) tells us the difference in average departure time for women and men is `r est14$coefficients[2] %>% scales::comma(accuracy = 0.01)` minutes (meaning in this sample women, on average, leave for work later than men) **holding everything else constant**. This coefficient is still statistically significant at the 5% level. 
+
+Our coefficient on whether the individual is married (`i_married`) the average difference in departure time between married and unmarried individuals in the sample **holding all other variables constant**. Specifically, we find that married individuals, on average, leave for work `r est14$coefficients[3] %>% abs() %>% scales::comma(accuracy = 0.01)` minutes **earlier** than their unmarried counterparts (holding all other variables constant). This coefficient is statistically significant at the 5% level.
+
+<!-- </noscript> -->
+
+.b[Q15.] What would need to be true for `age` to cause omitted-variable bias. Explain the requirements and whether you think they are likely to cause bias in this setting.
+
+<!-- <noscript> -->
+  
+.pink[**Answer:**] For age to cause bias as an omitted variable, it must (1) have an effect on time of departure and (2) correlate with an included variable. The first requirement seems possible, as sleep and work tendencies change with age. The second requirement also seems at least possible, as marriage status could be correlated with age.
+
+<!-- </noscript>  -->
+
+.b[Q16.] Add `age` to the reression you ran in .b[Q14]. Do the results of this new regression suggest that `age` was causing omitted-variable bias? Explain your answer. 
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer16}
+# Log-linear regression
+est16 = lm(time_depart ~ i_female + i_married + age, data = ps_df)
+# Results
+est16 %>% broom::tidy()
+```
+
+It does seem like age might have been causing some omitted-variable bias. When we include `age` in the regression, the coefficient on marriage changes considerably, and the coefficient on age is statistically significant (and economically large). The fact that there is a large and significant relationship between departure time and age is at least consistent with age affecting departure time (the first requirement for omitted-variable bias). The fact the the coefficient on `i_married` changes suggests that marriage and age are correlated (the second requirement for omitted-variable bias). 
+
+<!-- </noscript> -->
+
+---
+
+.b[Q17.] Now regress departure time on `i_female`, `i_married`, **and their interaction**. (You should have an intercept and three coefficients: the two variables and their interaction.) Interpret the coefficient on the interaction and comment on its statistical significance.
+
+.note[Hint:] In .mono[R] you can get an interaction using `:`, for example, `lm(y ~ x1 + x2 + x1:x2, data = fake_df)`.
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer17}
+# Log-linear regression
+est17 = lm(time_depart ~ i_female + i_married + i_female:i_married, data = ps_df)
+# Results
+est17 %>% broom::tidy()
+```
+
+There are a couple of ways to think about the coefficient on the interaction. Likely the clearest: We can interpret this coefficient as asking whether marriage (`i_married`) has different effects for women and men. For example, if marriage causes men to go to work earlier and women to go to work later, then this coefficient would be positive. Interpreted this way, this coefficient says that, on average, marriage causes women to go to work slightly less early (`r est14$coefficients[3] %>% abs() %>% scales::comma(accuracy = 0.01)` minutes)  relative to the marriage effect on men, holding all else constant.
+
+Notice that the main effect of marriage on time of departure (the non-interacted effect) is large, negative, and significant. This interaction is much smaller, positive, and not statistically significant.
+
+<!-- </noscript> -->
+
+.b[Q18.] For this last regression, we are going to do something totally different. Our outcome variable is going to be an indicator for whether the individual has internet access (`i_internet`). Regress this internet-access variable on a two explanatory variables: (1) an indicator for whether the household's location is considered urban `i_urban` (vs. rural) and (2) an indicator for whether the individual is black (`i_black`). 
+
+Interpret the intercept and coefficients. Comment on their statistical significance.
+
+<!-- <noscript> -->
+
+.pink[**Answer:**]
+
+```{r, answer18}
+# Regression
+est18 = lm(i_internet ~ i_urban + i_black, data = ps_df)
+# Results
+est18 %>% broom::tidy()
+```
+
+continued...
+
+---
+
+When the outcome variable is an indicator variable, we interpret the coefficients as percentages (sometimes referred to as *shares*).
+
+The intercept tells us the percentage of individuals who have internet access when the other variables are zero—meaning for non-urban, non-black individuals. Thus, approximately `r est18$coefficients[1] %>% scales::percent(accuracy = 0.1)` of rural, non-black individuals have internet access in the sample.
+
+The coefficient on `i_urban` tells us the urban *vs.* rural gap in internet access (in this sample). Thus, urban individuals are `r est18$coefficients[2] %>% scales::percent(accuracy = 0.01) ` (percentage points) more likely to have internet access than their rural counterparts, **holding everything else constant**.
+
+The coefficient on `i_black` tells us the difference in internet access between black and non-black individuals in the sample. Specifically, we find the black individuals in the sample are `r est18$coefficients[3] %>% abs() %>% scales::percent(accuracy = 0.01)` less likely to have internet access relative to non-black individuals **holding everything else constant**.
+
+Both of the coefficients are statistically significant at the 5% level.
+
+<!-- </noscript> -->
+
+## The bigger picture
+
+Write short answers to each of these questions. No math needed: Just explain your reasoning.
+
+.b[Q19.] Define the term <i>standard error</i>.
+
+<!-- <noscript> -->
+
+.pink[**Answer:**] Standard error is the standard deviation of an estimator's distribution.
+
+<!-- </noscript> -->
+
+.b[Q20.] For exogeneity, we write $\mathop{E}\left[ u | x \right] = 0$. What does this mathematical expression mean for the relationship between $u$ and $x$?
+
+<!-- <noscript> -->
+
+.pink[**Answer:**] This expression means that our disturbance $u$ cannot have *any* relationship with the variable $x$.
+
+<!-- </noscript> -->
+
+---
+
+## Description of variables and names
+
+<br>
+
+```{r, background variables, echo = F}
+# Load requisite packages
+pacman::p_load(tidyverse, knitr, kableExtra, here)
+# Load data
+acs_sub = here("001-data.rds") %>% read_rds()
+# Create table of variable descriptions
+var_tbl = data.frame(
+  Variable = names(acs_sub) %>% paste0(".mono-small[", ., "]"),
+  Description = c(
+    "State abbreviation",
+    "Binary indicator for whether home county is 'urban'",
+    "The individual's age (in years)",
+    "Binary indicator for whether the individual identified as Asian",
+    "Binary indicator for whether the individual identified as Black",
+    "Binary indicator for whether the individual identified as Hispanic",
+    "Binary indicator for whether the individual identified with a group indigenous to North Am.",
+    "Binary indicator for whether the individual identified as White",
+    "Binary indicator for whether the individual identified as Female",
+    "Binary indicator for whether the individual identified as Male",
+    "Binary indicator for whether the individual graduated college (estimated)",
+    "Binary indicator for whether the individual was married at the time of the sample",
+    "Total (annual) personal income (tens of thousands of dollars)",
+    "Binary indicator for whether the individual uses 'foodstamps' (SNAP)",
+    "Binary indicator for whether the individual has health insurance",
+    "Binary indicator for whether the individual has access to the internet",
+    "The time that the individual typically leaves for work (in minutes since midnight)",
+    "The time that the individual typically arrives at work (in minutes since midnight)",
+    "The length of time that the individual typically travels to work (in minutes)"
+  )
+)
+kable(var_tbl) %>%
+  kable_styling(full_width = F)
+```
+
+I've tried to stick with a naming convention. Variables that begin with .mono-small[i\\_] denote binary/indicator variables (taking on the value of .mono-small[0] or .mono-small[1]). 
+
+---
+exclude: true
+
+```{r, print pdf, echo = F, eval = F}
+# pagedown::chrome_print("001-questions.html")
+pagedown::chrome_print("001-questions.html", output = "001-solutions.pdf")
+```

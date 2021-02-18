@@ -1,0 +1,495 @@
+---
+title: "Problem Set 2: Heteroskedasticity"
+subtitle: "EC 421: Introduction to Econometrics"
+# author: "Edward Rubin"
+date: "Due *before* midnight on Sunday, 07 February 2020"
+# date: ".it.biggest[Solutions]"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    # self_contained: true
+    nature:
+      ratio: '8.5:11'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+class: clear
+layout: true
+
+---
+
+```{r, setup, include = F}
+# Knitr options
+library(knitr)
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+opts_chunk$set(dev = "svg")
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+options(digits = 4)
+options(width = 90)
+```
+
+.mono.b[DUE] Upload your answer on [Canvas](https://canvas.uoregon.edu/) *before* midnight on Sunday, 07 February 2020.
+
+.mono.b[IMPORTANT] You must submit .b[two files]: <br> .b.mono[1.] your typed responses/answers to the question (in a Word file or something similar) <br> .b.mono[2.] the .mono[R] script you used to generate your answers. Each student must turn in her/his own answers.
+
+If you are using [RMarkdown](https://rmarkdown.rstudio.com/), you can turn in one file, but it must be an .mono[HTML] or .mono[PDF] that includes your responses and R code.
+
+.mono.b[README!] As with the first problem set, the data in this problem set come from the 2018 American Community Survey (ACS), which I downloaded from [IPUMS](https://ipums.org/). The last page has a table that describes each variable in the dataset(s).
+
+.mono.b[OBJECTIVE] This problem set has three purposes: (1) reinforce the topics of heteroskedasticity and statistical inference; (2) build your .mono[R] toolset; (3) start building your intuition about causality within econometrics/regression.
+
+.mono.b[INTEGRITY] If you are suspected of cheating, then you will receive a zero. We may report you to the dean.
+
+## Setup
+
+**Q01.** Load your packages. You'll probably going to need/want `tidyverse` and `here` (among others).
+
+<noscript>
+
+**Answer:**
+
+```{r, answer01}
+# Load packages
+library(pacman)
+p_load(tidyverse, broom, skimr, here)
+```
+
+</noscript>
+
+**Q02.** Now load the data (it's the same dataset as the first problem set with one new variable: education). This time, I saved the same dataset as a single format: a `.csv` file. Use a function that reads `.csv` files---for example, `read.csv()` or `read_csv()` (from the `readr` package in the `tidyverse`.
+
+<noscript>
+
+**Answer:**
+
+```{r, answer02}
+# Load dataset
+ps_df = here("002-data.csv") %>% read_csv()
+```
+
+</noscript>
+
+**Q03.** Check your dataset. Apply the function `summary()` to your dataset. You should have ``` r ncol(ps_df)`` variables. You might also want to check out the ```skim()`function from the`skimr\` package---it's a really useful function.
+
+<noscript>
+
+**Answer:**
+
+```{r, answer03, eval = F}
+# Summary of 'ps_df' variables
+summary(ps_df)
+# Skim the dataset
+# skim(ps_df)
+```
+
+*continued on next page...*
+
+```{r, answer03-out, ref.label = "answer03", echo = F}
+```
+
+</noscript>
+
+**Q04.** Based upon your answer to **Q03**: What are the mean and median of commute time (`time_commuting`)? What does this tell you about the distribution of the variable?
+
+<noscript>
+
+**Answer:** The mean and median of commute time are `r mean(ps_df$time_commuting) %>% round(3)` and `r median(ps_df$time_commuting) %>% round(3)`, respectively. Because the mean is quite a bit larger than the median it tells us that the right tail of the distribution of household size is skewed---meaning there are a small number of individuals with very long commutes.
+
+</noscript>
+
+**Q05.** Based upon your answer to **Q03** What are the minimum, maximum, and mean of the indicator for whether the individual has health insurance (`i_health_insurance`)? What does the mean of of this binary indicator variable (`i_health_insurance`) tell us?
+
+<noscript>
+
+**Answer:** The minimum, maximum, and mean of `i_health_insurance` are `r min(ps_df$i_health_insurance) %>% round(1)`, `r max(ps_df$i_health_insurance) %>% round(1)`, and `r mean(ps_df$i_health_insurance) %>% round(3)`, respectively.
+
+The mean of a binary indicator variable tells us the share of individuals whose value equals one. Here: We learn that in the sample, approximately `r mean(ps_df$i_health_insurance) %>% scales::percent()` of individuals had some type of health insurance.
+
+</noscript>
+
+## What's the value of an education?
+
+**Q06.** Suppose we are interested in the "classic" labor regression: the relationship between an individual's education and her income. Plot a scatter plot with income on the y axis and approximate years of education on the x axis.
+
+For the scatterplot, you might try [.mono[geom_point()]](https://ggplot2.tidyverse.org/reference/geom_point.html) from .mono[ggplot2]. Make sure you [label](https://ggplot2.tidyverse.org/reference/labs.html) your axes.
+
+<noscript>
+
+**Answer:**
+
+```{r, answer06, fig.height = 5}
+ggplot(data = ps_df, aes(x = education, y = personal_income)) +
+geom_point(size = 0.25) + 
+scale_y_continuous("Personal income ($10K)") +
+scale_x_continuous("Years of education") +
+theme_minimal()
+```
+
+</noscript>
+
+**Q07.** Based your plot in **Q06.**, if we regress personal income on education, do you think we could have an issue with heteroskedasticity? Explain/justify your answer.
+
+<noscript>
+
+**Answer:** We may very well have heteroskedastic disturbances in the described regression: it appears as though the variance of our outcome variable (which depends upon the variance of the disturbance) grows as our explanatory variable grows. There are also certainly levels of education with more variance than others (*e.g.*, 12 years and 16 years).
+
+</noscript>
+
+**Q08.** What issues can heteroskedasticity cause? (*Hint:* There are at least two main issues.) Does it bias OLS when estimating coefficients?
+
+<noscript>
+
+**Answer:** Heteroskedasticity causes our standard errors to be biased (which affects inference---*e.g.*, hypothesis tests, confidence intervals). Heteroskedasticity also makes OLS regression less efficient for estimating coefficients.
+
+On the other hand, heteroskedasticity **does not** bias OLS when estimating linear regression coefficients.
+
+</noscript>
+
+---
+
+**Q09.** Time for a regression.
+
+Regress *personal income* (`personal_income`) on *education* (`education`) and our indicator for *female* (`i_female`). Report your results---interpreting the intercept and the coefficients and commenting on the coefficients' statistical significance.
+
+*Reminder:* The personal-income variable is measured in tens of thousands (meaning that a value of `3` tells us the household's income is \$30,000).
+
+<noscript>
+
+**Answer:**
+
+```{r, answer09}
+# Regression
+est09 = lm(personal_income ~ education + i_female, data = ps_df)
+# Results
+est09 %>% tidy()
+```
+
+We find statistically significant relationships between individuals' incomes and each of our explanatory variables---both education and our indicator for "female."
+
+-   The intercept tells us the expected income (`r est09$coef[1]`) for **a man** with **zero education** (which we do not observe in the actual data).
+-   The coefficient on `education` tells us that a each additional year of education is significantly associated with approximately `r est09$coef[2] %>% magrittr::multiply_by(1e3) %>% scales::dollar(1)` additional dollars of income (holding all else constant).
+-   The coefficient on `i_female` tells us that women in the sample, on average, make `r est09$coef[3] %>% abs() %>% magrittr::multiply_by(1e3) %>% scales::dollar(1)` less than the men in the sample (holding education constant).
+
+</noscript>
+
+**Q10.** Use the residuals from your regression in **Q09.** to conduct a Breusch-Pagan test for heteroskedasticity. Do you find significant evidence of heteroskedasticity? Justify your answer.
+
+*Hints*
+
+1.  You can get the residuals from an `lm` object using the `residuals()` function, *e.g.*, `residuals(my_reg)`.
+2.  You can get the R-squared from an estimated regression (*e.g.*, a regression called `my_reg`) using `summary(my_reg)$r.squared`.
+
+<noscript>
+
+**Answer:**
+
+```{r, answer10}
+# Regression for BP test
+est10 = lm(residuals(est09)^2 ~ education + i_female, data = ps_df)
+# Results
+est10 %>% tidy()
+```
+
+*continued on next page...*
+
+```{r, answer10b}
+# BP test statistic
+lm10 = summary(est10)$r.squared * nrow(ps_df)
+# Test against Chi-squared 2
+pchisq(lm10, df = 2, lower.tail = F) %>% round(5)
+```
+
+The *p*-value is extremely small---nearly zero---so we reject the null hypothesis and conclude that there is statistically significant evidence of heteroskedasticity.
+
+</noscript>
+
+**Q11.** Now use your residuals from **Q09** to conduct a White test for heteroskedasticity. Does your conclusion about heteroskedasticity change at all? Explain why you think this is.
+
+*Hints:* Recall that in R
+
+-   `lm(y ~ I(x^2))` will regress `y` on `x` squared.
+-   `lm(y ~ x1:x2` will regress `y` on the interaction between `x1` and `x2`.
+-   The square of a binary variable is the same binary variable (and you don't want to include the same variable in a regression twice).
+
+<noscript>
+
+**Answer:**
+
+```{r, answer11}
+# Regression for BP test
+est11 = lm(
+  residuals(est09)^2 ~
+  education + i_female +
+  I(education^2) +
+  education:i_female,
+  data = ps_df
+)
+# Results
+est11 %>% tidy()
+# BP test statistic
+lm11 = summary(est11)$r.squared * nrow(ps_df)
+# Test against Chi-squared 4
+pchisq(lm11, df = 4, lower.tail = F) %>% round(3)
+```
+
+The *p*-value is still extremely small---nearly zero, so we reject the null hypothesis and conclude that there is statistically significant evidence of heteroskedasticity. The result did not change because we already found strong evidence of heteroskedasticity, and the White test is just a more flexible test for heteroskedasticity.
+
+</noscript>
+
+**Q12.** Now conduct a Goldfeld-Quandt test for heteroskedasticity. Do you find significant evidence of heteroskedasticity? Explain why this result makes sense.
+
+**Specifics:**
+
+- We are still interested in the same regression (regressing personal income on education and the indicator for female).
+- Sort the dataset on **education**. The [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) should be helpful for this task.
+- Create you two groups for the Goldfeld-Quandt test by using the first **1,600** and last **1,600** observations (after sorting on commute time). The `head()` and `tail()` functions can help here.
+- When you create the Goldfeld-Quandt test statistic, put the larger SSE value in the numerator.
+
+<noscript>
+
+**Answer:**
+
+```{r, answer12}
+# Arrange the dataset by commute time
+ps_df = ps_df %>% arrange(education)
+# Create the two subsets (first and last 8,000 observations)
+g1 = head(ps_df, 1600)
+g2 = tail(ps_df, 1600)
+# Run the two regressions
+est12_1 = lm(personal_income ~ education + i_female, data = g1)
+est12_2 = lm(personal_income ~ education + i_female, data = g2)
+# Find the SSE from each regression
+sse1 = sum(residuals(est12_1)^2)
+sse2 = sum(residuals(est12_2)^2)
+# GQ test statistic
+gq = sse2 / sse1
+# p-value
+pf(gq, df1 = 1600, df2 = 1600, lower.tail = F)
+```
+
+Using the Goldfeld-Quandt test for heteroskedasticity, we again reject the null hypothesis of *homoskedasticity* with a *p*-value of approximately `r pf(gq, df1 = 8000, df2 = 8000, lower.tail = F) %>% round(3)`.
+
+When we looked at the figure at the beginning of the problem set, it definitely seemed like there was possibly a funnel-like heteroskedasticity. This is the type of heteroskedasticity that the Goldfeld-Quandt test is capable of picking up, so it makes sense that we were able to detect it. </noscript>
+
+**Q13.** Using the `lm_robust()` function from the `estimatr` package, calculate heteroskedasticity-robust standard errors. How do these heteroskedasticity-robust standard errors compare to the plain OLS standard errors you previously found?
+
+<noscript>
+
+**Answer:**
+
+```{r, answer13, eval = F}
+# Load estimatr package
+p_load(estimatr)
+# Estimate het-robust standard errors
+est13 = lm_robust(
+  personal_income ~ education + i_female,
+  data = ps_df,
+  se_type = "HC2"
+)
+# Print results
+est13 %>% summary()
+```
+
+*continued on next page...*
+
+```{r, answer13-out, ref.label = "answer13", echo = F}
+```
+
+The heteroskedasticity-robust standard errors are slightly slightly larger than the OLS standard errors. The increase is especially "large" for education---increasing by approximately `r ((est13$std.error[2] - summary(est09)$coef[2,2])/summary(est09)$coef[2,2]) %>% scales::percent()`. That said, the statistical significance of the term has not changed meaningfully.
+
+</noscript>
+
+Hint: `lm_robust(y ~ x, data = some_df, se_type = "HC2")` will calculate heteroskedasticity-robust standard errors.
+
+**Q14.** Why did your coefficients remain the same in **Q13.**---even though your standard errors changed?
+
+<noscript>
+
+**Answer:** Our coefficients have not changed because we are still using OLS to estimate the coefficients. The thing that has changed is how we calculate the *standard errors* (not the coefficients).
+
+</noscript>
+
+**Q15.** *If* you run weighted least squares (WLS), which the following four possibilities would you expect? Explain your answer.
+
+1.  The same coefficients as OLS but different standard errors.
+2.  Different coefficients from OLS but the same standard errors.
+3.  The same coefficients as OLS *and* the same standard errors.
+4.  Different coefficients from OLS *and* different standard errors.
+
+**Note:** You do not need to run WLS.
+
+<noscript>
+
+**Answer:** With WLS, we would expect our coefficients and standard error to differ from OLS. We expect this because WLS is a different estimator than OLS, which produces different estimates, different residuals, and different standard errors.
+
+</noscript>
+
+---
+
+**Q16.** As we discussed in class, a misspecified model can cause heteroskedasticity. Let's see if that's the issue here.
+
+Update your original model by adding an interaction between education and the indicator for female. In other words: In this new econometric model, you will regression personal income on an intercept, education, the indicator for female, and the interaction between education and female. Use heteroskedasticity-robust standard errors.
+
+Interpret the coefficient on the interaction between `education` and `i_female` and comment on its statistical significance.
+
+<noscript>
+
+*continued on next page...*
+
+**Answer:**
+
+```{r, answer16}
+# The new model
+est16 = lm_robust(
+  personal_income ~ education + i_female + education:i_female,
+  data = ps_df,
+  se_type = "HC2"
+)
+# The results
+summary(est16)
+```
+
+In this new model, the interaction between female and education is statistically significant at the 5-percent level with a coefficient of approximately `r est16$coefficients[4] %>% round(2)`. This coefficient tests whether the relationship between education and earnings appears to differ for females and non-females (in this sample: non-female means male). In more "economics" terms: We are testing whether the returns to education are different for women (relative to rest of the sample—men). The coefficient tells us that the returns to education for females in the sample make is approximately `r est16$coefficients[4] %>% abs() %>% magrittr::multiply_by(1e4) %>% scales::dollar()` **less** than males in the sample (for each additional year of education).
+
+</noscript>
+
+**Q17.** Based upon the model you estimated in **Q16.**, what is the expected personal income for women with 16 years of education? What about a man with 16 years of education?
+
+<noscript>
+
+**Answer:** The expected income for women with 16 years of education is approximately `r sum(est16$coefficients * c(1,16,1,16)) %>% magrittr::multiply_by(1e4) %>% scales::dollar(1)`. The expected income for men with 16 years of education is approximately `r sum(est16$coefficients * c(1,16,0,0)) %>% magrittr::multiply_by(1e4) %>% scales::dollar(1)`.
+
+</noscript>
+
+**Q18.** Back to heteroskedasticity! Use the residuals from **Q16.** (where we attempted to deal with misspecification) to conduct a White test. Did changing our model specification "help"? Explain your answer.
+
+<noscript>
+
+**Answer:**
+
+```{r, answer18, eval = F}
+# Get residuals from the model in 16
+resid16 = ps_df$personal_income - est16$fitted.values
+# Regression for BP test
+est18 = lm(
+  resid16^2 ~
+  education + i_female +
+  education:i_female +
+  I(education^2) + I(education^2):i_female,
+  data = ps_df
+)
+# Results
+est18 %>% tidy()
+# BP test statistic
+lm18 = summary(est18)$r.squared * nrow(ps_df)
+# Test against Chi-squared 5
+pchisq(lm18, df = 5, lower.tail = F) %>% round(3)
+```
+
+```{r, answer18-out, ref.label = "answer18", echo = F}
+```
+
+Even with this new interaction (our new specification to try to address misspecification), we still have very strong evidence of heteroskedasticity (*i.e.*, highly statistically significant). Thus, it does not seem like the interaction "helped" resolve the heteroskedasticity---though it does seem like an important part of the model (given its statistical significance and economic meaning).
+
+</noscript>
+
+**Q19.** Based upon your findings from the preceding questions: Do you think heteroskedasticity is present? If so: Does heteroskedasticity appear to matter in this setting?
+
+Explain your answer/reasoning. **Include a plot of the residuals in your answer.**
+
+<noscript>
+
+**Answer:**
+
+```{r, answer19, eval = F}
+# Plotting the residuals from our OLS regression against education
+ggplot(
+  data = data.frame(
+    education = ps_df$education,
+    residual = est09$residuals
+  ),
+  aes(x = education, y = residual)
+) +
+geom_point(size = 2.5, alpha = 0.4) +
+xlab("Education") +
+ylab("OLS Residual") +
+theme_minimal()
+```
+
+*continued on next page...*
+
+```{r, answer19-out, ref.label = "answer19", echo = F, fig.height = 4}
+```
+
+Heteroskedasticity does appear to be present---it appeared likely in our original plot, it was highly significant in our tests, and the figure above seems to suggest that variance (in the residuals) changes with values of education.
+
+This heteroskedasticity appears to be causing us to over-estimate our precision---especially for the relationship between education and personal income. For example, our $t$ statistic drops from `r summary(est09)$coef[2,3]` to `r summary(est13)$coef[2,3]` when we use heteroskedasticity-robust standard errors. However, the $t$ statistic of `r summary(est13)$coef[2,3]` is still highly significant, so adjusting for heteroskedasticity doesn't really change our results/understanding much in this setting.
+
+</noscript>
+
+**Q20.** In this assignment, we've largely focused on heteroskedasticity. But let's think a bit about the regressions you actually ran. Do you think the regression that we ran could suffer from omitted-variable bias? If you think there is omitted-variable bias, explain why and provide an example of "valid" omitted variable that would cause bias. If you do not think there is omitted-variable bias, justify your answer *using all of the requirements for an omitted variable.*
+
+<noscript>
+
+**Answer:** It is very likely that there is omitted variable bias here---there are many variables that affect personal income and that interact with education, sex, or their interaction.
+
+</noscript>
+
+---
+class: clear
+
+## Description of variables and names
+
+<br>
+
+```{r, background variables, echo = F}
+# Load requisite packages
+pacman::p_load(tidyverse, knitr, kableExtra, here)
+# Load data
+acs_sub = here("002-data.csv") %>% read_csv()
+# Create table of variable descriptions
+var_tbl = data.frame(
+  Variable = names(acs_sub) %>% paste0(".mono-small[", ., "]"),
+  Description = c(
+    "State abbreviation",
+    "Binary indicator for whether home county is 'urban'",
+    "The individual's age (in years)",
+    "Binary indicator for whether the individual identified as Asian",
+    "Binary indicator for whether the individual identified as Black",
+    "Binary indicator for whether the individual identified as Hispanic",
+    "Binary indicator for whether the individual identified with a group indigenous to North Am.",
+    "Binary indicator for whether the individual identified as White",
+    "Binary indicator for whether the individual identified as Female",
+    "Binary indicator for whether the individual identified as Male",
+    "(Approximate) years of education",
+    "Binary indicator for whether the individual graduated college (estimated)",
+    "Binary indicator for whether the individual was married at the time of the sample",
+    "Total (annual) personal income (tens of thousands of dollars)",
+    "Binary indicator for whether the individual uses 'foodstamps' (SNAP)",
+    "Binary indicator for whether the individual has health insurance",
+    "Binary indicator for whether the individual has access to the internet",
+    "The time that the individual typically leaves for work (in minutes since midnight)",
+    "The time that the individual typically arrives at work (in minutes since midnight)",
+    "The length of time that the individual typically travels to work (in minutes)"
+  )
+)
+kable(var_tbl) %>%
+  kable_styling(full_width = F)
+```
+
+Variables that begin with .mono-small[i\\\_] denote binary/indicator variables (taking on the value of .mono-small[0] or .mono-small[1]).
+
+```{r, print pdf, echo = F, eval = F, include = F}
+pagedown::chrome_print("002-questions.html")
+#pagedown::chrome_print(input = "002-questions.html", output = "002-solutions.pdf")
+```

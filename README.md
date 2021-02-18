@@ -20,8 +20,24 @@ The slides below (linked by their topic) are .html files that will only work pro
 
 6. [Consistency and OLS in asymptopia](https://raw.githack.com/edrubin/EC421W21/master/notes/06-consistency/06-consistency.html) <br> [PDF](https://raw.githack.com/edrubin/EC421W21/master/notes/06-consistency/06-consistency.pdf) | [.Rmd](https://github.com/edrubin/EC421W21/blob/master/notes/06-consistency/06-consistency.Rmd)
 
+7. [Introduction to time series](https://raw.githack.com/edrubin/EC421W21/master/notes/07-timeseries/07-time-series.html) <br> [PDF](https://raw.githack.com/edrubin/EC421W21/master/notes/07-timeseries/07-time-series.pdf) | [.Rmd](https://github.com/edrubin/EC421W21/blob/master/notes/07-timeseries/07-time-series.Rmd)
+
+8. [Autocorrelated disturbances](https://raw.githack.com/edrubin/EC421W21/master/notes/08-autocorrelation/08-autocorrelation.html)<br>Implications, testing, and estimation. Also: introduction `ggplot2` and user-defined functions. <br> [PDF](https://raw.githack.com/edrubin/EC421W21/master/notes/08-autocorrelation/08-autocorrelation.pdf) | [.Rmd](https://github.com/edrubin/EC421W21/blob/master/notes/08-autocorrelation/08-autocorrelation.Rmd)
+
+9. [Nonstationarity](https://raw.githack.com/edrubin/EC421W21/master/notes/09-nonstationarity/09-nonstationarity.html)<br>Introduciton, implications for OLS, testing, and estimation. Also: in-class exercise for model selection. <br> [PDF](https://raw.githack.com/edrubin/EC421W21/master/notes/09-nonstationarity/09-nonstationarity.pdf) | [.Rmd](https://github.com/edrubin/EC421W21/blob/master/notes/09-nonstationarity/09-nonstationarity.Rmd)
+
 
 ## Problem sets
+
+**Problem set 01: Review of OLS**
+
+- Data: [CSV](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/001/001-data.csv) | [RDS](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/001/001-data.rds)
+- Text: [Questions](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/001/001-questions.pdf) | [Solutions](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/001/001-solutions.pdf)
+
+**Problem set 02: Heteroskedasticity and inference**
+
+- Data: [CSV](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/002/002-data.csv)
+- Text: [Questions](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/002/002-questions.pdf) | [Solutions](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/002/002-solutions.pdf)
 
 ## Midterm
 
