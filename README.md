@@ -26,20 +26,21 @@ The slides below (linked by their topic) are .html files that will only work pro
 
 9. [Nonstationarity](https://raw.githack.com/edrubin/EC421W21/master/notes/09-nonstationarity/09-nonstationarity.html)<br>Introduciton, implications for OLS, testing, and estimation. Also: in-class exercise for model selection. <br> [PDF](https://raw.githack.com/edrubin/EC421W21/master/notes/09-nonstationarity/09-nonstationarity.pdf) | [.Rmd](https://github.com/edrubin/EC421W21/blob/master/notes/09-nonstationarity/09-nonstationarity.Rmd)
 
-https://raw.githack.com/edrubin/EC421W21/master/notes/09-nonstationarity/09-nonstationarity.html
+10. [Causality](https://raw.githack.com/edrubin/EC421W21/master/notes/10-causality/10-causality.html)<br>Introduction to causality and the Neymam-Rubin causal model. Also: Recap of in-class model-selection exercise. <br> [PDF](https://raw.githack.com/edrubin/EC421W21/master/notes/10-causality/10-causality.pdf) | [.Rmd](https://github.com/edrubin/EC421W21/blob/master/notes/10-causality/10-causality.Rmd)
 
+11. [Instrumental Variables](https://raw.githack.com/edrubin/EC421W21/master/notes/11-iv/11-iv.html)<br>Review the Neymam-Rubin causal model; introduction to instrumental variables (IV) and two-stage least squares (2SLS). Applications to causal inference and measurement error. Venn diagrams. <br> [PDF](https://raw.githack.com/edrubin/EC421W21/master/notes/11-iv/11-iv.pdf) | [.Rmd](https://github.com/edrubin/EC421W21/blob/master/notes/11-iv/11-iv.Rmd)
 
 ## Problem sets
 
 **Problem set 01: Review of OLS**
 
-- Data: [CSV](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/001/001-data.csv) | [RDS](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/001/001-data.rds)
-- Text: [Questions](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/001/001-questions.pdf) | [Solutions](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/001/001-solutions.pdf)
+- Data: [CSV](https://raw.githack.com/edrubin/EC421W21/master/problem-sets/001/001-data.csv) | [RDS](https://raw.githack.com/edrubin/EC421W21/master/problem-sets/001/001-data.rds)
+- Text: [Questions](https://raw.githack.com/edrubin/EC421W21/master/problem-sets/001/001-questions.pdf) | [Solutions](https://raw.githack.com/edrubin/EC421W21/master/problem-sets/001/001-solutions.pdf)
 
 **Problem set 02: Heteroskedasticity and inference**
 
-- Data: [CSV](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/002/002-data.csv)
-- Text: [Questions](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/002/002-questions.pdf) | [Solutions](https://raw.githack.com/edrubin/EC421S20/master/problem-sets/002/002-solutions.pdf)
+- Data: [CSV](https://raw.githack.com/edrubin/EC421W21/master/problem-sets/002/002-data.csv)
+- Text: [Questions](https://raw.githack.com/edrubin/EC421W21/master/problem-sets/002/002-questions.pdf) | [Solutions](https://raw.githack.com/edrubin/EC421W21/master/problem-sets/002/002-solutions.pdf)
 
 ## Midterm
 

@@ -1073,7 +1073,7 @@ layout: true
 ```{r, bg1}
 # Estimate the model
 ols_est <- lm(
-  ap ~ lag(approve) + price_oil,
+  approve ~ lag(approve) + price_oil,
   data = approval_df
 )
 # Summary
