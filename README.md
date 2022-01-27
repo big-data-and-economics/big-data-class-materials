@@ -44,4 +44,6 @@ The slides below (linked by their topic) are .html files that will only work pro
 
 ## Midterm
 
+[Screenshots of the exam](https://raw.githack.com/edrubin/EC421W21/master/midterm/exam/midterm-screenshots.pdf)
+
 ## Final

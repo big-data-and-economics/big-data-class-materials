@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Midterm project</title>
+    <meta charset="utf-8" />
+    <script src="key-01_files/header-attrs-2.6/header-attrs.js"></script>
+    <link href="key-01_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="key-01_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="key-01_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="key-01_files/kePrint-0.0.1/kePrint.js"></script>
+    <link href="key-01_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Midterm project
+## EC 421: Introduction to Econometrics
+### Due <em>before</em> midnight on Sunday, 21 February 2021 <br> <strong>Solutions</strong>
+
+---
+
+layout: true
+class: clear
+---
+
+
+
+## Instructions
+
+.mono.b[INTEGRITY:] Groups can either have **one or two members**. Only one person needs to submit your final document. If you are suspected of cheating in any way (for example, copying from someone else), then you will receive a zero and fail this course. We will report you to the dean.
+
+.mono.b[GRADING:] Your grade for this project will be based upon the accuracy of your answers *and* how well you explain/illustrate your answers. We value short, accurate answers over long, meandering answers. Edit your answers! Make your figures look good (including titles and labeled axes)!
+
+.mono.b[EMAIL POLICY:] Do not ask the GEs, the instructor, or people outside your group for help coding or for help answering these questions. You may only ask **clarifying** questions. **Use Google and the course's materials** (lectures, labs, notes, assignment keys).
+
+.mono.b[DUE:] **One member** of your group must upload your answer on [Canvas](https://canvas.uoregon.edu/) *before* midnight on Sunday, 21 February 2021. All members of the group must be listed on the submission.
+
+.mono.b[IMPORTANT:] As with your homework, you must submit .b[two files]:
+&lt;br&gt; .b.mono[1.] your typed responses/answers to the question **with figures and regression results** (in a Word file or something similar).
+&lt;br&gt; .b.mono[2.] the .mono[R] script you used to generate your answers. 
+
+If you are using RMarkdown, you can submit a single file.
+
+.mono.b[README!] The last page has a table that describes each variable in the dataset (`data-project-01.csv`).
+
+.mono.b[HELP!] The questions below ask for several figures. If you need help creating the figures, check out these `ggplot2` resources (in addition to the class and lab materials):
+
+- [An intro to `ggplot2`](https://uc-r.github.io/ggplot_intro)
+- [A tutorial on customizing `ggplot2` figures](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html)
+- [The `ggplot2` website (with a `ggplot2` cheatsheet!)](https://ggplot2.tidyverse.org/index.html)
+
+---
+
+## Questions
+
+.b[01.] Load the data (`data-project-01.csv`). Summarize and describe the variables in the dataset. Your answer should include:
+
+- Which countries show up in the data? What are their percentages (share of the sample)?
+- How many provinces and "tasters" show up in the data? How many varieties are there?
+- How skewed are the distributions of price and points?
+- Create at least two figures (graphs) that individually summarize the variables `price` and `points`.
+- Create at least three figures (graphs) that demonstrate how the key variables relate to each other and other variables (*i.e.*, `variety`, `country`, `province`, `taster_name`).
+
+Explain your decisions on summarizing the data. What do you learn about potential relationships?
+
+
+
+**Answer** 
+
+There are 2 **countries**. The US represents 71.6% of the observations, and France represents 28.4% of the observations.
+
+There are 6 unique provinces (3 per country), 4 "tasters", and 9 varieties.
+
+As we see below, the distribution of points is not very skewed (pretty symmetric), but the distribution of price is **very** skewed.
+
+&lt;img src="key-01_files/figure-html/answer01b-1.svg" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+&lt;img src="key-01_files/figure-html/unnamed-chunk-1-1.svg" style="display: block; margin: auto;" /&gt;&lt;img src="key-01_files/figure-html/unnamed-chunk-1-2.svg" style="display: block; margin: auto;" /&gt;
+
+As you can see above, the two countries differ slightly in their ratings, tasters have different distributions of ratings, and there are slight differences across regions and varieties (in rating). 
+
+---
+
+.b[02.] Does the distribution of `price` appear to be the same across the countries? What about the distribution of `points` across the countries? Use figures (plots) to justify your answer. Explain your answer.
+
+**Answer** As we saw above, the ratings for US wines tend to be slightly higher. The median price for French wine is slightly lower than that of US wine, but French wine has a much longer tail (higher prices).
+
+.b[03.] We are going to treat `price` as our outcome variable. Regress the price (of the wine bottle) on an intercept, the bottle's rating (`points`) and its country of origin. Explain what the coefficients mean and comment on their statistical significance.
+
+**Answer** 
+
+
+```
+#&gt; OLS estimation, Dep. Var.: price
+#&gt; Observations: 10,000 
+#&gt; Standard-errors: Standard 
+#&gt;             Estimate Std. Error t value  Pr(&gt;|t|)    
+#&gt; (Intercept)  -623.02    18.5380  -33.61 &lt; 2.2e-16 ***
+#&gt; points          7.63     0.2082   36.66 &lt; 2.2e-16 ***
+#&gt; countryUS     -17.14     1.3758  -12.46 &lt; 2.2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; RMSE: 61.6   Adj. R2: 0.123133
+```
+Both coefficients are highly statistically significant at the 5% levels.
+
+The coefficient on `points` tells us every additional point is associated with a $7.63 increase in the price (holding all else constant). The coefficient on `countryUS` suggests that a bottle of wine from the US is, on average, $17.14 cheaper than a bottle from France (holding all else constant).
+
+.b[04.] Create a scatter plot with the residuals from .b[03] on the y axis the rating (`points`) on the x axis.
+
+**Answer**
+
+&lt;img src="key-01_files/figure-html/unnamed-chunk-2-1.svg" style="display: block; margin: auto;" /&gt;
+
+.b[05.] Does the scatter plot from .b[04] suggest that **heteroskedasticity** may be present? Explain your answer.
+
+**Answer** The figure above seems to suggest we could have heteroskedasticity: Higher values of points appear to more variance in their residuals.
+
+.b[06.] Does the scatter plot from .b[04] suggest that there are any issues with **your specification**? Explain.
+
+**Answer** Perhaps: The residuals on the left-hand side of the plot (lower ratings) have means above zero—likely caused by outliers.
+
+.b[07.] Do you think your regression in .b[03] could suffer from omitted-variable bias? Explain why or why not, using the requirements for omitted-variable bias as part of your explanation.
+
+**Answer** Probably: There are likely omitted variables that (1) affect price (many variables affect price) and (2) are correlated with points (again seems like there are many options).
+
+---
+
+.b[08.] Now include an interaction between country and rating (`points`). Interpret this interaction and comment on the statistical significance. Does this interaction seem important? Explain.
+
+**Answer**
+
+
+```
+#&gt; OLS estimation, Dep. Var.: price
+#&gt; Observations: 10,000 
+#&gt; Standard-errors: Standard 
+#&gt;                   Estimate Std. Error t value  Pr(&gt;|t|)    
+#&gt; (Intercept)      -1208.600    31.7940  -38.01 &lt; 2.2e-16 ***
+#&gt; points              14.218     0.3575   39.77 &lt; 2.2e-16 ***
+#&gt; countryUS          850.280    38.7550   21.94 &lt; 2.2e-16 ***
+#&gt; points:countryUS    -9.729     0.4344  -22.40 &lt; 2.2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; RMSE: 60.1   Adj. R2: 0.164945
+```
+The coefficient on the interaction tells us how each additional point differentially affects the price for US wines, relative to the effect of additional points for French wines. Specifically, it tells us that the increase in price from an additional point is $9.73 less than the effect for French wines.
+
+This effect is highly statistically significant *and* has a large coefficient (it is economically meaningful). Thus, it seems pretty important.
+
+.b[09.] Up to this point, we've told you which regressions to run. And we've stuck with pretty simple regressions (*e.g.*, regress `y` on `x1 + x2`). Now we want you to explore the actual complexity of econometric/statistical analyses. **Estimate three new models.** These models **should not match** your previous models (in .b[03] and .b[08]). Be creative!! Across these three new models, you should include (at least once):
+
+- a log-transformed outcome variable (*i.e.*, use `log()`)
+- new/additional explanatory variables (you've only used two of the variables in the dataset)
+- an interaction
+
+**Answer** Lots of options here. There should be a logged variable, there shoyld be additional explanatory variables (province, taster, variety), and there should be new interactions .
+
+.b[10.] How did you choose your specifications in .b[09]? Explain your decision making.
+
+**Answer** Looking for reasonable justification.
+
+.b[11.] Which of your new models is the "best"—*i.e.*, if you must choose one model, which would you choose? Why? Explain your reasoning.
+
+**Answer** Looking for sound reasoning—especially with inference in mind. Not just R squared.
+
+.b[12.] For your "best" model (chosen in .b[11]): Interpret the coefficients and comment on their statistical significance.
+
+**Answer** Depends on the best model.
+
+.b[13.] Do you *trust* the estimates from your *best model*? Explain why/why not.
+
+**Answer** Should still worry about omitted-variable bias, but perhaps the model still helps describe the relationship between price and rating for wine. Also could wonder about reverse causality: Does price affect rating?
+
+---
+
+.b[14.] Create a scatter plot with the actual prices (`price`) on the *y* axis the the predictions (see the `fitted.values` outputted by `lm()` or use the `fitted()` or `predict()` functions) on the *x* axis. How well does your model predict the true price? Explain your answer.
+
+**Answer** 
+
+&lt;img src="key-01_files/figure-html/unnamed-chunk-3-1.svg" style="display: block; margin: auto;" /&gt;
+
+There's definitely a positive correlation (a very low). In my figure, there is a lot of room for improvement.
+
+.b[15.] Write up a one-paragraph summary of what you've learned about pricing in wine. Base your findings on the figures and regressions in this project.
+
+**Answer** Just want good reasoning.
+
+---
+
+&lt;table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Variable &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Description &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[price] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The price of the bottle of wine (US dollars). &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[points] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The points given in the review (more points means better wine). &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[variety] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The wine's variety (think: type). &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[country] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The country that produced the wine. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[province] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The province that produced the wine. &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[taster_name] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The name of the person who tasted/reviewed/rated the bottle of wine. &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+exclude: true
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "8.5:11",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

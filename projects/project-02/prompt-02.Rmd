@@ -1,0 +1,186 @@
+---
+title: "In-class project"
+subtitle: "EC 421"
+author: "Edward Rubin"
+date: "Winter 2021"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    # self_contained: true
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+class: inverse, middle
+
+```{r, setup, include = F}
+# devtools::install_github("dill/emoGG")
+library(pacman)
+p_load(
+  broom, here, tidyverse,
+  emoGG, latex2exp, ggplot2, ggthemes, ggforce, viridis, extrafont, gridExtra,
+  wooldridge,
+  kableExtra, snakecase,
+  data.table, dplyr, estimatr,
+  lubridate,
+  magrittr, knitr, parallel
+)
+# Define pink color
+red_pink <- "#e64173"
+turquoise <- "#20B2AA"
+orange <- "#FFA500"
+red <- "#fb6107"
+blue <- "#2b59c3"
+green <- "#8bb174"
+grey_light <- "grey70"
+grey_mid <- "grey50"
+grey_dark <- "grey20"
+purple <- "#6A5ACD"
+# Dark slate grey: #314f4f
+# Knitr options
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+opts_chunk$set(dev = "svg")
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+options(crayon.enabled = F)
+options(knitr.table.format = "html")
+# Column names for regression results
+reg_columns <- c("Term", "Est.", "S.E.", "t stat.", "p-Value")
+# Function for formatting p values
+format_pvi <- function(pv) {
+  return(ifelse(
+    pv < 0.0001,
+    "<0.0001",
+    round(pv, 4) %>% format(scientific = F)
+  ))
+}
+format_pv <- function(pvs) lapply(X = pvs, FUN = format_pvi) %>% unlist()
+# Tidy regression results table
+tidy_table <- function(x, terms, highlight_row = 1, highlight_color = "black", highlight_bold = T, digits = c(NA, 3, 3, 2, 5)) {
+  x %>%
+    tidy() %>%
+    select(1:5) %>%
+    mutate(
+      term = terms,
+      p.value = p.value %>% format_pv()
+    ) %>%
+    kable(
+      col.names = reg_columns,
+      escape = F,
+      digits = digits
+    ) %>%
+    kable_styling(font_size = 20) %>%
+    row_spec(1:nrow(tidy(x)), background = "white") %>%
+    row_spec(highlight_row, bold = highlight_bold, color = highlight_color)
+}
+```
+
+# Prologue
+
+---
+name: schedule
+
+# Schedule
+
+## Last Time
+
+Instrumental variables
+
+## Today
+
+Extra-credit prediction competition
+<br>.note[Submissions due by midnight (Pacific) tonight.]
+
+## Upcoming
+
+- **Last problem** set due by midnight (PST) on Friday 
+- **Review** in lecture on Thursday (review materials are on Canvas)
+- **Final** next week: Canvas .hi[8AM Pacific, Tuesday, 16 March 2021]
+
+---
+layout: false
+class: inverse, middle
+# Prediction
+
+---
+# Prediction
+## Intro
+
+Most tasks in econometrics boil down to one of two goals:
+
+$$
+\begin{align}
+  y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_k x_k + u
+\end{align}
+$$
+
+--
+
+1. .hi-purple[Prediction:] Accurately and dependably .purple[predict/forecast] $\color{#6A5ACD}{y}$ using on some set of explanatory variables—doesn't need to be $x_1$ through $x_k$. Focuses on $\color{#6A5ACD}{\hat{y}}$. $\beta_j$ doesn't really matter.
+
+--
+
+1. .hi[Causal estimation:].super[.pink[†]] Estimate the actual data-generating process—learning about the true, population model that explains .pink[how] $\color{#e64173}{y}$ .pink[changes when we change] $\color{#e64173}{x_j}$—focuses on $\color{#e64173}{\beta_j}$. Accuracy of $\hat{y}$ is not important.
+
+.footnote[
+.pink[†] Often called *causal identification*.
+]
+
+---
+# Prediction
+## Competition
+
+Today your job is to figure out the model that best .hi[predicts] the outcome `y`.
+
+**Specifics**
+
+- **Train** (build) your model using the `train.csv` dataset.
+  - 15 predictors (regressors): `x1`, `x2`, ... `x15`
+  - outcome: `y`
+- **Predict** the outcome for the `test.csv` data set. 
+- **Submit** a CSV of your predictions. <br> The CSV should only have a column of your preditions.
+
+**Reward:** Better preditions = more extra-credit points.
+
+---
+# Prediction
+## In R
+
+Fit a model and then use `predict()`  to predict onto `newdata`.
+
+```{r, predict, eval = F}
+# Load packages
+library(pacman)
+p_load(tidyverse)
+# Load datasets
+train_df = read_csv("train.csv")
+test_df = read_csv("test.csv")
+# Fit a model
+my_model = lm(y ~ x1 + x15 + x1:x15, data = train_df)
+# Predict onto new dataset
+my_predictions = predict(my_model, newdata = test_df)
+# Save as CSV
+write_csv(
+  as.data.frame(my_predictions),
+  "my-predictions.csv"
+)
+```
+
+---
+exclude: true
+
+```{r, print pdfs, echo = F, eval = F}
+pagedown::chrome_print(
+  input = "prompt-02.html",
+  timeout = 60
+)
+```

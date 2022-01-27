@@ -1,0 +1,290 @@
+---
+title: "Midterm project"
+subtitle: "EC 421: Introduction to Econometrics"
+# author: "Edward Rubin"
+date: "Due *before* midnight on Sunday, 21 February 2021 <br> **Solutions**"
+# date: ".it.biggest[Solutions]"
+output:
+  xaringan::moon_reader:
+    css: ['default', 'metropolis', 'metropolis-fonts', 'my-css.css']
+    # self_contained: true
+    nature:
+      ratio: '8.5:11'
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+layout: true
+class: clear
+---
+
+```{r, setup, include = F}
+# Knitr options
+library(knitr)
+opts_chunk$set(
+  comment = "#>",
+  fig.align = "center",
+  fig.height = 7,
+  fig.width = 10.5,
+  warning = F,
+  message = F
+)
+opts_chunk$set(dev = "svg")
+options(device = function(file, width, height) {
+  svg(tempfile(), width = width, height = height)
+})
+options(digits = 4)
+options(width = 90)
+```
+
+## Instructions
+
+.mono.b[INTEGRITY:] Groups can either have **one or two members**. Only one person needs to submit your final document. If you are suspected of cheating in any way (for example, copying from someone else), then you will receive a zero and fail this course. We will report you to the dean.
+
+.mono.b[GRADING:] Your grade for this project will be based upon the accuracy of your answers *and* how well you explain/illustrate your answers. We value short, accurate answers over long, meandering answers. Edit your answers! Make your figures look good (including titles and labeled axes)!
+
+.mono.b[EMAIL POLICY:] Do not ask the GEs, the instructor, or people outside your group for help coding or for help answering these questions. You may only ask **clarifying** questions. **Use Google and the course's materials** (lectures, labs, notes, assignment keys).
+
+.mono.b[DUE:] **One member** of your group must upload your answer on [Canvas](https://canvas.uoregon.edu/) *before* midnight on Sunday, 21 February 2021. All members of the group must be listed on the submission.
+
+.mono.b[IMPORTANT:] As with your homework, you must submit .b[two files]:
+<br> .b.mono[1.] your typed responses/answers to the question **with figures and regression results** (in a Word file or something similar).
+<br> .b.mono[2.] the .mono[R] script you used to generate your answers. 
+
+If you are using RMarkdown, you can submit a single file.
+
+.mono.b[README!] The last page has a table that describes each variable in the dataset (`data-project-01.csv`).
+
+.mono.b[HELP!] The questions below ask for several figures. If you need help creating the figures, check out these `ggplot2` resources (in addition to the class and lab materials):
+
+- [An intro to `ggplot2`](https://uc-r.github.io/ggplot_intro)
+- [A tutorial on customizing `ggplot2` figures](http://r-statistics.co/Complete-Ggplot2-Tutorial-Part2-Customizing-Theme-With-R-Code.html)
+- [The `ggplot2` website (with a `ggplot2` cheatsheet!)](https://ggplot2.tidyverse.org/index.html)
+
+---
+
+## Questions
+
+.b[01.] Load the data (`data-project-01.csv`). Summarize and describe the variables in the dataset. Your answer should include:
+
+- Which countries show up in the data? What are their percentages (share of the sample)?
+- How many provinces and "tasters" show up in the data? How many varieties are there?
+- How skewed are the distributions of price and points?
+- Create at least two figures (graphs) that individually summarize the variables `price` and `points`.
+- Create at least three figures (graphs) that demonstrate how the key variables relate to each other and other variables (*i.e.*, `variety`, `country`, `province`, `taster_name`).
+
+Explain your decisions on summarizing the data. What do you learn about potential relationships?
+
+```{r, answer01a, echo = F}
+# Load packages
+library(pacman)
+p_load(tidyverse, patchwork, data.table, scales, magrittr, here)
+# Load data
+wine_df = here("data-project-01.csv") %>% read_csv()
+setDT(wine_df)
+```
+
+**Answer** 
+
+There are `r wine_df[,uniqueN(country)]` **countries**. The US represents `r wine_df[,country == "US"] %>% mean() %>% percent(0.1)` of the observations, and France represents `r wine_df[,country == "France"] %>% mean() %>% percent(0.1)` of the observations.
+
+There are `r wine_df[,uniqueN(province)]` unique provinces (3 per country), `r wine_df[,taster_name %>% uniqueN()]` "tasters", and `r wine_df[,uniqueN(variety)]` varieties.
+
+As we see below, the distribution of points is not very skewed (pretty symmetric), but the distribution of price is **very** skewed.
+
+```{r, answer01b, echo = F}
+# Distribution of 'points'
+plot_points = ggplot(data = wine_df, aes(x = points)) +
+  geom_histogram(bins = 15) +
+  xlab("Points awarded") +
+  ggtitle("Rating") +
+  theme_minimal()
+# Distribution of 'price'
+plot_price = ggplot(data = wine_df, aes(x = price)) +
+  geom_histogram() +
+  scale_x_continuous("Price (USD)", labels = dollar) +
+  ggtitle("Price") +
+  theme_minimal()
+# Join plot
+plot_points + plot_price
+```
+
+```{r, answer01c, echo = F}
+# Rating by country
+plot_points_country = ggplot(data = wine_df, aes(x = points, fill = country)) +
+  geom_density(color = NA, alpha = 0.5) +
+  xlab("Points awarded") +
+  ggtitle("Rating and country") +
+  scale_fill_viridis_d("Country") +
+  theme_minimal()
+# Price by country
+plot_price_country = ggplot(data = wine_df, aes(y = price, x = country)) +
+  geom_boxplot() +
+  scale_y_log10("Price (USD)", labels = dollar) +
+  ggtitle("Price and country") +
+  scale_fill_viridis_d("Country") +
+  theme_minimal()
+# Taster and rating
+plot_points_taster = ggplot(data = wine_df, aes(y = points, x = taster_name)) +
+  geom_boxplot() +
+  xlab("Taster") +
+  ylab("Points awarded") +
+  ggtitle("Rating and tasters") +
+  scale_fill_viridis_d("Country") +
+  theme_minimal()
+# Province and rating
+plot_points_province = ggplot(data = wine_df, aes(y = points, x = province)) +
+  geom_boxplot() +
+  xlab("Province") +
+  ylab("Points awarded") +
+  ggtitle("Rating and province") +
+  theme_minimal()
+# Variety and rating
+plot_points_variety = ggplot(data = wine_df, aes(y = points, x = variety)) +
+  geom_boxplot() +
+  xlab("Variety") +
+  ylab("Points awarded") +
+  ggtitle("Rating and variety") +
+  theme_minimal()
+```
+
+---
+
+```{r, echo = F}
+# Combine plots
+(plot_points_country + plot_points_taster) 
+plot_price_country / plot_points_province / plot_points_variety
+```
+
+As you can see above, the two countries differ slightly in their ratings, tasters have different distributions of ratings, and there are slight differences across regions and varieties (in rating). 
+
+---
+
+.b[02.] Does the distribution of `price` appear to be the same across the countries? What about the distribution of `points` across the countries? Use figures (plots) to justify your answer. Explain your answer.
+
+**Answer** As we saw above, the ratings for US wines tend to be slightly higher. The median price for French wine is slightly lower than that of US wine, but French wine has a much longer tail (higher prices).
+
+.b[03.] We are going to treat `price` as our outcome variable. Regress the price (of the wine bottle) on an intercept, the bottle's rating (`points`) and its country of origin. Explain what the coefficients mean and comment on their statistical significance.
+
+**Answer** 
+
+```{r, answer03, echo = F}
+# Regression
+reg03 = fixest::feols(price ~ points + country, data = wine_df)
+reg03
+```
+Both coefficients are highly statistically significant at the 5% levels.
+
+The coefficient on `points` tells us every additional point is associated with a `r coef(reg03)[2] %>% dollar()` increase in the price (holding all else constant). The coefficient on `countryUS` suggests that a bottle of wine from the US is, on average, `r coef(reg03)[3] %>% abs() %>% dollar()` cheaper than a bottle from France (holding all else constant).
+
+.b[04.] Create a scatter plot with the residuals from .b[03] on the y axis the rating (`points`) on the x axis.
+
+**Answer**
+
+```{r, echo = F, fig.height = 3}
+ggplot(data = wine_df %>% mutate(e = reg03$residuals), aes(x = points, y = e)) +
+  geom_point() +
+  labs(x = "Points", y = "Residual") +
+  theme_minimal()
+```
+
+.b[05.] Does the scatter plot from .b[04] suggest that **heteroskedasticity** may be present? Explain your answer.
+
+**Answer** The figure above seems to suggest we could have heteroskedasticity: Higher values of points appear to more variance in their residuals.
+
+.b[06.] Does the scatter plot from .b[04] suggest that there are any issues with **your specification**? Explain.
+
+**Answer** Perhaps: The residuals on the left-hand side of the plot (lower ratings) have means above zero—likely caused by outliers.
+
+.b[07.] Do you think your regression in .b[03] could suffer from omitted-variable bias? Explain why or why not, using the requirements for omitted-variable bias as part of your explanation.
+
+**Answer** Probably: There are likely omitted variables that (1) affect price (many variables affect price) and (2) are correlated with points (again seems like there are many options).
+
+---
+
+.b[08.] Now include an interaction between country and rating (`points`). Interpret this interaction and comment on the statistical significance. Does this interaction seem important? Explain.
+
+**Answer**
+
+```{r, answer08, echo = F}
+# Regression
+reg08 = fixest::feols(price ~ points * country, data = wine_df)
+reg08
+```
+The coefficient on the interaction tells us how each additional point differentially affects the price for US wines, relative to the effect of additional points for French wines. Specifically, it tells us that the increase in price from an additional point is `r coef(reg08)[4] %>% abs() %>% dollar()` less than the effect for French wines.
+
+This effect is highly statistically significant *and* has a large coefficient (it is economically meaningful). Thus, it seems pretty important.
+
+.b[09.] Up to this point, we've told you which regressions to run. And we've stuck with pretty simple regressions (*e.g.*, regress `y` on `x1 + x2`). Now we want you to explore the actual complexity of econometric/statistical analyses. **Estimate three new models.** These models **should not match** your previous models (in .b[03] and .b[08]). Be creative!! Across these three new models, you should include (at least once):
+
+- a log-transformed outcome variable (*i.e.*, use `log()`)
+- new/additional explanatory variables (you've only used two of the variables in the dataset)
+- an interaction
+
+**Answer** Lots of options here. There should be a logged variable, there shoyld be additional explanatory variables (province, taster, variety), and there should be new interactions .
+
+.b[10.] How did you choose your specifications in .b[09]? Explain your decision making.
+
+**Answer** Looking for reasonable justification.
+
+.b[11.] Which of your new models is the "best"—*i.e.*, if you must choose one model, which would you choose? Why? Explain your reasoning.
+
+**Answer** Looking for sound reasoning—especially with inference in mind. Not just R squared.
+
+.b[12.] For your "best" model (chosen in .b[11]): Interpret the coefficients and comment on their statistical significance.
+
+**Answer** Depends on the best model.
+
+.b[13.] Do you *trust* the estimates from your *best model*? Explain why/why not.
+
+**Answer** Should still worry about omitted-variable bias, but perhaps the model still helps describe the relationship between price and rating for wine. Also could wonder about reverse causality: Does price affect rating?
+
+---
+
+.b[14.] Create a scatter plot with the actual prices (`price`) on the *y* axis the the predictions (see the `fitted.values` outputted by `lm()` or use the `fitted()` or `predict()` functions) on the *x* axis. How well does your model predict the true price? Explain your answer.
+
+**Answer** 
+
+```{r, echo = F}
+ggplot(data = wine_df %>% mutate(price_hat = reg08$fitted.values), aes(x = price, y = price_hat)) +
+  geom_point() +
+  scale_x_log10("True price", labels = dollar) +
+  scale_y_log10("Predicted price", labels = dollar) +
+  theme_minimal()
+```
+
+There's definitely a positive correlation (a very low). In my figure, there is a lot of room for improvement.
+
+.b[15.] Write up a one-paragraph summary of what you've learned about pricing in wine. Base your findings on the figures and regressions in this project.
+
+**Answer** Just want good reasoning.
+
+---
+
+```{r, background variables, echo = F, message = F}
+# Load requisite packages
+pacman::p_load(tidyverse, knitr, kableExtra, here)
+# Load data
+proj_df = here("data-project-01.csv") %>% read_csv()
+# Create table of variable descriptions
+var_tbl = data.frame(
+  Variable = names(proj_df) %>% paste0(".mono-small[", ., "]"),
+  Description = c(
+  	"The price of the bottle of wine (US dollars).",
+  	"The points given in the review (more points means better wine).",
+    "The wine's variety (think: type).",
+    "The country that produced the wine.",
+    "The province that produced the wine.",
+    "The name of the person who tasted/reviewed/rated the bottle of wine."
+  )
+)
+kable(var_tbl) %>%
+  kable_styling(full_width = F)
+```
+
+---
+exclude: true
+
+```{r, print pdf, echo = F, eval = F}
+pagedown::chrome_print("prompt-01.html", output = "project-01.pdf")
+```

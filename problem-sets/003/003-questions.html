@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Problem Set 3</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="EC 421: Introduction to Econometrics" />
+    <script src="003-questions_files/header-attrs-2.6/header-attrs.js"></script>
+    <link href="003-questions_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="003-questions_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="003-questions_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script src="003-questions_files/kePrint-0.0.1/kePrint.js"></script>
+    <link href="003-questions_files/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Problem Set 3
+### <strong>EC 421:</strong> Introduction to Econometrics
+### <br>.it.biggest[Solutions]
+
+---
+
+class: clear
+layout: true
+
+---
+
+
+
+.mono.b[DUE] Upload your answer on [Canvas](https://canvas.uoregon.edu/) *before* midnight on Friday, 05 March 2021.
+
+.mono.b[IMPORTANT!] You must submit .b[two files]: &lt;br&gt; .b.mono[1.] your typed responses/answers to the question (in a Word file or something similar) &lt;br&gt; .b.mono[2.] the .mono[R] script you used to generate your answers. Each student must turn in her/his own answers.
+
+If you are using [RMarkdown](https://rmarkdown.rstudio.com/), you can turn in one file, but it must be an .mono[HTML] or .mono[PDF] that includes your responses and R code (not just the .mono[RMD] file).
+
+If we ask you to create a figure or run a regression, then the figure or the regression results should be in the document that you submit (not just the code—we want the actual figure or regression output with coefficients, standard errors, *etc.*).
+
+.mono.b[OBJECTIVE] In this problem set, we want to (1) reinforce key topics to time-series econometrics; (2) continue to build your .mono[R] toolset; (3) keep building your intuition about causality and inference within econometrics/regression.
+
+.mono.b[INTEGRITY] If you are suspected of cheating, then you will receive a zero. We may report you to the dean.
+
+## Theory/review
+
+**Q01.** First, let's review some of the key concepts and results of time-series econometrics. For all of the sub-questions, you can assume that all of our assumptions are satisfied **unless we explicitly say otherwise**.
+
+**A.** How does autocorrelation affect **static models**? Consider unbiasedness and consistency.
+&lt;br&gt;
+**B.** How does autocorrelation affect **dynamic models with lagged explanatory variables**? Consider unbiasedness and consistency.
+&lt;br&gt;
+**C.** How does autocorrelation affect **dynamic models with lagged outcome variables**? Consider unbiasedness and consistency.
+&lt;br&gt;
+**D.** With no autocorrelation, can **dynamic models with lagged outcome variables** be unbiased and/or consistent? 
+&lt;br&gt;
+**E.** With no autocorrelation, can **dynamic models with lagged explanatory variables** be unbiased and/or consistent? 
+&lt;br&gt;
+**F.** Why do we care about **nonstationarity**?
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answers:**
+
+**A:** In the presence of autocorrelation, static models are **unbiased** and **consistent**.
+&lt;br&gt;
+**B:** In the presence of autocorrelation, dynamic models with lagged explanatory variables are **unbiased** and **consistent**.
+&lt;br&gt;
+**C:** In the presence of autocorrelation, dynamic models with lagged outcome variables are **biased** and **inconsistent**.
+&lt;br&gt;
+**D:** Without autocorrelation, dynamic models with lagged outcome variables are **biased** and **consistent**.
+&lt;br&gt;
+**E:** Without autocorrelation, dynamic models with lagged explanatory variables are **unbiased** and **consistent**.
+&lt;br&gt;
+**F:** Nonstationarity is our definition of a "well-behaved" time-series variable. If the variable is nonstationary, then we could be in danger of finding spurious results.
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+
+## Crime and policing
+
+In this problem set, we're going to compare the historical time series data for crime, population, and policing (specifically the size of the police force) in Illinois between 1985 and 2019.
+
+---
+
+**Q02.** Load your packages. You'll probably going to need/want `tidyverse` and `here` (among others). Now load the data (`003-data.csv`). The last page of this problem set describes the variables. 
+
+**Important:** Please note that most of the variables (excluding `year` and `unemployment`) are in tens of thousands. For example, in 1985 the population of Illinois (the state from which we have data) was `1139.981` **times 10,000** (which is 11,399,806). 
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:**
+
+
+```r
+# Load packages
+library(pacman)
+p_load(tidyverse, patchwork, broom, scales, magrittr, here)
+# Load the data
+crime_df = read_csv("003-data.csv")
+```
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q03.** Create a time-series graph (time, which is `year` here, should be in the *x* axis) for each of the following four variables: population (`pop`, in 10,000s), number of employed police officers (`n_officers`, in 10,000s), and both types of crime (violent: `n_crime_violent`; property: `n_crime_property`; both are in 10,000s).
+
+Don't forget to label your figures.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:**
+
+
+```r
+# Population
+p1 = ggplot(data = crime_df, aes(x = year, y = pop)) +
+geom_line() + geom_point() +
+scale_x_continuous("Year") +
+scale_y_continuous("Population (10,000s)", labels = comma) +
+ggtitle("Population") +
+theme_minimal()
+# Officers
+p2 = ggplot(data = crime_df, aes(x = year, y = n_officers)) +
+geom_line() + geom_point() +
+scale_x_continuous("Year") +
+scale_y_continuous("Number of officers (10,000s)", labels = comma) +
+ggtitle("Number of police officers") +
+theme_minimal()
+# Violent crimes
+p3 = ggplot(data = crime_df, aes(x = year, y = n_crime_violent)) +
+geom_line() + geom_point() +
+scale_x_continuous("Year") +
+scale_y_continuous("Number of violent crimes (10,000s)", labels = comma) +
+ggtitle("Violent crimes") +
+theme_minimal()
+# Property crimes
+p4 = ggplot(data = crime_df, aes(x = year, y = n_crime_property)) +
+geom_line() + geom_point() +
+scale_x_continuous("Year") +
+scale_y_continuous("Number of property crimes (10,000s)", labels = comma) +
+ggtitle("Property crimes") +
+theme_minimal()
+```
+
+---
+
+
+```r
+# Combine figures
+(p1 + p2) / (p3 + p4)
+```
+
+&lt;img src="003-questions_files/figure-html/answer03-continued-1.svg" style="display: block; margin: auto;" /&gt;
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q04.** Based upon your figures in **03**, which, if any, of your variables appear to be positively autocorrelated? Which, if any, appear to be negatively autocorrelated? 
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** Each of the variables appears to be positively autocorrelated: years that are near each other tend to take on similar values.
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q05.** Based upon your time-series figure for property crimes in **03**: Does the variable appear to be stationary? If so: Explain how it satisfies each of the three requirements for stationarity. If not: Explain how it violates stationarity.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** The variable appears to violate stationarity, since it is trending downward (pretty strongly) for almost all of the sample period. It is difficult to say whether this is a violation of mean stationarity (trending downward) or variance stationarity (like a random walk). 
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+---
+
+**Q06.** Let's start with a static model. Regress the **log** of property crimes (*i.e.*, `log(n_crime_property)`) on an intercept and on the **log** of the number of police officers (*i.e.*, `log(n_officers)`).
+
+Include your regression results, interpret the coefficient on police officers, and comment on the significance.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** 
+
+
+```r
+# Estimate the regression
+reg06 = lm(log(n_crime_property) ~ log(n_officers), data = crime_df)
+# Output results
+reg06 %&gt;% tidy()
+```
+
+```
+#&gt; # A tibble: 2 x 5
+#&gt;   term            estimate std.error statistic  p.value
+#&gt;   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+#&gt; 1 (Intercept)        4.30      0.491      8.75 4.07e-10
+#&gt; 2 log(n_officers)   -0.494     0.413     -1.20 2.40e- 1
+```
+
+The relationship between property crimes and police officers is negative, but it is not statistically significant. The interpretation for the (non-significant) coefficient is: a 1-percent increase the number of police officers is associated with a 0.49% **decrease** in property crimes.
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q07.** We're currently using a log-log model. Explain why this might make sense in this setting, compared to a log-linear model.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** We probably want a log-log model, rather than a log-linear model, because it likely make more sense to link **percent changes** in crime to **percent changes** in police employment (rather than linking percent changes in crime to **level changes** in policing).
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q08.** Now add **log** population (*i.e.*, `log(pop)`) into your regression model—you now are regressing the **log** of the number of property crimes on the number of police officers and population.
+
+Include your regression results. Interpret the coefficient on population, and comment on its significance.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** 
+
+
+```r
+# Estimate the regression
+reg08 = lm(log(n_crime_property) ~ log(n_officers) + log(pop), data = crime_df)
+# Output results
+reg08 %&gt;% tidy()
+```
+
+```
+#&gt; # A tibble: 3 x 5
+#&gt;   term            estimate std.error statistic  p.value
+#&gt;   &lt;chr&gt;              &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+#&gt; 1 (Intercept)        54.2      2.83      19.2  4.07e-19
+#&gt; 2 log(n_officers)     1.30     0.163      7.96 4.37e- 9
+#&gt; 3 log(pop)           -7.32     0.414    -17.7  4.39e-18
+```
+
+The relationship between property crimes and population is negative and strongly statistically significant. The interpretation for the coefficient on population: a one-percent increase in population is associated with a 7.3% decrease in property crimes (holding all else constant).
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q09.** When you added the log of population (moving from the regression in **06** to the regression in **08**), the coefficient on the log number of police officers should have changed signs. Give an explanation for why this happened.
+
+*Hint:* Think about the lecture on signing the bias from omitted variables.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** If population affects crime, and if population is correlated with the size of the police force, then our coefficient on police officers will be biased. Including population will remove this bias.
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+---
+
+**Q10.** These previous models have all been static models. Explain why you think a static model in this setting could be appropriate or inappropriate.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** Lots of options here. The basic idea is that a static model assumes the outcome in unaffected by previous values of the explanatory variables and previous values of the outcome. If we think the last year's policing affects this current crime—or if we believe last year's crime level affects this year's crime—then we want a dynamic model.
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q11.** Time for a dynamic model. Add the lags of your two explanatory variables (the log of police officers and the log of population). Note: You should have four regressors now (plus the intercept)—the contemporaneous variables *and* their lags. Everything is still logged.
+
+Include your regression results. Interpret the coefficient on the lag of police officers, and comment on its significance.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** 
+
+
+```r
+# Estimate the regression
+reg11 = lm(
+  log(n_crime_property) ~
+    log(n_officers) + log(pop) +
+    lag(log(n_officers)) + lag(log(pop)),
+  data = crime_df
+)
+# Output results
+reg11 %&gt;% tidy()
+```
+
+```
+#&gt; # A tibble: 5 x 5
+#&gt;   term                 estimate std.error statistic  p.value
+#&gt;   &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+#&gt; 1 (Intercept)            53.7       2.80     19.1   5.46e-18
+#&gt; 2 log(n_officers)         0.484     0.214     2.26  3.12e- 2
+#&gt; 3 log(pop)                2.25      3.04      0.742 4.64e- 1
+#&gt; 4 lag(log(n_officers))    0.737     0.215     3.42  1.86e- 3
+#&gt; 5 lag(log(pop))          -9.48      2.81     -3.37  2.13e- 3
+```
+
+The relationship between property crimes and lagged (log) number of officers is positive and statistically significant. The interpretation for the coefficient on the lag of log number of officers: a one-percent increase in the number of police officers **in the previous year** is associated with a 0.74% increase in property crimes (holding all else constant).
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q12.** Based upon your regression in **11**, what is the *total effect* of a 1-percent increase in the number of police officers (on property crime)?
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** We sum the coefficients on the contemporaneous and lagged number of police officers to find that the total "effect" of a 1-percent increase in the size of the police force is an increase in property crime of approximately 1.22%.
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q13.** Should we be worries about reverse causality here? Explain your answer.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** We should be very worried about reverse causality here: It is quite likely that the number of police officers is affected by the amount of crime (and also could affect the amount of crime).
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+---
+
+**Q14.** Use the residuals from your regression model in **11** to test for first-order autocorrelation in the disturbance. Include the steps of your test and clearly state what you conclude from your test.
+
+*Hint:* You test for autocorrelation in dynamic models with lagged *explanatory variables* just like you test for autocorrelation in static models.
+
+*Another hint:* Don't forget to add an `NA` when adding the residuals to your dataset (see slide 49/64 from the autocorrelation notes if you don't remember).
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:**
+
+
+```r
+# Add the residuals to our dataset
+crime_df$e_reg11 = c(NA, residuals(reg11))
+# Regress residuals on their lag (no intercept)
+reg14 = lm(e_reg11 ~ -1 + lag(e_reg11), data = crime_df)
+# Output regression results
+reg14 %&gt;% tidy()
+```
+
+```
+#&gt; # A tibble: 1 x 5
+#&gt;   term         estimate std.error statistic p.value
+#&gt;   &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+#&gt; 1 lag(e_reg11)    0.461     0.159      2.89 0.00678
+```
+
+We find strong, statistically significant evidence of first-order autocorrelation with a p-value of approximately 0.0068, which rejects the null hypothesis of "no first-order autocorrelation" at the 5% level.
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q15.** If we have autocorrelation in the regression in **11**, what "problems" does it cause? What are our options for "living with" (or "fixing") the issues caused by autocorrelation?
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** Because our model does not include a lagged **outcome** variable, OLS is still unbiased and consistent for the **coefficients** in the presence of autocorrelation. However, the standard errors will be biased (messing up our inference), and OLS will be inefficient. We can attempt to fix the specification, use autocorrelation-robust standard errors, and/or try FGLS.
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+---
+
+**Q16.** Let's make sure our inference in **11** is robust to autocorrelation. 
+
+Step 1: Load the `lmtest` and `sandwich` packages, *i.e.*, `p_load(lmtest, sandwich)` (you must have loaded the `pacman` packge to use `p_load()`).
+&lt;br&gt;
+Step 2: Combine the `coeftest()` and `NeweyWest()` functions with your regression output from **11** to get **autocorrelation-robust standard errors** (also called *Newey West* standard errors). 
+
+For example, if your regression output in **11** is called `reg11` (the output of `lm()`), then you should run
+
+
+```r
+# Load the packages
+library(pacman)
+p_load(lmtest, sandwich)
+# Autocorrelation-robust standard errors
+coeftest(reg11, NeweyWest(reg11))
+```
+
+Output your results. Does anything change?
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** Our coefficients are unchange—this exercise is for our standard errors (and the rest of our inference). The standard errors on the number of police officers decrease (increasing in statistical significance), while the standard errors on the population increase (decreasing in statistical significance).
+
+
+```r
+# Load the packages
+library(pacman)
+p_load(lmtest, sandwich)
+# Autocorrelation-robust standard errors
+coeftest(reg11, NeweyWest(reg11))
+```
+
+```
+#&gt; 
+#&gt; t test of coefficients:
+#&gt; 
+#&gt;                      Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)            53.651      3.200   16.76  &lt; 2e-16 ***
+#&gt; log(n_officers)         0.484      0.100    4.83  4.0e-05 ***
+#&gt; log(pop)                2.251      5.024    0.45    0.657    
+#&gt; lag(log(n_officers))    0.737      0.157    4.70  5.8e-05 ***
+#&gt; lag(log(pop))          -9.480      4.806   -1.97    0.058 .  
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+---
+
+**Q17.** One way the disturbance can have autocorrelation is when we've omitted a variable that is autocorrelated. Let's now specify our model as an ADL(1,1) (include the lag of the outcome and the lag for both explanatory variables). Keep everything in logs.
+
+**Adjust your standard errors** to be robust to autocorrelation as we did above in **16**.
+
+Include your regression results. Interpret the coefficient on the lag of logged property crime and comment on its significance.
+
+*Note:* This regression should have an intercept two explanatory variables, the lags of the two explanatory variables, *and* the lag of the outcome variable.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:**
+
+
+```r
+# Estimate the regression
+reg17 = lm(
+  log(n_crime_property) ~ 
+    log(n_officers) + log(pop) +
+    lag(log(n_officers)) + lag(log(pop)) +
+    lag(log(n_crime_property)),
+  data = crime_df
+)
+# Output results
+coeftest(reg17, NeweyWest(reg17))
+```
+
+```
+#&gt; 
+#&gt; t test of coefficients:
+#&gt; 
+#&gt;                            Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept)                 11.6635     2.7585    4.23  0.00023 ***
+#&gt; log(n_officers)              0.0610     0.0419    1.46  0.15649    
+#&gt; log(pop)                    -1.2479     0.3150   -3.96  0.00047 ***
+#&gt; lag(log(n_officers))         0.1939     0.0717    2.71  0.01149 *  
+#&gt; lag(log(pop))               -0.3561     0.5214   -0.68  0.50025    
+#&gt; lag(log(n_crime_property))   0.8443     0.0414   20.39  &lt; 2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+We find a strong, statistically significant relationship between the log of property crimes and its lag. Specifically, the coefficient tells us that a 1-percent increase in property crimes **last year** is associated with a 0.84% increase in property crime this year.
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+---
+
+**Q18.** Now that we've included the lag of our outcome variable (in **17**), use the residuals for evidence of autocorrelation. Remember that testing models with a lagged outcome variable differs from testing models without a lagged outcome variable.
+
+Report your results/conclusions from the test.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:**
+
+
+```r
+# Grab the residuals from the regression in 17
+crime_df$e_reg17 = c(NA, residuals(reg17))
+# The regression for autocorrelation
+reg18 = lm(
+  e_reg17 ~ 
+    lag(e_reg17) + log(n_officers) + log(pop) +
+    lag(log(n_officers)) + lag(log(pop)) +
+    lag(log(n_crime_property)),
+  data = crime_df
+)
+coeftest(reg18)
+```
+
+```
+#&gt; 
+#&gt; t test of coefficients:
+#&gt; 
+#&gt;                            Estimate Std. Error t value Pr(&gt;|t|)
+#&gt; (Intercept)                -0.44200    4.56605   -0.10     0.92
+#&gt; lag(e_reg17)               -0.01029    0.22563   -0.05     0.96
+#&gt; log(n_officers)            -0.00597    0.11092   -0.05     0.96
+#&gt; log(pop)                    0.19371    1.43004    0.14     0.89
+#&gt; lag(log(n_officers))        0.00149    0.10871    0.01     0.99
+#&gt; lag(log(pop))              -0.13336    1.59095   -0.08     0.93
+#&gt; lag(log(n_crime_property))  0.00453    0.08782    0.05     0.96
+```
+We no longer find statistically significant evidence of autocorrelation: The coefficient on the lag of the residual is small in magnitude (-0.0103) and not statistically significant (p-value of approximately 0.964). We cannot reject the null hypothesis of "no autocorrelation."
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+**Q19.** Based upon everything you've seen in this assignment, what is your conclusion? Does a larger police force increase or decrease property crime? Or does it do nothing? Or do you need more data/information? Explain your answer.
+
+&lt;!-- &lt;noscript&gt; --&gt;
+
+**Answer:** Lots of options here. Looking for a reasonable justification of the specification, concerns about omitted variables, issues with dynamic models, and/or concerns about nonstationarity.
+
+&lt;!-- &lt;/noscript&gt; --&gt;
+
+
+---
+class: clear
+
+## Description of variables and names
+
+&lt;br&gt;
+
+&lt;table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Variable &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Description &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[year] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The year &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[pop] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The population of Illinois (in 10,000s) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[unemployment] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The unemployment rate (between 0 and 1) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[n_officers] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The number of police officers employed in Illinois (in 10,000s) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[n_crime_violent] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The number of property crimes in Illinois (in 10,000s) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; .mono-small[n_crime_property] &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; The number of violent crimes in Illinois (in 10,000s) &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "8.5:11",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

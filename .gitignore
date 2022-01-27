@@ -1,12 +1,11 @@
 
 # Temporary holds
 final/*
-midterm/exam*
-projects/*
 other-docs/*
 
 # Project-specific files
 problem-sets/001/acs-pull.dta
+projects/project-02/submisions/*
 
 # History files
 .Rhistory
