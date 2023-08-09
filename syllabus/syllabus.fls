@@ -1,8 +1,8 @@
-PWD c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/ECON368/syllabus
+PWD c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/big-data-class-materials/syllabus
 INPUT c:/texlive/2022/texmf.cnf
 INPUT c:/texlive/2022/texmf-dist/web2c/texmf.cnf
 INPUT c:/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/ECON368/syllabus/syllabus.tex
+INPUT c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/big-data-class-materials/syllabus/syllabus.tex
 OUTPUT syllabus.log
 INPUT c:/texlive/2022/texmf-dist/tex/latex/base/article.cls
 INPUT c:/texlive/2022/texmf-dist/tex/latex/base/article.cls

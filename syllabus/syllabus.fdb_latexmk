@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1691533675 "c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/ECON368/syllabus/syllabus.tex" "syllabus.pdf" "syllabus" 1691533681 0
-  "c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/ECON368/syllabus/syllabus.tex" 1691533678 29635 32e618d8cfebc901adc563763338ee69 ""
+["pdflatex"] 1691539571 "c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/big-data-class-materials/syllabus/syllabus.tex" "syllabus.pdf" "syllabus" 1691539576 0
+  "c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/big-data-class-materials/syllabus/syllabus.tex" 1691539565 29627 d3f53d98e9043f58b86cdbad7e271a72 ""
   "c:/texlive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc" 1673118979 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "c:/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1673118178 2971 def0b6c1f0b107b3b936def894055589 ""
   "c:/texlive/2022/texmf-dist/fonts/map/fontname/texfonts.map" 1673121724 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -116,9 +116,9 @@
   "c:/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1673130429 4662777 47d999f891270c1ec2e3f69191e4532c ""
   "c:/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt" 1673130649 7874772 de5bf56d604093357b4e4a7864acacdf ""
   "c:/texlive/2022/texmf.cnf" 1673130399 713 e69b156964470283e0530f5060668171 ""
-  "syllabus.aux" 1691533680 917 a6d62db2c42f56a07e3595905c2a878b "pdflatex"
-  "syllabus.out" 1691533679 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
-  "syllabus.tex" 1691533678 29635 32e618d8cfebc901adc563763338ee69 ""
+  "syllabus.aux" 1691539576 917 a6d62db2c42f56a07e3595905c2a878b "pdflatex"
+  "syllabus.out" 1691539575 0 d41d8cd98f00b204e9800998ecf8427e "pdflatex"
+  "syllabus.tex" 1691539565 29627 d3f53d98e9043f58b86cdbad7e271a72 ""
   (generated)
   "syllabus.aux"
   "syllabus.log"

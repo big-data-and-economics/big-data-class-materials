@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.7)  8 AUG 2023 18:27
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.1.7)  8 AUG 2023 20:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**"c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/ECON368/syllabus/syllabus.tex"
-(c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/ECON368/syllabus/syllabus.tex
+**"c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/big-data-class-materials/syllabus/syllabus.tex"
+(c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/big-data-class-materials/syllabus/syllabus.tex
 LaTeX2e <2022-11-01> patch level 1
 L3 programming layer <2022-12-17> (c:/texlive/2022/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2022/07/02 v1.4n Standard LaTeX document class
@@ -570,18 +570,18 @@ Package rerunfilecheck Info: File `syllabus.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 11937 strings out of 476093
- 184032 string characters out of 5795584
+ 11936 strings out of 476093
+ 184076 string characters out of 5795584
  1864787 words of memory out of 5000000
  32043 multiletter control sequences out of 15000+600000
  561979 words of font info for 112 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,12n,77p,1417b,519s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,12n,77p,1434b,519s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {c:/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}{c:/texlive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc}<c:/texlive/2022/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb><c:/texlive/2022/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb><c:/texlive/2022/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb><c:/texlive/2022/texmf-dist/fonts/type1/urw/palatino/uplbi8a.pfb><c:/texlive/2022/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb><c:/texlive/2022/texmf-dist/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on syllabus.pdf (10 pages, 169758 bytes).
+Output written on syllabus.pdf (10 pages, 169724 bytes).
 PDF statistics:
- 201 PDF objects out of 1000 (max. 8388607)
- 175 compressed objects within 2 object streams
- 66 named destinations out of 1000 (max. 500000)
+ 200 PDF objects out of 1000 (max. 8388607)
+ 174 compressed objects within 2 object streams
+ 65 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 

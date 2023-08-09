@@ -47,3 +47,10 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Tex files to drop
+*.log
+*.aux
+*.synctex.gz
+*.out
+*.fdb_latexmk
