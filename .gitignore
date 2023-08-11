@@ -57,3 +57,16 @@ rsconnect/
 
 #Temporarily block ProblemSets
 ProblemSets/
+
+#From McDermott
+.httr-oauth
+**/*_cache/
+**/cache/
+**/logs/
+**/derby.log
+**/*.xls
+**/*.xlsx
+17-spark/spark_files/
+17-spark/data/*.csv
+09a-spatial-rasters/data/*
+**/TEST/
