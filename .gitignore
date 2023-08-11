@@ -52,8 +52,11 @@ rsconnect/
 *.out
 *.fdb_latexmk
 
-#Temporarily block ProblemSets
+#Temporarily block ProblemSets, midterms
 ProblemSets/
+midterm/
+problem-sets/
+projects/
 
 #From McDermott
 .httr-oauth
@@ -70,3 +73,4 @@ ProblemSets/
 # Dropbox
 .DS_Store
 */.DS_Store
+
