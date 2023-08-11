@@ -54,3 +54,6 @@ rsconnect/
 *.synctex.gz
 *.out
 *.fdb_latexmk
+
+#Temporarily block ProblemSets
+ProblemSets/
