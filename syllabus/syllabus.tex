@@ -132,16 +132,18 @@ You are ready to start this course once you have installed R, RStudio, and Git (
 \begin{itemize}
 	\item \textbf{Linux:} You should be good to go. 
 	\item \textbf{Mac:} Install the \href{https://brew.sh/}{Homebrew} package manager. I also recommend that you make sure your C++ toolchain is configured/open. Don't worry, it's simpler than it sounds. Just download the \href{https://github.com/rmacoslib/r-macos-rtools#installer-package-for-macos-r-toolchain-}{macOS Rtools installer} and follow the instructions.
-	\item \textbf{Windows:} Install \href{https://cran.r-project.org/bin/windows/Rtools/}{Rtools}. While its not essential, I also recommend that you install the \href{https://chocolatey.org/}{Chocolatey} package manager for Windows.
+	\item \textbf{Windows:} Install \href{https://cran.r-project.org/bin/windows/Rtools/}{Rtools}. While its not essential, I also recommend that you install the \href{https://chocolatey.org/}{Chocolatey} package manager for Windows. Furthermore, please install the Windows Subsystem for Linux (WSL) and the Ubuntu distribution. Instructions \href{https://docs.microsoft.com/en-us/windows/wsl/install-win10}{here}.
 \end{itemize}
 
 I will provide instructions for any further software requirements as the need arises; i.e. when we get to the relevant lecture. On that note, the lectures have all been posted ahead of time on the \href{https://github.com/uo-ec607}{course website}. Each lecture lists all the \textit{R} packages and external libraries (if relevant) required for a particular class. I'll try to remind you, but my expectation is that you will look at these requirements and ensure that you have them installed \textit{before} we start class. 
 
 \subsection*{Textbook and other readings}
 
-There's no set textbook for this course. The lecture notes are pretty detailed and are thus ``self-contained''. However, I've drawn inspiration from various sources; a few of which are listed below. You don't \textit{need} to buy or read any of these (excellent) books to complete the course. But I can eagerly recommend leafing through at least one or two of them. Each of these books is freely available online if you can't afford a hard copy:
+There's no set textbook for this course. I'll draw on readings from select \textit{free} sources as needed listed below. You don't \textit{need} to buy any of these (excellent) books to complete the course. But I can eagerly recommend leafing through at least one or two of them. Each of these books is freely available online if you can't afford a hard copy:
 %
 \begin{itemize}
+  \item ``\href{https://mixtape.scunning.com/}{\textbf{Causal Inference: The Mixtape}}'' (Scott Cunningham)
+  \item  ``\href{https://theeffectbook.net/}{\textbf{The Effect}}'' (Nick Huntington-Klein)
   \item ``\href{http://socviz.co/}{\textbf{Data Visualization: A practical introduction}}'' (Kieran Healy)
 	\item ``\href{https://r4ds.hadley.nz/}{\textbf{\textit{R} for Data Science}}'' (Garrett Grolemund and Hadley Wickham)\footnote{FWIW, Jake VanderPlas's ``\href{https://jakevdp.github.io/PythonDataScienceHandbook/}{\textbf{Python Data Science Handbook}}'' is excellent option for anyone looking for a Python equivalent.}
    \item ``\href{https://adv-r.hadley.nz/}{\textbf{Advanced \textit{R}}}'' (Hadley Wickham)
@@ -289,13 +291,13 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
 \week{Week 4} Spatial Analysis
 \begin{itemize}
   \item \textbf{Skills:} Map projections, shapefiles, \textit{sf}
-  \item \textbf{Application:} Neighborhoods and Mobility, Racial gaps?
+  \item \textbf{Application:} Neighborhoods and Mobility
   \item \textit{\textbf{Problem Set 2 due Friday at Midnight}}
 \end{itemize}
-\week{Week 5} Regression review
+\week{Week 5} Regression review \& Causal Inference
 \begin{itemize}
-  \item \textbf{Skills:} OLS, IV
-  \item \textbf{Application:} Stories from the Atlas, TK
+  \item \textbf{Skills:} OLS, IV, Potential Outcomes
+  \item \textbf{Application:} Causal Effects of Neighborhoods
 \end{itemize}
 \week{Week 6} Regression Discontinuity Design
 \begin{itemize}
@@ -310,33 +312,33 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
 \end{itemize}
 \week{Week 7} Panel data and two-way fixed effects
 \begin{itemize}
-  \item \textbf{Skills:} Frisch-Waugh-Lovell Theorem, \textit{fixest}
-  \item \textbf{Application:} Creating Moves to Opportunity
+  \item \textbf{Skills:} Frisch-Waugh-Lovell Theorem, Event Studies, \textit{fixest}
+  \item \textbf{Application:} Moving to Opportunity
   \item \textit{\textbf{Problem Set 4 due Friday at Midnight}}
 \end{itemize}
 \week{Week 8} Field Experiments %Maybe drop or add resume moving to opportunity?
 \begin{itemize}
   \item \textbf{Skills:} Audit studies, correspondence studies
-  \item \textbf{Application:} Resume studies and Racial Discrimination
+  \item \textbf{Application:} Resume studies and Racial Discrimination, Creating Moves to Opportunity
 \end{itemize}
 %\url{https://www.annualreviews.org/doi/abs/10.1146/annurev-economics-082222-074352?casa_token=5OzCf9NSgEMAAAAA%3ACwCox17aNu0Rrg5QnBOIzE8cXMfgDgYOgCgx2Ow7fP32tJj5H85AilUS2a4giTbbeip5Rkes9AgI}
 %\url{https://www.nber.org/papers/w26380}
 %Uber work by List
 %AirBNB field experiments? Discrimination and audits...
 %Slot functions here?
-\week{Week 9} Parallel programming
+\week{Week 9} Functions \& Parallel programming
 \begin{itemize}
-  \item \textbf{Skills:} Parallel programming, cluster computing, and cloud computing
-  \item \textbf{Application:} TK
+  \item \textbf{Skills:} Functions, parallel programming, cluster computing, and cloud computing
+  \item \textbf{Application:} Judicial decisions
   \item \textit{\textbf{Problem Set 5 due Friday at Midnight}}
 \end{itemize}
 \week{Week 10} Machine Learning 
 \begin{itemize}
   \item \textbf{Skills:} Regression penalization methods, Causal Forests
-  \item \textbf{Application:} Unbiased judicial decisions, pandemic prediction, Netflix project
+  \item \textbf{Application:} Summer Jobs and At-Risk Youth
   \item \textit{\textbf{Data Description due 11/17 at Midnight}}
 \end{itemize}
-%Summer jobs: \url{https://www.aeaweb.org/articles?id=10.1257/aer.p20171000}
+%Summer jobs, at risk youth: \url{https://www.aeaweb.org/articles?id=10.1257/aer.p20171000}
 %Urban pictures: \url{https://www.aeaweb.org/articles?id=10.1257/aer.p20161030}
 %Streetscore: \url{https://www.cv-foundation.org/openaccess/content_cvpr_workshops_2014/W20/html/Naik_Streetscore_-_Predicting_2014_CVPR_paper.html}
 %\url{https://www.annualreviews.org/doi/abs/10.1146/annurev-economics-080217-053433}
@@ -370,7 +372,6 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
   \item Cluster computing
   \item Prediction and Machine Learning
   \item Cross-validation
-  \item Writing functions 
   \item Supervised vs. unsupervised ML
   \item Bayesian ML
 \end{itemize}
