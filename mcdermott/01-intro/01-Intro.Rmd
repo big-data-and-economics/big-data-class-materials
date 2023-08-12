@@ -636,7 +636,7 @@ p2 =
 
 # 3. Build your plot in layers (cont.)
 
-```{r layers2, dependson=p2, echo=FALSE, dev='svg'}
+```{r layers2,  echo=FALSE, dev='svg'}
 p2
 ```
 
@@ -661,7 +661,7 @@ pacman::p_load(hrbrthemes, gganimate)
 # What else? (cont.)
 
 Simple extension: Use an external package theme.
-```{r modern_rc_theme, dependson=p2, dev='svg'}
+```{r modern_rc_theme,  dev='svg'}
 # library(hrbrthemes)
 p2 + theme_modern_rc() + geom_point(aes(size = pop, col = continent), alpha = 0.2)
 ```
