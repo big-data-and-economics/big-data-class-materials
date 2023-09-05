@@ -53,6 +53,8 @@
             linkcolor=clemsonorange,urlcolor=clemsonorange,
             anchorcolor=clemsonorange,citecolor=black}
 
+            %latex natbib here
+\usepackage{natbib}
 
 \begin{document}
 
@@ -64,9 +66,9 @@
   % Modify information %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 E-mail: \texttt{kcoombs@bates.edu} & Web: \href{kylecoombs.com}{\tt\bf kylecoombs.com} \\
 
-  Office Hours: W 9-12am (Zoom or in-person)  &  Class Hours: T/Th 9:30-10:50am \\
-  Office: ??? & Class Room: ??? \\ 
-  \multicolumn{2}{c}{Course Website: \href{TBD}{\tt\bf TBD}} \\
+  Office Hours: T, 3-4pm, W 9-10am  (Zoom or in-person)  &  Class Hours: T/Th 9:30-10:50am \\
+  Office: PGill 276 & Class Room: Carnegie 339 \\ 
+  \multicolumn{2}{c}{Course Website: \href{https://github.com/ECON368-fall2023-big-data-and-economics}{\tt\bf https://github.com/ECON368-fall2023-big-data-and-economics}} \\
   \multicolumn{2}{c}{OH Link: \href{https://calendar.app.google/XF36Ujpg9NcJbSD58
   }{\tt\bf https://calendar.app.google/XF36Ujpg9NcJbSD58}} \\
 \hline
@@ -76,8 +78,7 @@ E-mail: \texttt{kcoombs@bates.edu} & Web: \href{kylecoombs.com}{\tt\bf kylecoomb
 \subsection*{Note}
 \label{sec:note}
 
-This syllabus contains a rough outline of the course and may change in
-the future.  If you have any questions, you should check with me.
+This syllabus contains a rough outline of the course and may change in the future.  If you have any questions, you should check with me.
 
 \section*{Course Description}
 \label{sec:desc}
@@ -85,6 +86,19 @@ the future.  If you have any questions, you should check with me.
 Economics is at the forefront of developing statistical methods for analyzing data collected from uncontrolled sources. Since econometrics addresses challenges in estimation such as sample selection bias and treatment effects identification, the discipline is well-suited for the analysis of large and unsystematically collected datasets. This course introduces statistical (machine) learning methods, which have been developed for analyzing such datasets but which have only recently been implemented in economic research. We will cover a variety of topics including data collection, data management, data description, causal inference, and data visualization.  The course also explores how econometrics and statistical learning methods cross-fertilize and can be used to advance knowledge in the numerous domains where large volumes of data are rapidly accumulating. We will also cover the ethics of data collection and analysis. The course will be taught in \textit{R}. 
 
 % Second Section %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Course Objectives}
+
+After this course is done, you should know how to:
+
+\begin{enumerate}
+\item Organize empirical projects that are replicable, reproducible, and collaborative using good programming practices
+\item Collect and clean big or novel datasets using APIs, web scraping, and other methods
+\item Use Big Data to generate key insights about economic opportunity, inequality, and racial discrimination
+\item Understand the differences between prediction, causality, and description, and when to apply each%eh
+\item Explain what data science is, and how Big Data differs from other types of data %eh
+\end{enumerate}
+
+% Third Section %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%s
 
 \section*{Required Materials}
 \label{sec:materials}
@@ -93,20 +107,20 @@ Course notes, assignments, extra readings, recordings, and all other materials a
 
 \subsection*{Software requirements}
 
-All of the software requirements for this course are open-source and/or free. Please aim to have everything installed by the start of our first lecture. I will be available for installation troubleshooting during the first week of the semester. If you want a detailed tutorial on how to achieve a perfect working setup, I can think of no finer guide than Jenny Bryan \textit{et al}.'s \url{http://happygitwithr.com/} (see esp. sections 4 -- 15).
+All the software requirements for this course are open-source and/or free. Please aim to have \textbf{\textit{R}} and \textbf{\textit{Rstudio}} installed by the start of our first lecture. Other installation will be a part of Problem Set 0. I will be available for installation troubleshooting during the first week of the semester. If you want a detailed tutorial on how to achieve a perfect working setup, I can think of no finer guide than Jenny Bryan \textit{et al}.'s \url{http://happygitwithr.com/} (see esp. sections 4 -- 15).
 
 \vspace{-0.25cm}
 \subsubsection*{\textit{R} and RStudio}
 
-We will mainly be using the statistical programming language \textbf{\textit{R}} (download \href{https://www.r-project.org/}{here}). %Indeed, at one level, this seminar could be seen as a crash-course in learning and using \textit{R} to answer economics-based questions. 
+We will mainly be using the statistical programming language \textbf{\textit{R}} (download \href{https://www.r-project.org/}{here}). 
 Please make sure that you install the \textbf{RStudio IDE} too (download \href{https://www.rstudio.com/products/rstudio/download/preview/}{here}).
 
 \vspace{-0.25cm}
-\subsubsection*{Git and GitHub Classroom and GitHub CoPilot}
+\subsubsection*{Git, GitHub Classroom and GitHub CoPilot}
 
 We will also make extensive use of the \textbf{Git} version control system (follow the OS-specific installation instructions \href{http://happygitwithr.com/install-git.html}{here}). Once you have installed Git, please create an account on \textbf{GitHub} (\href{https://github.com/join}{here}) and register for an education discount to get unlimited private repos (\href{https://education.github.com/discount_requests/new}{here}).\footnote{GitHub recently \href{https://blog.github.com/changelog/2019-01-08-pricing-changes/}{announced} unlimited free private repos for everyone. However, you are limited to three collaborators per private repo, so the education discount still makes sense.} Now is probably a good time to tell you that I am going to run the course through \href{https://classroom.github.com/}{GitHub Classroom}. You will receive an email invitation to the course repo with instructions in due time, but suffice it to say that this is how we'll submit assignments, provide feedback, receive grades, etc.
 
-You will also need to signup for a \textbf{GitHub CoPilot} using the instructions here \url{https://docs.github.com/en/copilot/quickstart}. GitHub CoPilot is an AI tool that will help you write code. It is not perfect, but it is very useful. It is free for students, faculty, or maintainers of open source projects. It helped me write this syllabus. 
+You will also need to sign up for a \textbf{GitHub CoPilot} using the instructions here \url{https://docs.github.com/en/copilot/quickstart}. GitHub CoPilot is an AI tool that will help you write code. It is not perfect, but it is very useful. It is free for students, faculty, or maintainers of open source projects. It helped me write this syllabus. 
 
 \vspace{-0.25cm}
 \subsubsection*{Visual Studio Code}
@@ -114,20 +128,23 @@ We will largely be using Visual Studio Code, or VSCode, for coding with \textit{
 
 \begin{enumerate}
   \item The \textit{R} extension by REditorSupport -- \url{https://code.visualstudio.com/docs/languages/r}
-  \item \textit{GitHub Copilot} by GitHub -- \url{https://marketplace.visualstudio.com/items?itemName=GitHub.copilot}
   \item \textit{LaTeX Workshop} by James Yu -- \url{https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop}
-\end{enumerate}
-
-\textbf{Recommended but not required extensions:}
-\begin{enumerate}
-  \item \textit{ChatGPT - Genie AI} by Genie AI -- \url{https://marketplace.visualstudio.com/items?itemName=genieai.chatgpt-vscode}
-  
 \end{enumerate}
 
 \vspace{-0.25cm}
 \subsubsection*{Other}
 
-You are ready to start this course once you have installed R, RStudio, and Git (as well as created an account on GitHub). The last thing I want you to do for now is make sure that your system is configured to handle some additional packages that we will be using down the line. This varies by operating system:
+You are ready to start this course once you have installed R, RStudio, and Git (as well as created an account on GitHub). The last thing I want you to do for now is make sure that your system is configured to handle some additional packages/tools that we will be using down the line. 
+
+\textbf{Recommended but not required:}
+\begin{enumerate}
+  \item \textit{GitHub Copilot} by GitHub -- \url{https://marketplace.visualstudio.com/items?itemName=GitHub.copilot}
+  \item \textit{ChatGPT - Genie AI} by Genie AI -- \url{https://marketplace.visualstudio.com/items?itemName=genieai.chatgpt-vscode}
+  \item \textit{Anaconda} or \textit{PIP} -- largely used for Python installations, there a few quality of life packages for R that are distributed via \textit{Anaconda} or \textit{PIP}.
+  \item \textit{Radian} -- Radian allows you to use RStudio similar to how you would RStudio. You will be able to run code directly into a terminal with \texttt{Ctrl+Enter}, but also have access to GitHub CoPilot coding assistance. 
+\end{enumerate}
+
+\textbf{Operating system-specific recommendations:}
 
 \begin{itemize}
 	\item \textbf{Linux:} You should be good to go. 
@@ -135,7 +152,7 @@ You are ready to start this course once you have installed R, RStudio, and Git (
 	\item \textbf{Windows:} Install \href{https://cran.r-project.org/bin/windows/Rtools/}{Rtools}. While its not essential, I also recommend that you install the \href{https://chocolatey.org/}{Chocolatey} package manager for Windows. Furthermore, please install the Windows Subsystem for Linux (WSL) and the Ubuntu distribution. Instructions \href{https://docs.microsoft.com/en-us/windows/wsl/install-win10}{here}.
 \end{itemize}
 
-I will provide instructions for any further software requirements as the need arises; i.e. when we get to the relevant lecture. On that note, the lectures have all been posted ahead of time on the \href{https://github.com/uo-ec607}{course website}. Each lecture lists all the \textit{R} packages and external libraries (if relevant) required for a particular class. I'll try to remind you, but my expectation is that you will look at these requirements and ensure that you have them installed \textit{before} we start class. 
+I will provide instructions for any further software requirements as the need arises; i.e. when we get to the relevant lecture. On that note, each week's lectures will be posted by the preceding Sunday on the \href{https://github.com/ECON368-fall2023-big-data-and-economics}{course website}. Each lecture lists all the \textit{R} packages and external libraries (if relevant) required for a particular class. I'll try to remind you, but my expectation is that you will look at these requirements and ensure that you have them installed \textit{before} we start class. 
 
 \subsection*{Textbook and other readings}
 
@@ -153,13 +170,7 @@ There's no set textbook for this course. I'll draw on readings from select \text
    \item Etc.
 \end{itemize}
 
-% The nearest thing to a conventional textbook for this course is probably Garrett Grolemund and Hadley Wickham's ``\href{http://r4ds.had.co.nz}{\textbf{\textit{R} for Data Science}}'' (R4DS). I have ordered some copies at the Duck Store, but the book is available in its entirety for free online. I highly recommend this book for anyone who is interested in using \textit{R} for their research.\footnote{For those of you who prefer Python to \textit{R}, Jake VanderPlas's ``\href{https://jakevdp.github.io/PythonDataScienceHandbook/}{\textbf{Python Data Science Handbook}}'' is another excellent option.} Which, let's be honest, you should be. %Only dinosaurs are using Stata now. (Don't tell the other professors. Actually, who am I kidding: TELL THEM.)
-% 
-% In truth, R4DS will mostly cover the introductory parts of this course, Other books that I eagerly recommend and will be drawing on occasionally include ``\href{https://adv-r.hadley.nz/}{\textbf{Advanced \textit{R}}}'' (Hadley Wickham, again), ``\href{http://socviz.co/}{\textbf{Data Visualization: A practical introduction}}'' (Kieran Healy), and ``\href{https://geocompr.robinlovelace.net/}{\textbf{Geocomputation with \textit{R}}}'' (Robin Lovelace, Jakub Nowosad and Jannes Muenchow). These books are all freely available online too. I may also refer you to the \href{http://stat545.com/topics.html}{\textbf{STAT 545 website}}, which is a course initially taught at UBC by Jenny Bryan and continues to serve as an incredible knowledge resource for all things related to \textit{R} and reproducible research. Finally, if we get enough time to take a deep dive into machine learning, then I'll be drawing from ``\href{https://web.stanford.edu/~hastie/ElemStatLearn/}{\textbf{The Elements of Statistical Learning}}'' (Trevor Hastie, Robert Tibshirani, and Jerome Friedman), which is a classic and (surprise!) also available as a free PDF online.\footnote{A new book that I really like the look of is ``\href{https://bradleyboehmke.github.io/HOML/}{\textbf{Hands-On Machine Learning with \textit{R}}}'' (Boehmke and Greenwell).}
-
-Taking a step back, one of the goals of this course is to make you aware of the incredible array of instruction material that is freely available online. I also want to encourage you to be entrepreneurial. In that spirit, many of the lectures will follow a tutorial on someone's blog tutorial, or involve reproducing an existing study with open source tools. Each lecture will come with a set of recommended readings, which I expect you to at least look over before class.
-
-% Third Section %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Taking a step back, one of the goals of this course (and most Data Science courses) is to make you aware of the incredible array of instruction material that is freely available online. I also want to encourage you to be entrepreneurial. In that spirit, many of the lectures will follow a tutorial on someone's blog tutorial, or involve reproducing an existing study with open source tools. Each lecture will come with a set of recommended readings, which I expect you to at least look over before class.
 
 \section*{Prerequisites}
 Prerequisites: ECON 255 and ECON 260 or ECON 270 The course assumes background in econometrics and statistics. 
@@ -168,34 +179,20 @@ Prerequisites: ECON 255 and ECON 260 or ECON 270 The course assumes background i
 
 There is no teaching assistant for this course. 
 
-% Fourth Section %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\section*{Course Objectives}
-
-After this course is done, you should know how to:
-
-\begin{enumerate}
-\item Organize big data projects to be replicable and reproducible
-\item Demonstrate good programming practices by writing code that can allow for easy collaboration with and replication by others
-\item Collect and clean big or novel datasets using APIs, web scraping, and other methods
-\item Make key insights into economic opportunity, racial discrimination, and economic mobility using big data
-\item Understand the differences between prediction, causality, and description, and when to apply each%eh
-\item Explain what data science is, and how Big Data differs from other types of data %eh
-\end{enumerate}
-
-\subsection*{Grading Policy}
-The course will have a biweekly written problem sets (50\%), short student presentations (10\%) and a final project (40\%). The final project will be a short research paper on a topic of your choice. The project will be graded based on a written report.
+\section*{Grading Policy}
+The course will have seven coding problem sets (50\%), weekly short student presentations (10\%) and a final project (40\%). The final project will be a short research paper on a topic of your choice. 
 
 \begin{itemize}
-	\item \underline{\textbf{50\%}} of your grade will be determined by problem sets
-	\item \underline{\textbf{10\%}} of your grade will be determined by short class presentations.
-	\item \underline{\textbf{40\%}} of your grade will be determined by a final project
+	\item \underline{\textbf{50\%}} of your grade will be determined by the top 5 out of 7 problem sets
+	\item \underline{\textbf{10\%}} of your grade will be determined by 1-2 short class presentations
+	\item \underline{\textbf{40\%}} of your grade will be determined by a final project due 12/11
 	\begin{itemize}
-    \item \underline{\textbf{5\%}} of your grade will be determined by a project proposal due TK
-    \item \underline{\textbf{5\%}} of your grade will be determined by a literature review due TK
-    \item \item \underline{\textbf{5\%}} of your grade will be determined by a data description due TK
+    \item \underline{\textbf{5\%}} of your grade will be determined by a project proposal due 9/22
+    \item \underline{\textbf{5\%}} of your grade will be determined by a literature review due 10/17
+    \item \underline{\textbf{5\%}} of your grade will be determined by a data description \& analysis due 11/17
+    \item \underline{\textbf{5\%}} of your grade will be determined by a peer review due 12/1
     \item \underline{\textbf{10\%}} of your grade will be determined by your code
-    \item \underline{\textbf{15\%}} of your grade will be determined by a written summary of results
+    \item \underline{\textbf{10\%}} of your grade will be determined by a written summary of results
   \end{itemize}
 \end{itemize}
 
@@ -203,42 +200,71 @@ The course will have a biweekly written problem sets (50\%), short student prese
 
 \subsection*{Problem Sets}
 
-All problem sets will be posted on GitHub Classroom and will be due in exactly two weeks. Problem sets should be turned in on GitHub Classroom. Working in groups on problem sets is not forbidden, but every student has to submit individual solutions in his/her own words.
+All problem sets will be posted on GitHub Classroom and will be due in roughly two weeks. Problem sets should be turned in on GitHub Classroom. Working in groups on problem sets is not forbidden, but every student has to submit individual solutions in his/her own words.
 
 \subsection*{Short Class Presentations}
 
-Almost every lecture will begin with a short student presentation. These should last 5-10 minutes and cover a prescribed topic (either assigned or approved ahead of time). 
+Almost every lecture will begin with a short student presentation. These should last 5-10 minutes and cover a prescribed topic (either assigned or approved ahead of time). You can sign up at \url{https://github.com/ECON368-fall2023-big-data-and-economics/presentations}.
 
-Tuesday presentations will involve presenting a technical skill or analytic method that will be used during the week. A successful presentation will introduce the skill or method, explain how it works, and provide an example of how it can be used.
-
-Thursday presentations will involve presenting a key paper for the lecture that applies the technical skill or analytic method. A successful presentation will introduce the paper, explain the methodology, and summarize the key findings.
+Presentations will cover a technical skill (e.g. minimally reproducible examples), analytic method (e.g. regression discontinuity design), or a key reading (e.g. an applied research paper). A successful presentation of a skill or method will introduce it, explain how it works, and provide a use case. A successful presentation of a key reading will introduce the research question, explain the methodology, and summarize the key findings.
 
 \subsection*{Final Project}
 
-The final project will be a research proposal on a topic of your choice, which uses methods taught in this course. The project will be graded based on a 5-10 page written report and your code. The report should include a literature review, a description of the data, a description of the methods, and a description of the expected results. The report should be written in \LaTeX or RMarkdown. All code and other materials required\footnote{Large datafiles do not need to be uploaded. Code to download or instructions to access work.} to reproduce results should be submitted in a GitHub repository.
+The final project will be a research paper on a topic of your choice, which uses methods taught in this course. The project will be graded based on a 5-10 page written report and your code. The report should include a literature review, a description of the data, analysis, and discussion of results. The report should be written in \LaTeX or RMarkdown. All code and other materials required\footnote{Large data files do not need to be uploaded. Code to download or instructions to access will suffice.} to reproduce results should be submitted in a GitHub repository.
 
-During the semester, there will be three assignments related to the final project. The first will be a project proposal, which will be due 9/21. The second will be a review of the relevant literature, which will be due 10/17. The third will be a description of your data, which will be due 11/17. These are to help you stay on track for the final project, which is due on 12/11. 
+During the semester, there will be four assignments related to the final project. The first will be a project proposal, which will be due 9/21. The second will be a review of the relevant literature, which will be due 10/17. The third will be a data description, which will be due 11/17. The fourth will be a peer review due 12/1. These are to help you stay on track for the final project, which is due on 12/11. 
+
+For ideas on datasets that are ``big,'' consider \url{https://www.kaggle.com/datasets} or this guide put together by Christine Murray: \url{https://libguides.bates.edu/ECON368}. 
+
+\subsubsection*{Peer review}
+After you submit your data description \& analysis, I will randomly assign each of you a peer's draft up to this point. You will have two weeks to provide constructive feedback on the project in the form of a short paper and a meeting during class. 
+
+Examples of constructive feedback:
+\begin{itemize}
+  \item ``I believe your empirical design does not account for variation by county and time. Consider adding fixed effects.''
+  \item ``This project aligns closely with this other literature. Check out read Author X (YYYY).''
+  \item ``Your regression discontinuity design may suffer from manipulating at the cutoff. Consider implementing a McCrary test.''
+  \item ``It would be helpful to present your results in terms of expected earnings increases. That would make your main outcome easier to interpret.''
+\end{itemize}
+
+Not constructive feedback:
+\begin{itemize}
+  \item ``I noticed three typos.''
+  \item ``This idea is bad, and you should feel bad.''
+  \item ``This is not actually economics.''
+  \item ``Your mother was a hamster and your father smells of elderberry.''
+\end{itemize}
 
 \newpage
 \section*{Course Policies}
 
 \subsection*{During Class}
-\footnotesize{I understand that the electronic recording of notes will be important for class and so computers will be allowed in class. Please refrain from using computers for anything but activities related to the class. Phones are prohibited as they are rarely useful for anything in the course. Eating and drinking are allowed in class, but please refrain from it affecting the course. Try not to eat your lunch in class as the classes are typically active.}
+\footnotesize{We will be doing active coding projects during class, so please bring your personal laptops. Please refrain from using computers for anything but activities related to the class. Phones are prohibited as they are rarely useful for anything in the course. Eating and drinking are allowed in class, but please refrain from it affecting the course. Try not to eat your breakfast/lunch in class as the classes are typically active.}
+
+\subsection*{Artificial Intelligence}
+\footnotesize{I encourage each of you to make use of artificial intelligence-driven digital assistants, like ChatGPT and Github CoPilot. These tools are not a substitute for your own ingenuity, but instead a complement as they are incredibly useful for tasks like coding or proofreading. Please note during assignments whether and where you used ChatGPT, as you would cite your (human) sources.}
 
 \subsection*{Attendance Policy}
-\footnotesize{For complete attendance and excused absence policies, please see \href{https://www.bates.edu/dof/course-attendance-policy-guideline-for-absences/}{\tt\bf https://www.bates.edu/dof/course-attendance-policy-guideline-for-absences/}. Attendance is expected in all lectures. Valid excuses for absence will be accepted before class. In extenuating circumstances, valid excuses with proof will be accepted after class. For every class missed the participation grade will be dropped 1 point.}
+\footnotesize{For complete attendance and excused absence policies, please see \href{https://www.bates.edu/dof/course-attendance-policy-guideline-for-absences/}{\tt\bf https://www.bates.edu/dof/course-attendance-policy-guideline-for-absences/}. Attendance is expected in all lectures. Valid excuses for absence will be accepted before class. In extenuating circumstances, valid excuses with proof will be accepted after class.}
 
+%Get policy on incompletes
 \subsection*{Policies on Incomplete Grades and Late Assignments}
-\footnotesize{If an extended deadline is not authorized by the instructor or department, an unfinished incomplete grade will automatically change to an F after either (a) the end of the next regular semester in which the student is enrolled (not including summer sessions), or (b) the end of 12 months if the student is not enrolled, whichever is shorter. Incompletes that change to F will count as an attempted course on transcripts. The burden of fulfilling an incomplete grade is the responsibility of the student. The college policy on incomplete grades is located at TK.}k
+\footnotesize{\textbf{Grace Period Days:} Everyone will receive three ``grace period'' days to turn in work after the due date. Late assignments will be accepted for no penalty if turned in within the ``grace period.'' You can use these whenever you wish, but once you use them, they are gone.}
 
-\footnotesize{Late assignments will be accepted for no penalty if a valid excuse is communicated to the instructor before the deadline. After the deadline, assignments will be accepted for a 50\% deduction to the score up to 2 days after the deadline. After this any assignments handed in will be given 0.}
+\footnotesize{After the ``grace period,'' the instructor, department, or college must authorize an extension. If not authorized, assignments will be accepted for a 50\% deduction to the score up to 2 days after the deadline. After this any assignments handed in will be given 0.}
+
+\footnotesize{\textbf{End of course:} If an extension beyond the ``grace period'' is not authorized by the instructor, department, or college, an unfinished incomplete grade will automatically change to an F after either (a) the end of the next regular semester in which the student is enrolled (not including summer sessions), or (b) the end of 12 months if the student is not enrolled, whichever is shorter.}
+
+\footnotesize{Incompletes that change to F will count as an attempted course on transcripts. The burden of fulfilling an incomplete grade is the responsibility of the student. The college policy on incomplete grades is located at TK.}
 
 \subsection*{Academic Integrity and Honesty}
 \footnotesize{Students are required to comply with the Bates policy on academic integrity in the Code of Student Conduct at \url{https://www.bates.edu/student-conduct-community-standards/student-conduct/code-of-student-conduct/}. Don't cheat. Don't be that person. Yes, you. You know exactly what I'm talking about. See \url{https://www.bates.edu/student-conduct-community-standards/student-conduct/academic-integrity-policy/} for a detailed explanation of academic integrity.}
 
+%Zoom policy -- maybe not allowed
 \subsection*{Accommodations by Zoom}
 \footnotesize{I prefer that all of you attend lecture in person, but I understand that there are sometimes unavoidable conflicts. As such, the course will have an option to tune in via Zoom for those with an excused absence related to health, family, or other unavoidable conflicts/emergencies. If you have a reason you need to attend a lecture via Zoom, please get in touch to explain the situation. If you do not get in touch and attend a lecture via Zoom without approval, I will consider it an absence. Approval can be given after the fact, but I prefer to know about hybrid attendance ahead of time. Several of you have been in touch about this option already and do not need to seek further approval.}
 
+%TK: Accommodations
 \subsection*{Accommodations for Disabilities}
 \footnotesize{Reasonable accommodations will be made for students with verifiable disabilities. In order to take advantage of available accommodations, students must register with the Office of Accessible Education and Student Support (AESS) in Ladd Library G35. For more information on Bates' policy on working with students with disabilities, please see the AESS webpage on Requesting Services (\url{https://www.bates.edu/accessible-education-student-support/requesting-services/how-to-register-for-accommodations/}).}
 
@@ -248,14 +274,14 @@ During the semester, there will be three assignments related to the final projec
 
 \subsection*{Accommodations for Families}
 
-\footnotesize{If you are a parent or guardian of a child and you are unable to attend class and care for that child for class one day, please be in touch in case you need further accommodations. You are invited to attend the lecture via Zoom or watch it asynchronously if that will make it easier to not miss course material.}
+\footnotesize{If you are a parent or guardian of a child, and you are unable to attend class and care for that child for class one day, please be in touch in case you need further accommodations. You are invited to attend the lecture via Zoom or watch it asynchronously if that will make it easier to not miss course material.}
 
 % Course Schedule %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newpage
 \section*{Tentative schedule and weekly learning goals}
 \label{sec:sched}
-The schedule is tentative and subject to change. Each week, I will cover a specific of topic. On Tuesday, we will cover relevant data science skills. On Thursday, we will apply those skills to a specific application. 
+The schedule is tentative and subject to change. Each week, I will cover a specific of topic. On Tuesday, we will cover relevant data science skills. On Thursday, we will apply those skills to a specific application. Bolded readings are ``key'' readings.
 
 \normalsize
 
@@ -264,19 +290,34 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
 \begin{itemize}
   \item \textbf{Skills:} Installation of \textit{R}, \textit{VSCode}, etc.
   \item \textbf{Application:} Opportunity Atlas basics
-  \item \textit{\textbf{Problem Set 0 due Friday at Midnight}}
+  \begin{itemize}
+    \item Readings: \textbf{\cite{chetty2018opportunityatlas}}, \cite{chetty2020opportunity}, \cite{einav2014ageofbigdata}
+  \end{itemize}
+  \item \textit{\textbf{Problem Set 0 due Sunday at Midnight}}
 \end{itemize}
 \week{Week 2} Coding workflow, staying organized, and version control
 \begin{itemize}
   \item \textbf{Skills:} Functions, folder structure, Git(Hub), minimally reproducible examples, Docker
+  \begin{itemize}
+    \item Readings: \cite{gentzkowshapiro2014code}, \cite{mcdermott2022docker}
+  \end{itemize}
   \item \textbf{Application:} Hidden Decisions of Researchers, Data Colada
+  \begin{itemize}
+    \item Readings: \textbf{\cite{huntingtonklen2021influence}}, \cite{datacolada2021groundhog}, \cite{datacolada2022groundhog}
+  \end{itemize}
   \item \textit{\textbf{Problem Set 1 due Friday at Midnight}}
 \end{itemize}
 \week{Week 3} Gathering Data, Ethics, and Privacy
 \begin{itemize}
 \item \textbf{Skills:} APIs, scraping, hashing, differential privacy
-\item \textbf{Application:} Nowcasting Gentrification using Yelp Data, EJMR
+\begin{itemize}
+  \item Readings: \textbf{\cite{chetty2019privacy}}, \cite{abowd2019privacy}
+\end{itemize}
+\item \textbf{Application:} Nowcasting Gentrification using Yelp Data
 \item \textit{\textbf{Project Proposal due 9/22 at Midnight}}
+\begin{itemize}
+  \item Readings: \textbf{\cite{glaeser2018gentrification}}, \cite{glaeser2017local}
+\end{itemize}
 %\item Readings:
 %\url{https://www.journals.uchicago.edu/doi/10.1086/701680}
 %\url{https://www.aeaweb.org/articles?id=10.1257/jep.26.2.189}
@@ -291,35 +332,65 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
 \week{Week 4} Spatial Analysis
 \begin{itemize}
   \item \textbf{Skills:} Map projections, shapefiles, \textit{sf}
+  \begin{itemize}
+    \item Reading: 
+  \end{itemize}
   \item \textbf{Application:} Neighborhoods and Mobility
+  \begin{itemize}
+    \item Readings:  \textbf{\cite{chetty2018opportunityatlas}}, 
+  \end{itemize}
   \item \textit{\textbf{Problem Set 2 due Friday at Midnight}}
 \end{itemize}
 \week{Week 5} Regression review \& Causal Inference
 \begin{itemize}
   \item \textbf{Skills:} OLS, IV, Potential Outcomes
+  \begin{itemize}
+    \item Readings: \cite{hungtintonklein2023effect} Chapter 13, \cite{cunningham2023mixtape} Chapter 4
+  \end{itemize}
   \item \textbf{Application:} Causal Effects of Neighborhoods
+  \begin{itemize}
+    \item Readings: \textbf{\cite{chetty2016moving}}
+  \end{itemize}
 \end{itemize}
 \week{Week 6} Regression Discontinuity Design
 \begin{itemize}
   \item \textbf{Skills:} Kernels, RDD, McCrary Test, fuzzy RDD
+  \begin{itemize}
+    \item Readings: \cite{cunningham2023mixtape} Chapter 6, \cite{hungtintonklein2023effect} Chapter 20
+  \end{itemize}
   \item \textbf{Application:} Class sizes and test scores
+  \begin{itemize}
+    \item Readings: \textbf{\cite{angrist1999maimonides}}, \cite{chetty2011kindergarten}
+  \end{itemize}
   \item \textit{\textbf{Problem Set 3 due Friday at Midnight}}
 \end{itemize}
 \week{Fall Recess} Databases on Tuesday, then rest!
 \begin{itemize}
   \item \textbf{Skills:} SQL
-  \item \textit{\textbf{Literature Review due 10/17 at midnight}}\footnote{Can change as needed.} 
+  \item \textit{\textbf{Literature Review due 10/17 at midnight}}
 \end{itemize}
 \week{Week 7} Panel data and two-way fixed effects
 \begin{itemize}
   \item \textbf{Skills:} Frisch-Waugh-Lovell Theorem, Event Studies, \textit{fixest}
+  \begin{itemize}
+    \item \cite{hungtintonklein2023effect} Chapters 16-18, \cite{cunningham2023mixtape} Chapters 8, 9
+  \end{itemize}
   \item \textbf{Application:} Moving to Opportunity
+  \begin{itemize}
+    \item Reading: \textbf{\cite{chetty2018neighborhoods}}
+  \end{itemize}
   \item \textit{\textbf{Problem Set 4 due Friday at Midnight}}
 \end{itemize}
 \week{Week 8} Field Experiments %Maybe drop or add resume moving to opportunity?
 \begin{itemize}
   \item \textbf{Skills:} Audit studies, correspondence studies
+  \begin{itemize}
+    \item Readings: TK
+  \end{itemize}
   \item \textbf{Application:} Resume studies and Racial Discrimination, Creating Moves to Opportunity
+  \begin{itemize}
+    \item Readings: \cite{bertrand2004emily}
+  \end{itemize}
 \end{itemize}
 %\url{https://www.annualreviews.org/doi/abs/10.1146/annurev-economics-082222-074352?casa_token=5OzCf9NSgEMAAAAA%3ACwCox17aNu0Rrg5QnBOIzE8cXMfgDgYOgCgx2Ow7fP32tJj5H85AilUS2a4giTbbeip5Rkes9AgI}
 %\url{https://www.nber.org/papers/w26380}
@@ -330,33 +401,53 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
 \begin{itemize}
   \item \textbf{Skills:} Functions, parallel programming, cluster computing, and cloud computing
   \item \textbf{Application:} Judicial decisions
+  \begin{itemize}
+    \item Readings: Judicial decisions
+  \end{itemize}
   \item \textit{\textbf{Problem Set 5 due Friday at Midnight}}
 \end{itemize}
 \week{Week 10} Machine Learning 
 \begin{itemize}
   \item \textbf{Skills:} Regression penalization methods, Causal Forests
+  \begin{itemize}
+    \item Readings: \cite{athey2019machine}
+  \end{itemize}
   \item \textbf{Application:} Summer Jobs and At-Risk Youth
+  \begin{itemize}
+    \item Readings: , \cite{naik2014streetscore}
+  \end{itemize}
   \item \textit{\textbf{Data Description due 11/17 at Midnight}}
 \end{itemize}
+%ML Bail decisions
 %Summer jobs, at risk youth: \url{https://www.aeaweb.org/articles?id=10.1257/aer.p20171000}
 %Urban pictures: \url{https://www.aeaweb.org/articles?id=10.1257/aer.p20161030}
 %Streetscore: \url{https://www.cv-foundation.org/openaccess/content_cvpr_workshops_2014/W20/html/Naik_Streetscore_-_Predicting_2014_CVPR_paper.html}
-%\url{https://www.annualreviews.org/doi/abs/10.1146/annurev-economics-080217-053433}
 \week{Thanksgiving Recess} Gobble, gobble! 
 \week{Week 11} Text analysis
 \begin{itemize}
   \item \textbf{Skills:} Regular expressions, WordClouds, sentiment analysis
-  \item \textbf{Application:} Twitter, inherited biases?
+  \begin{itemize}
+    \item Readings:\cite{gentzkow2019text}
+  \end{itemize}
+  \item \textbf{Application:} Twitter, inherited bias
+  \begin{itemize}
+    \item Readings: 
+  \end{itemize}
 %\url{https://www.aeaweb.org/articles?id=10.1257/pandp.20231117}
 %EJMR: https://www.aeaweb.org/articles?id=10.1257/pandp.20181101
 %Bias in NLP: \url{https://www.brookings.edu/articles/detecting-and-mitigating-bias-in-natural-language-processing/}
 \end{itemize}
 \week{Week 12} Text analysis
 \begin{itemize}
-  \item \textbf{Skills:} topics modeling, LLMs, AI
+  \item \textbf{Skills:} Topics modeling, LLMs, AI
+  \begin{itemize}
+    \item Reading: \cite{ash2023textalgorithms}
+  \end{itemize}
   \item \textbf{Application:} EJMR, climate and attitude
+  \begin{itemize}
+    \item Reading: TK
+  \end{itemize}
   \item \textit{\textbf{Problem Set 6 due Friday at Midnight}}
-%\url{https://www.aeaweb.org/articles?id=10.1257/pandp.20231117}
 %EJMR: https://www.aeaweb.org/articles?id=10.1257/pandp.20181101
 %Bias in NLP: \url{https://www.brookings.edu/articles/detecting-and-mitigating-bias-in-natural-language-processing/}
 \end{itemize}
@@ -376,6 +467,9 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
   \item Bayesian ML
 \end{itemize}
 
-Want to add: section on protection of identity, privacy, and ethics. Hashing, etc. Maybe drop Field Experiments? Drop databases? 
+\newpage
+
+\bibliographystyle{AER}
+\bibliography{syllabus_bigdata}
 
 \end{document}

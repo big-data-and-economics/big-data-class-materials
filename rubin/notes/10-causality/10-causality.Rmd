@@ -15,7 +15,7 @@ output:
 class: inverse, middle
 
 ```{r, setup, include = F}
-# devtools::install_github("dill/emoGG")
+devtools::install_github("dill/emoGG")
 library(pacman)
 p_load(
   broom, here, tidyverse,

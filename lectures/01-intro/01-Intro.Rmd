@@ -1,0 +1,1043 @@
+---
+title: "Big Data and Economics"
+# subtitle: "<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>"
+subtitle: "Lecture 1: Introduction"
+author: "Kyle Coombs (he/him/his)"
+date: "Bates College | [EC/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, 'ou-colors.css'] 
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+```{css, echo=FALSE}
+# CSS for including pauses in printed PDF output (see bottom of lecture)
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",  
+  fig.height=4, #fig.width=6,
+  # out.width="748px", #out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  cache=T#, echo=F, warning=F, message=F
+  )
+library(tidyverse)
+library(hrbrthemes)
+library(fontawesome)
+library(RefManageR)
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = TRUE)
+#biblio <- ReadBib("../../References/References.bib", check = FALSE)
+```
+
+# Table of contents
+
+1. [Prologue](#prologue)
+
+2. [Dessert: What makes data big?](#whatmakesdatabig)
+
+3. [Veggies: Syllabus highlights](#syllabus)
+
+4. [Appetizer: R for data science](#r4ds)
+
+5. [Entree: Getting started](#started)
+
+6. [Second Dessert: Data visualization with ggplot2](#ggplot2)
+
+---
+class: inverse, center, middle
+name: prologue
+
+# Prologue
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+---
+# Introductions
+
+### Course
+
+`r fa('globe')` https://github.com/ECON368-fall2023-big-data-and-economics
+
+You'll soon receive access to this repo, where we submit assignments, upload presentations, etc.
+
+--
+
+### Me
+
+`r fa('address-book')` [Kyle Coombs](https://kylecoombs.com/)
+
+`r fa('envelope')` [kcoombs@bates.edu](mailto:kcoombs@bates.edu)
+
+`r fa('graduation-cap')` Assistant Professor (economics)
+
+`r fa('map-marker')` From Scotia, New York
+
+`r fa('home')` Live in Maine and Massachusetts
+
+--
+
+### You
+
+A quick roundtable of names, fields/interests, and coding background.
+---
+class: inverse, center, middle
+name: syllabus
+
+# Syllabus highlights
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+(Read the full document [here](https://github.com/ECON368-fall2023-big-data-and-economics/syllabus/blob/master/syllabus.pdf).)
+
+---
+# Why this course?
+
+Fill in the gaps left by traditional econometrics and methods classes.
+
+- Practical skills that tools that will benefit your thesis and future career.
+- Neglected skills like how to actually find datasets in the wild and clean them.
+- Apply skills to answer and address empirical questions on economic and *social* problems. 
+
+Data science skills are largely distinct from (and complementary to) the core 'metrics familiar to economists.
+
+- Acquiring data; scraping; maintaining databases; etc. 
+- Data viz, cleaning and wrangling; programming; cloud computation; relational databases; machine learning; etc.
+
+--
+
+> *"In short, we will cover things that I wish someone had taught me when I was starting out in college."*
+
+---
+# You, at the end of this course
+
+<div align="center">
+<img src="pics/awesome.jpg">
+</div>
+
+---
+# Syllabus readthrough
+
+- Read over the syllabus for 3 minutes
+- Identify at least one word you're unfamiliar with
+- Anyone have guesses for how to define them?
+- [Mentimeter](https://www.mentimeter.com/app/presentation/bl36t5koddqihwnyhf9ichwwm5cgqj9a)
+
+---
+# Grading
+
+| Component                           | Weight | Graded |
+|:-||-:|
+| 7 × homework assignments (10% each) | 50% | Top 5 |
+| 2 × short presentations (5% each)		| 10% | Top 1 |
+| 1 × final project   				        | 40% | In parts |
+
+- [Short presentations](https://github.com/ECON368-fall2023-big-data-and-economics/presentations) summarize either a key lecture reading, or an (approved) software package/platform.
+<!-- - We'll get to OSS contribution later in the course, but I particularly encourage contributions to [LOST](https://lost-stats.github.io/). -->
+- Extensions: Each of you gets three ''grace period'' days to extend deadlines. 
+  - You can use these days in any way you like, but once they're gone, they're gone.
+
+--
+
+</br>
+
+PS &mdash; I'll also award a class participation bonus (2.5%) at my discretion.
+
+---
+# Homework assignments
+
+- 7 homework assignments will be assigned throughout the semester.
+- Each assignment will be assigned and  submitted via GitHub classroom
+  - You will be submitting relevant data files, code, and a write-up
+- 2  will be group assignments, the rest will be individual.
+- I want you to practice pair coding and reconciling GitHub bugs
+
+---
+# Presentations
+
+- Every class will have a five-minute presentation on a key reading, software, data science technique, or programming skill
+- You will sign up for a presentation slot on the [course website](https://github.com/ECON368-fall2023-big-data-and-economics/presentations)
+- A successful presentation will:
+  - Introduce the topic
+  - Explain why it is important
+  - Provide a use case
+- You will submit a PDF (and any .tex or .Rmd files) of your slides to GitHub classroom
+
+---
+# Final project
+
+- Each of you will write an original 5-10 page research paper
+- Throughout the semester, there will be three guided assignments that will help you develop your fine
+- The final paper will be due on 12/11
+- I expect your code to work and the results to be reproducible (i.e. I should be able to run your code and get the same results)
+
+| Component           | Weight of Final | Date |
+|:-|-:|
+| Project Proposal    | 5% | 9/22   |
+| Literature Review		| 5% | 10/17  |
+| Data Description    | 5% | 11/17  |
+| Code                | 10% | 12/11 |
+| Write up            | 15% | 12/11 |
+| **Total**               | **40%** | N/A |
+
+- Like problem sets, you will submit a PDF with all code and data files to reproduce your results
+- Christine Murray has created a guide of [potential data sources](https://libguides.bates.edu/ECON368)
+- You can also check [kaggle](https://www.kaggle.com/datasets)
+
+---
+# Lecture outline
+
+- Each lecture will cover either a "skill" or an "application"
+- Skills will typically be taught on Tuesdays and applications on Thursdays
+
+### Data science basics
+
+- Data visualization
+- Version control
+- Learning to love the shell
+- R language basics
+- Data cleaning and wrangling
+- Webscraping 
+
+### Analysis and Programming
+
+- Regression analysis in R
+- Spatial analysis in R
+- Functions in R
+- Parallel programming
+
+---
+# Lecture outline (cont.)
+
+### Causal inference
+
+- Regression discontinuity design
+- Panel data and fixed effects
+- Field experiments
+
+### Scaling up: Big data and cloud computation
+
+- High performance computing (Leavitt cluster) 
+- Databases: SQL(ite) and BigQuery
+- Machine Learning techniques
+- Text analysis
+
+---
+# What is Data Science?
+
+- .hi[Data science (DS):] The scientific discipline that deals with transforming data into useful information ("insights") using a variety of stats/ML techniques
+
+    - Amazon: Collects data on search history, cart history, purchases
+
+    - Analyzes the data to estimate users' willingness to pay for various products (including Prime); recommend new products
+
+- The rise of data science has come because of the so-called Big Data revolution
+
+    - The rise of the internet in the late-1990s and 2000s $\Rightarrow \,\uparrow$ opportunities for companies and governments to collect data on consumers & citizens
+
+    - Proliferation of mobile devices & social media from late 2000s until now has generated even more data
+    
+---
+# Skills required for data science
+
+.center[
+```{r img1, echo=F, out.width="75%"}
+knitr::include_graphics('pics/skills.jpg')
+```
+
+Source: [NC State Univ.](http://sites.nationalacademies.org/cs/groups/cstbsite/documents/webpage/cstb_181680.pdf) (p. 26)
+]
+
+---
+# Pillars of data science
+
+- Programming (for automation of data collection, manipulation, cleaning, visualization, and modeling)
+
+- Visualization & exploration
+
+- Causal inference (to be able to make a policy prescription)
+
+- Machine learning (to select models, compress data, predict outcomes)
+
+...Assuming one has the appropriate foundation of basic calculus and statistics
+
+---
+# The data science workflow
+
+.center[
+```{r img2, echo=F, out.width="85%"}
+knitr::include_graphics('https://d33wubrfki0l68.cloudfront.net/571b056757d68e6df81a3e3853f54d3c76ad6efc/32d37/diagrams/data-science.png')
+```
+
+Source: [R for Data Science](http://r4ds.had.co.nz/introduction.html)
+]
+
+---
+# Big Data
+.center[
+```{r img3, echo=F, out.width="90%"}
+knitr::include_graphics('pics/frisch.jpg')
+```
+]
+
+---
+# Big Data
+.center[
+```{r img, echo=F, out.width="90%"}
+knitr::include_graphics('pics/frisch.jpg')
+```
+]
+
+Source: Frisch, Ragnar. 1933. "Editor's Note" _Econometrica_ 1(1): 1--4
+
+---
+# What is Big Data?
+
+It depends on who you ask. It could mean:
+
+1. "Wild" data (unstructured; happenstance; collected without a particular intention; e.g. twitter, contrast with Census surveys)
+
+2. "Wide" data (a.k.a. "Big-K" data because $K>N$, customer data sets where each click is a variable)
+
+3. "Long" data (a.k.a. "Big-N" data because $N$ very, very large [and may not all fit onto a single hard drive!], government tax records, Medicare claims data, etc.)
+
+4. Any data set that cannot be analyzed with classical methods like OLS (e.g. all combinations of the above three types)
+
+"Big Data" not so much about size of data, but about whether or not "small data" (read: classical) methods can be used
+
+---
+# Unstructured data boom 
+
+```{r img_unstructured, echo=F, out.width="90%"}
+knitr::include_graphics('pics/unstructured_vs_structured.png')
+```
+
+Source: [IDC](https://www.idc.com/)
+<!-- https://seekingalpha.com/article/4317681-mongodb-riding-data-wave -->
+
+---
+# Long data
+```{r img_long, echo=F, out.width="90%"}
+knitr::include_graphics('pics/longdata.png')
+```
+
+- Main application: *identifying causal effects*
+- Example: effects of improving schools on income
+
+---
+# Wide data
+
+```{r img_wide, echo=F, out.width="90%"}
+knitr::include_graphics('pics/widedata.png')
+```
+
+- Main application: *prediction*
+- Example: predicting income to target ads
+
+---
+# What is machine learning? What is AI?
+
+- .hi[Machine learning (ML):] Allowing computers to learn for themselves without explicitly being programmed
+
+    - USPS: Computer to read handwriting on envelopes
+
+    - Google: AlphaGo, computer that defeated world champion Go player
+
+    - Apple/Amazon/Microsoft: Siri, Alexa, Cortana, Talon voice assistants 
+
+- .hi[Artificial intelligence (AI):] Constructing machines (robots, computers) to think and act like human beings
+
+- ML is a subset of AI
+
+---
+# Big data & machine learning
+
+- You'll often hear the phrase "big data and machine learning"
+
+- This is because many machine learning algorithms are helpful for big data problems:
+
+    - Selecting which $k<K$ covariates should enter your model
+
+    - Streamlined techniques for processing "wild" data
+
+    - New modeling approaches that can leverage the greater amount of information that Big Data has
+
+---
+# ChatGPT and GitHub CoPilot
+
+- I strongly encourage you to use ChatGPT and GitHub CoPilot in all aspects of this class
+
+- ChatGPT is a large language model (LLM) developed by OpenAI
+
+- Create an account at http://chat.openai.com/
+
+- ChatGPT is excellent at producing basic code and helping resolve bugs
+
+- It takes most of the headache away from coding, leaving only the "fun" parts
+
+---
+# ChatGPT example from PS3 later in the semester
+
+**Human:**
+
+Write a SQL script that does the following:
+
+(a) Read in the Florida insurance data CSV file
+
+(b) Print out the first 10 rows of the data set
+
+(c) List which counties are in the sample (i.e. list unique values of the county variable)
+
+(d) Compute the average property appreciation from 2011 to 2012 (i.e. compute the
+mean of tiv_2012 - tiv_2011)
+
+(e) Create a frequency table of the construction variable to see what fraction of
+buildings are made out of wood or some other material
+
+---
+# ChatGPT example (continued)
+
+**Assistant:**
+
+Assuming the Florida insurance data is stored in a table called "insurance" and the columns are named "county", "tiv_2011", "tiv_2012", and "construction", the SQL script would be as follows:
+
+.scroll-box-8[
+```sql
+-- (a) Read in the Florida insurance data CSV file
+CREATE TABLE insurance (county VARCHAR(255), tiv_2011 INT, tiv_2012 INT, construction VARCHAR(255));
+LOAD DATA INFILE 'florida_insurance.csv' INTO TABLE insurance
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;
+
+-- (b) Print out the first 10 rows of the data set
+SELECT * FROM insurance LIMIT 10;
+
+-- (c) List which counties are in the sample (i.e. list unique values of the county variable)
+SELECT DISTINCT county FROM insurance;
+
+-- (d) Compute the average property appreciation from 2011 to 2012 (i.e. compute the mean of tiv_2012 - tiv_2011)
+SELECT AVG(tiv_2012 - tiv_2011) FROM insurance;
+
+-- (e) Create a frequency table of the construction variable to see what fraction of buildings are made out of wood or some other material
+SELECT construction, COUNT(*) as frequency FROM insurance GROUP BY construction;
+
+```
+]
+
+Note: This is basic SQL script and it may vary based on the database you are using. You may need to make some modification accordingly.
+***
+
+Exported on January 17, 2023 10:11 AM.
+
+---
+# AI assistance and accessibility
+
+- I actively used GitHub CoPilot to write these Rmarkdown slides
+- I used a voice-to-text tool (Talon) to dictate text and comments
+- Asked CoPilot to write code for me based on the comments
+- Quick demo if time allows
+
+---
+# Correlation vs. causation
+
+- Machine learning is not the end-all, be-all of data science
+
+- A good data scientist knows that correlation is not causation!
+
+- ML is good at prediction, but not necessarily at causal inference
+
+---
+
+# Differences in Opportunity Across Local Areas 
+
+- How do children’s chances of moving up vary across areas in America?
+  - Are there some areas where kids do better than others?  If so, what lessons can we learn from them?
+
+- The Opportunity Atlas is a new tool that allows you to explore these questions
+  - Data sources: Anonymized Census data (2000, 2010, ACS) covering U.S. pop linked to federal income tax returns from 1989-2015
+  - Link children to parents based on dependent claims on tax returns
+  - Target sample: children born between 1978 and 1983 born in the U.S. or who are authorized immigrants who came to the U.S. in childhood.
+  - Analyis sample: 20.5M children, 96% coverage rate of target sample
+
+---
+# Measuring Parents' and Children's Incomes in Tax Data
+
+- Parents' HH incomes: average income reported on Form 1040 tax return from 1994-2000
+- Children's incomes measured from tax returns 2014-2015 (ages 31-37)
+- Focus on percentile ranks in *national* distribution
+  - Why?
+
+---
+# Integenerational Income Mobility for Children Raised in Chicago
+
+```{r img_chicago, echo=FALSE, out.width="90%"}
+
+knitr::include_graphics('pics/chicago_mobility.png')
+
+```
+
+---
+# Geography of Upward Mobility in the United States
+
+```{r img_us, echo=FALSE, out.width="90%"}
+
+knitr::include_graphics('pics/income_mobility.png')
+
+```
+
+Average household income of children with parents earning $27,000 (25th percentile)
+
+Source: *The Opportunity Atlas. Chetty, Firedman, Hendren, Jones, Porter (2018)*
+
+---
+# Correlation vs. causation
+
+- Machine learning is not the end-all, be-all of data science
+
+- A good data scientist knows that correlation is not causation!
+
+- ML is good at prediction, but not necessarily at causal inference
+
+- A good ML model will account for location and parental income to predict adult income
+
+- How do you answer each of these to a hotelier? 
+  - What is the _predicted effect_ of growing up with parents at the 25th percentile in Chicago on adult income?
+  - What is the _counterfacual effect_ of growing up with parents at the 25th precentile in Chicago on adult income?
+
+- Economists' comparative advantage is in combining machine learning with economic theory to answer these questions
+
+---
+class: inverse, center, middle
+name: started
+
+# Getting started
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+---
+# Software installation and registration
+
+1. Download [R](https://www.r-project.org/).
+
+2. Download [RStudio](https://www.rstudio.com/products/rstudio/download/preview/).
+
+3. Download [Visual Studio Code](TK).
+
+4. Download [Git](https://git-scm.com/downloads).
+
+5. Create an account on [GitHub](https://github.com/) and register for a student/educator [discount](https://education.github.com/discount_requests/new).
+  - You will soon receive an invitation to the semester-specific course org. on GitHub, as well as [GitHub classroom](https://classroom.github.com), which is how we'll disseminate and submit assignments, receive feedback and grading, etc. 
+
+--
+
+If you had trouble completing any of these steps, please raise your hand.
+- My go-to place for installation guidance and troubleshooting is Jenny Bryan's http://happygitwithr.com.
+
+---
+# Some OS-specific extras
+
+I'll detail further software requirements as and when the need arises. However, to help smooth some software installation issues further down the road, please also do the following (depending on your OS):
+
+- **Windows:** Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/). I also recommend that you install [Chocolately](https://chocolatey.org/).
+- **Mac:** Install [Homebrew](https://brew.sh/). I also recommend that you configure/open your C++ toolchain (see [here](https://github.com/rmacoslib/r-macos-rtools#installer-package-for-macos-r-toolchain-).)
+- **Linux:** None (you should be good to go).
+
+---
+# Checklist
+
+☑ Do you have the most recent version of R?
+  ```{r, cache=FALSE}
+  version$version.string
+  ```
+☑ Do you have the most recent version of RStudio? (The [preview version](https://www.rstudio.com/products/rstudio/download/preview/) is fine.)
+  ```{r eval=FALSE}
+  RStudio.Version()$version
+  ## Requires an interactive session but should return something like "[1] ‘1.4.1100’"
+  ```
+
+☑ Have you updated all of your R packages? 
+  ```{r eval=FALSE}
+  update.packages(ask = FALSE, checkBuilt = TRUE)
+  ```
+  
+---
+# Checklist (cont.)
+
+Open up the [shell](http://happygitwithr.com/shell.html#shell).
+- Windows users, make sure that you installed a Bash-compatible version of the shell. If you installed [Git for Windows](https://gitforwindows.org), then you should be good to go.
+
+☑ Which version of Git have you installed?
+  ```{bash, cache=FALSE}
+  git --version
+  ```
+
+☑ Did you introduce yourself to Git? (Substitute in your details.)
+  ```{bash eval=FALSE}
+  git config --global user.name 'Kyle Coombs'
+  git config --global user.email 'kcoombs@bates.edu'
+  git config --global --list
+  ```
+
+☑ Did you register an account in GitHub? 
+
+---
+# Checklist (cont.)
+
+We will make sure that everything is working properly with your R and GitHub setup next lecture.
+
+For the rest of today's lecture, I want to go over some very basic R concepts.
+
+--
+
+</br>
+
+PS — Just so you know where we're headed: We'll return to these R concepts (and delve much deeper) next week after a brief, but important detour to the lands of Git(Hub) and coding best practices.
+- Don't worry, it will all make sense. You'll see.
+
+---
+class: inverse, center, middle
+name: r4ds
+
+# R for data science
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+---
+name: whyr
+
+# Why R and RStudio? (cont.)
+```{R, indeeddotcom, echo = F, fig.height = 6, fig.width = 9, dev = "svg"}
+# The popularity data
+pop_df = 
+  data.frame(
+  lang = c("SQL", "Python", "R", "SAS", "Matlab", "SPSS", "Stata"),
+  n_jobs = c(107130, 66976, 48772, 25644, 11464, 3717, 1624),
+  free = c(T, T, T, F, F, F, F)
+  )
+## Plot it
+pop_df %>% 
+  mutate(lang = lang %>% factor(ordered = T)) %>%
+  ggplot(aes(x = lang, y = n_jobs, fill = free)) +
+  geom_col() +
+  geom_hline(yintercept = 0) +
+  aes(x = reorder(lang, -n_jobs), fill = reorder(free, -free)) +
+  xlab("Statistical language") +
+  scale_y_continuous(label = scales::comma) +
+  ylab("Number of jobs") +
+  labs(
+    title = "Comparing statistical languages",
+    subtitle = "Number of job postings on Indeed.com, 2019/01/06"
+    ) +
+  scale_fill_manual(
+    "Free?",
+    labels = c("True", "False"),
+    values = c("#f92672", "darkslategray")
+    ) +
+  ggthemes::theme_pander(base_size = 17) +
+  # theme_ipsum() +
+  theme(legend.position = "bottom")
+```
+
+---
+# Why R and RStudio? (cont.)
+
+### Data science positivism
+
+- Alongside Python, R has become the *de facto* language for data science.
+  - See: [*The Impressive Growth of R*](https://stackoverflow.blog/2017/10/10/impressive-growth-r/), [*The Popularity of Data Science Software*](http://r4stats.com/articles/popularity/)
+- Open-source (free!) with a global user-base spanning academia and industry.
+  - "Do you want to be a profit source or a cost center?"
+
+### Bridge to applied economics and other tools
+
+- Already has all of the statistics and econometrics support, and is amazingly adaptable as a “glue” language to other
+programming languages and APIs.
+- The RStudio IDE and ecosystem allow for further, seemless integration.
+
+### Path dependency
+
+- It's also the language that I know best.
+--
+
+- (Learning multiple languages is a good idea, though.)
+
+---
+# Some R basics
+
+1. Everything is an object.
+
+2. Everything has a name.
+
+3. You do things using functions.
+
+4. Functions come pre-written in packages (i.e. "libraries"), although you can — and should — write your own functions too.
+
+--
+
+</br>
+
+Points 1. and 2. can be summarised as an [object-orientated programming](https://en.wikipedia.org/wiki/Object-oriented_programming) (OOP) approach.
+  - This may sound super abstract now, but we'll see *lots* of examples over the coming weeks that will make things clear.
+
+---
+# R vs Stata
+
+If you're coming from Stata, some additional things worth emphasizing:
+
+- Multiple objects (e.g. data frames) can exist happily in the same workspace. 
+   - No more `keep`, `preserve`, `restore` hackery. (Though, props to [Stata 16](https://www.stata.com/new-in-stata/multiple-datasets-in-memory/).)
+   - This is a direct consequence of the OOP approach.
+
+- You will load packages at the start of every new R session. Make peace with this.
+  - "Base" R comes with tons of useful in-built functions. It also provides all the tools necessary for you to write your own functions. 
+  - However, many of R's best data science functions and tools come from external packages written by other users.
+
+- R easily and infinitely parallelizes. For free.
+  - Compare the cost of a [Stata/MP](https://www.stata.com/statamp/) license, nevermind the fact that you effectively pay per core...
+
+- You don't need to `tsset or xtset` your data. (Although you can too.)
+
+---
+# R code example (linear regression)
+
+```{r fit}
+fit = lm(mpg ~ wt, data = mtcars)
+summary(fit)
+```
+
+---
+# Base R plot
+
+```{r mtcars_baseplot, dev="svg"}
+par(mar = c(4, 4, 1, .1)) ## Just for nice plot margins on this slide deck
+plot(mtcars$wt, mtcars$mpg)
+abline(fit, col = "red")
+```
+
+---
+# ggplot2
+
+```{r mtcars_ggplot, dev="svg"}
+library(ggplot2)
+ggplot(data = mtcars, aes(x = wt, y = mpg)) + 
+  geom_smooth(method = "lm", col = "red") + 
+  geom_point() 
+```
+
+---
+class: inverse, center, middle
+name: ggplot2
+
+# More ggplot2
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+---
+# Install and load
+
+Open up your laptops. For the remainder of this first lecture, we're going continue playing around with [ggplot2](https://ggplot2.tidyverse.org/) (i.e. livecoding).
+
+If you don't have them already, install the `ggplot2` and `gapminder` packages via either:
+- **Console:** Enter `install.packages(c("ggplot2", "gapminder"), dependencies=T)`.
+- **RStudio:** Click the "Packages" tab in the bottom-right window pane. Then click "Install" and search for these two packages.
+  
+![](pics/install.gif)
+
+---
+# Install and load (cont.)
+
+Once the packages are installed, load them into your R session with the `library()` function.
+```{r pkg_load}
+library(ggplot2)
+library(gapminder) ## We're just using this package for the gapminder data
+```
+
+Notice too that you don't need quotes around the package names any more. Reason: R now recognises these packages as defined objects with given names. ("Everything in R is an object and everything has a name.")
+
+--
+
+PS — A convenient way to combine the package installation and loading steps is with the [pacman package's](https://github.com/trinker/pacman) `p_load()` function. If you run `pacman::p_load(ggplot, gapminder)` it will first look to see whether it needs to install either package before loading them. Clever.
+- We'll get to this next week, but if you want to run a function from an (installed) package without loading it, you can use the `PACKAGE::package_function()` syntax.
+
+---
+# Brief aside: The gapminder dataset
+
+Because we're going to be plotting the [gapminder](https://github.com/jennybc/gapminder) dataset, it is helpful to know that it contains panel data on life expectancy, population size, and GDP per capita for 142 countries since the 1950s.
+
+```{r gapm}
+gapminder
+```
+---
+# Elements of ggplot2
+
+[Hadley Wickham's](http://hadley.nz/) ggplot2 is one of the most popular packages in the entire R canon. 
+- It also happens to be built upon some deep visualization theory: i.e. Leland Wilkinson's [*The Grammar of Graphics*](https://www.amazon.com/Grammar-Graphics-Statistics-Computing/dp/0387245448).
+
+There's a lot to say about ggplot2's implementation of this "grammar of graphics" approach, but the three key elements are:
+
+1. Your plot ("the visualization") is linked to your variables ("the data") through various **aesthetic mappings**.
+
+2. Once the aesthetic mappings are defined, you can represent your data in different ways by choosing different **geoms** (i.e. "geometric objects" like points, lines or bars).
+
+3. You build your plot in **layers**.
+
+--
+
+</br>
+
+That's kind of abstract. Let's review each element in turn with some actual plots.
+
+---
+# 1. Aesthetic mappings
+
+```{r, aesthetics0}
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point()
+```
+---
+# 1. Aesthetic mappings (cont.)
+
+```{r aesthetics1, eval=FALSE}
+ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point()
+```
+
+Focus on the top line, which contains the initialising `ggplot()` function call. This function accepts various arguments, including:
+- Where the data come from (i.e. `data = gapminder`).
+- What the aesthetic mappings are (i.e. `mapping = aes(x = gdpPercap, y = lifeExp)`).
+
+--
+
+The aesthetic mappings here are pretty simple: They just define an x-axis (GDP per capita) and a y-axis (life expecancy).
+- To get a sense of the power and flexibility that comes with this approach, however, consider what happens if we add more aesthetics to the plot call...
+
+---
+# 1. Aesthetic mappings (cont.)
+
+```{r aesthetics2, dev='svg'}
+ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp, size = pop, col = continent)) + 
+  geom_point(alpha = 0.3) ## "alpha" controls transparency. Takes a value between 0 and 1.
+```
+
+--
+
+Note that I've dropped the "mapping =" part of the ggplot call. Most people just start with "aes(...)", since `ggplot2` knows the order of the arguments.
+
+---
+# 1. Aesthetic mappings (cont.)
+
+We can specify aesthetic mappings in the geom layer too.
+```{r aesthetics3, dev='svg'}
+ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp)) + ## Applicable to all geoms
+  geom_point(aes(size = pop, col = continent), alpha = 0.3) ## Applicable to this geom only
+```
+
+---
+# 1. Aesthetic mappings (cont.)
+
+Oops. What went wrong here?
+```{r aesthetics_mistake, warning=FALSE,dev='svg'}
+ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp)) + 
+  geom_point(aes(size = "big", col="black"), alpha = 0.3)
+```
+
+--
+
+**Answer: **Aesthetics must be mapped to variables, not descriptions!
+
+---
+# 1. Aesthetic mappings (cont.)
+
+At this point, instead of repeating the same ggplot2 call every time, it will prove convenient to define an intermediate plot object that we can re-use.
+
+```{r p, dev='svg'}
+p = ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp))
+p
+```
+
+---
+# 2. Geoms
+
+Once your variable relationships have been defined by the aesthetic mappings, you can invoke and combine different geoms to generate different visulaizations.
+
+```{r geoms1, dev='svg'}
+p + 
+  geom_point(alpha = 0.3)  +
+  geom_smooth(method = "loess") 
+```
+
+---
+# 2. Geoms (cont.)
+
+Aesthetics can be applied differentially across geoms.
+
+```{r geoms2, dev='svg'}
+p + 
+  geom_point(aes(size = pop, col = continent), alpha = 0.3)  +
+  geom_smooth(method = "loess") 
+```
+
+---
+# 2. Geoms (cont.)
+
+The previous plot provides a good illustration of the power (or effect) that comes from assigning aesthetic mappings "globally" vs in the individual geom layers.
+- Compare: What happens if you run the below code chunk?
+
+```{r geoms3, eval=FALSE}
+ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp, size = pop, col = continent)) +
+  geom_point(alpha = 0.3)  +
+  geom_smooth(method = "loess") 
+```
+
+---
+# 2. Geoms (cont.)
+
+Similarly, note that some geoms only accept a subset of mappings. E.g. `geom_density()` doesn't know what to do with the "y" aesthetic mapping.
+
+```{r geoms4, error=TRUE, dev='svg'}
+p + geom_density()
+```
+
+---
+# 2. Geoms (cont.)
+
+We can fix that by being more careful about how we build the plot.
+
+```{r geoms5, dev='svg'}
+ggplot(data = gapminder) + ## i.e. No "global" aesthetic mappings"
+  geom_density(aes(x = gdpPercap, fill = continent), alpha=0.3)
+```
+
+---
+# 3. Build your plot in layers
+
+We've already seen how we can chain (or "layer") consecutive plot elements using the `+` connector.
+- The fact that we can create and then re-use an intermediate plot object (e.g. "p") is testament to this.
+
+But it bears repeating: You can build out some truly impressive complexity and transformation of your visualization through this simple layering process.
+- You don't have to transform your original data; ggplot2 takes care of all of that.
+- For example (see next slide for figure).
+
+```{r layers1}
+p2 =
+  p +
+  geom_point(aes(size = pop, col = continent), alpha = 0.3) +
+  scale_color_brewer(name = "Continent", palette = "Set1") + ## Different colour scale
+  scale_size(name = "Population", labels = scales::comma) + ## Different point (i.e. legend) scale
+  scale_x_log10(labels = scales::dollar) + ## Switch to logarithmic scale on x-axis. Use dollar units.
+  labs(x = "Log (GDP per capita)", y = "Life Expectancy") + ## Better axis titles
+  theme_minimal() ## Try a minimal (b&w) plot theme
+```
+
+---
+# 3. Build your plot in layers (cont.)
+
+```{r layers2,  echo=FALSE, dev='svg'}
+p2
+```
+
+---
+# What else?
+
+We have barely scratched the surface of ggplot2's functionality... let alone talked about the entire ecosystem of packages that has been built around it. 
+- Here's are two quick additional examples to whet your appetite
+
+--
+
+Note that you will need to install and load some additional packages if you want to recreate the next two figures on your own machine. A quick way to do this:
+
+```{r pacinstall}
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(hrbrthemes, gganimate)
+```
+
+---
+# What else? (cont.)
+
+Simple extension: Use an external package theme.
+```{r modern_rc_theme,  dev='svg'}
+# library(hrbrthemes)
+p2 + theme_modern_rc() + geom_point(aes(size = pop, col = continent), alpha = 0.2)
+```
+
+---
+# What else? (cont.)
+
+Elaborate extension: Animation! (See the next slide for the resulting GIF.)
+```{r gganim1, eval=FALSE}
+# library(gganimate)
+ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_colour_manual(values = country_colors) +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10(labels = scales::dollar) +
+  facet_wrap(~continent) +
+  # Here comes the gganimate specific bits
+  labs(title = 'Year: {frame_time}', x = 'Log (GDP per capita)', y = 'Life expectancy') +
+  transition_time(year) +
+  ease_aes('linear')
+```
+
+---
+# What else? (cont.)
+
+```{r ggamin2, echo=FALSE}
+ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
+  geom_point(alpha = 0.7, show.legend = FALSE) +
+  scale_colour_manual(values = country_colors) +
+  scale_size(range = c(2, 12)) +
+  scale_x_log10(labels = scales::dollar) +
+  facet_wrap(~continent) + 
+  # Here comes the gganimate specific bits
+  labs(title = 'Year: {frame_time}', x = 'Log (GDP per capita)', y = 'Life expectancy') +
+  transition_time(year) +
+  ease_aes('linear')
+```
+
+--
+
+Note that this animated plot provides a much more intuitive understanding of the underlying data. Just as [Hans Rosling](https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen) intended.
+
+---
+# What else? (cont.)
+
+There's a lot more to say, but I think we'll stop now for today's lecture.
+
+We also haven't touched on ggplot2's relationship to "tidy" data.
+  - It actually forms part of a suite of packages collectively known as the [tidyverse](https://www.tidyverse.org/). 
+  - We will get back to this in Lecture 5.
+
+Rest assured, you will be using ggplot2 throughout the rest of this course and developing your skills along the way.
+- Your very first assignment (coming up) is a chance specifically to hone some of those skills.
+
+In the meantime, I want you to do some reading and practice on your own. Pick either of the following (or choose among the litany of online resources) and work through their examples:
+- [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html) of *R for Data Science* by Hadley Wickham and Garett Grolemund.
+- [*Data Visualization: A Practical Guide*](https://socviz.co/makeplot.html) by Kieran Healy.
+- [Designing ggplots](https://designing-ggplots.netlify.com) by Malcom Barrett.
+
+---
+class: inverse, center, middle
+
+# Next lecture: Deep dive into Git(Hub).
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+infile = list.files(pattern = '.html')
+pagedown::chrome_print(input = infile, timeout = 100)
+```

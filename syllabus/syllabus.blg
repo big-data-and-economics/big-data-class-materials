@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2022)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: syllabus.aux
+The style file: AER.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: syllabus_bigdata.bib
+Warning--empty journal in chetty2018opportunityatlas
+Warning--empty journal in glaeser2017local
+You've used 23 entries,
+            2984 wiz_defined-function locations,
+            774 strings with 8035 characters,
+and the built_in function-call counts, 19880 in all, are:
+= -- 2856
+> -- 1383
+< -- 346
++ -- 485
+- -- 268
+* -- 1399
+:= -- 4473
+add.period$ -- 23
+call.type$ -- 23
+change.case$ -- 161
+chr.to.int$ -- 23
+cite$ -- 25
+duplicate$ -- 239
+empty$ -- 541
+format.name$ -- 689
+if$ -- 4802
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 19
+newline$ -- 75
+num.names$ -- 276
+pop$ -- 332
+preamble$ -- 1
+purify$ -- 184
+quote$ -- 0
+skip$ -- 0
+stack$ -- 0
+substring$ -- 494
+swap$ -- 74
+text.length$ -- 2
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 88
+warning$ -- 2
+while$ -- 241
+width$ -- 0
+write$ -- 355
+(There were 2 warnings)

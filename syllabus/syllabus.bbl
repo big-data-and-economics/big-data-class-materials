@@ -1,0 +1,126 @@
+\ifx\undefined\bysame
+\newcommand{\bysame}{\leavevmode\hbox to\leftmargin{\hrulefill\,\,}}
+\fi
+\begin{thebibliography}{xx}
+
+\harvarditem[Abowd and Schmutte]{Abowd and Schmutte}{2019}{abowd2019privacy}
+{\bf Abowd, John~M. and Ian~M. Schmutte}, ``An Economic Analysis of Privacy
+  Protection and Statistical Accuracy as Social Choices,'' {\it American
+  Economic Review}, 1 2019, {\it 109}, 171--202.
+
+\harvarditem[Angrist and Lavy]{Angrist and Lavy}{1999}{angrist1999maimonides}
+{\bf Angrist, Joshua~D. and Victor Lavy}, ``Using Maimonides' Rule to Estimate
+  the Effect of Class Size on Scholastic Achievement,'' {\it The Quarterly
+  Journal of Economics}, 5 1999, {\it 114}, 533--575.
+
+\harvarditem[Ash and Hansen]{Ash and Hansen}{2023}{ash2023textalgorithms}
+{\bf Ash, Elliott and Stephen Hansen}, ``Text Algorithms in Economics,'' {\it
+  https://doi.org/10.1146/annurev-economics-082222-074352}, 7 2023, {\it 15.}
+
+\harvarditem[Athey and Imbens]{Athey and Imbens}{2019}{athey2019machine}
+{\bf Athey, Susan and Guido~W. Imbens}, ``Machine Learning Methods That
+  Economists Should Know About,'' {\it Annual Review of Economics}, 2019, {\it
+  11.}
+
+\harvarditem[Bertrand and Mullainathan]{Bertrand and
+  Mullainathan}{2004}{bertrand2004emily}
+{\bf Bertrand, Marianne and Sendhil Mullainathan}, ``Are Emily and Greg More
+  Employable Than Lakisha and Jamal? A Field Experiment on Labor Market
+  Discrimination,'' {\it American Economic Review}, 8 2004, {\it 94},
+  991--1013.
+
+\harvarditem[Chetty and Friedman]{Chetty and Friedman}{2019}{chetty2019privacy}
+{\bf Chetty, Raj and John~N. Friedman}, ``A Practical Method to Reduce Privacy
+  Loss When Disclosing Statistics Based on Small Samples,'' {\it AEA Papers and
+  Proceedings}, 5 2019, {\it 109}, 414--20.
+
+\harvarditem[Chetty and Hendren]{Chetty and
+  Hendren}{2018}{chetty2018neighborhoods}
+{\bf \bysame{} and Nathaniel Hendren}, ``The Impacts of Neighborhoods on
+  Intergenerational Mobility I: Childhood Exposure Effects,'' {\it The
+  Quarterly Journal of Economics}, 8 2018, {\it 133}, 1107--1162.
+
+\harvarditem[Chetty et al.]{Chetty, Friedman and
+  Hendren}{2020}{chetty2020opportunity}
+{\bf \bysame{}, John Friedman, and Nathaniel Hendren}, ``The Opportunity Atlas
+  Mapping the Childhood Roots of Social Mobility,'' 2020.
+
+\harvarditem[Chetty et al.]{Chetty, Friedman, Hendren, Jones and
+  Porter}{2018}{chetty2018opportunityatlas}
+{\bf \bysame{}, John~N Friedman, Nathaniel Hendren, Maggie~R Jones, and Sonya~R
+  Porter}, ``The Opportunity Atlas: Mapping the Childhood Roots of Social
+  Mobility,'' 10 2018.
+
+\harvarditem[Chetty et al.]{Chetty, Friedman, Hilger, Saez, Schanzenbach and
+  Yagan}{2011}{chetty2011kindergarten}
+{\bf \bysame{}, John~N. Friedman, Nathaniel Hilger, Emmanuel Saez,
+  Diane~Whitmore Schanzenbach, and Danny Yagan}, ``How Does Your Kindergarten
+  Classroom Affect Your Earnings? Evidence from Project Star,'' {\it The
+  Quarterly Journal of Economics}, 11 2011, {\it 126}, 1593--1660.
+
+\harvarditem[Chetty et al.]{Chetty, Hendren and Katz}{2016}{chetty2016moving}
+{\bf \bysame{}, Nathaniel Hendren, and Lawrence~F. Katz}, ``The Effects of
+  Exposure to Better Neighborhoods on Children: New Evidence from the Moving to
+  Opportunity Experiment,'' {\it American Economic Review}, 4 2016, {\it 106},
+  855--902.
+
+\harvarditem[Cunningham]{Cunningham}{2021}{cunningham2023mixtape}
+{\bf Cunningham, Scott}, {\it Causal Inference: The Mixtape}, Vol. Yale Press.
+  2021.
+
+\harvarditem[Einav and Levin]{Einav and Levin}{2014}{einav2014ageofbigdata}
+{\bf Einav, Liran and Jonathan Levin}, ``Economics in the age of big data,''
+  {\it Science}, 2014, {\it 346}, 1--7.
+
+\harvarditem[Gentzkow et al.]{Gentzkow, Kelly and
+  Taddy}{2019}{gentzkow2019text}
+{\bf Gentzkow, Matthew, Bryan Kelly, and Matt Taddy}, ``Text as Data,'' {\it
+  Source: Journal of Economic Literature}, 2019, {\it 57}, 535--574.
+
+\harvarditem[Glaeser et al.]{Glaeser, Kim and Luca}{2017}{glaeser2017local}
+{\bf Glaeser, Edward~L., Hyunjin Kim, and Michael Luca}, ``Nowcasting the Local
+  Economy: Using Yelp Data to Measure Economic Activity,'' 11 2017.
+
+\harvarditem[Glaeser et al.]{Glaeser, Kim and
+  Luca}{2018}{glaeser2018gentrification}
+{\bf \bysame{}, \bysame{}, and \bysame{}}, ``Nowcasting Gentrification: Using
+  Yelp Data to Quantify Neighborhood Change,'' {\it AEA Papers and
+  Proceedings}, 5 2018, {\it 108}, 77--82.
+
+\harvarditem[Huntington-Klein]{Huntington-Klein}{2021}{hungtintonklein2023effect}
+{\bf Huntington-Klein, Nick}, {\it The Effect: An introduction to research and
+  causality}, Vol. Chapman and Hall 2021.
+
+\harvarditem[Huntington-Klein et al.]{Huntington-Klein, Arenas, Beam, Bertoni,
+  Bloem, Burli, Chen, Grieco, Ekpe, Pugatch, Saavedra and
+  Stopnitzky}{2021}{huntingtonklen2021influence}
+{\bf \bysame{}, Andreu Arenas, Emily Beam, Marco Bertoni, Jeffrey~R. Bloem,
+  Pralhad Burli, Naibin Chen, Paul Grieco, Godwin Ekpe, Todd Pugatch, Martin
+  Saavedra, and Yaniv Stopnitzky}, ``The influence of hidden researcher
+  decisions in applied microeconomics,'' {\it Economic Inquiry}, 7 2021, {\it
+  59}, 944--960.
+
+\harvarditem[McDermott]{McDermott}{2022}{mcdermott2022docker}
+{\bf McDermott, Grant}, ``Docker Lecture,'' 2022.
+
+\harvarditem[Naik et al.]{Naik, Philipoom, Raskar and
+  Hidalgo}{2014}{naik2014streetscore}
+{\bf Naik, Nikhil, Jade Philipoom, Ramesh Raskar, and Cesar Hidalgo},
+  ``Streetscore - Predicting the Perceived Safety of One Million
+  Streetscapes,'' 2014.
+
+\harvarditem[Shapiro et al.]{Shapiro, Booth, Gentzkow and
+  Shapiro}{2014}{gentzkowshapiro2014code}
+{\bf Shapiro, Matthew M Gentzkow~Jesse, Chicago Booth, Matthew Gentzkow, and
+  Jesse~M Shapiro}, ``Code and Data for the Social Sciences: A Practitioner's
+  Guide,'' 2014.
+
+\harvarditem[Simonsohn]{Simonsohn}{2021}{datacolada2021groundhog}
+{\bf Simonsohn, Uri}, ``[95] Groundhog: Addressing The Threat That R Poses To
+  Reproducible Research - Data Colada,'' 2021.
+
+\harvarditem[Simonsohn]{Simonsohn}{2022}{datacolada2022groundhog}
+{\bf \bysame{}}, ``[100] Groundhog 2.0: Further addressing the threat R poses
+  to reproducible research - Data Colada,'' 2022.
+
+\end{thebibliography}
