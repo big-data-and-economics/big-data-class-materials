@@ -1,51 +1,67 @@
 This is BibTeX, Version 0.99d (TeX Live 2022)
 Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: syllabus.aux
-The style file: AER.bst
-Reallocated singl_function (elt_size=4) to 100 items from 50.
-Reallocated singl_function (elt_size=4) to 100 items from 50.
+The style file: unsrtnat.bst
 Database file #1: syllabus_bigdata.bib
 Warning--empty journal in chetty2018opportunityatlas
+Warning--empty year in tinyverse
+Warning--empty journal in wickhamtidy
+Warning--empty year in wickhamtidy
+Warning--empty year in wickhamtidy
+Warning--empty year in apiintro
 Warning--empty journal in glaeser2017local
-You've used 23 entries,
-            2984 wiz_defined-function locations,
-            774 strings with 8035 characters,
-and the built_in function-call counts, 19880 in all, are:
-= -- 2856
-> -- 1383
-< -- 346
-+ -- 485
-- -- 268
-* -- 1399
-:= -- 4473
-add.period$ -- 23
-call.type$ -- 23
-change.case$ -- 161
-chr.to.int$ -- 23
-cite$ -- 25
-duplicate$ -- 239
-empty$ -- 541
-format.name$ -- 689
-if$ -- 4802
-int.to.chr$ -- 1
-int.to.str$ -- 0
-missing$ -- 19
-newline$ -- 75
-num.names$ -- 276
-pop$ -- 332
+Warning--empty author in crs
+Warning--empty journal in crs
+Warning--empty year in crs
+Warning--empty year in crs
+Warning--empty publisher in lovelace2019geographic
+Warning--empty publisher in wickham2023meta
+Warning--empty year in tidyeval
+Warning--empty journal in eddelbuettel2020parallel
+Warning--empty publisher in hungtintonklein2023effect
+Warning--empty publisher in cunningham2023mixtape
+Warning--empty journal in card1993college
+Warning--empty note in chetty2023diversifying
+Warning--empty year in simonsohn2023bertrand
+You've used 50 entries,
+            2481 wiz_defined-function locations,
+            857 strings with 13635 characters,
+and the built_in function-call counts, 17611 in all, are:
+= -- 1538
+> -- 816
+< -- 31
++ -- 339
+- -- 236
+* -- 1348
+:= -- 2832
+add.period$ -- 211
+call.type$ -- 50
+change.case$ -- 96
+chr.to.int$ -- 47
+cite$ -- 74
+duplicate$ -- 860
+empty$ -- 1629
+format.name$ -- 310
+if$ -- 3761
+int.to.chr$ -- 4
+int.to.str$ -- 51
+missing$ -- 38
+newline$ -- 319
+num.names$ -- 138
+pop$ -- 412
 preamble$ -- 1
-purify$ -- 184
+purify$ -- 50
 quote$ -- 0
-skip$ -- 0
+skip$ -- 534
 stack$ -- 0
-substring$ -- 494
-swap$ -- 74
+substring$ -- 551
+swap$ -- 121
 text.length$ -- 2
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 88
-warning$ -- 2
-while$ -- 241
+type$ -- 338
+warning$ -- 20
+while$ -- 114
 width$ -- 0
-write$ -- 355
-(There were 2 warnings)
+write$ -- 740
+(There were 20 warnings)

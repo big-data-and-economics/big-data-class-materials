@@ -91,6 +91,8 @@ You'll soon receive access to this repo, where we submit assignments, upload pre
 
 `r fa('home')` Live in Maine and Massachusetts
 
+`r fa('book')` Research fields: Public and Labor, interested in applied econometrics and data science
+
 --
 
 ### You
@@ -125,11 +127,27 @@ Data science skills are largely distinct from (and complementary to) the core 'm
 > *"In short, we will cover things that I wish someone had taught me when I was starting out in college."*
 
 ---
+
+# Caveat
+
+- This course will be **hard.** You will need to:
+  - Teach yourself new skills I cannot cover in 12 weeks
+  - Be entrepreneurial: If you find a better way to do something, do (and share) it!
+  - Be patient: You will encounter bugs and errors, and you will need to learn how to fix them
+
+- This course will also be **rewarding**
+  - You can avoid the mistakes you make here on your thesis and in your career
+  - You will learn skills that employers, pre-doc programs, and graduate schools want (but teach poorly)
+  - You will learn how to be a better researcher and a better citizen
+    - Seriously, a little data science goes a long way in helping you see through BS
+
+---
 # You, at the end of this course
 
 <div align="center">
 <img src="pics/awesome.jpg">
 </div>
+
 
 ---
 # Syllabus readthrough
@@ -145,7 +163,7 @@ Data science skills are largely distinct from (and complementary to) the core 'm
 | Component                           | Weight | Graded |
 |:-||-:|
 | 7 × homework assignments (10% each) | 50% | Top 5 |
-| 2 × short presentations (5% each)		| 10% | Top 1 |
+| 2 × short presentations (10% each)	| 10% | Top 1 |
 | 1 × final project   				        | 40% | In parts |
 
 - [Short presentations](https://github.com/ECON368-fall2023-big-data-and-economics/presentations) summarize either a key lecture reading, or an (approved) software package/platform.
@@ -165,7 +183,7 @@ PS &mdash; I'll also award a class participation bonus (2.5%) at my discretion.
 - 7 homework assignments will be assigned throughout the semester.
 - Each assignment will be assigned and  submitted via GitHub classroom
   - You will be submitting relevant data files, code, and a write-up
-- 2  will be group assignments, the rest will be individual.
+- 2 will be group assignments, the rest will be individual.
 - I want you to practice pair coding and reconciling GitHub bugs
 
 ---
@@ -173,10 +191,7 @@ PS &mdash; I'll also award a class participation bonus (2.5%) at my discretion.
 
 - Every class will have a five-minute presentation on a key reading, software, data science technique, or programming skill
 - You will sign up for a presentation slot on the [course website](https://github.com/ECON368-fall2023-big-data-and-economics/presentations)
-- A successful presentation will:
-  - Introduce the topic
-  - Explain why it is important
-  - Provide a use case
+- Details on a strong presentation available in the syllabus
 - You will submit a PDF (and any .tex or .Rmd files) of your slides to GitHub classroom
 
 ---
@@ -189,12 +204,13 @@ PS &mdash; I'll also award a class participation bonus (2.5%) at my discretion.
 
 | Component           | Weight of Final | Date |
 |:-|-:|
-| Project Proposal    | 5% | 9/22   |
-| Literature Review		| 5% | 10/17  |
-| Data Description    | 5% | 11/17  |
+| Project Proposal    | 5%  | 9/22  |
+| Literature Review		| 5%  | 10/17 |
+| Data Description    | 5%  | 11/17 |
+| Peer Review         | 5%  | 12/1  |
 | Code                | 10% | 12/11 |
-| Write up            | 15% | 12/11 |
-| **Total**               | **40%** | N/A |
+| Write up            | 10% | 12/11 |
+| **Total**           | **40%** | N/A |
 
 - Like problem sets, you will submit a PDF with all code and data files to reproduce your results
 - Christine Murray has created a guide of [potential data sources](https://libguides.bates.edu/ECON368)
@@ -203,17 +219,16 @@ PS &mdash; I'll also award a class participation bonus (2.5%) at my discretion.
 ---
 # Lecture outline
 
-- Each lecture will cover either a "skill" or an "application"
-- Skills will typically be taught on Tuesdays and applications on Thursdays
+- Each lecture will cover either a "skill" (on Tuesdays) or an "application" (on Thursdays)
 
+.pull-left[
 ### Data science basics
 
-- Data visualization
-- Version control
-- Learning to love the shell
+- Version control with Git and GitHub
 - R language basics
 - Data cleaning and wrangling
 - Webscraping 
+- Data visualization
 
 ### Analysis and Programming
 
@@ -221,22 +236,22 @@ PS &mdash; I'll also award a class participation bonus (2.5%) at my discretion.
 - Spatial analysis in R
 - Functions in R
 - Parallel programming
+]
 
----
-# Lecture outline (cont.)
-
+.pull-right[
 ### Causal inference
 
 - Regression discontinuity design
 - Panel data and fixed effects
 - Field experiments
 
-### Scaling up: Big data and cloud computation
+### Scaling up: Big data, ML, and cloud computation
 
 - High performance computing (Leavitt cluster) 
 - Databases: SQL(ite) and BigQuery
 - Machine Learning techniques
 - Text analysis
+]
 
 ---
 # What is Data Science?
@@ -392,7 +407,7 @@ knitr::include_graphics('pics/widedata.png')
 - It takes most of the headache away from coding, leaving only the "fun" parts
 
 ---
-# ChatGPT example from PS3 later in the semester
+# ChatGPT example
 
 **Human:**
 
@@ -451,7 +466,7 @@ Exported on January 17, 2023 10:11 AM.
 # AI assistance and accessibility
 
 - I actively used GitHub CoPilot to write these Rmarkdown slides
-- I used a voice-to-text tool (Talon) to dictate text and comments
+- I used a voice-to-text tool (Talon) to dictate text and comments while in a sling
 - Asked CoPilot to write code for me based on the comments
 - Quick demo if time allows
 
@@ -464,65 +479,7 @@ Exported on January 17, 2023 10:11 AM.
 
 - ML is good at prediction, but not necessarily at causal inference
 
----
-
-# Differences in Opportunity Across Local Areas 
-
-- How do children’s chances of moving up vary across areas in America?
-  - Are there some areas where kids do better than others?  If so, what lessons can we learn from them?
-
-- The Opportunity Atlas is a new tool that allows you to explore these questions
-  - Data sources: Anonymized Census data (2000, 2010, ACS) covering U.S. pop linked to federal income tax returns from 1989-2015
-  - Link children to parents based on dependent claims on tax returns
-  - Target sample: children born between 1978 and 1983 born in the U.S. or who are authorized immigrants who came to the U.S. in childhood.
-  - Analyis sample: 20.5M children, 96% coverage rate of target sample
-
----
-# Measuring Parents' and Children's Incomes in Tax Data
-
-- Parents' HH incomes: average income reported on Form 1040 tax return from 1994-2000
-- Children's incomes measured from tax returns 2014-2015 (ages 31-37)
-- Focus on percentile ranks in *national* distribution
-  - Why?
-
----
-# Integenerational Income Mobility for Children Raised in Chicago
-
-```{r img_chicago, echo=FALSE, out.width="90%"}
-
-knitr::include_graphics('pics/chicago_mobility.png')
-
-```
-
----
-# Geography of Upward Mobility in the United States
-
-```{r img_us, echo=FALSE, out.width="90%"}
-
-knitr::include_graphics('pics/income_mobility.png')
-
-```
-
-Average household income of children with parents earning $27,000 (25th percentile)
-
-Source: *The Opportunity Atlas. Chetty, Firedman, Hendren, Jones, Porter (2018)*
-
----
-# Correlation vs. causation
-
-- Machine learning is not the end-all, be-all of data science
-
-- A good data scientist knows that correlation is not causation!
-
-- ML is good at prediction, but not necessarily at causal inference
-
-- A good ML model will account for location and parental income to predict adult income
-
-- How do you answer each of these to a hotelier? 
-  - What is the _predicted effect_ of growing up with parents at the 25th percentile in Chicago on adult income?
-  - What is the _counterfacual effect_ of growing up with parents at the 25th precentile in Chicago on adult income?
-
-- Economists' comparative advantage is in combining machine learning with economic theory to answer these questions
+- More on this later! First, let's get into software
 
 ---
 class: inverse, center, middle
@@ -539,7 +496,7 @@ name: started
 
 2. Download [RStudio](https://www.rstudio.com/products/rstudio/download/preview/).
 
-3. Download [Visual Studio Code](TK).
+3. Download [Visual Studio Code](https://code.visualstudio.com/download).
 
 4. Download [Git](https://git-scm.com/downloads).
 
@@ -556,7 +513,7 @@ If you had trouble completing any of these steps, please raise your hand.
 
 I'll detail further software requirements as and when the need arises. However, to help smooth some software installation issues further down the road, please also do the following (depending on your OS):
 
-- **Windows:** Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/). I also recommend that you install [Chocolately](https://chocolatey.org/).
+- **Windows:** Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/). I also recommend that you install [Chocolately](https://chocolatey.org/). [Windows Subsystem for Linx](https://learn.microsoft.com/en-us/windows/wsl/install).
 - **Mac:** Install [Homebrew](https://brew.sh/). I also recommend that you configure/open your C++ toolchain (see [here](https://github.com/rmacoslib/r-macos-rtools#installer-package-for-macos-r-toolchain-).)
 - **Linux:** None (you should be good to go).
 
@@ -601,7 +558,7 @@ Open up the [shell](http://happygitwithr.com/shell.html#shell).
 ---
 # Checklist (cont.)
 
-We will make sure that everything is working properly with your R and GitHub setup next lecture.
+We will make sure that everything is working properly with your R, VS Code, and GitHub setup next lecture.
 
 For the rest of today's lecture, I want to go over some very basic R concepts.
 
@@ -673,7 +630,7 @@ programming languages and APIs.
 
 ### Path dependency
 
-- It's also the language that I know best.
+- It's also the language that I know (second) best.
 --
 
 - (Learning multiple languages is a good idea, though.)
@@ -742,6 +699,17 @@ ggplot(data = mtcars, aes(x = wt, y = mpg)) +
 ```
 
 ---
+
+# Do increases in GDP cause life expectancy to increase? 
+
+- Let's use our new-found R knowledge to try to separate correlation from causation for a critical question in economics:
+  - Does increasing the economic pie (GDP) lead to longer lives (life expectancy)?
+
+- We can use the gapminder dataset to explore this question
+- The gapminder dataset contains panel data on life expectancy, population size, and GDP per capita for 142 countries since the 1950s
+- Any predictions about what we'll learn? 
+
+---
 class: inverse, center, middle
 name: ggplot2
 
@@ -751,10 +719,10 @@ name: ggplot2
 ---
 # Install and load
 
-Open up your laptops. For the remainder of this first lecture, we're going continue playing around with [ggplot2](https://ggplot2.tidyverse.org/) (i.e. livecoding).
+Open up your laptops. For the remainder of this first lecture, we're going to pla around with [ggplot2](https://ggplot2.tidyverse.org/) (i.e. livecoding) to answer our question about GDP and life expectancy.
 
-If you don't have them already, install the `ggplot2` and `gapminder` packages via either:
-- **Console:** Enter `install.packages(c("ggplot2", "gapminder"), dependencies=T)`.
+If you don't have them already, install the `ggplot2` and `causaldata` packages via either:
+- **Console:** Enter `install.packages(c("ggplot2", "causaldata"), dependencies=T)`.
 - **RStudio:** Click the "Packages" tab in the bottom-right window pane. Then click "Install" and search for these two packages.
   
 ![](pics/install.gif)
@@ -765,14 +733,14 @@ If you don't have them already, install the `ggplot2` and `gapminder` packages v
 Once the packages are installed, load them into your R session with the `library()` function.
 ```{r pkg_load}
 library(ggplot2)
-library(gapminder) ## We're just using this package for the gapminder data
+library(causaldata) ## We're just using this package for the gapminder data, it has many useful datasets! 
 ```
 
 Notice too that you don't need quotes around the package names any more. Reason: R now recognises these packages as defined objects with given names. ("Everything in R is an object and everything has a name.")
 
 --
 
-PS — A convenient way to combine the package installation and loading steps is with the [pacman package's](https://github.com/trinker/pacman) `p_load()` function. If you run `pacman::p_load(ggplot, gapminder)` it will first look to see whether it needs to install either package before loading them. Clever.
+PS — A convenient way to combine the package installation and loading steps is with the [pacman package's](https://github.com/trinker/pacman) `p_load()` function. If you run `pacman::p_load(ggplot, causaldata)` it will first look to see whether it needs to install either package before loading them. Clever.
 - We'll get to this next week, but if you want to run a function from an (installed) package without loading it, you can use the `PACKAGE::package_function()` syntax.
 
 ---
@@ -783,6 +751,13 @@ Because we're going to be plotting the [gapminder](https://github.com/jennybc/ga
 ```{r gapm}
 gapminder
 ```
+
+When opening a new dataset, it is important to know why. What question are we asking?
+
+Today we want to know: 
+- Does increased GDP per capita lead to increased life expectancy? 
+- If not, what can we say about the two? 
+
 ---
 # Elements of ggplot2
 
@@ -883,7 +858,17 @@ p +
 ```
 
 ---
-# 2. Geoms (cont.)
+# Check back on question
+
+Does increased GDP per capita lead to increased life expectancy?
+- There is a positive relationship between GDP per capita and life expectancy
+- Is it causal? Unclear.
+- What other factors might be at play?
+- Can we rule those out? 
+- What about time? 
+
+---
+# 2. Geoms (cont.): account for population and geography
 
 Aesthetics can be applied differentially across geoms.
 
@@ -934,6 +919,8 @@ But it bears repeating: You can build out some truly impressive complexity and t
 - You don't have to transform your original data; ggplot2 takes care of all of that.
 - For example (see next slide for figure).
 
+- **Bonus:** Maybe this will help make sense of the non-linear relationship between GDP per capita and life expectancy?
+
 ```{r layers1}
 p2 =
   p +
@@ -977,6 +964,16 @@ p2 + theme_modern_rc() + geom_point(aes(size = pop, col = continent), alpha = 0.
 ```
 
 ---
+# Check back on question
+
+Does increased GDP per capita lead to increased life expectancy?
+- There is a positive relationship between GDP per capita and life expectancy
+- Is it causal? Unclear.
+- What other factors might be at play?
+- Can we rule those out? 
+- What about time? 
+
+---
 # What else? (cont.)
 
 Elaborate extension: Animation! (See the next slide for the resulting GIF.)
@@ -997,7 +994,7 @@ ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
 ---
 # What else? (cont.)
 
-```{r ggamin2, echo=FALSE}
+```{r gganim2, echo=FALSE}
 ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
   geom_point(alpha = 0.7, show.legend = FALSE) +
   scale_colour_manual(values = country_colors) +
@@ -1012,7 +1009,29 @@ ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
 
 --
 
+
 Note that this animated plot provides a much more intuitive understanding of the underlying data. Just as [Hans Rosling](https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen) intended.
+
+---
+# Correlation vs. causation
+
+- A good ML model will account for continent, time, GDP per capita, and many other factors to predict life expectancy
+
+- How do you answer each of these to a policymaker? 
+  - What is the _predicted effect_ of increasing GDP by \$1000 on life expectancy? 
+  - What is the _counterfacual effect_ of increasing GDP by \$1000 on life expectancy? 
+
+- Economists' comparative advantage is in combining machine learning with economic theory to answer these questions
+
+---
+# But do increases in GDP per capita cause life expectancy to increase?
+
+- We can't answer this question with a simple plot.
+- We also can't answer this question with a very fancy plot. 
+- What do we need?
+  > - A model
+  > - A causal identification strategy
+  > - More granular (bigger) data
 
 ---
 # What else? (cont.)

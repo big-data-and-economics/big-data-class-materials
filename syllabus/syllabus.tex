@@ -4,7 +4,9 @@
 
 \newcommand{\blankline}{\quad\pagebreak[2]}
 
-\title{ECON368/DCS368: Big Data in Economics}
+\setlength\parindent{0pt}
+
+\title{ECON368/DCS368: Big Data and Economics}
 \author{Kyle Coombs he/him/his}
 \date{Fall 2023}
 
@@ -36,7 +38,7 @@
 \usepackage{url}
 \pagestyle{fancy}
 \usepackage{hyperref}
-\usepackage{lastpage}
+%\usepackage{lastpage}
 \usepackage{amsmath}
 \usepackage{layout}   
 \lhead{}
@@ -74,7 +76,6 @@ E-mail: \texttt{kcoombs@bates.edu} & Web: \href{kylecoombs.com}{\tt\bf kylecoomb
 \hline
 \end{tabular*} \\
   
-
 \subsection*{Note}
 \label{sec:note}
 
@@ -123,6 +124,18 @@ We will also make extensive use of the \textbf{Git} version control system (foll
 You will also need to sign up for a \textbf{GitHub CoPilot} using the instructions here \url{https://docs.github.com/en/copilot/quickstart}. GitHub CoPilot is an AI tool that will help you write code. It is not perfect, but it is very useful. It is free for students, faculty, or maintainers of open source projects. It helped me write this syllabus. 
 
 \vspace{-0.25cm}
+\subsubsection*{Windows only: Windows Subsystem for Linux}
+Windows users will need some form of command line interface tool. My recommendation is Windows Subsystem for Linux (\url{https://learn.microsoft.com/en-us/windows/wsl/install}). This allows you to run Linux within your Windows machine, so you can more easily implement tips you find online for software installation, etc. 
+
+\vspace{-0.25cm}
+\subsubsection*{LaTeX software}
+\textbf{TeX Live}: \\
+A LaTeX software distribution that is compatible with the LaTeX Workshop extension in Visual Studio Code. Installation instructions can be found here: \url{https://www.tug.org/texlive/}. Use the ``easy install'' option for your operating system. \\
+
+\hspace{-0.25cm} \textbf{Overleaf}: \\
+I also recommend that you create an Overleaf account. Overleaf is a useful tool for learning LaTex, which you will use to write your final. You can create an account here \url{https://www.overleaf.com/register}. Note, you can sync your Overleaf account with your GitHub account using instructions here \url{https://www.overleaf.com/learn/how-to/Git_integration}. This is a premium feature at present, so I do not require it. You can also sync it with Dropbox, which is similarly a premium feature \url{https://www.overleaf.com/learn/how-to/Dropbox_Synchronization}. (Student plans cost \$89 per year.)
+
+\vspace{-0.25cm}
 \subsubsection*{Visual Studio Code}
 We will largely be using Visual Studio Code, or VSCode, for coding with \textit{R}. VSCode is free and open-source, and is available for Windows, Mac, and Linux. You can download it at \url{https://code.visualstudio.com/download}. Once you have installed VSCode, you will need to install a variety of extensions. We will cover installations during the problem set (or as they become necessary), but here is a list:
 
@@ -140,8 +153,8 @@ You are ready to start this course once you have installed R, RStudio, and Git (
 \begin{enumerate}
   \item \textit{GitHub Copilot} by GitHub -- \url{https://marketplace.visualstudio.com/items?itemName=GitHub.copilot}
   \item \textit{ChatGPT - Genie AI} by Genie AI -- \url{https://marketplace.visualstudio.com/items?itemName=genieai.chatgpt-vscode}
-  \item \textit{Anaconda} or \textit{PIP} -- largely used for Python installations, there a few quality of life packages for R that are distributed via \textit{Anaconda} or \textit{PIP}.
-  \item \textit{Radian} -- Radian allows you to use RStudio similar to how you would RStudio. You will be able to run code directly into a terminal with \texttt{Ctrl+Enter}, but also have access to GitHub CoPilot coding assistance. 
+  \item \textit{Anaconda} or \textit{PIP} -- largely used for Python installations, there a few quality of life packages for R that are distributed via \textit{Anaconda} or \textit{PIP}. \url{https://docs.anaconda.com/free/anaconda/install/index.html}
+  \item \textit{Radian} -- Radian allows you to use RStudio similar to how you would RStudio. You will be able to run code directly into a terminal with \texttt{Ctrl+Enter}, but also have access to GitHub CoPilot coding assistance. \url{https://github.com/randy3k/radian}
 \end{enumerate}
 
 \textbf{Operating system-specific recommendations:}
@@ -253,9 +266,9 @@ Not constructive feedback:
 
 \footnotesize{After the ``grace period,'' the instructor, department, or college must authorize an extension. If not authorized, assignments will be accepted for a 50\% deduction to the score up to 2 days after the deadline. After this any assignments handed in will be given 0.}
 
-\footnotesize{\textbf{End of course:} If an extension beyond the ``grace period'' is not authorized by the instructor, department, or college, an unfinished incomplete grade will automatically change to an F after either (a) the end of the next regular semester in which the student is enrolled (not including summer sessions), or (b) the end of 12 months if the student is not enrolled, whichever is shorter.}
+\footnotesize{\textbf{End of course:} If an extension beyond the ``grace period'' is not authorized by the instructor, department, or college, an unfinished incomplete grade will automatically change to an F after either (a) the end of the next regular semester in which the student is enrolled (not including short-term), or (b) the end of 12 months if the student is not enrolled, whichever is shorter.}
 
-\footnotesize{Incompletes that change to F will count as an attempted course on transcripts. The burden of fulfilling an incomplete grade is the responsibility of the student. The college policy on incomplete grades is located at TK.}
+\footnotesize{Incompletes that change to F will count as an attempted course on transcripts. The burden of fulfilling an incomplete grade is the responsibility of the student.}
 
 \subsection*{Academic Integrity and Honesty}
 \footnotesize{Students are required to comply with the Bates policy on academic integrity in the Code of Student Conduct at \url{https://www.bates.edu/student-conduct-community-standards/student-conduct/code-of-student-conduct/}. Don't cheat. Don't be that person. Yes, you. You know exactly what I'm talking about. See \url{https://www.bates.edu/student-conduct-community-standards/student-conduct/academic-integrity-policy/} for a detailed explanation of academic integrity.}
@@ -297,13 +310,13 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
 \end{itemize}
 \week{Week 2} Coding workflow, staying organized, and version control
 \begin{itemize}
-  \item \textbf{Skills:} Functions, folder structure, Git(Hub), minimally reproducible examples, Docker
+  \item \textbf{Skills:} Folder structure, Git(Hub), minimally reproducible examples, Docker
   \begin{itemize}
-    \item Readings: \cite{gentzkowshapiro2014code}, \cite{mcdermott2022docker}
+    \item Readings: \textbf{\cite{gentzkowshapiro2014code}}, \cite{mcdermott2022docker}
   \end{itemize}
   \item \textbf{Application:} Hidden Decisions of Researchers, Data Colada
   \begin{itemize}
-    \item Readings: \textbf{\cite{huntingtonklen2021influence}}, \cite{datacolada2021groundhog}, \cite{datacolada2022groundhog}
+    \item Readings: \textbf{\cite{huntingtonklen2021influence}}, \cite{tinyverse}, \cite{wickhamtidy}, \cite{datacolada2021groundhog}, \cite{datacolada2022groundhog}
   \end{itemize}
   \item \textit{\textbf{Problem Set 1 due Friday at Midnight}}
 \end{itemize}
@@ -311,58 +324,48 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
 \begin{itemize}
 \item \textbf{Skills:} APIs, scraping, hashing, differential privacy
 \begin{itemize}
-  \item Readings: \textbf{\cite{chetty2019privacy}}, \cite{abowd2019privacy}
+  \item Readings: \textbf{\cite{chetty2019privacy}}, \cite{abowd2019privacy}, \cite{apiintro}
 \end{itemize}
 \item \textbf{Application:} Nowcasting Gentrification using Yelp Data
 \item \textit{\textbf{Project Proposal due 9/22 at Midnight}}
 \begin{itemize}
   \item Readings: \textbf{\cite{glaeser2018gentrification}}, \cite{glaeser2017local}
 \end{itemize}
-%\item Readings:
-%\url{https://www.journals.uchicago.edu/doi/10.1086/701680}
-%\url{https://www.aeaweb.org/articles?id=10.1257/jep.26.2.189}
-%\url{https://pubs.aeaweb.org/doi/pdfplus/10.1257/pandp.20181034}
-%\url{https://www.brookings.edu/articles/modeling-remittances-flows-with-web-scraping/}
-%\url{https://www.nber.org/system/files/working_papers/w24010/w24010.pdf}
-%\url{https://www.aeaweb.org/articles?id=10.1257/jep.30.2.151}
-%\url{https://oxfordre.com/economics/display/10.1093/acrefore/9780190625979.001.0001/acrefore-9780190625979-e-652;jsessionid=0A097CCF3C3F6708C136BBEE85E7E9E9?rskey=vcsTnq}
-%\url{https://evictionlab.org/research/}
-%\url{https://scholarspace.manoa.hawaii.edu/items/cf2a9d38-0bd8-42df-aa60-f2c95a42b139}
 \end{itemize} 
 \week{Week 4} Spatial Analysis
 \begin{itemize}
   \item \textbf{Skills:} Map projections, shapefiles, \textit{sf}
   \begin{itemize}
-    \item Reading: 
+    \item Reading: \textbf{\cite{mcdermott2023spatial}} \cite{crs}, \cite{lovelace2019geographic}
   \end{itemize}
   \item \textbf{Application:} Neighborhoods and Mobility
   \begin{itemize}
-    \item Readings:  \textbf{\cite{chetty2018opportunityatlas}}, 
+    \item Readings: \textbf{\cite{chetty2018opportunityatlas}}
   \end{itemize}
   \item \textit{\textbf{Problem Set 2 due Friday at Midnight}}
 \end{itemize}
-\week{Week 5} Regression review \& Causal Inference
+\week{Week 5} Functions \& Parallel programming
+\begin{itemize}
+  \item \textbf{Skills:} Functions
+  \begin{itemize}
+    \item Readings: \cite{mcdermott2023functionsintro}, \cite{mcdermott2023functionsadvanced} \cite{wickham2023meta}, \cite{tidyeval}
+  \end{itemize}
+  \item \textbf{Skill:} Parallel Programming
+  \begin{itemize}
+    \item Readings: \textbf{\cite{mcdermott2023parallel}}, \cite{eddelbuettel2020parallel}, \cite{mcdermott2023parallel}
+  \end{itemize}
+  \item \textit{\textbf{Problem Set 5 due Friday at Midnight}}
+\end{itemize}
+\week{Week 6} Regression review \& Causal Inference
 \begin{itemize}
   \item \textbf{Skills:} OLS, IV, Potential Outcomes
   \begin{itemize}
     \item Readings: \cite{hungtintonklein2023effect} Chapter 13, \cite{cunningham2023mixtape} Chapter 4
   \end{itemize}
-  \item \textbf{Application:} Causal Effects of Neighborhoods
+  \item \textbf{Application:} Returns to Education and College Proximity
   \begin{itemize}
-    \item Readings: \textbf{\cite{chetty2016moving}}
+    \item Readings: \textbf{\cite{card1993college}}
   \end{itemize}
-\end{itemize}
-\week{Week 6} Regression Discontinuity Design
-\begin{itemize}
-  \item \textbf{Skills:} Kernels, RDD, McCrary Test, fuzzy RDD
-  \begin{itemize}
-    \item Readings: \cite{cunningham2023mixtape} Chapter 6, \cite{hungtintonklein2023effect} Chapter 20
-  \end{itemize}
-  \item \textbf{Application:} Class sizes and test scores
-  \begin{itemize}
-    \item Readings: \textbf{\cite{angrist1999maimonides}}, \cite{chetty2011kindergarten}
-  \end{itemize}
-  \item \textit{\textbf{Problem Set 3 due Friday at Midnight}}
 \end{itemize}
 \week{Fall Recess} Databases on Tuesday, then rest!
 \begin{itemize}
@@ -375,77 +378,77 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
   \begin{itemize}
     \item \cite{hungtintonklein2023effect} Chapters 16-18, \cite{cunningham2023mixtape} Chapters 8, 9
   \end{itemize}
-  \item \textbf{Application:} Moving to Opportunity
+  \item \textbf{Application:} Causal Effects of Neighborhoods
   \begin{itemize}
-    \item Reading: \textbf{\cite{chetty2018neighborhoods}}
+    \item Reading: \textbf{\cite{chetty2018neighborhoods}}, \textbf{\cite{chetty2019moving}}, \textbf{\cite{chetty2016moving}}
+  \end{itemize}
+  \item \textit{\textbf{Problem Set 3 due Friday at Midnight}}
+\end{itemize}
+\week{Week 8} Regression Discontinuity Design
+\begin{itemize}
+  \item \textbf{Skills:} RDD, McCrary Test, fuzzy RDD
+  \begin{itemize}
+    \item Readings: \cite{cunningham2023mixtape} Chapter 6, \cite{hungtintonklein2023effect} Chapter 20
+  \end{itemize}
+  \item \textbf{Applications:} College wage premia, Peru's Mining \textit{Mita}, class sizes
+  \begin{itemize}
+    \item Readings: \textbf{\cite{dell2010mita}}, \textbf{\cite{zimmerman2014returns}}, \textbf{\cite{angrist1999maimonides}}, \cite{chetty2023diversifying}
   \end{itemize}
   \item \textit{\textbf{Problem Set 4 due Friday at Midnight}}
-\end{itemize}
-\week{Week 8} Field Experiments %Maybe drop or add resume moving to opportunity?
-\begin{itemize}
-  \item \textbf{Skills:} Audit studies, correspondence studies
-  \begin{itemize}
-    \item Readings: TK
-  \end{itemize}
-  \item \textbf{Application:} Resume studies and Racial Discrimination, Creating Moves to Opportunity
-  \begin{itemize}
-    \item Readings: \cite{bertrand2004emily}
-  \end{itemize}
 \end{itemize}
 %\url{https://www.annualreviews.org/doi/abs/10.1146/annurev-economics-082222-074352?casa_token=5OzCf9NSgEMAAAAA%3ACwCox17aNu0Rrg5QnBOIzE8cXMfgDgYOgCgx2Ow7fP32tJj5H85AilUS2a4giTbbeip5Rkes9AgI}
 %\url{https://www.nber.org/papers/w26380}
 %Uber work by List
 %AirBNB field experiments? Discrimination and audits...
 %Slot functions here?
-\week{Week 9} Functions \& Parallel programming
+\week{Week 9} Machine Learning I
 \begin{itemize}
-  \item \textbf{Skills:} Functions, parallel programming, cluster computing, and cloud computing
-  \item \textbf{Application:} Judicial decisions
+  \item \textbf{Skills:} Decision Trees
   \begin{itemize}
-    \item Readings: Judicial decisions
+    \item Readings: \textbf{\cite{athey2019machine}}, \textbf{\cite{varian2014bigdata}}, \cite{mullainathan2017machine}, \cite{kleinberg2015prediction}
   \end{itemize}
-  \item \textit{\textbf{Problem Set 5 due Friday at Midnight}}
-\end{itemize}
-\week{Week 10} Machine Learning 
-\begin{itemize}
-  \item \textbf{Skills:} Regression penalization methods, Causal Forests
+  \item \textbf{Application:} Bias and Judicial Decisions
   \begin{itemize}
-    \item Readings: \cite{athey2019machine}
-  \end{itemize}
-  \item \textbf{Application:} Summer Jobs and At-Risk Youth
-  \begin{itemize}
-    \item Readings: , \cite{naik2014streetscore}
+    \item Readings: \textbf{\cite{kleinberg2018human}}, \cite{bertrand2004emily}, \cite{simonsohn2023bertrand}
   \end{itemize}
   \item \textit{\textbf{Data Description due 11/17 at Midnight}}
 \end{itemize}
-%ML Bail decisions
-%Summer jobs, at risk youth: \url{https://www.aeaweb.org/articles?id=10.1257/aer.p20171000}
-%Urban pictures: \url{https://www.aeaweb.org/articles?id=10.1257/aer.p20161030}
-%Streetscore: \url{https://www.cv-foundation.org/openaccess/content_cvpr_workshops_2014/W20/html/Naik_Streetscore_-_Predicting_2014_CVPR_paper.html}
+\week{Week 10} Machine Learning II
+\begin{itemize}
+  \item \textbf{Skills:} Regression penalization methods, Causal Forests
+  \begin{itemize}
+    \item Readings: \textbf{\cite{athey2019machine}}, \cite{varian2014bigdata}, \cite{mullainathan2017machine}, \cite{kleinberg2015prediction}
+  \end{itemize}
+  \item \textbf{Application:} Summer Jobs and At-Risk Youth
+  \begin{itemize}
+    \item Readings: \textbf{\cite{davis2017summer}}, \cite{naik2014streetscore}
+  \end{itemize}
+  \item \textit{\textbf{Data Description due 11/17 at Midnight}}
+\end{itemize}
 \week{Thanksgiving Recess} Gobble, gobble! 
-\week{Week 11} Text analysis
+\week{Week 11} Text analysis I
 \begin{itemize}
   \item \textbf{Skills:} Regular expressions, WordClouds, sentiment analysis
   \begin{itemize}
-    \item Readings:\cite{gentzkow2019text}
+    \item Readings: \textbf{\cite{gentzkow2019text}}
   \end{itemize}
-  \item \textbf{Application:} Twitter, inherited bias
+  \item \textbf{Application:} Google Flu Trends, Racial Animus and Elections
   \begin{itemize}
-    \item Readings: 
+    \item Reading: \textbf{\cite{lazer2014parable}}, \textbf{\cite{stephensdavidowitz2014racial}}, \cite{ginsberg2009influenza}
   \end{itemize}
 %\url{https://www.aeaweb.org/articles?id=10.1257/pandp.20231117}
 %EJMR: https://www.aeaweb.org/articles?id=10.1257/pandp.20181101
 %Bias in NLP: \url{https://www.brookings.edu/articles/detecting-and-mitigating-bias-in-natural-language-processing/}
 \end{itemize}
-\week{Week 12} Text analysis
+\week{Week 12} Text analysis II
 \begin{itemize}
   \item \textbf{Skills:} Topics modeling, LLMs, AI
   \begin{itemize}
-    \item Reading: \cite{ash2023textalgorithms}
+    \item Reading: \textbf{\cite{ash2023textalgorithms}}
   \end{itemize}
-  \item \textbf{Application:} EJMR, climate and attitude
+  \item \textbf{Application:} EJMR, Temperature and Twitter
   \begin{itemize}
-    \item Reading: TK
+    \item Readings: \textbf{\cite{wu2018gendered}}, \cite{moore2019temp}
   \end{itemize}
   \item \textit{\textbf{Problem Set 6 due Friday at Midnight}}
 %EJMR: https://www.aeaweb.org/articles?id=10.1257/pandp.20181101
@@ -457,6 +460,7 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
 \subsection*{What is missing?}
 
 \begin{itemize}
+  \item Field and Quasiexperiments
   \item Data types, data storage
   \item Command line interface
   \item Optimization, vectorization
@@ -469,7 +473,20 @@ The schedule is tentative and subject to change. Each week, I will cover a speci
 
 \newpage
 
-\bibliographystyle{AER}
+%\bibliographystyle{AER}
+\bibliographystyle{unsrtnat}
 \bibliography{syllabus_bigdata}
+
+%Field Experiments and Quasiexperiments %Maybe drop or add resume moving to opportunity?
+% \begin{itemize}
+%   \item \textbf{Skills:} Audit studies, correspondence studies
+%   \begin{itemize}
+%     \item Readings: \textbf{\cite{bertrand2004emily}}
+%   \end{itemize}
+%   \item \textbf{Application:} Resume studies and Racial Discrimination, Creating Moves to Opportunity
+%   \begin{itemize}
+%     \item Readings: \textbf{\cite{chetty2018neighborhoods}}, \textbf{\cite{chetty2019moving}}, \textbf{\cite{chetty2016moving}}
+%   \end{itemize}
+% \end{itemize}
 
 \end{document}

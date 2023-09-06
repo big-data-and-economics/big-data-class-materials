@@ -1,126 +1,376 @@
-\ifx\undefined\bysame
-\newcommand{\bysame}{\leavevmode\hbox to\leftmargin{\hrulefill\,\,}}
-\fi
-\begin{thebibliography}{xx}
+\begin{thebibliography}{50}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\harvarditem[Abowd and Schmutte]{Abowd and Schmutte}{2019}{abowd2019privacy}
-{\bf Abowd, John~M. and Ian~M. Schmutte}, ``An Economic Analysis of Privacy
-  Protection and Statistical Accuracy as Social Choices,'' {\it American
-  Economic Review}, 1 2019, {\it 109}, 171--202.
+\bibitem[Chetty et~al.(2018)Chetty, Friedman, Hendren, Jones, and
+  Porter]{chetty2018opportunityatlas}
+Raj Chetty, John~N Friedman, Nathaniel Hendren, Maggie~R Jones, and Sonya~R
+  Porter.
+\newblock The opportunity atlas: Mapping the childhood roots of social
+  mobility.
+\newblock 10 2018.
+\newblock \doi{10.3386/W25147}.
+\newblock URL \url{https://www.nber.org/papers/w25147}.
 
-\harvarditem[Angrist and Lavy]{Angrist and Lavy}{1999}{angrist1999maimonides}
-{\bf Angrist, Joshua~D. and Victor Lavy}, ``Using Maimonides' Rule to Estimate
-  the Effect of Class Size on Scholastic Achievement,'' {\it The Quarterly
-  Journal of Economics}, 5 1999, {\it 114}, 533--575.
+\bibitem[Chetty et~al.(2020)Chetty, Friedman, and
+  Hendren]{chetty2020opportunity}
+Raj Chetty, John Friedman, and Nathaniel Hendren.
+\newblock The opportunity atlas mapping the childhood roots of social mobility,
+  2020.
 
-\harvarditem[Ash and Hansen]{Ash and Hansen}{2023}{ash2023textalgorithms}
-{\bf Ash, Elliott and Stephen Hansen}, ``Text Algorithms in Economics,'' {\it
-  https://doi.org/10.1146/annurev-economics-082222-074352}, 7 2023, {\it 15.}
+\bibitem[Einav and Levin(2014)]{einav2014ageofbigdata}
+Liran Einav and Jonathan Levin.
+\newblock Economics in the age of big data.
+\newblock \emph{Science}, 346:\penalty0 1--7, 2014.
+\newblock URL \url{https://www.science.org}.
 
-\harvarditem[Athey and Imbens]{Athey and Imbens}{2019}{athey2019machine}
-{\bf Athey, Susan and Guido~W. Imbens}, ``Machine Learning Methods That
-  Economists Should Know About,'' {\it Annual Review of Economics}, 2019, {\it
-  11.}
+\bibitem[Shapiro et~al.(2014)Shapiro, Booth, Gentzkow, and
+  Shapiro]{gentzkowshapiro2014code}
+Matthew M Gentzkow~Jesse Shapiro, Chicago Booth, Matthew Gentzkow, and Jesse~M
+  Shapiro.
+\newblock Code and data for the social sciences: A practitioner's guide, 2014.
+\newblock URL
+  \url{http://faculty.chicagobooth.edu/matthew.gentzkow/research/CodeAndData.pdf,}.
 
-\harvarditem[Bertrand and Mullainathan]{Bertrand and
-  Mullainathan}{2004}{bertrand2004emily}
-{\bf Bertrand, Marianne and Sendhil Mullainathan}, ``Are Emily and Greg More
-  Employable Than Lakisha and Jamal? A Field Experiment on Labor Market
-  Discrimination,'' {\it American Economic Review}, 8 2004, {\it 94},
-  991--1013.
+\bibitem[McDermott(2022)]{mcdermott2022docker}
+Grant McDermott.
+\newblock Docker lecture, 2022.
+\newblock URL
+  \url{https://raw.githack.com/uo-ec607/lectures/master/13-docker/13-docker.html#1}.
 
-\harvarditem[Chetty and Friedman]{Chetty and Friedman}{2019}{chetty2019privacy}
-{\bf Chetty, Raj and John~N. Friedman}, ``A Practical Method to Reduce Privacy
-  Loss When Disclosing Statistics Based on Small Samples,'' {\it AEA Papers and
-  Proceedings}, 5 2019, {\it 109}, 414--20.
+\bibitem[Huntington-Klein et~al.(2021)Huntington-Klein, Arenas, Beam, Bertoni,
+  Bloem, Burli, Chen, Grieco, Ekpe, Pugatch, Saavedra, and
+  Stopnitzky]{huntingtonklen2021influence}
+Nick Huntington-Klein, Andreu Arenas, Emily Beam, Marco Bertoni, Jeffrey~R.
+  Bloem, Pralhad Burli, Naibin Chen, Paul Grieco, Godwin Ekpe, Todd Pugatch,
+  Martin Saavedra, and Yaniv Stopnitzky.
+\newblock The influence of hidden researcher decisions in applied
+  microeconomics.
+\newblock \emph{Economic Inquiry}, 59:\penalty0 944--960, 7 2021.
+\newblock ISSN 1465-7295.
+\newblock \doi{10.1111/ECIN.12992}.
+\newblock URL \url{https://onlinelibrary.wiley.com/doi/full/10.1111/ecin.12992
+  https://onlinelibrary.wiley.com/doi/abs/10.1111/ecin.12992
+  https://onlinelibrary.wiley.com/doi/10.1111/ecin.12992}.
 
-\harvarditem[Chetty and Hendren]{Chetty and
-  Hendren}{2018}{chetty2018neighborhoods}
-{\bf \bysame{} and Nathaniel Hendren}, ``The Impacts of Neighborhoods on
-  Intergenerational Mobility I: Childhood Exposure Effects,'' {\it The
-  Quarterly Journal of Economics}, 8 2018, {\it 133}, 1107--1162.
+\bibitem[tin()]{tinyverse}
+tinyverse.
+\newblock URL \url{https://www.tinyverse.org/}.
 
-\harvarditem[Chetty et al.]{Chetty, Friedman and
-  Hendren}{2020}{chetty2020opportunity}
-{\bf \bysame{}, John Friedman, and Nathaniel Hendren}, ``The Opportunity Atlas
-  Mapping the Childhood Roots of Social Mobility,'' 2020.
+\bibitem[Wickham()]{wickhamtidy}
+Hadley Wickham.
+\newblock Journal of statistical software tidy data.
+\newblock URL \url{http://www.jstatsoft.org/}.
 
-\harvarditem[Chetty et al.]{Chetty, Friedman, Hendren, Jones and
-  Porter}{2018}{chetty2018opportunityatlas}
-{\bf \bysame{}, John~N Friedman, Nathaniel Hendren, Maggie~R Jones, and Sonya~R
-  Porter}, ``The Opportunity Atlas: Mapping the Childhood Roots of Social
-  Mobility,'' 10 2018.
+\bibitem[Simonsohn(2021)]{datacolada2021groundhog}
+Uri Simonsohn.
+\newblock [95] groundhog: Addressing the threat that r poses to reproducible
+  research - data colada, 2021.
+\newblock URL \url{https://datacolada.org/95}.
 
-\harvarditem[Chetty et al.]{Chetty, Friedman, Hilger, Saez, Schanzenbach and
-  Yagan}{2011}{chetty2011kindergarten}
-{\bf \bysame{}, John~N. Friedman, Nathaniel Hilger, Emmanuel Saez,
-  Diane~Whitmore Schanzenbach, and Danny Yagan}, ``How Does Your Kindergarten
-  Classroom Affect Your Earnings? Evidence from Project Star,'' {\it The
-  Quarterly Journal of Economics}, 11 2011, {\it 126}, 1593--1660.
+\bibitem[Simonsohn(2022)]{datacolada2022groundhog}
+Uri Simonsohn.
+\newblock [100] groundhog 2.0: Further addressing the threat r poses to
+  reproducible research - data colada, 2022.
+\newblock URL \url{http://datacolada.org/100}.
 
-\harvarditem[Chetty et al.]{Chetty, Hendren and Katz}{2016}{chetty2016moving}
-{\bf \bysame{}, Nathaniel Hendren, and Lawrence~F. Katz}, ``The Effects of
-  Exposure to Better Neighborhoods on Children: New Evidence from the Moving to
-  Opportunity Experiment,'' {\it American Economic Review}, 4 2016, {\it 106},
-  855--902.
+\bibitem[Chetty and Friedman(2019)]{chetty2019privacy}
+Raj Chetty and John~N. Friedman.
+\newblock A practical method to reduce privacy loss when disclosing statistics
+  based on small samples.
+\newblock \emph{AEA Papers and Proceedings}, 109:\penalty0 414--20, 5 2019.
+\newblock ISSN 2574-0768.
+\newblock \doi{10.1257/PANDP.20191109}.
 
-\harvarditem[Cunningham]{Cunningham}{2021}{cunningham2023mixtape}
-{\bf Cunningham, Scott}, {\it Causal Inference: The Mixtape}, Vol. Yale Press.
-  2021.
+\bibitem[Abowd and Schmutte(2019)]{abowd2019privacy}
+John~M. Abowd and Ian~M. Schmutte.
+\newblock An economic analysis of privacy protection and statistical accuracy
+  as social choices.
+\newblock \emph{American Economic Review}, 109:\penalty0 171--202, 1 2019.
+\newblock ISSN 0002-8282.
+\newblock \doi{10.1257/AER.20170627}.
 
-\harvarditem[Einav and Levin]{Einav and Levin}{2014}{einav2014ageofbigdata}
-{\bf Einav, Liran and Jonathan Levin}, ``Economics in the age of big data,''
-  {\it Science}, 2014, {\it 346}, 1--7.
+\bibitem[api()]{apiintro}
+An introduction to apis | zapier guides.
+\newblock URL \url{https://zapier.com/resources/guides/apis}.
 
-\harvarditem[Gentzkow et al.]{Gentzkow, Kelly and
-  Taddy}{2019}{gentzkow2019text}
-{\bf Gentzkow, Matthew, Bryan Kelly, and Matt Taddy}, ``Text as Data,'' {\it
-  Source: Journal of Economic Literature}, 2019, {\it 57}, 535--574.
+\bibitem[Glaeser et~al.(2018)Glaeser, Kim, and Luca]{glaeser2018gentrification}
+Edward~L. Glaeser, Hyunjin Kim, and Michael Luca.
+\newblock Nowcasting gentrification: Using yelp data to quantify neighborhood
+  change.
+\newblock \emph{AEA Papers and Proceedings}, 108:\penalty0 77--82, 5 2018.
+\newblock ISSN 2574-0768.
+\newblock \doi{10.1257/PANDP.20181034}.
+\newblock URL \url{https://doi.org/10.1257/pandp.20181034}.
 
-\harvarditem[Glaeser et al.]{Glaeser, Kim and Luca}{2017}{glaeser2017local}
-{\bf Glaeser, Edward~L., Hyunjin Kim, and Michael Luca}, ``Nowcasting the Local
-  Economy: Using Yelp Data to Measure Economic Activity,'' 11 2017.
+\bibitem[Glaeser et~al.(2017)Glaeser, Kim, and Luca]{glaeser2017local}
+Edward~L. Glaeser, Hyunjin Kim, and Michael Luca.
+\newblock Nowcasting the local economy: Using yelp data to measure economic
+  activity.
+\newblock 11 2017.
+\newblock \doi{10.3386/W24010}.
+\newblock URL \url{https://www.nber.org/papers/w24010}.
 
-\harvarditem[Glaeser et al.]{Glaeser, Kim and
-  Luca}{2018}{glaeser2018gentrification}
-{\bf \bysame{}, \bysame{}, and \bysame{}}, ``Nowcasting Gentrification: Using
-  Yelp Data to Quantify Neighborhood Change,'' {\it AEA Papers and
-  Proceedings}, 5 2018, {\it 108}, 77--82.
+\bibitem[McDermott and Rubin(2023{\natexlab{a}})]{mcdermott2023spatial}
+Grant McDermott and Ed~Rubin.
+\newblock Spatial analysis, 2023{\natexlab{a}}.
+\newblock URL \url{https://grantmcdermott.com/ds4e/spatial-analysis.html}.
 
-\harvarditem[Huntington-Klein]{Huntington-Klein}{2021}{hungtintonklein2023effect}
-{\bf Huntington-Klein, Nick}, {\it The Effect: An introduction to research and
-  causality}, Vol. Chapman and Hall 2021.
+\bibitem[crs()]{crs}
+Overview of coordinate reference systems (crs) in r.
+\newblock URL \url{http://spatialreference.org/}.
 
-\harvarditem[Huntington-Klein et al.]{Huntington-Klein, Arenas, Beam, Bertoni,
-  Bloem, Burli, Chen, Grieco, Ekpe, Pugatch, Saavedra and
-  Stopnitzky}{2021}{huntingtonklen2021influence}
-{\bf \bysame{}, Andreu Arenas, Emily Beam, Marco Bertoni, Jeffrey~R. Bloem,
-  Pralhad Burli, Naibin Chen, Paul Grieco, Godwin Ekpe, Todd Pugatch, Martin
-  Saavedra, and Yaniv Stopnitzky}, ``The influence of hidden researcher
-  decisions in applied microeconomics,'' {\it Economic Inquiry}, 7 2021, {\it
-  59}, 944--960.
+\bibitem[Lovelace et~al.(2019)Lovelace, Nowosad, and
+  Muenchow]{lovelace2019geographic}
+Robin Lovelace, Jakub Nowosad, and Jannes Muenchow.
+\newblock \emph{Chapter 2 Geographic data in R | Geocomputation with R}.
+\newblock 2019.
+\newblock ISBN 9780203730058.
+\newblock URL \url{https://r.geocompx.org/spatial-class.html}.
 
-\harvarditem[McDermott]{McDermott}{2022}{mcdermott2022docker}
-{\bf McDermott, Grant}, ``Docker Lecture,'' 2022.
+\bibitem[McDermott and Rubin(2023{\natexlab{b}})]{mcdermott2023functionsintro}
+Grant McDermott and Ed~Rubin.
+\newblock Functions: Introductory concepts, 2023{\natexlab{b}}.
+\newblock URL \url{https://grantmcdermott.com/ds4e/funcs-intro.html}.
 
-\harvarditem[Naik et al.]{Naik, Philipoom, Raskar and
-  Hidalgo}{2014}{naik2014streetscore}
-{\bf Naik, Nikhil, Jade Philipoom, Ramesh Raskar, and Cesar Hidalgo},
-  ``Streetscore - Predicting the Perceived Safety of One Million
-  Streetscapes,'' 2014.
+\bibitem[McDermott and
+  Rubin(2023{\natexlab{c}})]{mcdermott2023functionsadvanced}
+Grant McDermott and Ed~Rubin.
+\newblock Functions: Advanced concepts, 2023{\natexlab{c}}.
+\newblock URL \url{https://grantmcdermott.com/ds4e/funcs-adv.html}.
 
-\harvarditem[Shapiro et al.]{Shapiro, Booth, Gentzkow and
-  Shapiro}{2014}{gentzkowshapiro2014code}
-{\bf Shapiro, Matthew M Gentzkow~Jesse, Chicago Booth, Matthew Gentzkow, and
-  Jesse~M Shapiro}, ``Code and Data for the Social Sciences: A Practitioner's
-  Guide,'' 2014.
+\bibitem[Wickham(2023)]{wickham2023meta}
+Hadley Wickham.
+\newblock \emph{Metaprogramming}.
+\newblock 2023.
+\newblock URL \url{https://adv-r.hadley.nz/metaprogramming.html}.
 
-\harvarditem[Simonsohn]{Simonsohn}{2021}{datacolada2021groundhog}
-{\bf Simonsohn, Uri}, ``[95] Groundhog: Addressing The Threat That R Poses To
-  Reproducible Research - Data Colada,'' 2021.
+\bibitem[tid()]{tidyeval}
+Tidy eval helpers — tidyeval • ggplot2.
+\newblock URL \url{https://ggplot2.tidyverse.org/reference/tidyeval.html}.
 
-\harvarditem[Simonsohn]{Simonsohn}{2022}{datacolada2022groundhog}
-{\bf \bysame{}}, ``[100] Groundhog 2.0: Further addressing the threat R poses
-  to reproducible research - Data Colada,'' 2022.
+\bibitem[McDermott and Rubin(2023{\natexlab{d}})]{mcdermott2023parallel}
+Grant McDermott and Ed~Rubin.
+\newblock Parallel programming, 2023{\natexlab{d}}.
+\newblock URL \url{https://grantmcdermott.com/ds4e/parallel.html}.
+
+\bibitem[Eddelbuettel(2020)]{eddelbuettel2020parallel}
+Dirk Eddelbuettel.
+\newblock Parallel computing with r: A brief review.
+\newblock 2020.
+\newblock URL \url{https://arxiv.org/abs/1912.11144}.
+
+\bibitem[Huntington-Klein(2021)]{hungtintonklein2023effect}
+Nick Huntington-Klein.
+\newblock \emph{The Effect: An introduction to research and causality}, volume
+  Chapman and Hall.
+\newblock 2021.
+\newblock URL \url{https://theeffectbook.net/ch-StatisticalAdjustment.html}.
+
+\bibitem[Cunningham(2021)]{cunningham2023mixtape}
+Scott Cunningham.
+\newblock \emph{Causal Inference: The Mixtape}, volume Yale Press.
+\newblock 2021.
+\newblock URL \url{https://mixtape.scunning.com/04-potential_outcomes}.
+
+\bibitem[Card(1993)]{card1993college}
+David Card.
+\newblock Using geographic variation in college proximity to estimate the
+  return to schooling.
+\newblock 10 1993.
+\newblock \doi{10.3386/W4483}.
+\newblock URL \url{https://www.nber.org/papers/w4483}.
+
+\bibitem[Chetty and Hendren(2018)]{chetty2018neighborhoods}
+Raj Chetty and Nathaniel Hendren.
+\newblock The impacts of neighborhoods on intergenerational mobility i:
+  Childhood exposure effects.
+\newblock \emph{The Quarterly Journal of Economics}, 133:\penalty0 1107--1162,
+  8 2018.
+\newblock ISSN 0033-5533.
+\newblock \doi{10.1093/QJE/QJY007}.
+\newblock URL \url{https://dx.doi.org/10.1093/qje/qjy007}.
+
+\bibitem[Bergman et~al.(2019)Bergman, Chetty, Stefanie, Hendren, Katz, and
+  Palmer]{chetty2019moving}
+Peter Bergman, Raj Chetty, Deluca Stefanie, Nathaniel Hendren, Lawrence~F.
+  Katz, and Christopher Palmer.
+\newblock Creating moves to opportunity: Experimental evidence on barriers to
+  neighborhood choice, 8 2019.
+\newblock URL \url{https://www.nber.org/papers/w26164}.
+
+\bibitem[Chetty et~al.(2016)Chetty, Hendren, and Katz]{chetty2016moving}
+Raj Chetty, Nathaniel Hendren, and Lawrence~F. Katz.
+\newblock The effects of exposure to better neighborhoods on children: New
+  evidence from the moving to opportunity experiment.
+\newblock \emph{American Economic Review}, 106:\penalty0 855--902, 4 2016.
+\newblock ISSN 0002-8282.
+\newblock \doi{10.1257/AER.20150572}.
+
+\bibitem[Dell(2010)]{dell2010mita}
+Melissa Dell.
+\newblock The persistent effects of peru's mining mita.
+\newblock \emph{Econometrica}, 78:\penalty0 1863--1903, 2010.
+\newblock \doi{10.3982/ECTA8121}.
+\newblock URL
+  \url{https://scholar.harvard.edu/files/dell/files/ecta8121_0.pdf}.
+
+\bibitem[Zimmerman(2014)]{zimmerman2014returns}
+Seth~D. Zimmerman.
+\newblock The returns to college admission for academically marginal students.
+\newblock \emph{Journal of Labor Economics}, 32:\penalty0 711--754, 10 2014.
+\newblock ISSN 0734306X.
+\newblock \doi{10.1086/676661}.
+\newblock URL \url{https://www.journals.uchicago.edu/doi/full/10.1086/676661}.
+
+\bibitem[Angrist and Lavy(1999)]{angrist1999maimonides}
+Joshua~D. Angrist and Victor Lavy.
+\newblock Using maimonides' rule to estimate the effect of class size on
+  scholastic achievement.
+\newblock \emph{The Quarterly Journal of Economics}, 114:\penalty0 533--575, 5
+  1999.
+\newblock ISSN 0033-5533.
+\newblock \doi{10.1162/003355399556061}.
+\newblock URL \url{https://dx.doi.org/10.1162/003355399556061}.
+
+\bibitem[Chetty et~al.(2023)Chetty, Deming, and
+  Friedman]{chetty2023diversifying}
+Raj Chetty, David~J. Deming, and John~N. Friedman.
+\newblock Diversifying society’s leaders? the causal effects of admission to
+  highly selective private colleges.
+\newblock 7 2023.
+\newblock URL \url{https://www.nber.org/papers/w31492}.
+
+\bibitem[Athey and Imbens(2019)]{athey2019machine}
+Susan Athey and Guido~W. Imbens.
+\newblock Machine learning methods that economists should know about.
+\newblock \emph{Annual Review of Economics}, 11, 2019.
+
+\bibitem[Varian(2014)]{varian2014bigdata}
+Hal~R. Varian.
+\newblock Big data: New tricks for econometrics.
+\newblock \emph{Journal of Economic Perspectives}, 28:\penalty0 3--28, 2014.
+\newblock ISSN 0895-3309.
+\newblock \doi{10.1257/JEP.28.2.3}.
+\newblock URL \url{http://dx.doi.org/10.1257/jep.28.2.3}.
+
+\bibitem[Mullainathan and Spiess(2017)]{mullainathan2017machine}
+Sendhil Mullainathan and Jann Spiess.
+\newblock Machine learning: An applied econometric approach.
+\newblock \emph{Journal of Economic Perspectives}, 31:\penalty0 87--106, 2017.
+\newblock \doi{10.1257/jep.31.2.87}.
+\newblock URL \url{https://doi.org/10.1257/jep.31.2.87}.
+
+\bibitem[Kleinberg et~al.(2015)Kleinberg, Ludwig, Mullainathan, and
+  Obermeyer]{kleinberg2015prediction}
+Jon Kleinberg, Jens Ludwig, Sendhil Mullainathan, and Ziad Obermeyer.
+\newblock Prediction policy problems.
+\newblock \emph{American Economic Review}, 105:\penalty0 491--95, 5 2015.
+\newblock ISSN 0002-8282.
+\newblock \doi{10.1257/AER.P20151023}.
+
+\bibitem[Kleinberg et~al.(2018)Kleinberg, Lakkaraju, Leskovec, Ludwig, and
+  Mullainathan]{kleinberg2018human}
+Jon Kleinberg, Himabindu Lakkaraju, Jure Leskovec, Jens Ludwig, and Sendhil
+  Mullainathan.
+\newblock Human decisions and machine predictions.
+\newblock \emph{The Quarterly Journal of Economics}, 133:\penalty0 237--293, 2
+  2018.
+\newblock ISSN 0033-5533.
+\newblock \doi{10.1093/QJE/QJX032}.
+\newblock URL \url{https://dx-doi-org.lprx.bates.edu/10.1093/qje/qjx032}.
+
+\bibitem[Bertrand and Mullainathan(2004)]{bertrand2004emily}
+Marianne Bertrand and Sendhil Mullainathan.
+\newblock Are emily and greg more employable than lakisha and jamal? a field
+  experiment on labor market discrimination.
+\newblock \emph{American Economic Review}, 94:\penalty0 991--1013, 8 2004.
+\newblock ISSN 0002-8282.
+\newblock \doi{10.1257/0002828042002561}.
+
+\bibitem[Simonsohn()]{simonsohn2023bertrand}
+Uri Simonsohn.
+\newblock [51] greg vs. jamal: Why didn’t bertrand and mullainathan (2004)
+  replicate? - data colada.
+\newblock URL \url{https://datacolada.org/51}.
+
+\bibitem[Davis and Heller(2017)]{davis2017summer}
+Jonathan~M.V. Davis and Sara~B. Heller.
+\newblock Using causal forests to predict treatment heterogeneity: An
+  application to summer jobs.
+\newblock \emph{American Economic Review}, 107:\penalty0 546--50, 5 2017.
+\newblock ISSN 0002-8282.
+\newblock \doi{10.1257/AER.P20171000}.
+
+\bibitem[Naik et~al.(2014)Naik, Philipoom, Raskar, and
+  Hidalgo]{naik2014streetscore}
+Nikhil Naik, Jade Philipoom, Ramesh Raskar, and Cesar Hidalgo.
+\newblock Streetscore - predicting the perceived safety of one million
+  streetscapes, 2014.
+
+\bibitem[Gentzkow et~al.(2019)Gentzkow, Kelly, and Taddy]{gentzkow2019text}
+Matthew Gentzkow, Bryan Kelly, and Matt Taddy.
+\newblock Text as data.
+\newblock \emph{Source: Journal of Economic Literature}, 57:\penalty0 535--574,
+  2019.
+\newblock \doi{10.2307/26787457}.
+
+\bibitem[Lazer et~al.(2014)Lazer, Kennedy, King, and
+  Vespignani]{lazer2014parable}
+David Lazer, Ryan Kennedy, Gary King, and Alessandro Vespignani.
+\newblock The parable of google flu: Traps in big data analysis.
+\newblock \emph{Science}, 343:\penalty0 1203--1205, 3 2014.
+\newblock ISSN 10959203.
+\newblock
+  \doi{10.1126/SCIENCE.1248506/SUPPL_FILE/1248506.LAZER.SM.REVISION1.PDF}.
+\newblock URL \url{https://www.science.org/doi/10.1126/science.1248506}.
+
+\bibitem[Stephens-Davidowitz(2014)]{stephensdavidowitz2014racial}
+Seth Stephens-Davidowitz.
+\newblock The cost of racial animus on a black candidate: Evidence using google
+  search data.
+\newblock \emph{Journal of Public Economics}, 118:\penalty0 26--40, 10 2014.
+\newblock ISSN 0047-2727.
+\newblock \doi{10.1016/J.JPUBECO.2014.04.010}.
+
+\bibitem[Ginsberg et~al.(2009)Ginsberg, Mohebbi, Patel, Brammer, Smolinski, and
+  Brilliant]{ginsberg2009influenza}
+Jeremy Ginsberg, Matthew~H. Mohebbi, Rajan~S. Patel, Lynnette Brammer, Mark~S.
+  Smolinski, and Larry Brilliant.
+\newblock Detecting influenza epidemics using search engine query data.
+\newblock \emph{Nature 2009 457:7232}, 457:\penalty0 1012--1014, 2 2009.
+\newblock ISSN 1476-4687.
+\newblock \doi{10.1038/nature07634}.
+\newblock URL \url{https://www.nature.com/articles/nature07634}.
+
+\bibitem[Ash and Hansen(2023)]{ash2023textalgorithms}
+Elliott Ash and Stephen Hansen.
+\newblock Text algorithms in economics.
+\newblock \emph{https://doi.org/10.1146/annurev-economics-082222-074352}, 15, 7
+  2023.
+\newblock ISSN 1941-1383.
+\newblock \doi{10.1146/ANNUREV-ECONOMICS-082222-074352}.
+\newblock URL
+  \url{https://www.annualreviews.org/doi/abs/10.1146/annurev-economics-082222-074352}.
+
+\bibitem[Wu(2018)]{wu2018gendered}
+Alice~H. Wu.
+\newblock Gendered language on the economics job market rumors forum.
+\newblock \emph{AEA Papers and Proceedings}, 108:\penalty0 175--79, 5 2018.
+\newblock ISSN 2574-0768.
+\newblock \doi{10.1257/PANDP.20181101}.
+
+\bibitem[Moore et~al.(2019)Moore, Obradovich, Lehner, and
+  Baylis]{moore2019temp}
+Frances~C. Moore, Nick Obradovich, Flavio Lehner, and Patrick Baylis.
+\newblock Rapidly declining remarkability of temperature anomalies may obscure
+  public perception of climate change.
+\newblock \emph{Proceedings of the National Academy of Sciences of the United
+  States of America}, 116:\penalty0 4905--4910, 2019.
+\newblock ISSN 10916490.
+\newblock \doi{10.1073/PNAS.1816541116/-/DCSUPPLEMENTAL}.
 
 \end{thebibliography}

@@ -564,7 +564,6 @@ INPUT c:/texlive/2022/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
 INPUT c:/texlive/2022/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
 INPUT c:/texlive/2022/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
 INPUT c:/texlive/2022/texmf-dist/tex/generic/infwarerr/infwarerr.sty
-INPUT c:/texlive/2022/texmf-dist/tex/latex/lastpage/lastpage.sty
 INPUT c:/texlive/2022/texmf-dist/tex/latex/amsmath/amsmath.sty
 INPUT c:/texlive/2022/texmf-dist/tex/latex/amsmath/amsmath.sty
 INPUT c:/texlive/2022/texmf-dist/tex/latex/amsmath/amsmath.sty
@@ -822,9 +821,9 @@ INPUT c:/texlive/2022/texmf-dist/tex/latex/psnfss/ts1pplx.fd
 INPUT c:/texlive/2022/texmf-dist/tex/latex/psnfss/ts1pplx.fd
 INPUT c:/texlive/2022/texmf-dist/tex/latex/psnfss/ts1pplx.fd
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplr9c.tfm
+INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/vf/adobe/palatino/pplr9c.vf
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplrc8r.tfm
-INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/vf/adobe/palatino/pplb9e.vf
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplb8r.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/mathpazo/fplmb.tfm
