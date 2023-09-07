@@ -50,13 +50,13 @@ BibOptions(check.entries = FALSE,
 
 1. [Prologue](#prologue)
 
-2. [Dessert: What makes data big?](#whatmakesdatabig)
+2. [Veggies: Syllabus highlights](#syllabus)
 
-3. [Veggies: Syllabus highlights](#syllabus)
+2. [Dessert: What is data science?](#what_is_data_science)
 
-4. [Appetizer: R for data science](#r4ds)
+4. [Appetizer: Getting started](#started)
 
-5. [Entree: Getting started](#started)
+5. [Entree: R for data science](#r4ds)
 
 6. [Second Dessert: Data visualization with ggplot2](#ggplot2)
 
@@ -258,6 +258,9 @@ PS &mdash; I'll also award a class participation bonus (2.5%) at my discretion.
 ]
 
 ---
+class: inverse, center, middle
+name: what_is_data_science
+
 # What is Data Science?
 
 - .hi[Data science (DS):] The scientific discipline that deals with transforming data into useful information ("insights") using a variety of stats/ML techniques
