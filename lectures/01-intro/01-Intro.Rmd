@@ -185,6 +185,10 @@ PS &mdash; I'll also award a class participation bonus (2.5%) at my discretion.
   - You will be submitting relevant data files, code, and a write-up
 - 2 will be group assignments, the rest will be individual.
 - I want you to practice pair coding and reconciling GitHub bugs
+- You should complete the project in either a *.tex* or *.Rmd* file that can be compiled into a PDF (or HTML) file
+  - *.tex* files are more often used in academia
+  - *.Rmd* files are more often used in industry
+  - Just no Microsoft Word *.docx* or *.doc* files, please
 
 ---
 # Presentations
@@ -198,7 +202,7 @@ PS &mdash; I'll also award a class participation bonus (2.5%) at my discretion.
 # Final project
 
 - Each of you will write an original 5-10 page research paper
-- Throughout the semester, there will be three guided assignments that will help you develop your fine
+- Throughout the semester, there will be three guided assignments that will help you develop your final paper
 - The final paper will be due on 12/11
 - I expect your code to work and the results to be reproducible (i.e. I should be able to run your code and get the same results)
 
@@ -212,7 +216,7 @@ PS &mdash; I'll also award a class participation bonus (2.5%) at my discretion.
 | Write up            | 10% | 12/11 |
 | **Total**           | **40%** | N/A |
 
-- Like problem sets, you will submit a PDF with all code and data files to reproduce your results
+- Like problem sets, you will submit a repo with all code and data files to reproduce your results
 - Christine Murray has created a guide of [potential data sources](https://libguides.bates.edu/ECON368)
 - You can also check [kaggle](https://www.kaggle.com/datasets)
 
