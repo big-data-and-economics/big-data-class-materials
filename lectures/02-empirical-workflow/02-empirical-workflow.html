@@ -293,8 +293,6 @@ name: principles
 - I'll further organize as needed
 - See GitHub folder for this lecture as an example 
     - I also include a script `make_directory.sh` that automates this process
-
-
 ---
 # How I organize research projects
 
@@ -335,6 +333,70 @@ tree my_project
 &lt;/div&gt;
 
 Source: My computer
+
+---
+# What is the value of directories? 
+
+- All of the files in a directory are related to each other
+- Can reference a file within the `data/raw` folder, from the `code/build` folder, using a relative path: `../data/raw/my_data.csv`
+    - `..` means "go up one directory", then down into `data/raw`
+- Can save objects of strings of path directories to use later using the `paste()` function
+
+
+```r
+my_project &lt;- 'my_project'
+data &lt;- paste(my_project,'data',sep='/')
+data_raw &lt;- paste(data,'raw',sep='/')
+data_clean &lt;- paste(data,'clean',sep='/')
+data_temp &lt;- paste(data,'temp',sep='/')
+code &lt;- paste(my_project,'code',sep='/')
+code_analysis &lt;- paste(code,'analysis',sep='/')
+code_build &lt;- paste(code,'build',sep='/')
+
+print(paste(data_raw,'my_data.csv',sep='/'))
+```
+
+```
+## [1] "my_project/data/raw/my_data.csv"
+```
+
+- This is a good way to make sure that your code is portable
+- If you move your project to a different computer, you can just change the `my_project` variable and all the other paths will update automatically
+
+---
+# Alternative to all the pastes is here()
+
+- Better yet is the [here](https://cran.r-project.org/web/packages/here/vignettes/here.html)
+    - `here()` will find the root directory of your project and then you can navigate from there
+
+
+```r
+#install.packages('here')
+library(here)
+```
+
+```
+## here() starts at C:/Users/kgcsp/OneDrive/Documents/Education/Big Data/big-data-class-materials
+```
+
+```r
+here::i_am('my_project/code/build/.placeholder')
+```
+
+```
+## here() starts at C:/Users/kgcsp/OneDrive/Documents/Education/Big Data/big-data-class-materials/lectures/02-empirical-workflow
+```
+
+
+```r
+here('data/raw','my_data.csv')
+```
+
+```
+## [1] "C:/Users/kgcsp/OneDrive/Documents/Education/Big Data/big-data-class-materials/lectures/02-empirical-workflow/data/raw/my_data.csv"
+```
+
+- Can be less clunky than `paste()` and `sep='/'`
 
 ---
 
@@ -1036,8 +1098,6 @@ map(1:3, multiply)
 &gt; - More on these later!
 
 &lt;!-- Now if I need to adjust the `constructor()` function, I only have to modify one line of code instead of three. This approach also minimizes typos in copy-pasting lines that are largely similar. --&gt;
-
----
 
 ---
 class: inverse, center, middle
