@@ -49,7 +49,7 @@ touch data/raw/.placeholder
 touch data/clean/.placeholder
 touch data/temp/.placeholder
 touch code/analysis/.placeholder
-touch code/scripts/.placeholder
+touch code/build/.placeholder
 touch output/figures/.placeholder
 touch output/tables/.placeholder
 touch writing/notes/.placeholder
