@@ -41,7 +41,6 @@ class: center, middle, inverse, title-slide
 
 
 ---
-
 # Table of contents
 
 1. [Prologue](#prologue)
@@ -58,7 +57,7 @@ name: prologue
 
 # Prologue
 
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+&lt;html&gt;&lt;div style='float:right'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
 &lt;div align="center"&gt;
 &lt;img src="pics/code_quality.png"&gt;
 &lt;/div&gt;
@@ -279,7 +278,7 @@ name: principles
         c. `temp` for temporary data files
     2. `code` for all code files, and sometimes:
         a. `code/analysis` for code files that build/clean code
-        a. `code/analysis` for code files that do analysis
+        a. `code/build` for code files that do analysis
     3. `output` for all output files
         a. `output/figures` for code files that make figures
         b. `output/tables` for code files that make tables
@@ -294,9 +293,48 @@ name: principles
 - I'll further organize as needed
 - See GitHub folder for this lecture as an example 
     - I also include a script `make_directory.sh` that automates this process
+
+
 ---
 # How I organize research projects
 
+
+```bash
+tree my_project
+```
+
+```
+## my_project
+## ├── code
+## │   ├── analysis
+## │   └── build
+## ├── data
+## │   ├── clean
+## │   ├── raw
+## │   └── temp
+## ├── literature
+## ├── output
+## │   ├── figures
+## │   └── tables
+## ├── presentations
+## │   ├── notes
+## │   └── slides
+## └── writing
+##     ├── drafts
+##     ├── edits
+##     └── notes
+## 
+## 18 directories, 0 files
+```
+
+---
+# How I organize research projects
+
+&lt;div align="center"&gt;
+&lt;img src="pics/directory_structure.jpg"&gt;
+&lt;/div&gt;
+
+Source: My computer
 
 ---
 
@@ -315,7 +353,27 @@ name: principles
 - Gentzkow &amp; Shapiro recommend not merging data sets until as far into your code pipeline as possible
 
 ---
+# What problems would this create?
 
+
+&lt;div align="center"&gt;
+&lt;img src="pics/not_rdbms.jpg"&gt;
+&lt;/div&gt;
+
+Source: [Code and Data for the Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) (p. 19)
+
+
+---
+# What's RDBM look like?
+
+&lt;div align="center"&gt;
+&lt;img src="pics/rdbms.jpg"&gt;
+&lt;/div&gt;
+
+Source: [Code and Data for the Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) (p. 19)
+
+
+---
 # Abstraction
 
 - What is abstraction? It means "reducing the complexity of something by hiding unnecessary details from the user"
@@ -387,132 +445,6 @@ print(name_repeater(3,names_short=names_short))
 ```
 
 - Now if I need to make further changes to `name_repeater` I can do it once!
-
----
-
-# More complicated example
-
-
-```r
-set.seed(16)
-prod1  = rnorm(1, 0, 1)*rnorm(1,4,6)
-prod2  = rnorm(2, 0, 1)*rnorm(2,4,6)
-prod3  = rnorm(3, 0, 1)*rnorm(3,4,6)
-print(prod1)
-```
-
-```
-## [1] 1.547257
-```
-
-```r
-print(prod2)
-```
-
-```
-## [1] 11.934479 -1.717951
-```
-
-```r
-print(prod3)
-```
-
-```
-## [1] -7.4831177  0.9587218  4.7882622
-```
-
-
-```r
-set.seed(16)
-multiply = function(count,mean1=0,sd1=1,mean2=4,sd2=6) {
-    prod = rnorm(count,mean1,sd1)*rnorm(count,mean2,sd2)
-    return(prod)
-} 
-prod1=multiply(1)
-prod2=multiply(2)
-prod3=multiply(3)
-
-print(prod1)
-```
-
-```
-## [1] 1.547257
-```
-
-```r
-print(prod2)
-```
-
-```
-## [1] 11.934479 -1.717951
-```
-
-```r
-print(prod3)
-```
-
-```
-## [1] -7.4831177  0.9587218  4.7882622
-```
-
----
-# Note on seeds
-
-- When randomizing in any language, you aren't really randomizing
-- You're producing pseudo-random numbers that return in a deterministic ordered list
-- If you set the seed, you can reproduce the same "random" numbers
-- This is useful for debugging and sharing code
-- Use `set.seed` in R
-
----
-
-# Neat R functions to help reduce redundancy like replicate, lapply, etc. 
-
-
-```r
-set.seed(16)
-list1 = list() # Make an empty list to save output in
-for (i in 1:3) { # Indicate number of iterations with "i"
-    list1[[i]] = multiply(i) # Save output in list for each iteration
-}
-list1
-```
-
-```
-## [[1]]
-## [1] 1.547257
-## 
-## [[2]]
-## [1] 11.934479 -1.717951
-## 
-## [[3]]
-## [1] -7.4831177  0.9587218  4.7882622
-```
-
-A better way to eliminate this redundancy is to use the `map` function:
-
-
-```r
-set.seed(16)
-map(1:3, multiply)
-```
-
-```
-## [[1]]
-## [1] 1.547257
-## 
-## [[2]]
-## [1] 11.934479 -1.717951
-## 
-## [[3]]
-## [1] -7.4831177  0.9587218  4.7882622
-```
-
-&gt; - More on these later!
-
-&lt;!-- Now if I need to adjust the `constructor()` function, I only have to modify one line of code instead of three. This approach also minimizes typos in copy-pasting lines that are largely similar. --&gt;
-
----
 
 # Abstract to improve clarity
 
@@ -974,12 +906,138 @@ name: appendix
   - You have to need to use it (immersion) to learn it.
   - Google is your dictionary.
   - Help files are your grammar books.
+  - ChatGPT is your phrasebook.
   - A great way to start coding is to see lots of other people's code and copy what you read.
 - You must learn how to ask the “right” question:
-  - Never: "Importing csv file into stata not working."
-  - Better: "import csv stata [specific error message]."
-  - Better still: "import delimited using csv [specific error message]."
-  - `set trace on/off` around a buggy command can help reveal where the error happens inside the black box.
+  - Never: "Importing csv file into R not working."
+  - Better: "read_csv R [specific error message]."
+  - Better still: "read_csv tidyverse [specific error message]."
+
+---
+
+# More complicated example of eliminating redundancy
+
+
+```r
+set.seed(16)
+prod1  = rnorm(1, 0, 1)*rnorm(1,4,6)
+prod2  = rnorm(2, 0, 1)*rnorm(2,4,6)
+prod3  = rnorm(3, 0, 1)*rnorm(3,4,6)
+print(prod1)
+```
+
+```
+## [1] 1.547257
+```
+
+```r
+print(prod2)
+```
+
+```
+## [1] 11.934479 -1.717951
+```
+
+```r
+print(prod3)
+```
+
+```
+## [1] -7.4831177  0.9587218  4.7882622
+```
+
+
+```r
+set.seed(16)
+multiply = function(count,mean1=0,sd1=1,mean2=4,sd2=6) {
+    prod = rnorm(count,mean1,sd1)*rnorm(count,mean2,sd2)
+    return(prod)
+} 
+prod1=multiply(1)
+prod2=multiply(2)
+prod3=multiply(3)
+
+print(prod1)
+```
+
+```
+## [1] 1.547257
+```
+
+```r
+print(prod2)
+```
+
+```
+## [1] 11.934479 -1.717951
+```
+
+```r
+print(prod3)
+```
+
+```
+## [1] -7.4831177  0.9587218  4.7882622
+```
+
+---
+# Note on seeds
+
+- When randomizing in any language, you aren't really randomizing
+- You're producing pseudo-random numbers that return in a deterministic ordered list
+- If you set the seed, you can reproduce the same "random" numbers
+- This is useful for debugging and sharing code
+- Use `set.seed` in R
+
+---
+
+# Neat R functions to help reduce redundancy like replicate, lapply, etc. 
+
+
+```r
+set.seed(16)
+list1 = list() # Make an empty list to save output in
+for (i in 1:3) { # Indicate number of iterations with "i"
+    list1[[i]] = multiply(i) # Save output in list for each iteration
+}
+list1
+```
+
+```
+## [[1]]
+## [1] 1.547257
+## 
+## [[2]]
+## [1] 11.934479 -1.717951
+## 
+## [[3]]
+## [1] -7.4831177  0.9587218  4.7882622
+```
+
+A better way to eliminate this redundancy is to use the `map` function:
+
+
+```r
+set.seed(16)
+map(1:3, multiply)
+```
+
+```
+## [[1]]
+## [1] 1.547257
+## 
+## [[2]]
+## [1] 11.934479 -1.717951
+## 
+## [[3]]
+## [1] -7.4831177  0.9587218  4.7882622
+```
+
+&gt; - More on these later!
+
+&lt;!-- Now if I need to adjust the `constructor()` function, I only have to modify one line of code instead of three. This approach also minimizes typos in copy-pasting lines that are largely similar. --&gt;
+
+---
 
 ---
 class: inverse, center, middle
