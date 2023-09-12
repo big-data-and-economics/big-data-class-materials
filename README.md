@@ -12,8 +12,12 @@ in the original HTML format.*
 
 This is in progress. Check back in for progress to be made. 
 
-<!-- 1. Introduction \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/01-intro/01-Intro.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/01-intro/01-Intro.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/01-intro/01-Intro.Rmd)\] 
-2. Version control with Git(Hub) \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.Rmd)\]
+| Date | Day | Topic | Due | 
+|---------|-------|-----------|-----------|
+| 2023-09-07  | Th | [Introduction to Big Data](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html)  |  |
+| 2023-09-12  | T | [Git slides](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html#1) by Grant McDermott, [Empirical Organization slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-empirical-workflow/02-empirical-workflow.html) | |
+
+<!-- 2. Version control with Git(Hub) \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.Rmd)\]
 3. Learning to love the shell \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.Rmd)\]
 4. R language basics \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/04-rlang/04-rlang.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/04-rlang/04-rlang.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/04-rlang/04-rlang.Rmd)\]
 5. Data wrangling & tidying
