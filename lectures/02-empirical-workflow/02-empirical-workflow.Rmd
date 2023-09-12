@@ -710,7 +710,7 @@ amazing_function <- function(x) {
 
     ☐ Complete two-period model of UI
 
-    ☐ Write discussion of intertemporal crowd-in
+    ☐ Discussion of intertemporal crowd-in
 ]
 .pull-right[
 - **Big Data:**
