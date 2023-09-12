@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Big Data and Economics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kyle Coombs (adapted from Tyler Ransom + Scott Cunningham)" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="ou-colors.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Big Data and Economics
+]
+.subtitle[
+## The Empirical Workflow and Clean Code
+]
+.author[
+### Kyle Coombs (adapted from Tyler Ransom + Scott Cunningham)
+]
+.date[
+### Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics">EC/DCS 368</a>
+]
+
+---
+
+&lt;style type="text/css"&gt;
+# CSS for including pauses in printed PDF output (see bottom of lecture)
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+
+---
+
+# Table of contents
+
+1. [Prologue](#prologue)
+
+2. [Clean Code](#clean_code)
+
+3. [Principles](#principles)
+
+4. [Appendix: FAQ](#faq)
+
+---
+class: inverse, center, middle
+name: prologue
+
+# Prologue
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+&lt;div align="center"&gt;
+&lt;img src="pics/code_quality.png"&gt;
+&lt;/div&gt;
+Source: [xkcd](http://xkcd.com/1513/)
+
+---
+# Forgot to mention
+
+- .hi[Office Hours:]
+    - My office hours are 9am-10am on Tuesdays and 3pm-4pm on Wednesdays
+    - My office is 276 Pettengill 
+    - I'm also available by [appointment](https://calendar.app.google/XF36Ujpg9NcJbSD58) on Zoom
+
+- .hi[Problem Set 0:] due on Sunday, September 17th at 11:59pm
+
+---
+
+# Attribution
+
+- Today's material comes from these sources:
+
+1. [Clean Code](https://raw.githack.com/OU-PhD-Econometrics/fall-2022/master/LectureNotes/01a-CleanCode/01aslides.html) by Tyler Ransom
+
+2. [*Code and Data for the Social Sciences: A Practitioner's Guide*](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf), by Gentzkow and Shapiro
+
+3. [Causal Inference and Research Design](https://github.com/scunning1975/mixtape) by Scott Cunningham
+
+4. [Jenny Bryan's UseR 2018 keynote address](https://www.youtube.com/watch?v=7oyiPBjLAWY)
+
+Also a small contribution from [here](https://garywoodfine.com/what-is-clean-code/) and other sundry internet pages
+
+---
+# Jargon
+
+- There is a jargon in this class that won't make sense at first, I'll try to flag it as it comes
+    - If I don't flag a term, look it up on ChatGPT 
+    - If it still doesn't make sense, ask me -- could be I'm using it idiosyncratically
+
+- Here's a few terms:
+    - **Local machine:** Your personal (or any) computer that isn't a server accessed via the internet
+    - **Version Control:** Keep track of different iterations of a project/code
+    - **Repository:** The location on GitHub of all project files and (commented) file revision history
+    - **GUI:** A Graphical User Interface -- what you're used to pointing and clicking to navigate a computer and execute programs
+    - **Command line:** Removes the "graphical" from GUI, instead you type all commands to navigate a computer and execute programs 
+        - R operates via the Command line, RStudio is a GUI
+        - On Mac, this is called Terminal
+        - Windows has Powershell, but it Powershell uses quite user-unfriendly commands
+        - If you installed Git for Windows, you got *Git Bash*, which uses Bash (Linux) commands
+        - You can also install Windows Subsystem for Linux to run Linux on a Windows machine
+
+---
+class: inverse, center, middle
+name: clean_code
+
+# Clean Code
+
+---
+# Reducing empirical chaos
+
+## Sad story
+
+- Once upon a time there was a boy who was writing a job market paper on unemployment insurance during the pandemic
+- This boy presented the findings a half dozen times, spoke to the media some, and generally thought he had cool results
+- Several people suggested he look at a handful of other outcome series and try changing his analysis unit frequency from monthly to weekly
+- He also knew that he needed to restrict his sample to reduce noise
+
+---
+# The horror! 
+
+- But then after making these changes and re-running his code that took two days, his new sample dropped by 50 percent! 
+- He was, understandably, terrified.
+- The young boy spent a week looking for the fix weeding through six different versions of the .do, .R, .dta, .csv, .sh, .py files with suffixes like *_v1* and *_test* and *_test2* and *_final_I_swear* and *_okay_i_lied*
+- Finally he discovered the phrase:
+
+```r
+df %&gt;% filter(insample_new==0)
+```
+**instead of**
+
+```r
+df %&gt;% filter(insample_new==1)
+```
+- The boy was very frustrated and decided to work on these slides while re-running his code.
+
+---
+# What is Clean Code?
+
+- .hi[Clean Code:] Code that is easy to understand, easy to modify, and hence easy to debug
+
+- Clean code saves you and your collaborators time
+
+---
+
+# Why clean code matters: Scientific progress
+
+- Good science is based on careful observations
+
+- Science progresses through iteratively testing hypotheses and making predictions
+
+- Scientific progress is impeded if 
+
+    - mistaken previous results are erroneously given authority
+    
+    - previous hypothesis tests are not reproducible
+    
+    - previous methods and results are not transparent 
+
+- Thus, for science that involves computer code, clean code is a must
+
+
+---
+
+# Why clean code matters: Personal and team sanity
+
+- You will always make a mistake while coding
+
+- What makes good programmers great is their ability to quickly identify and correct mistakes
+
+- Developing a habit of clean coding from the outset of your career will help you more quickly identify and correct mistakes
+
+- It will save you a lot of stress in the long-run
+
+- It will make your collaborative relationships more pleasant
+
+
+---
+
+# Why clean code is under-produced
+
+- If clean code is so beneficial and important, why isn't there more of it?
+
+&lt;br&gt;
+
+1. .hi[Competitive pressure] to produce research/products as quickly as possible
+    
+2. .hi[End user] (journal editor, reviewer, reader, dean) .hi[doesn't care what the code looks like], just that the product works
+    
+3. In the moment, clean code .hi[takes longer to produce] while seemingly conferring no benefit
+
+---
+class: inverse, center, middle
+name: principles
+
+# How does one produce clean code? Principles
+
+---
+
+# How does one produce clean code? Principles
+
+- Automation
+
+- Version control
+
+- Organization of data and software files
+
+- Abstraction
+
+- Documentation
+
+- Time / task management
+
+- Test-driven development (unit testing, profiling, refactoring)
+
+- Pair programming
+
+---
+
+# Automation
+
+- Gentzkow &amp; Shapiro's two rules for automation:
+
+1. Automate everything that can be automated
+
+2. Write a single script that executes all code from beginning to end
+
+- There are two reasons automation is so important
+
+    - Reproducibility (helps with debugging and revisions)
+    
+    - Efficiency (having a code base saves you time in the future)
+
+- A single script that shows the sequence of steps taken is the equivalent to "showing your work"
+
+---
+
+# Version control
+
+- We've discussed Git and GitHub in a previous slide deck
+
+- Version control provides a principled way for you to easily undo changes, test out new specifications, and more
+
+---
+
+# File organization
+
+1. Separate directories by function
+
+2. Separate files into inputs and outputs
+
+3. Make directories portable
+
+- To see how professionals do this, check out the source code for R's [dplyr](https://github.com/tidyverse/dplyr) package
+
+    - There are separate directories for source code (`/src`), documentation (`/man`), code tests (`/test`), data (`/data`), examples (`/vignettes`), and more
+    
+- When you use version control, it forces you to make directories portable (otherwise a collaborator will not be able to run your code)
+
+    - use __relative__ file paths, not absolute file paths
+
+---
+# How I organize research projects
+
+- I have a folder called (`my_project`) 
+- Within that folder I have subfolders:
+    1. `data` for all data files
+        a. `raw` for raw data files
+        b. `clean` or `work` for cleaned data files
+        c. `temp` for temporary data files
+    2. `code` for all code files, and sometimes:
+        a. `code/analysis` for code files that build/clean code
+        a. `code/analysis` for code files that do analysis
+    3. `output` for all output files
+        a. `output/figures` for code files that make figures
+        b. `output/tables` for code files that make tables
+    4. `literature` or `articles` for all relevant literature
+    5. `writing` for all writing files
+        a. `writing/notes` for notes
+        b. `writing/drafts` for drafts
+        c. `writing/edits` for edits
+    6. `presentations` for all presentations
+        a. `presentations/slides` for slides
+        b. `presentations/notes` for notes
+- I'll further organize as needed
+- See GitHub folder for this lecture as an example 
+    - I also include a script `make_directory.sh` that automates this process
+---
+# How I organize research projects
+
+
+---
+
+# Data organization
+
+- The key idea is to practice .hi[relational data base management]
+
+- A relational database consists of many smaller data sets
+
+- Each data set is tabular and has a unique, non-missing key
+
+- Data sets "relate" to each other based on these keys
+
+- You can implement these practices in any modern statistical analysis software (R, Stata, SAS, Python, Julia, SQL, ...)
+
+- Gentzkow &amp; Shapiro recommend not merging data sets until as far into your code pipeline as possible
+
+---
+
+# Abstraction
+
+- What is abstraction? It means "reducing the complexity of something by hiding unnecessary details from the user"
+
+- e.g. A dishwasher. All I need to know is how to put dirty dishes into the machine, and which button to press. I don't need to understand how the electrical wiring or plumbing work.
+
+- In programming, abstraction is usually handled with functions
+
+- Abstraction is usually a good thing
+
+- But it can be taken to a harmful extreme: overly abstract code can be "impenetrable" which makes it difficult to modify or debug
+
+---
+
+# Rules for Abstraction
+
+- Gentzkow &amp; Shapiro give three rules for abstraction:
+
+1. Abstract to eliminate redundancy
+
+2. Abstract to improve clarity
+
+3. Otherwise, don't abstract
+
+---
+
+# Abstract to eliminate redundancy
+
+- Sometimes you might find yourself repeating lines of code with small modifications across the lines:
+
+
+```r
+names &lt;- c('one','two','three','four','five','one','two','three','four','five','one','two','three','four','five')
+
+#Better
+names_short &lt;- c('one','two','three','four','five')
+names_long &lt;- c(names_short,names_short,names_short)
+
+#Even better
+name_repeater &lt;- function(count,names_short=c('one','two','three','four','five')) {
+    names_long &lt;- rep(names_short, times = count)
+    return(names_long)
+}
+
+print(names)
+```
+
+```
+##  [1] "one"   "two"   "three" "four"  "five"  "one"   "two"   "three" "four" 
+## [10] "five"  "one"   "two"   "three" "four"  "five"
+```
+
+```r
+print(names_long)
+```
+
+```
+##  [1] "one"   "two"   "three" "four"  "five"  "one"   "two"   "three" "four" 
+## [10] "five"  "one"   "two"   "three" "four"  "five"
+```
+
+```r
+print(name_repeater(3,names_short=names_short))
+```
+
+```
+##  [1] "one"   "two"   "three" "four"  "five"  "one"   "two"   "three" "four" 
+## [10] "five"  "one"   "two"   "three" "four"  "five"
+```
+
+- Now if I need to make further changes to `name_repeater` I can do it once!
+
+---
+
+# More complicated example
+
+
+```r
+set.seed(16)
+prod1  = rnorm(1, 0, 1)*rnorm(1,4,6)
+prod2  = rnorm(2, 0, 1)*rnorm(2,4,6)
+prod3  = rnorm(3, 0, 1)*rnorm(3,4,6)
+print(prod1)
+```
+
+```
+## [1] 1.547257
+```
+
+```r
+print(prod2)
+```
+
+```
+## [1] 11.934479 -1.717951
+```
+
+```r
+print(prod3)
+```
+
+```
+## [1] -7.4831177  0.9587218  4.7882622
+```
+
+
+```r
+set.seed(16)
+multiply = function(count,mean1=0,sd1=1,mean2=4,sd2=6) {
+    prod = rnorm(count,mean1,sd1)*rnorm(count,mean2,sd2)
+    return(prod)
+} 
+prod1=multiply(1)
+prod2=multiply(2)
+prod3=multiply(3)
+
+print(prod1)
+```
+
+```
+## [1] 1.547257
+```
+
+```r
+print(prod2)
+```
+
+```
+## [1] 11.934479 -1.717951
+```
+
+```r
+print(prod3)
+```
+
+```
+## [1] -7.4831177  0.9587218  4.7882622
+```
+
+---
+# Note on seeds
+
+- When randomizing in any language, you aren't really randomizing
+- You're producing pseudo-random numbers that return in a deterministic ordered list
+- If you set the seed, you can reproduce the same "random" numbers
+- This is useful for debugging and sharing code
+- Use `set.seed` in R
+
+---
+
+# Neat R functions to help reduce redundancy like replicate, lapply, etc. 
+
+
+```r
+set.seed(16)
+list1 = list() # Make an empty list to save output in
+for (i in 1:3) { # Indicate number of iterations with "i"
+    list1[[i]] = multiply(i) # Save output in list for each iteration
+}
+list1
+```
+
+```
+## [[1]]
+## [1] 1.547257
+## 
+## [[2]]
+## [1] 11.934479 -1.717951
+## 
+## [[3]]
+## [1] -7.4831177  0.9587218  4.7882622
+```
+
+A better way to eliminate this redundancy is to use the `map` function:
+
+
+```r
+set.seed(16)
+map(1:3, multiply)
+```
+
+```
+## [[1]]
+## [1] 1.547257
+## 
+## [[2]]
+## [1] 11.934479 -1.717951
+## 
+## [[3]]
+## [1] -7.4831177  0.9587218  4.7882622
+```
+
+&gt; - More on these later!
+
+&lt;!-- Now if I need to adjust the `constructor()` function, I only have to modify one line of code instead of three. This approach also minimizes typos in copy-pasting lines that are largely similar. --&gt;
+
+---
+
+# Abstract to improve clarity
+
+- Consider the example of obtaining OLS estimates from a vector `y` and covariate matrix `X` that already exist on our workspace
+
+- We could code this in two ways:
+
+
+```r
+Bhat = (t(X)%*%X)^(-1)%*%t(X)%*%y
+```
+
+or
+
+
+```r
+estimate_ols &lt;- function(yvar, Xmat) {
+    Bhat = (t(Xmat)%*%Xmat)^(-1)%*%t(Xmat)%*%yvar
+    return(Bhat)
+}
+estimate_ols(y,X)
+```
+
+The second approach is easier to read and understand what the code is doing
+
+---
+
+# Otherwise, don't abstract
+
+- One could argue that the examples on the previous two slides are overly abstract
+
+- OLS is a simple operation that only takes one line of code
+
+- If we're only doing it once in our script, then it may not make sense to use the function version
+
+- Similarly, it may not make sense to use the `name_repeater` function if I only need to use it to repeat five names three times
+
+- This discussion points out that it can be difficult to know if one has reached the optimal level of abstraction
+
+- As you're starting out programming, I would advise doing almost every inside of a function (i.e. err on the side of over-abstraction when starting out)
+
+---
+
+# Documentation
+
+1. Don't write documentation you will not maintain
+
+2. Code should be self-documenting
+
+- Generally speaking, commented code is helpful
+
+- However, sometimes it can be harmful if, e.g. code comments contain dynamic information
+
+- It may not be helpful to have to rewrite comments every time you change the code
+
+- Code can be "self-documenting" by leveraging abstraction: function arguments make it easier to understand what is a variable and what is a constant
+
+---
+
+# Documentation in R
+
+- R has excellent built-in documentation called `Roxygen2`
+
+- These make great documents above functions to increase readability
+
+- Here's an example:
+
+
+```r
+#' This is a sample function
+#'
+#' This function does something amazing.
+#'
+#' @param x A numeric input.
+#' @return The result of the amazing operation.
+#' @examples
+#' amazing_function(5)
+amazing_function &lt;- function(x) {
+  # function implementation
+}
+```
+
+---
+
+# Other documentation in R
+
+- .hi[R Help System:] access using `?function_name`
+
+- .hi[Package vignettes:] access using `vignette("vignette_name")`
+
+- .hi[Cheatsheets:] access at [Posit Cheatsheets](https://posit.co/resources/cheatsheets/)
+
+---
+
+# Time management
+
+- Time management is key to writing clean code
+
+- It is foolish to think that one can write clean code in a strained mental state
+
+- Code written when you are groggy, overly anxious, or distracted will come back to bite you
+
+- Schedule long blocks of time (1.5 hours - 3 hours) to work on coding where you eliminate distractions (email, social media, etc.)
+
+- Stop coding when you feel that your focus or energy is dissipating
+
+---
+
+# Task management
+
+- When collaborating on code, it is essential to not use email or Slack threads to discuss coding tasks
+
+- Rather, use a task management system that has dedicated messages for a particular point of discussion (bug in the code, feature to develop, etc.)
+
+- I use GitHub issues for all of my coding projects
+
+- For my personal task management, I use Trello to take all tasks out of my email inbox and put them in Trello's task management system
+
+- GitHub and Trello also have Kanban-style boards where you can easily visually track progress on tasks
+
+---
+# Workflow workflow workflow
+
+## The Cunningham Empirical Workflow Conjecture
+
+- The cause of most of your errors is **not** due to insufficient knowledge of syntax in your chosen programming language
+- The cause of most of your errors is due to a poorly designed .hi[Empirical Workflow]
+
+---
+# Empirical Workflow
+
+- A workflow is a fixed set of routines you bind yourself to which when followed identifies the most common errors
+	- Think of it as your morning routine: alarm goes off, go to wash up, make your coffee/tea, put pop tart in toaster, contemplate your existence in the universe until **ding**, eat pop tart repeat *ad infinitum*
+- Finding the outlier errors is a different task;  empirical workflows catch typical and common errors created by the modal data generating processes
+- Empirical workflows follow a checklist
+
+---
+# Why do we use checklists?
+
+- I got engaged in July am planning a wedding in Princeton for next July 
+- I also moved to New England in August and am still unpacking
+    - Extra weird I live part-time in MA with my fiance
+- I am teaching two upper-level electives
+- I am trying to submit several papers to conferences/journals this year
+- Each of these tasks gets a checklist:
+    - Wedding:
+        ☐ Finalize tent configuration
+        ☐ Pick wedding colors
+    - Unpacking:
+        ☐ Put books on shelves
+        ☐ Buy dresser
+    - Big Data:
+        ☐ Prep GitHub demo
+        ☐ Create presentations repo
+    - Public Economics:
+        ☐ Update solutions for PS1
+        ☐ Amend 2nd Welfare Theorem slides
+    - etc.
+
+---
+# To remember the obvious stuff you keep forgetting
+- When I stop to think, I know I need to do everything on my checklists 
+- But then I forget when I move onto the next task
+- Programming is the same, except you have an **empirical checklist**:
+- The **empirical checklist**:
+    - Covers the intermediate step between "getting the data" and "analyzing the data"
+    - It largely focuses on ensuring data quality for the most common, easy to identify problems
+    - It'll make you a better coauthor
+
+---
+# Simple data checks
+
+- Simple, yet non-negotiable, programming commands and exercises to check for data errors 
+
+# Look at the data
+
+- "Real eyes realize real lies" --Troy Ave vai some dude from my high school 
+
+- Let's look at a [dataset](https://www.askamanager.org/2021/04/how-much-money-do-you-make-4.html) with self-reported salaries (and other info) put together by Alison Green
+
+- Note: This is an actively growing dataset -- the timestamps help show that! 
+
+
+```r
+bp &lt;- read.csv('data/messier_bp.csv')
+bp
+```
+
+```
+##    STOP.Blood.Pressure.Study             X2        X3         X4        X5
+## 1                       &lt;NA&gt;           &lt;NA&gt;      &lt;NA&gt;       &lt;NA&gt;      &lt;NA&gt;
+## 2                     pat_id Month of birth Day birth Year birth      Race
+## 3                          1             11        30       1967     White
+## 4                          2             12        12       1990 Caucasian
+## 5                          3              5         4       1989     White
+## 6                          3              3         8       1977     Other
+## 7                          4              6        14       1963     Black
+## 8                          5              4        19       1973     Black
+## 9                          6              1        23       1986     White
+## 10                         7             11         1       1956     Asian
+## 11                         8              4        17       1961     Other
+## 12                         8             12        24       1967     White
+## 13                        11              9        27       1971     White
+## 14                        12              5        16       1970 Caucasian
+## 15                        13              7        18       1963     Black
+## 16                        14              3         3       1989     Black
+## 17                        15             12         8       1990     Asian
+## 18                        16             11        13       1987     WHITE
+## 19                        17              6        27       1980     WHITE
+## 20                        19              4        11       1975     Black
+## 21                        20              2         7       1967 Caucasian
+## 22                        21              1         9       1988 Caucasian
+## 23                        22             13        32       1899     Black
+## 24                        23             11        21       9999     Black
+## 25                        24              1        30       1992     White
+##        X6           X7      X8   X9     X10  X11     X12  X13
+## 1    &lt;NA&gt;         &lt;NA&gt; Visit 1 &lt;NA&gt; Visit 2 &lt;NA&gt; Visit 3 &lt;NA&gt;
+## 2     Sex     Hispanic      BP   HR      BP   HR      BP   HR
+## 3    Male     Hispanic  167/92   89  156/82   82  144/71   77
+## 4  Female Not Hispanic  158/99   77  147/90   71  138/82   66
+## 5    Male     Hispanic 171/102   88  161/90   81  153/82   75
+## 6  Female Not Hispanic  155/88   69  143/80   63  136/72   58
+## 7    Male Not Hispanic  153/90   73  145/82   66  133/74   62
+## 8  Female     Hispanic  161/94   71  152/86   64  144/78   59
+## 9  Female     Hispanic 181/103   68 172/194   62  164/82   57
+## 10 Female     Hispanic 176/106   83  165/98   76  156/90   70
+## 11   Male Not Hispanic 155/112   88 144/101   82  133/92   75
+## 12   Male Not Hispanic 158/109   92  147/98   85  137/91   79
+## 13 Female Not Hispanic  144/93   84  134/84   77  126/74   72
+## 14   Male Not Hispanic  170/92   86  162/80   79  152/72   75
+## 15 Female Not Hispanic 188/112   79 176/104   73  168/92   67
+## 16   Male     Hispanic 192/122   77 177/108   70  168/99   65
+## 17   Male Not Hispanic  161/88   93  153/76   85  145/68   81
+## 18   Male Not Hispanic  144/91   89  134/82   83  128/73   77
+## 19 Female Not Hispanic  156/93   90  147/84   81  136/75   76
+## 20   Male     Hispanic  167/98   77  158/86   71  145/77   67
+## 21 Female     Hispanic  177/90   68  166/80   60  154/72   55
+## 22 Female Not Hispanic  173/87   91  162/73   82  152/68   75
+## 23      M     Hispanic 999/999   89 999/999   91 999/999  999
+## 24      F     Hispanic  143/20  999 999/999  999 999/999  999
+## 25        Not Hispanic  130/60   65  130/61   75  127/63   57
+```
+
+--- 
+# What not to do: Immediately summarize data
+
+
+```r
+bp &lt;- read_csv('data/messier_bp.csv',skip=4,
+    col_names=c('pat_id','birth_month','birth_day','birth_year','race','sex','hispanic','bp_visit1','hr_visit1','bp_visit2','hr_visit2','bp_visit3','hr_visit3'))
+```
+
+```
+## Rows: 22 Columns: 13
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr (6): race, sex, hispanic, bp_visit1, bp_visit2, bp_visit3
+## dbl (7): pat_id, birth_month, birth_day, birth_year, hr_visit1, hr_visit2, h...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+```r
+ggplot(data=bp,aes(y=hr_visit1,x=race)) + geom_bar(stat='summary',fun='mean')
+```
+
+&lt;img src="02-empirical-workflow_files/figure-html/immediate_visual-1.svg" style="display: block; margin: auto;" /&gt;
+- Why don't you want to do that?
+
+---
+# Check factor variables
+
+
+```r
+table(bp$race,bp$sex)
+```
+
+```
+##            
+##             F Female M Male
+##   Asian     0      1 0    1
+##   Black     1      2 1    3
+##   Caucasian 0      3 0    1
+##   Other     0      1 0    1
+##   White     0      2 0    2
+##   WHITE     0      1 0    1
+```
+
+---
+# Visualize the data 
+
+- Go beyond the eyeball and graph the data 
+&lt;!-- Can I use readxl? Seems odd I cannot gett it to work. --&gt;
+
+```r
+# Get the first three rows of the data frame (or as many rows as needed)
+
+#Make a density of the heart rate on visit 1:
+ggplot(data=bp,aes(x=hr_visit1))+geom_density()
+```
+
+&lt;img src="02-empirical-workflow_files/figure-html/funky_data2-1.svg" style="display: block; margin: auto;" /&gt;
+
+What might be going on here?
+
+---
+# Other tricks:
+
+- Check if the data are the right-size
+
+- If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
+
+- If not, find out why! Maybe there are 1020 because DC is (rightfully) included
+
+- Search for outliers or oddities and work out possible explanations using:
+    - Codebooks
+    - Intuition
+    - Emails to the source/creator of data
+
+---
+
+# Test-driven development (unit testing, refactoring, profiling)
+
+- The only way to know that your code works is to test it!
+
+- Test-driven development (TDD) consists of a suite of tools for writing code that can be automatically tested
+
+- .hi[unit testing] is nearly universally used in professional software development
+
+- Unit testing is to software developers what washing hands is to surgeons
+
+---
+
+# Unit testing
+
+- Unit tests are scripts that check that a piece of code does everything it is supposed to do
+
+- When professionals write code, they also write unit tests for that code at the same time
+
+- If code doesn't pass tests, then bugs are caught on the front end
+
+- Test coverage determines how much of the code base is tested. High coverage rates are a must for unit testing to be useful.
+
+- R's [dplyr package](https://github.com/tidyverse/dplyr) shows that all unit tests are passing and that tests cover 88% of the code base
+
+- [testthat](https://testthat.r-lib.org/) is a nice step-by-step guide for doing this in R
+
+---
+
+# Assertions
+
+- Assert statements are extremely useful
+- They exist in every langage 
+- In R it is called stopifnot()
+
+
+```r
+x &lt;- TRUE
+stopifnot(x)
+
+y &lt;- FALSE
+stopifnot(y)
+```
+
+```
+## Error: y is not TRUE
+```
+
+---
+
+# Refactoring
+
+- Refactoring refers to the action of restructuring code without changing its external behavior or functionality. Think of it as "reorganizing"
+
+- Example:
+
+
+
+after refactoring becomes
+
+
+
+- Nothing changed in the code except the number of characters in the function
+
+- The new version may run faster, is more readable. The output is unchanged.
+
+- Refactoring could also mean reducing the number of input arguments
+
+- Jenny Bryan gave a [great talk](https://www.youtube.com/watch?v=7oyiPBjLAWY) on refactoring
+
+---
+
+# Profiling
+
+- Profiling refers to checking the resource demands of your code
+
+- How much processing time does your script take? How much memory?
+
+- Clean code should be highly performant: it uses minimal computational resources
+
+- Profiling and refactoring go hand in hand, along with unit testing, to ensure that code is maximally optimized
+
+- [Here](https://www.geeksforgeeks.org/benchmarking-in-julia/) is an intro guide to profiling in Julia using the `@time` macro
+
+---
+
+# Pair programming
+
+- An essential part of clean code is reviewing code
+
+- An excellent way to review code is to do so at the time of writing
+
+- .hi[Pair programming] involves sitting two programmers at one computer
+
+- One programmer does the writing while the other reviews
+
+- This is a great way to spot silly typos and other issues that would extend development time
+
+- It's also a great way to quickly refactor code at the start
+
+- .hi[I strongly encourage you to do pair programming on problem sets in this course!]
+    - (Sometimes I will require it)
+
+---
+class: inverse, center, middle
+name: appendix
+# Appendix
+
+---
+
+# Textbooks: Smarter people than me
+
+- Cunningham (2021) [Causal Inference: The Mixtape](https://www.amazon.com/Causal-Inference-Mixtape-Scott-Cunningham/dp/0300251688) (Also, [free version on his website](https://mixtape.scunning.com/))
+- Huntington-Klein (2022) [The Effect](https://theeffectbook.net/introduction.html)
+- Angrist and Pischke (2009) [Mostly Harmless Econometrics](http://www.amazon.com/Mostly-Harmless-Econometrics-Empiricists-Companion/dp/0691120358/) (MHE)
+- Morgan and Winship (2014) [Counterfactuals and Causal Inference](http://www.amazon.com/Counterfactuals-Causal-Inference-Principles-Analytical/dp/1107694167/) (MW)
+- Sweigart (2019) [Automate The Boring Stuff With Python](https://automatetheboringstuff.com/)
+
+# Non-textbook readings
+
+- The help documentation associated with your language (no really)
+- Jesse Shapiro's "How to Present an Applied Micro Paper"
+- Gentzkow and Shapiro's coding practices manual
+- Ljubica "LJ" Ristovska's language agnostic guide to programming for economists
+- Grant McDermott on Version Control using Github [Link](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html#1)
+
+# Helpful for troubleshooting
+
+- The help documentation associated with your language (no really)
+- All languages: [Stack Overflow](https://stackoverflow.com), [Stack Exchange](https://stackexchange.com)
+- Stata-specific (all hail Nick Cox): [Statalist](https://www.statalist.org/forums/forum/general-stata-discussion/general)
+- Cheatsheets: [Stata](https://www.stata.com/bookstore/statacheatsheets.pdf), [RStudio](https://www.rstudio.com/resources/cheatsheets/), [Python](https://betterprogramming.pub/10-must-have-python-cheatsheets-2b74e8097bc3?gi=cfdb14820caa)
+- Me: [Sign up for office hours](https://calendar.google.com/calendar/u/1/selfsched?sstoken=UUF5d0hzbmlvemxVfGRlZmF1bHR8NDRjMWFiMjA5OTNkNzMwNTVkYzBkYWYyYzc2NmQ5Yjc/)
+
+# Learn by Immersion
+
+- Just like learning a real language, no amount of talking today will teach you how to use any program.
+  - You have to need to use it (immersion) to learn it.
+  - Google is your dictionary.
+  - Help files are your grammar books.
+  - A great way to start coding is to see lots of other people's code and copy what you read.
+- You must learn how to ask the “right” question:
+  - Never: "Importing csv file into stata not working."
+  - Better: "import csv stata [specific error message]."
+  - Better still: "import delimited using csv [specific error message]."
+  - `set trace on/off` around a buggy command can help reveal where the error happens inside the black box.
+
+---
+class: inverse, center, middle
+
+# Next lecture: Hidden Researcher Decisions
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
