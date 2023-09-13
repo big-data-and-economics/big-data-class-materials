@@ -47,7 +47,6 @@ BibOptions(check.entries = FALSE,
 #biblio <- ReadBib("../../References/References.bib", check = FALSE)
 ```
 
----
 # Table of contents
 
 1. [Prologue](#prologue)
