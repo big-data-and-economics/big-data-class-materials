@@ -190,9 +190,10 @@ Before we get started, you need to create an SSH key on your local machine.
   - GitHub also recommends it
 
 - We will generate a key, then add the public key to GitHub SSH keys.
+  - I will show you the "hard" way first, then an "easier" way second (guess which we'll do?)
 
 ---
-# First create an SSH-key (cont.)
+# The hard way -- ssh-keygen
 - You can generate an SSH key via the terminal with the following command:
 ```bash 
 ssh-keygen -t ed25519  -C "YOUR-EMAIL-ADDRESS OR OTHER COMMENT"
@@ -224,7 +225,7 @@ ssh-add ~/.ssh/id_ed25519
 - Then you'll go to your GitHub account settings and add the public key to your account under SSH keys.
 
 ---
-# First create an SSH-key (the easy way)
+# The Rstudio way point-and-click
 
 - You can also point-and-click with RStudio: Tools -&gt; Global Options -&gt; Git/SVN -&gt; Create RSA Key...
   - Guess which we're gonna do today?
