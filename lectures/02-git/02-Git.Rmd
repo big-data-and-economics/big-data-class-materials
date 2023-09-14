@@ -88,7 +88,7 @@ We went through a software installation check during the previous lecture. By no
 
 ☑ Created an account on [GitHub](https://github.com/) 
 
-☑ Accepted an invitation to EC 607 course repo (quarter specific).
+☑ Accepted an invitation to ECON 368 course repo (semester specific).
 
 
 </br>
@@ -186,16 +186,16 @@ Before we get started, you need to create an SSH key on your local machine.
 
 ---
 # First create an SSH-key (cont.)
-- You can generate an SSH key on your local machine with the following command:
+- You can generate an SSH key via the terminal with the following command:
 ```bash 
-ssh-keygen -t ed25519  -b 4096 -C "YOUR-EMAIL-ADDRESS OR OTHER COMMENT"
+ssh-keygen -t ed25519  -C "YOUR-EMAIL-ADDRESS OR OTHER COMMENT"
 ```
 - You will be prompted to enter a file in which to save the key. Just hit enter to accept the default location.
 - You will then be prompted to enter a passphrase. You can either enter a passphrase or leave it blank. (If you leave it blank, you will not be prompted for a passphrase when you use the key.)
 - You should see something like this:
 
 ```bash
-Generating public/private rsa key pair.
+Generating public/private ed25519 key pair.
 Enter file in which to save the key (/Users/you/.ssh/id_ed25519):
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
