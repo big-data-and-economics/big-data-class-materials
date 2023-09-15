@@ -1,0 +1,219 @@
+% Fonts/languages
+\documentclass[12pt,english]{exam}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}
+\usepackage[T1]{fontenc}
+\usepackage[latin9]{inputenc}
+\usepackage{babel}
+\usepackage{mathpazo}
+%\usepackage{mathptmx}
+
+% Colors: see  http://www.math.umbc.edu/~rouben/beamer/quickstart-Z-H-25.html
+\usepackage{color}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{byublue}     {RGB}{0.  ,30. ,76. }
+\definecolor{deepred}     {RGB}{190.,0.  ,0.  }
+\definecolor{deeperred}   {RGB}{160.,0.  ,0.  }
+\newcommand{\textblue}[1]{\textcolor{byublue}{#1}}
+\newcommand{\textred}[1]{\textcolor{deeperred}{#1}}
+
+% Layout
+\usepackage{setspace} %singlespacing; onehalfspacing; doublespacing; setstretch{1.1}
+\setstretch{1.2}
+\usepackage[verbose,nomarginpar,margin=1in]{geometry} % Margins
+\setlength{\headheight}{15pt} % Sufficent room for headers
+\usepackage[bottom]{footmisc} % Forces footnotes on bottom
+
+% Headers/Footers
+\setlength{\headheight}{15pt}	
+%\usepackage{fancyhdr}
+%\pagestyle{fancy}
+%\lhead{For-Profit Notes} \chead{} \rhead{\thepage}
+%\lfoot{} \cfoot{} \rfoot{}
+
+% Useful Packages
+%\usepackage{bookmark} % For speedier bookmarks
+\usepackage{amsthm}   % For detailed theorems
+\usepackage{amssymb}  % For fancy math symbols
+\usepackage{amsmath}  % For awesome equations/equation arrays
+\usepackage{array}    % For tubular tables
+\usepackage{longtable}% For long tables
+\usepackage[flushleft]{threeparttable} % For three-part tables
+\usepackage{multicol} % For multi-column cells
+\usepackage{graphicx} % For shiny pictures
+\usepackage{subfig}   % For sub-shiny pictures
+\usepackage{enumerate}% For cusomtizable lists
+\usepackage{pstricks,pst-node,pst-tree,pst-plot} % For trees
+
+% Bib
+\usepackage[authoryear]{natbib} % Bibliography
+\usepackage{url}                % Allows urls in bib
+
+% TOC
+\setcounter{tocdepth}{4}
+
+% Links
+\usepackage{hyperref}    % Always add hyperref (almost) last
+\hypersetup{colorlinks,breaklinks,citecolor=black,filecolor=black,linkcolor=byublue,urlcolor=blue,pdfstartview={FitH}}
+\usepackage[all]{hypcap} % Links point to top of image, builds on hyperref
+\usepackage{breakurl}    % Allows urls to wrap, including hyperref
+
+\pagestyle{head}
+\firstpageheader{\textbf{\class\ - \term}}{\textbf{\examnum}}{\textbf{Due: Sep. 17\\ midnight}}
+\runningheader{\textbf{\class\ - \term}}{\textbf{\examnum}}{\textbf{Due: Sep. 17\\ midnight}}
+\runningheadrule
+
+\newcommand{\class}{ECON/DCS 368}
+\newcommand{\term}{Fall 2023}
+\newcommand{\examdate}{Due: September 17, 2023 by Midnight}
+% \newcommand{\timelimit}{30 Minutes}
+
+\noprintanswers                         % Uncomment for no solutions version
+\newcommand{\examnum}{Problem Set 0}           % Uncomment for no solutions version
+% \printanswers                           % Uncomment for solutions version
+% \newcommand{\examnum}{Problem Set 1 - Solutions} % Uncomment for solutions version
+
+
+%\lhead{Econ 201 - Summer 2014} \chead{Quiz 1} \rhead{\thepage}
+%\lfoot{} \cfoot{} \rfoot{}
+%\setstretch{1.0}
+
+
+\begin{document}
+This problem set is intended to guide you through installation of different required software and get you familiar with GitHub classroom. It will also help me learn a bit more about your research interests. 
+
+In completing this assignment, you will be writing TeX code, either using \url{overleaf.com} or a local TeX editor like TeX Live. You will also be using Git, and publishing your work to GitHub.
+
+You will submit your problem set by pushing the document to \emph{your} fork of Problem Set 0, \texttt{big-data-PS0}. You will put this and all other problem sets in the repository \texttt{big-data-PSX}, where \texttt{X} is the problem set number. Name your files \texttt{PSX\_LastName.extension}.
+
+\begin{questions}
+\question Create an account at \url{GitHub.com} and ``star'' our class repository (\url{https://github.com/ECON368-fall2023-big-data-and-economics}). Please add a photo of yourself to your profile; this will make it easier for all of us to interact throughout the course. 
+
+\question Navigate to \url{https://education.github.com/students} and Sign Up for Global Campus. This will give you access to GitHub Pro for free, which will give you access to more repositories and GitHub CoPilot. You must enroll using your bates.edu email and a photo of your student ID. 
+
+\question Fork the class repository to your own account. Once you have forked, go to ``Settings'' and click on ``Collaborators'' on the left hand bar. Enter my GitHub username so that I will be able to view your completed assignments. 
+
+\question Download Git and GitHub Desktop. You can download Git at \url{https://git-scm.com/downloads}. You can download GitHub Desktop from \url{https://desktop.github.com/}. 
+
+\question Clone your fork of the class repository to your local machine. There are two ways to do this (instructions with pictures--\url{https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository}):
+\begin{enumerate}
+  \item GitHub Desktop: 
+  \begin{enumerate}
+    \item \textbf{Sign in to Your GitHub Account:}
+        Sign in to your GitHub account using your username and password.
+    \item \textbf{Configure GitHub Desktop (if required):}
+        GitHub Desktop may prompt you to configure your default settings, including your name, email, and text editor. Configure these settings as needed.
+    \item \textbf{Clone a Repository:}
+        Click the "File" menu, then select "Clone Repository."
+    \item \textbf{Choose a Repository to Clone:}
+        In the "Clone a Repository" window, you can:
+        \begin{itemize}
+          \item Choose your fork of the repository
+          \item Choose a local directory where you want to clone the repository.
+        \end{itemize}
+        Click the "Clone" button to proceed.
+    \item \textbf{Wait for Cloning to Complete:}
+        GitHub Desktop will download all the files and history from the repository. Depending on the size of the repository and your internet connection, this may take some time.
+    
+    \item \textbf{Access Your Cloned Repository:}
+        Once cloning is complete, you will have a local copy of the Git repository in the directory you specified. You can access it through GitHub Desktop and start working on your project.
+  \end{enumerate}
+  
+  \item Command line (challenging):
+  \begin{enumerate}
+    \item \textbf{Open Terminal/Command Prompt:}
+      \begin{itemize}
+        \item \textbf{Windows:} Open the Command Prompt or PowerShell.
+        \item \textbf{Mac:} Open the Terminal application located in the Utilities folder within the Applications folder.
+      \end{itemize}
+  \item \textbf{Navigate to the Directory:}
+      Use the \texttt{cd} (Change Directory) command to navigate to the directory where you want to clone the Git repository. Below I use the Documents folder, your choice where! 
+      \begin{itemize}
+        \item \textbf{Windows:} \texttt{cd C:\textbackslash Users\textbackslash YourUsername\textbackslash Documents}
+        \item \textbf{Mac:} \texttt{cd \textasciitilde/Documents}
+      \end{itemize}
+  \item \textbf{Clone the Repository:}
+      To clone your fork of the Git repository, use the \texttt{git clone} command followed by the repository URL, which is the green ``Clone or download'' button on your forked repository webpage and copying the link.
+      \begin{itemize}
+      \item Example: \texttt{git clone https://github.com/username/repository.git}
+      \end{itemize}
+
+  \item \textbf{Enter GitHub Credentials (if required):}
+      If the repository is private and you haven't set up SSH keys or a credential manager, Git may prompt you to enter your GitHub username and password.
+
+  \item \textbf{Wait for Cloning to Complete:}
+      Git will download all the files and history from the repository. Depending on the size of the repository and your internet connection, this may take some time.
+
+  \item \textbf{Verify the Clone:}
+      Once the cloning process is complete, you will have a local copy of the Git repository in the directory you specified. You can navigate to the cloned directory using the \texttt{cd} command and verify its contents. You can also navigate their by pointing and clicking. 
+  \end{enumerate}
+\end{enumerate}
+
+\question Download R and RStudio. You can download R from \url{https://cran.r-project.org/} and RStudio from \url{https://www.rstudio.com/products/rstudio/download/}. '
+
+\begin{enumerate}
+  \item \textbf{If you would like access to GitHub CoPilot within RStudio, there is a beta release version here:} \url{https://tinyurl.com/mv7cntu6}. I have installed it and it works. 
+  \item Navigate to ``Tools,'' click on CoPilot, and follow instructions. 
+  \item This tool was released this month, so it is still in beta. It is not perfect, but it is pretty cool. (This supersedes the need to use VS Code, but I have left the instructions for that installation below.)
+\end{enumerate}
+
+\question Download TeX Live or a related \TeX editor. You can download TeX Live from \url{https://www.tug.org/texlive/}. You may also use \url{overleaf.com} or another TeX editor of your choice. I will be able to provide less guidance on how to optimize those.
+
+\question Navigate to the Solutions folder of this repository. Inside you will find \texttt{PS0\_solutions\_latex.tex}. Open one of thils files in your preferred TeX editor. In this file, write a brief summary ($\approx$ half a page) of your interests in economics \& data science. What made you want to take this class? Do you have any ideas for what you would want to do for your project for this class? What are your goals for this class, and what is your plan for after graduation? Repeat in the second file. 
+
+\question At the end of your document, create a new section entitled ``Equation'' and write the following equation in \TeX format following the directions \href{https://www.overleaf.com/learn/latex/mathematical_expressions}{here}:
+\begin{equation}
+	a^{2} + b^{2} = c^{2}
+\end{equation}
+
+\question Compile the .tex file into a .pdf. There should be an obvious green arrow for compilation in your \TeX editor. 
+
+Copy and paste this text and the equation into the \texttt{PS0\_solutions.Rmd} file. Knit the file and look at the output. You should have a PDF and an HTML file.
+
+Note that the equation you wrote will look incorrect. Try to figure out how to fix it. Ask ChatGPT or GitHub CoPilot for help if you like. 
+
+\question Issue a pull request to our class repository (note: \emph{not} your private fork of the class repository) by adding a text file with your initials to the \texttt{People/} folder. The first (and only) line of the text file should say \texttt{'hello'}. For example, if I were completing this problem set, I would:
+
+\begin{enumerate}
+  \item Create a file called \texttt{KC.txt} in the \texttt{People/} folder (after cloning the repository)
+  \item ``Add,'' ``Commit,'' and ``push'' this change using GitHub Desktop or a command line: \\
+  \texttt{git add KC.txt} \\
+  \texttt{git commit "New file"} \\
+  \texttt{git push} 
+  \item Add it to the course repository via ``pull request'' under \textbf{Pull requests} on the main GitHub page
+\end{enumerate}
+
+\end{questions}
+
+Note: Specific steps to complete this problem set are listed below:
+\begin{itemize}
+\item Double check that your big-data-PS0/Solutions folder (in your local copy of the forked repository) has PS0\_solutions.Rmd, PS0\_solutions.html, PS0\_solutions.pdf, PS0\_solutions\_latex.tex, PS0\_solutions\_latex.pdf included in it. 
+\item From the command line type the following:
+    \begin{itemize}
+    \item \texttt{git add PS0\_solutions*} -- it will warn you that some files are ignored. See the .gitignore file which specifically tells git to ignore nuisance files created by LaTeX editors. 
+    \item \texttt{git commit -m "Turning in my PS0"}
+    \item \texttt{git push origin main}
+    \end{itemize}
+\end{itemize}
+
+Are you still confused about Git? I definitely recommend going through \href{https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html}{these slides}. I also invite you to check out the ``Learn by doing'' resources on \url{https://try.github.io/}. Also, learning Git requires patience and with enough practice, you'll get it!
+
+\section{More advanced Programming with VS Code -- not required, but recommended}
+
+I had suggested that you download Visual Studio Code and use that in this course. I still do! It is a highly useful tool. At this time, RStudio will accomplish all my goals for the class WITHOUT needing you to install VSCode. I've included some tips for how to install below. 
+
+Download Visual Studio Code (or similar text editor). You can download Visual Studio Code from \url{https://code.visualstudio.com/}. You may also use Sublime Text, \url{https://www.sublimetext.com/}, or another text editor of your choice. I will be able to provide less guidance on how to optimize those. 
+
+If you will be actively using VSCode in this class to do assignments, navigate to the extensions tab on the LHS utility bar -- \texttt{ctrl+shift+X} will also pull it up. It looks like a square with four squares inside -- the top-right has been removed. Search for and install the following extensions:
+
+\begin{enumerate}
+  \item The \textit{R} extension by REditorSupport -- \url{https://code.visualstudio.com/docs/languages/r}
+  \item \textit{LaTeX Workshop} by James Yu -- \url{https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop}
+  \item Install Anaconda -- \url{https://www.anaconda.com/products/individual}
+  \item Follow the Radian installlation instructions -- \url{https://github.com/randy3k/radian}
+  \item GitHub CoPilot -- \url{https://marketplace.visualstudio.com/items?itemName=GitHub.copilot}
+  \item GitHub Classroom -- \url{https://marketplace.visualstudio.com/items?itemName=GitHub.classroom}
+\end{enumerate}
+
+Follow installation instructions and setup. 
+
+\end{document}
