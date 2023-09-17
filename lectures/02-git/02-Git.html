@@ -3,7 +3,7 @@
   <head>
     <title>Data Science for Economists</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Grant McDermott" />
+    <meta name="author" content="Grant McDermott, adapted by Kyle Coombs" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
@@ -20,10 +20,10 @@ class: center, middle, inverse, title-slide
 ## Lecture 2: Version control with Git(Hub)
 ]
 .author[
-### Grant McDermott
+### Grant McDermott, adapted by Kyle Coombs
 ]
 .date[
-### University of Oregon | <a href="https://github.com/uo-ec607">EC 607</a>
+### Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials">ECON 368</a>
 ]
 
 ---
@@ -95,7 +95,7 @@ We went through a software installation check during the previous lecture. By no
 
 ☑ Created an account on [GitHub](https://github.com/) 
 
-☑ Accepted an invitation to EC 607 course repo (quarter specific).
+☑ Accepted an invitation to ECON 368 course repo (semester specific).
 
 
 &lt;/br&gt;
@@ -190,19 +190,20 @@ Before we get started, you need to create an SSH key on your local machine.
   - GitHub also recommends it
 
 - We will generate a key, then add the public key to GitHub SSH keys.
+  - I will show you the "hard" way first, then an "easier" way second (guess which we'll do?)
 
 ---
-# First create an SSH-key (cont.)
-- You can generate an SSH key on your local machine with the following command:
+# The hard way -- ssh-keygen
+- You can generate an SSH key via the terminal with the following command:
 ```bash 
-ssh-keygen -t ed25519  -b 4096 -C "YOUR-EMAIL-ADDRESS OR OTHER COMMENT"
+ssh-keygen -t ed25519  -C "YOUR-EMAIL-ADDRESS OR OTHER COMMENT"
 ```
 - You will be prompted to enter a file in which to save the key. Just hit enter to accept the default location.
 - You will then be prompted to enter a passphrase. You can either enter a passphrase or leave it blank. (If you leave it blank, you will not be prompted for a passphrase when you use the key.)
 - You should see something like this:
 
 ```bash
-Generating public/private rsa key pair.
+Generating public/private ed25519 key pair.
 Enter file in which to save the key (/Users/you/.ssh/id_ed25519):
 Enter passphrase (empty for no passphrase):
 Enter same passphrase again:
@@ -224,7 +225,7 @@ ssh-add ~/.ssh/id_ed25519
 - Then you'll go to your GitHub account settings and add the public key to your account under SSH keys.
 
 ---
-# First create an SSH-key (the easy way)
+# The Rstudio way point-and-click
 
 - You can also point-and-click with RStudio: Tools -&gt; Global Options -&gt; Git/SVN -&gt; Create RSA Key...
   - Guess which we're gonna do today?
@@ -259,7 +260,7 @@ The starting point for our workflow is to link a GitHub repository (i.e. "repo")
 
 &lt;/br&gt;
 Now, I want you to practice by these steps by creating your own repo on GitHub — call it "test" — and cloning it via an RStudio Project.
-- See my GIF walkthrough on the next slide...
+- See Grant's GIF walkthrough on the next slide...
 
 ---
 
@@ -281,7 +282,7 @@ Now open up the README file (see the "Files" tab in the bottom-right panel).
 - Add some text like "Hello World!" and save the README.
 - Do you see any changes in the "Git" panel? Good. (Raise your hand if not.)
 
-Again, see my GIF walkthrough on the next slide...
+Again, see Grant's GIF walkthrough on the next slide...
 
 .footnote[&lt;sup&gt;1&lt;/sup&gt; They're important, but not for the purposes of this section.]
 
@@ -661,14 +662,15 @@ name: branches
 # What are branches and why use them?
 
 Branches are one of Git's coolest features.
-- Allow you to take a snapshot of your existing repo and try out a whole new idea *without affecting* your main (i.e. "master") branch.
-- Only once you (and your collaborators) are 100% satisfied, would you merge it back into the master branch.&lt;sup&gt;1&lt;/sup&gt;
+- Allow you to take a snapshot of your existing repo and try out a whole new idea *without affecting* your main branch.&lt;sup&gt;1&lt;/sup&gt;
+- Only once you (and your collaborators) are 100% satisfied, would you merge it back into the main branch.&lt;sup&gt;2&lt;/sup&gt;
   - This is how most new features in modern software and apps are developed.
   - It is also how bugs are caught and fixed.
   - But researchers can easily — and should! — use it to try out new ideas and analysis (e.g. robustness checks, revisions, etc.)
 - If you aren't happy, then you can just delete the experimental branch and continue as if nothing happened.
 
-.footnote[&lt;sup&gt;1&lt;/sup&gt; You can actually have branches of branches (of branches). But let's not get ahead of ourselves.]
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Github used to call the main branch "master", but has now switched to "main."]
+.footnote[&lt;sup&gt;2&lt;/sup&gt; You can actually have branches of branches (of branches). But let's not get ahead of ourselves.]
 
 --
 
@@ -701,9 +703,9 @@ List all branches on your local machine:
 $ git branch
 ```
 
-Switch back to (e.g.) the master branch:
+Switch back to (e.g.) the main branch:
 ```bash
-$ git checkout master
+$ git checkout main
 ```
 
 Delete a branch
@@ -720,7 +722,7 @@ You have two options:
 
 ### 1. Locally
 - Commit your final changes to the new branch (say we call it "new-idea").
-- Switch back to the master branch: `$ git checkout master`
+- Switch back to the main branch: `$ git checkout main`
 - Merge in the new-idea branch changes: `$ git merge new-idea`
 - Delete the new-idea branch (optional): `$ git branch -d new-idea`
   
@@ -784,9 +786,11 @@ Creating forks is super easy as we've just seen. However, maintaining them invol
 
 --
 
-### OSS contribution
+### Open Source Software contribution
 
-Remember that "OSS contribution" component of the course (i.e. 10% of your final grade)? Well, now is a good time to tell you that forks, branches, and pull requests are effectively what I will be expecting of you.
+Lots of Open Source Software (OSS) projects are hosted on GitHub. They rely on forks, branches, etc. to manage contributions from the community.
+
+I will give anyone who successfully makes a contribution to an OSS project during the semester a bonus 2.5% on their final grade. (Link me to the PR and I'll verify.)
 - Grades aside, I want to encourage you to start thinking about contributing to software projects in general.
 - Seriously, it can be something as simple as correcting typos or language. Many great programmers and data scientists are not English first-language speakers. Helping to improve package documentation is a small way to say thanks. (More [here](https://yihui.name/en/2013/06/fix-typo-in-documentation).)
 

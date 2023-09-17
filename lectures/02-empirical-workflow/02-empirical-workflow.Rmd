@@ -47,7 +47,6 @@ BibOptions(check.entries = FALSE,
 #biblio <- ReadBib("../../References/References.bib", check = FALSE)
 ```
 
----
 # Table of contents
 
 1. [Prologue](#prologue)
@@ -79,6 +78,25 @@ Source: [xkcd](http://xkcd.com/1513/)
     - I'm also available by [appointment](https://calendar.app.google/XF36Ujpg9NcJbSD58) on Zoom
 
 - .hi[Problem Set 0:] due on Sunday, September 17th at 11:59pm
+
+- .hi[Presentations:] Everyone does two, sign-up in the [Presentations github repository](https://classroom.github.com/a/jWcBRDZJ)
+
+- .hi[Problem Set 0:] due on Sunday, September 17th at 11:59pm
+
+- .hi[Problem Set 1:] due on Sunday, September 24th at 11:59pm
+
+- .hi[Project Proposal:] due on Sunday, September 24th at 11:59pm
+
+---
+
+# Play along at home
+
+- Sync your forks of the class repository
+
+- Pull the latest changes from the class repository to your computer
+
+- Open lectures/02-empirical-workflow.Rmd and you can follow along with the slides
+  - Specifically, you can run the code live while I walk through it on the slides
 
 ---
 
@@ -172,6 +190,7 @@ df %>% filter(insample_new==1)
 
 - Thus, for science that involves computer code, clean code is a must
 
+- Minimizes (incompletely) the role of ``the influence of hidden researcher decisions'' (Huntington-Klein et al. 2021)
 
 ---
 
