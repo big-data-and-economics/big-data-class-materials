@@ -1,0 +1,22 @@
+---
+title: "Problem Set 0"
+author: "Author Name"
+date: "2023-09-07"
+output: 
+    html_document:
+        theme: journal
+    pdf_document:
+        latex_engine: xelatex
+knit: (function(inputFile, encoding) {
+ rmarkdown::render(inputFile, encoding = encoding, 
+ output_format = 'all') 
+ })
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Section 1
+
+## Section 2
