@@ -296,29 +296,78 @@ name: principles
 Source: [xkcd](http://xkcd.com/1459/)
 
 ---
+# What is a directory? 
+
+- All the files on your computer are organized in directories or folders
+
+- When you are running a script, you are running it from a particular directory
+  - This is *not necessarily* the directory where the script is located
+  - It is the directory that your console is in
+  - That means if you say `read.csv('my_data.csv')`, your computer looks for `my_data.csv` in that particular directory
+  - If that file is not in that directory, you will get a `FileNotFound` error
+  - In **R**, you can see what directory you are in using the `getwd()` function
+    - It is also above the console in RStudio
+    - You can change your working directory using the `setwd()` function
+
+
+```r
+getwd()
+```
+
+```
+## [1] "c:/Users/kgcsp/OneDrive/Documents/Education/Big Data/big-data-class-materials/lectures/02-empirical-workflow"
+```
+
+```r
+#setwd('lectures/02-empirical-workflow')
+```
+
+---
+# What is a directory path? 
+
+A path defines the location of a file or directory in a file system tree.
+
+If I navigate to this file in my computer, the path is `C:\Users\kgcsp\OneDrive\Documents\Education\Big Data\big-data-class-materials\lectures\02-empirical-workflow\02-empirical-workflow.Rmd`
+
+The name separates folders that chart the path from the .hi[root] to the file
+  - .hi[root]: the start of the file system tree (above that is `C:\`)
+  - Each folder along the tree is separated by a `\` or `/`
+
+This is called an .hi[absolute path]:
+  - It is long
+  - It is hard to remember
+  - It is not portable -- if I send this file to you, it won't work on your computer
+
+.hi[Relative paths] solve a lot of this:
+  - The path to a file or directory starting from the current working directory
+  - If my current working directory is `\big-data-class-materials`, then I can use `lectures/02-empirical-workflow/02-empirical-workflow.Rmd`
+  - **This is portable** -- if I send this file to you and you have a copy of the `big-data-class-materials` repository on your computer, it will work on your computer
+
+---
 # How I organize research projects
 
+- Entire projects should *ideally* live within the same directory
 - I have a folder called (`my_project`) 
-- Within that folder I have subfolders:
-    1. `data` for all data files
-        a. `raw` for raw data files
-        b. `clean` or `work` for cleaned data files
-        c. `temp` for temporary data files
-    2. `code` for all code files, and sometimes:
-        a. `code/analysis` for code files that build/clean code
-        a. `code/build` for code files that do analysis
-    3. `output` for all output files
-        a. `output/figures` for code files that make figures
-        b. `output/tables` for code files that make tables
-    4. `literature` or `articles` for all relevant literature
-    5. `writing` for all writing files
-        a. `writing/notes` for notes
-        b. `writing/drafts` for drafts
-        c. `writing/edits` for edits
-    6. `presentations` for all presentations
-        a. `presentations/slides` for slides
-        b. `presentations/notes` for notes
-- I'll further organize as needed
+  - Within that folder I have subfolders:
+      1. `data` for all data files
+          a. `raw` for raw data files
+          b. `clean` or `work` for cleaned data files
+          c. `temp` for temporary data files
+      2. `code` for all code files, and sometimes:
+          a. `code/analysis` for code files that build/clean code
+          a. `code/build` for code files that do analysis
+      3. `output` for all output files
+          a. `output/figures` for code files that make figures
+          b. `output/tables` for code files that make tables
+      4. `literature` or `articles` for all relevant literature
+      5. `writing` for all writing files
+          a. `writing/notes` for notes
+          b. `writing/drafts` for drafts
+          c. `writing/edits` for edits
+      6. `presentations` for all presentations
+          a. `presentations/slides` for slides
+          b. `presentations/notes` for notes
+- I'll further more or less as needed
 - See GitHub folder for this lecture as an example 
     - I also include a script `make_directory.sh` that automates this process
 ---
@@ -364,10 +413,23 @@ tree my_project
 Source: My computer
 
 ---
+# Help! I am in `code`, but I need something in `data/raw`!
+
+- You can use relative paths to navigate between directories
+- `..` means "go up one directory"
+  - `../data/raw` means "go up one directory, then down into `data/raw`"
+- `.` means "stay in the current directory"
+  - `./code/build' means "stay in the current directory, then down into `code/build`"
+- `../..` means "go up two directories"
+  - `../../data/raw` means "go up two directories, then down into `data/raw`"
+
+Play around with them yourself! 
+
+---
 # What is the value of directories? 
 
 - All of the files in a directory are related to each other
-- Can reference a file within the `data/raw` folder, from the `code/build` folder, using a relative path: `../data/raw/my_data.csv`
+- Can reference a file within the `data/raw` folder, from the `code/build` folder without writing out the full path `C:/Users/kylec/Documents/my_project/data/raw/my_data.csv`
     - `..` means "go up one directory", then down into `data/raw`
 - Can save objects of strings of path directories to use later using the `paste()` function
 

@@ -74,3 +74,4 @@ projects/
 .DS_Store
 */.DS_Store
 recordings/
+*.mp4
