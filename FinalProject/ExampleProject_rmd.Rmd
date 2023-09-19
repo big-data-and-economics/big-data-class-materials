@@ -1,0 +1,99 @@
+---
+title: "Further Examination of an Important Research Question"
+author: "Student Name"
+date: "May 9, 2020"
+output:
+  bookdown::html_document2: default
+  #bookdown::pdf_document2: default
+bibliography: References.bib
+---
+
+```{r setup, include=FALSE}
+#install.packages("lorem",'pander','kableExtra')
+library(knitr)
+library(kableExtra)
+library(xtable)
+library(lorem)
+library(fixest)
+library(pander)
+library(tidyverse)
+dict = c("(Intercept)" = "Constant", 
+         note1 = dsb("*Notes*: This is a note that illustrates how to access notes ",
+                     "from the dictionary."),
+         source = "*Sources*: Somewhere from the net.")
+setFixest_dict(dict)
+# The style of the table
+
+# markdown = TRUE is only useful in Rmarkdown documents
+```
+
+# Introduction
+
+`r lorem::ipsum(paragraphs = 4)`
+
+# Literature Review
+
+Previous work by @altonji1993 shows that educational decisions are an important determinant of later-life earnings. This point is driven further in follow-up work by @altonji_al2012 and @altonji_al2016.
+
+# Data 
+
+`r lorem::ipsum(paragraphs = 5)`
+
+# Empirical Methods
+
+While my approach explores a number of different approaches, the primary empirical model can be depicted in the following equation:
+
+\[
+Y_{it} = \alpha_{0} + \alpha_{1}Z_{it} + \alpha_{2} X_{it} + \varepsilon (\#eq:mean),
+\]
+
+where \(Y_{it}\) is a continuous outcome variable for unit \(i\) in year \(t\), and \(Z_{it}\) are characteristics about the firm at which \(i\) is working, while \(X_{it}\) are characteristics about \(i\). The parameter of interest is \(\alpha_{1}\).
+
+# Research Findings
+
+The main results are reported in Table \@ref(mytable). Also in figure \@ref(fig:myfigure). Note the table reference does not work. Needs some more troubleshooting. 
+
+# Conclusion
+
+`r lorem::ipsum(paragraphs = 3)`
+
+# References
+
+<div id="refs"></div>
+
+# Tables 
+
+ ```{r ols, echo=FALSE}
+data(trade)
+data(base_did)
+ols = feols(y ~ x1, base_did)
+ols_fe = feols(y ~ x1 | id+period, base_did)
+iv = feols(y ~ 1 | x1~treat, base_did)
+iv_fe = feols(y ~ 1| period | x1 ~ treat, base_did)
+
+# Create tables using kable
+```
+
+
+```{r mytable,echo=FALSE}
+#Knitr::kable allows the cross-reference of tables, etable makes a pretty table.
+etable(list('OLS'=ols, 'OLS'=ols_fe, 
+    'First-stage'=summary(iv, stage = 1), 'IV'=summary(iv, stage = 2), 
+    'First-stage'=summary(iv_fe, stage = 1:2), 'IV'=summary(iv_fe, stage = 2)), 
+    style.df = style.df(depvar.title = "", 
+    yesNo = "yes"),
+    notes = c("note1", "source"),
+    label='mytable',
+    postprocess.df = pandoc.table.return, style = "rmarkdown")
+```
+
+```{r myfigure, fig.cap='My Figure'}
+base_did %>% group_by(treat,period) %>% summarise(y=mean(y)) %>%
+    ggplot(aes(x=period,y=y,col=factor(treat))) + 
+        geom_line() +
+        labs(y='Outcome',x='Period',col='Treatment',title='Very cool graph of main descriptive result') +
+        theme_bw() +
+        theme(legend.position = c(.1,.8),
+            text = element_text(size=20),) #bigger font size
+
+```
