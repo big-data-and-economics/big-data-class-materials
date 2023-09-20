@@ -4,28 +4,35 @@ author: "Student Name"
 date: "May 9, 2020"
 output:
   bookdown::html_document2: default
-  #bookdown::pdf_document2: default
+  bookdown::pdf_document2: default
 bibliography: References.bib
 ---
 
 ```{r setup, include=FALSE}
-#install.packages("lorem",'pander','kableExtra')
+#install.packages('lorem','pander','fixest','stargazer','tidyverse','knir')
+# Also need to install either install.packages('pdftools') 
+# Alternatively, can install ImageMagick and Ghostscript for the fixest package to make pretty tables
 library(knitr)
-library(kableExtra)
-library(xtable)
 library(lorem)
+library(stargazer)
 library(fixest)
 library(pander)
 library(tidyverse)
-dict = c("(Intercept)" = "Constant", 
-         note1 = dsb("*Notes*: This is a note that illustrates how to access notes ",
-                     "from the dictionary."),
-         source = "*Sources*: Somewhere from the net.")
+dict = c("(Intercept)" = "Constant",
+         'x1' = "Variable 1",
+         'y' = "Outcome",
+         'treat' = "Treatment",
+        note1 = dsb("*Notes*: This is a note that illustrates how to access notes ",
+                    "from the dictionary."),
+        source = "*Sources*: Somewhere from the net.")
 setFixest_dict(dict)
 # The style of the table
+my_style = style.tex("aer", model.format = "(i)")
+#markdown = TRUE is only useful in Rmarkdown documents
+setFixest_etable(style.tex = my_style, markdown = TRUE, page.width = "a4")
 
-# markdown = TRUE is only useful in Rmarkdown documents
 ```
+
 
 # Introduction
 
@@ -51,7 +58,7 @@ where \(Y_{it}\) is a continuous outcome variable for unit \(i\) in year \(t\), 
 
 # Research Findings
 
-The main results are reported in Table \@ref(mytable). Also in figure \@ref(fig:myfigure). Note the table reference does not work. Needs some more troubleshooting. 
+The main results are reported in Table 1. Also in figure \@ref(fig:myfigure). Note the table reference does not work. Needs some more troubleshooting. 
 
 # Conclusion
 
@@ -63,37 +70,53 @@ The main results are reported in Table \@ref(mytable). Also in figure \@ref(fig:
 
 # Tables 
 
- ```{r ols, echo=FALSE}
-data(trade)
+```{r,results='asis',echo=FALSE}
+# Load required packages
+# Generate sample data and perform regression
+data(mtcars)
+lm_model <-  lm(mpg ~ wt, data = mtcars)
+lm_model2 <- lm(mpg ~ wt + vs, data = mtcars)
+lm_model3 <- lm(mpg ~ wt + vs + as.factor(gear), data = mtcars)
+
+# Generate the regression table
+stargazer(lm_model, lm_model2, lm_model3, 
+          title = "Linear Regression Results", 
+          align = TRUE, 
+          style = "qje",
+          column.labels = c("Outcome", "Dependent Variable", "Coefficient (SE)"),
+          dep.var.caption = "Dependent variable:",
+          dep.var.labels = "MPG",
+          covariate.labels=c('Weight', 'Straight-Engine', 'Gears 3', 'Gears 4'),
+          ci = TRUE,
+          single.row = TRUE,
+          type='html')
+
+```
+
+Or a table using the fixest, etable functionality. This may be a little trickier to implement. Follow [vignette](https://lrberge.github.io/fixest/articles/etable_new_features.html) here.
+
+```{r ols, echo=FALSE,results='asis'}
 data(base_did)
 ols = feols(y ~ x1, base_did)
 ols_fe = feols(y ~ x1 | id+period, base_did)
 iv = feols(y ~ 1 | x1~treat, base_did)
 iv_fe = feols(y ~ 1| period | x1 ~ treat, base_did)
 
-# Create tables using kable
-```
-
-
-```{r mytable,echo=FALSE}
-#Knitr::kable allows the cross-reference of tables, etable makes a pretty table.
 etable(list('OLS'=ols, 'OLS'=ols_fe, 
     'First-stage'=summary(iv, stage = 1), 'IV'=summary(iv, stage = 2), 
-    'First-stage'=summary(iv_fe, stage = 1:2), 'IV'=summary(iv_fe, stage = 2)), 
-    style.df = style.df(depvar.title = "", 
-    yesNo = "yes"),
-    notes = c("note1", "source"),
-    label='mytable',
-    postprocess.df = pandoc.table.return, style = "rmarkdown")
+    'First-stage'=summary(iv_fe, stage = 1:2), 'IV'=summary(iv_fe, stage = 2)),
+    style.df = style.df(depvar.title = "", yesNo = "Yes"),
+    notes = c("note1", "source"))
 ```
 
-```{r myfigure, fig.cap='My Figure'}
-base_did %>% group_by(treat,period) %>% summarise(y=mean(y)) %>%
-    ggplot(aes(x=period,y=y,col=factor(treat))) + 
-        geom_line() +
-        labs(y='Outcome',x='Period',col='Treatment',title='Very cool graph of main descriptive result') +
-        theme_bw() +
-        theme(legend.position = c(.1,.8),
-            text = element_text(size=20),) #bigger font size
+# Figures
 
+```{r myfigure, fig.cap='My Figure', echo=FALSE}
+base_did %>% group_by(treat,period) %>% summarise(y=mean(y)) %>% ungroup() %>%
+ggplot(aes(x=period,y=y,col=factor(treat))) + 
+         geom_line() +
+         labs(y='Outcome',x='Period',col='Treatment',title='Very cool graph of main descriptive result') +
+         theme_bw() + 
+         theme(legend.position = c(.1,.8),
+             text = element_text(size=20)) #bigger font size 
 ```
