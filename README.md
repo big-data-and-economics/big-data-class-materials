@@ -12,10 +12,16 @@ in the original HTML format.*
 
 This is in progress. Check back in for progress to be made. 
 
-| Date | Day | Topic | Due | 
-|---------|-------|-----------|-----------|
-| 2023-09-07  | Th | [Introduction to Big Data](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html)  |  |
-| 2023-09-12  | T | [Git slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-git/02-Git.html#1) by Grant McDermott, [Empirical Organization slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-empirical-workflow/02-empirical-workflow.html) | |
+| Date | Day | Topic | Download | Due | 
+|------|-----|-------|----------|-----|
+| 2023-09-07  | Th | [Introduction to Big Data](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html) | N/A  |  |
+| 2023-09-12  | T | [Git slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-git/02-Git.html#1) by Grant McDermott | N/A | |
+| 2023-09-21  | Th | [Empirical Organization slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-empirical-workflow/02-empirical-workflow.html) | N/A | |
+| 2023-09-26 | T | [R Basics](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/04/04-rlang.html) | N/A | |
+| 2023-09-28 | Th | [Data Table](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/05-datatable/05-datatable.html), [Tidyverse](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/05-tidyverse/05-tidyverse.html) | N/A | |
+| 2023-10-03 | T | [CSS](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/07-web-css/07-web-css.html) | [SelectorGadget](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb) (Chrome), [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/) (Firefox) | |
+| 2023-10-05 | Th | [APIs](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/07-web-apis/07-web-apis.html) | [JSONView](https://jsonview.com/), [Sign-up](https://research.stlouisfed.org/useraccount/apikey) and register for [Personal API Key](https://research.stlouisfed.org/useraccount/apikey) | |
+
 
 <!-- 2. Version control with Git(Hub) \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.Rmd)\]
 3. Learning to love the shell \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.Rmd)\]

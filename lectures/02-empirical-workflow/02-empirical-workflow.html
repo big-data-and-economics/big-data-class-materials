@@ -1173,7 +1173,12 @@ ggplot(data=bp %&gt;% mutate(race=ifelse(race=='WHITE' | race=='Caucasian','Whit
 
 
 ```r
-library(causaldata)
+library(gapminder) #Just load the data
+## 
+## Attaching package: 'gapminder'
+## The following object is masked from 'package:causaldata':
+## 
+##     gapminder
 country_count &lt;- length(unique(gapminder$country))
 year_count &lt;- length(unique(gapminder$year))
 
@@ -1298,9 +1303,9 @@ stopifnot(y)
 
 
 ```r
-library(ggplot2)
-library(datasets)
-library(hrbrthemes)
+library(ggplot2) #For ggplot
+library(datasets) #To load irs
+library(hrbrthemes) #For the theme
 data(iris)
 df &lt;- iris %&gt;%
     mutate(Sepal.Length = Sepal.Length * 1000,
