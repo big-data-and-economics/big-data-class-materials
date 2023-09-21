@@ -35,7 +35,6 @@ opts_chunk$set(
   cache=T#, echo=F, warning=F, message=F
   )
 library(tidyverse)
-library(hrbrthemes)
 library(RefManageR)
 BibOptions(check.entries = FALSE,
            bib.style = "authoryear",
@@ -995,7 +994,7 @@ ggplot(data=bp %>% mutate(race=ifelse(race=='WHITE' | race=='Caucasian','White',
 - If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
 
 ```{r data check, collapse=TRUE}
-library(causaldata)
+library(gapminder) #Just load the data
 country_count <- length(unique(gapminder$country))
 year_count <- length(unique(gapminder$year))
 
@@ -1113,9 +1112,9 @@ stopifnot(y)
   - You can remove this package from your code and still reproduce the error.
 
 ```{r initial code, error=TRUE}
-library(ggplot2)
-library(datasets)
-library(hrbrthemes)
+library(ggplot2) #For ggplot
+library(datasets) #To load irs
+library(hrbrthemes) #For the theme
 data(iris)
 df <- iris %>%
     mutate(Sepal.Length = Sepal.Length * 1000,
