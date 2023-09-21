@@ -1,6 +1,6 @@
 ---
 title: "Big Data and Economics"
-subtitle: "The Empirical Workflow and Clean Code"
+subtitle: "Lecture 2a: The Empirical Workflow and Clean Code"
 author: Kyle Coombs (adapted from Tyler Ransom + Scott Cunningham)
 date: "Bates College | [EC/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
 output:
@@ -36,9 +36,7 @@ opts_chunk$set(
   )
 library(tidyverse)
 library(hrbrthemes)
-library(fontawesome)
 library(RefManageR)
-library(aqp)
 BibOptions(check.entries = FALSE,
            bib.style = "authoryear",
            style = "markdown",
@@ -70,33 +68,43 @@ name: prologue
 Source: [xkcd](http://xkcd.com/1513/)
 
 ---
-# Forgot to mention
+# Housekeeping
 
 - .hi[Office Hours:]
-    - My office hours are 9am-10am on Tuesdays and 3pm-4pm on Wednesdays
-    - My office is 276 Pettengill 
+    - My office hours are now 4-5pm on Tuesdays and 10:30am-11:30am on Wednesdays
+    - My office is 276 Pettengill
     - I'm also available by [appointment](https://calendar.app.google/XF36Ujpg9NcJbSD58) on Zoom
 
-- .hi[Problem Set 0:] due on Sunday, September 17th at 11:59pm
-
 - .hi[Presentations:] Everyone does two, sign-up in the [Presentations github repository](https://classroom.github.com/a/jWcBRDZJ)
-
-- .hi[Problem Set 0:] due on Sunday, September 17th at 11:59pm
 
 - .hi[Problem Set 1:] due on Sunday, September 24th at 11:59pm
 
 - .hi[Project Proposal:] due on Sunday, September 24th at 11:59pm
+  - Create a fork of the Final Project repository and add me as a collaborator
 
 ---
-
 # Play along at home
 
-- Sync your forks of the class repository
+- Navigate to your fork of class repository on GitHub (**not** the class organization repository)
+  - It should be at `your-github-username/big-data-class-materials`
 
-- Pull the latest changes from the class repository to your computer
+- Sync your fork of the class repository with the `Sync fork` button
 
-- Open lectures/02-empirical-workflow.Rmd and you can follow along with the slides
-  - Specifically, you can run the code live while I walk through it on the slides
+- `Clone` the repository to your computer using RStudio
+  - Copy the repository ssh URL from GitHub
+  - `File` > `New Project` > `Version Control` > `Git` > `Repository ssh URL`
+  - Alternatively, use GitHub Desktop to clone the repository to your computer
+
+- `Pull` the latest changes from the class repository to your computer
+
+- Open RStudio and navigate to the `lectures/02-empirical-workflow` folder
+
+- Open `02-empirical-workflow.Rmd` and you can follow along with any code in the slides
+  - You may need to install tidyverse with `install.packages('tidyverse')`
+
+```{r play_along, eval=FALSE}
+install.packages('tidyverse')
+```
 
 ---
 
@@ -118,7 +126,7 @@ Also a small contribution from [here](https://garywoodfine.com/what-is-clean-cod
 # Jargon
 
 - There is a jargon in this class that won't make sense at first, I'll try to flag it as it comes
-    - If I don't flag a term, look it up on ChatGPT 
+    - If I don't flag a term, look it up on ChatGPT
     - If it still doesn't make sense, ask me -- could be I'm using it idiosyncratically
 
 - Here's a few terms:
@@ -126,7 +134,7 @@ Also a small contribution from [here](https://garywoodfine.com/what-is-clean-cod
     - **Version Control:** Keep track of different iterations of a project/code
     - **Repository:** The location on GitHub of all project files and (commented) file revision history
     - **GUI:** A Graphical User Interface -- what you're used to pointing and clicking to navigate a computer and execute programs
-    - **Command line:** Removes the "graphical" from GUI, instead you type all commands to navigate a computer and execute programs 
+    - **Command line:** Removes the "graphical" from GUI, instead you type all commands to navigate a computer and execute programs
         - R operates via the Command line, RStudio is a GUI
         - On Mac, this is called Terminal
         - Windows has Powershell, but it Powershell uses quite user-unfriendly commands
@@ -145,14 +153,17 @@ name: clean_code
 ## Sad story
 
 - Once upon a time there was a boy who was writing a job market paper on unemployment insurance during the pandemic
+
 - This boy presented the findings a half dozen times, spoke to the media some, and generally thought he had cool results
+
 - Several people suggested he look at a handful of other outcome series and try changing his analysis unit frequency from monthly to weekly
+
 - He also knew that he needed to restrict his sample to reduce noise
 
 ---
-# The horror! 
+# The horror!
 
-- But then after making these changes and re-running his code that took two days, his new sample dropped by 50 percent! 
+- But then after making these changes and re-running his code that took two days, his new sample dropped by 50 percent!
 - He was, understandably, terrified.
 - The young boy spent a week looking for the fix weeding through six different versions of the .do, .R, .dta, .csv, .sh, .py files with suffixes like *_v1* and *_test* and *_test2* and *_final_I_swear* and *_okay_i_lied*
 - Finally he discovered the phrase:
@@ -173,28 +184,26 @@ df %>% filter(insample_new==1)
 - Clean code saves you and your collaborators time
 
 ---
-
-# Why clean code matters: Scientific progress
+# Why clean code: Scientific progress
 
 - Good science is based on careful observations
 
 - Science progresses through iteratively testing hypotheses and making predictions
 
-- Scientific progress is impeded if 
+- Scientific progress is impeded if
 
     - mistaken previous results are erroneously given authority
-    
+
     - previous hypothesis tests are not reproducible
-    
-    - previous methods and results are not transparent 
+
+    - previous methods and results are not transparent
 
 - Thus, for science that involves computer code, clean code is a must
 
-- Minimizes (incompletely) the role of ``the influence of hidden researcher decisions'' (Huntington-Klein et al. 2021)
+- Minimizes (incompletely) the role of "the influence of hidden researcher decisions" (Huntington-Klein et al. 2021)
 
 ---
-
-# Why clean code matters: Personal and team sanity
+# Why clean code: Personal/team sanity
 
 - You will always make a mistake while coding
 
@@ -206,9 +215,7 @@ df %>% filter(insample_new==1)
 
 - It will make your collaborative relationships more pleasant
 
-
 ---
-
 # Why clean code is under-produced
 
 - If clean code is so beneficial and important, why isn't there more of it?
@@ -216,9 +223,9 @@ df %>% filter(insample_new==1)
 <br>
 
 1. .hi[Competitive pressure] to produce research/products as quickly as possible
-    
+
 2. .hi[End user] (journal editor, reviewer, reader, dean) .hi[doesn't care what the code looks like], just that the product works
-    
+
 3. In the moment, clean code .hi[takes longer to produce] while seemingly conferring no benefit
 
 ---
@@ -228,7 +235,6 @@ name: principles
 # How does one produce clean code? Principles
 
 ---
-
 # How does one produce clean code? Principles
 
 - Automation
@@ -260,7 +266,7 @@ name: principles
 - There are two reasons automation is so important
 
     - Reproducibility (helps with debugging and revisions)
-    
+
     - Efficiency (having a code base saves you time in the future)
 
 - A single script that shows the sequence of steps taken is the equivalent to "showing your work"
@@ -286,13 +292,13 @@ name: principles
 - To see how professionals do this, check out the source code for R's [dplyr](https://github.com/tidyverse/dplyr) package
 
     - There are separate directories for source code (`/src`), documentation (`/man`), code tests (`/test`), data (`/data`), examples (`/vignettes`), and more
-    
+
 - When you use version control, it forces you to make directories portable (otherwise a collaborator will not be able to run your code)
 
     - use __relative__ file paths, not absolute file paths
 
 ---
-# Don't be like this 
+# Don't be like this
 
 <html><div style='float:right'></div><hr color='#EB811B' size=1px width=796px></html>
 <div align="center">
@@ -301,7 +307,7 @@ name: principles
 Source: [xkcd](http://xkcd.com/1459/)
 
 ---
-# What is a directory? 
+# What is a directory?
 
 - All the files on your computer are organized in directories or folders
 
@@ -314,13 +320,13 @@ Source: [xkcd](http://xkcd.com/1459/)
     - It is also above the console in RStudio
     - You can change your working directory using the `setwd()` function
 
-```{r directories}
+```{r directories,collapse=TRUE}
 getwd()
 #setwd('lectures/02-empirical-workflow')
 ```
 
 ---
-# What is a directory path? 
+# What is a directory path?
 
 A path defines the location of a file or directory in a file system tree.
 
@@ -344,7 +350,7 @@ This is called an .hi[absolute path]:
 # How I organize research projects
 
 - Entire projects should *ideally* live within the same directory
-- I have a folder called (`my_project`) 
+- I have a folder called (`my_project`)
   - Within that folder I have subfolders:
       1. `data` for all data files
           a. `raw` for raw data files
@@ -365,8 +371,9 @@ This is called an .hi[absolute path]:
           a. `presentations/slides` for slides
           b. `presentations/notes` for notes
 - I'll further more or less as needed
-- See GitHub folder for this lecture as an example 
+- See GitHub folder for this lecture as an example
     - I also include a script `make_directory.sh` that automates this process
+
 ---
 # How I organize research projects
 
@@ -384,24 +391,10 @@ tree my_project
 Source: My computer
 
 ---
-# Help! I am in `code`, but I need something in `data/raw`!
-
-- You can use relative paths to navigate between directories
-- `..` means "go up one directory"
-  - `../data/raw` means "go up one directory, then down into `data/raw`"
-- `.` means "stay in the current directory"
-  - `./code/build' means "stay in the current directory, then down into `code/build`"
-- `../..` means "go up two directories"
-  - `../../data/raw` means "go up two directories, then down into `data/raw`"
-
-Play around with them yourself! 
-
----
-# What is the value of directories? 
+# What is the value of directories?
 
 - All of the files in a directory are related to each other
 - Can reference a file within the `data/raw` folder, from the `code/build` folder without writing out the full path `C:/Users/kylec/Documents/my_project/data/raw/my_data.csv`
-    - `..` means "go up one directory", then down into `data/raw`
 - Can save objects of strings of path directories to use later using the `paste()` function
 
 ```{r path_string}
@@ -422,6 +415,19 @@ read.csv(paste(data_raw,'my_data.csv',sep='/'))
 - If you move your project to a different computer, you can just change the `my_project` variable and all the other paths will update automatically
 
 ---
+# Help! I am in code/, but I need data/raw/file.csv!
+
+- You can use relative paths to navigate between directories
+- `..` means "go up one directory"
+  - `../data/raw` means "go up one directory, then down into `data/raw`"
+- `.` means "stay in the current directory"
+  - `./code/build` means "stay in the current directory, then down into `code/build`"
+- `../..` means "go up two directories"
+  - `../../data/raw` means "go up two directories, then down into `data/raw`
+
+Play around with them yourself!
+
+---
 # Alternative to all the pastes is here()
 
 - Better yet is the [here](https://cran.r-project.org/web/packages/here/vignettes/here.html)
@@ -437,10 +443,10 @@ here::i_am('my_project/code/build/.placeholder')
 here('data/raw','my_data.csv')
 ```
 
-- Can be less clunky than `paste()` and `sep='/'`
+- Can be less clunky than `paste()` and `sep="/"`
 
 ---
-# How to write scripts 
+# How to write scripts
 
 ## Keep them modular
 - Each script should do one thing and one thing only
@@ -449,7 +455,7 @@ here('data/raw','my_data.csv')
     - Taking in a raw file and returning a cleaned version
     - Taking in two files and merging them
     - Taking in a cleaned file and returning a figure
- 
+
 ## Have a main script that runs all scripts in order
 
 - This is the script that you run to reproduce your results
@@ -485,7 +491,7 @@ cleaned_df3  <- cf.clean_df3(df3)
 #Merge files 1 to 2
 merged_df1_df2 = merge(cleaned_df1, cleaned_df2, on=c('merge','vars'))
 
-#Append file 1 to 
+#Append file 1 to
 append_df1_df2_df3 = rbind(merged_df1_df2, cleaned_df2)
 
 #Analysis
@@ -597,32 +603,97 @@ Source: [Code and Data for the Social Sciences](https://web.stanford.edu/~gentzk
 
 3. Otherwise, don't abstract
 
+- In the context of R, abstraction means:
+  - Write functions
+  - Name your objects sensibly
+
 ---
 
 # Abstract to eliminate redundancy
 
-- Sometimes you might find yourself repeating lines of code with small modifications across the lines:
+- Sometimes you might find yourself repeating lines of code:
 
 ```{r naming redundancy}
-names <- c('one','two','three','four','five','one','two','three','four','five','one','two','three','four','five')
+names_thrice <- c('kyle','alex','charlie','sadie','laila','aidan','alice','ethan','ian','jaden','john','maggie','rawson','sam','sean','tyler','will','yun','yuna',
+  'kile','alex','charlie','sadie','laila','aidan','alice','ethan','ian','jaden','john','maggie','rawson','sam','sean','tyler','will','yun','yuna',
+  'alex','charlie','sadie','laila','aidan','alice','ethan','ian','jaden','john','maggie','rawson','sam','sean','tyler','will','yun','yuna')
+```
 
+Notice any problems?
+
+```{r improving}
 #Better
-names_short <- c('one','two','three','four','five')
-names_long <- c(names_short,names_short,names_short)
+names_short <- c('kyle','alex','charlie','sadie','laila','aidan','alice','ethan','ian','jaden','john','maggie','rawson','sam','sean','tyler','will','yun','yuna')
+c(names_short,names_short,names_short)
+```
 
-#Even better
-name_repeater <- function(count,names_short=c('one','two','three','four','five')) {
-    names_long <- rep(names_short, times = count)
-    return(names_long)
-}
+R anticipated repetition and created an in-built function
 
-print(names)
-print(names_long)
-print(name_repeater(3,names_short=names_short))
+```{r rep_function}
+#Even better use rep function
+rep(names_short, times = 3)
 
 ```
 
-- Now if I need to make further changes to `name_repeater` I can do it once!
+---
+
+# Abstract to eliminate redundancy (cont.)
+
+What if you can't find an R function? Write your own!
+
+```{r redundancy, collapse=TRUE}
+set.seed(16)
+prod1  = rnorm(1, 0, 1)*rnorm(1,4,6)
+prod2  = rnorm(2, 0, 1)*rnorm(2,0,1)
+prod3  = rnorm(3, 0, 1)*rnorm(3,15,78)
+print(prod1)
+print(prod2)
+print(prod3)
+```
+
+```{r redundancy_eliminated, collapse=TRUE}
+set.seed(16)
+multiply_normals = function(count,mean1=0,sd1=1,mean2=0,sd2=1) {
+    prod = rnorm(count,mean1,sd1)*rnorm(count,mean2,sd2)
+    return(prod)
+}
+prod1=multiply_normals(1,mean2=4,sd2=6)
+prod2=multiply_normals(2,mean2=0,sd2=1)
+prod3=multiply_normals(3,mean2=15,sd2=78)
+
+print(prod1)
+print(prod2)
+print(prod3)
+```
+
+---
+# Note on seeds
+
+- When randomizing in any language, you aren't really randomizing
+
+- You're producing pseudo-random numbers that return in a deterministic ordered list
+
+- If you set the seed, you can reproduce the same "random" numbers
+
+- This is useful for debugging and sharing code
+
+- Use `set.seed` in R
+
+```{r seed,collapse=TRUE}
+set.seed(0)
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+# New seed
+set.seed(1)
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+# Reset seed
+set.seed(0)
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+```
+
+---
 
 # Abstract to improve clarity
 
@@ -632,6 +703,7 @@ print(name_repeater(3,names_short=names_short))
 
 ```{r ols, eval=FALSE}
 Bhat = (t(X)%*%X)^(-1)%*%t(X)%*%y
+Bhat2 = (t(X)%*%X2)^(-1)%*%t(X2)%*%y
 ```
 
 or
@@ -641,7 +713,8 @@ estimate_ols <- function(yvar, Xmat) {
     Bhat = (t(Xmat)%*%Xmat)^(-1)%*%t(Xmat)%*%yvar
     return(Bhat)
 }
-estimate_ols(y,X)
+Bhat = estimate_ols(y,X)
+Bhat2 = estimate_ols(y,X2)
 ```
 
 The second approach is easier to read and understand what the code is doing
@@ -650,13 +723,11 @@ The second approach is easier to read and understand what the code is doing
 
 # Otherwise, don't abstract
 
-- One could argue that the examples on the previous two slides are overly abstract
+- One could argue that the examples on the previous slides are overly abstract
 
 - OLS is a simple operation that only takes one line of code
 
 - If we're only doing it once in our script, then it may not make sense to use the function version
-
-- Similarly, it may not make sense to use the `name_repeater` function if I only need to use it to repeat five names three times
 
 - This discussion points out that it can be difficult to know if one has reached the optimal level of abstraction
 
@@ -679,8 +750,46 @@ The second approach is easier to read and understand what the code is doing
 - Code can be "self-documenting" by leveraging abstraction: function arguments make it easier to understand what is a variable and what is a constant
 
 ---
+# A README is documentation 
+
+- A README gives high-level information about the repository or data file:
+  - This repository contains code that does X task
+  - Simple use case: use this repository to replicate paper X in journal Y
+
+
+- Onboarding instructions:
+  - Add your name to this file in repository folder `the/folder/file.md`
+  - Fork the repository and pull request changes
+  - Configure your computer settings in this way to run this project
+  - Guidelines/rules for contributing to the project
+
+
+- Licensing information:
+  - You can just take this code!
+  - This is proprietary and we will sue you if you haven't paid us
+
+
+- Dependencies:
+  - To use this code or package or data, download packages `X`, `Y`, `Z`
+
+
+- Changelog (short narrative commit history):
+  - 9/23/2023 - KGC - added function `X` to do `Y`
+
+---
 
 # Documentation in R
+
+- .hi[R Help System:] access using `?function_name`
+
+- .hi[Package vignettes:] access using `vignette("vignette_name")`
+
+- .hi[Cheatsheets:] access at [Posit Cheatsheets](https://posit.co/resources/cheatsheets/)
+
+
+---
+
+# Make your own documentation
 
 - R has excellent built-in documentation called `Roxygen2`
 
@@ -689,6 +798,7 @@ The second approach is easier to read and understand what the code is doing
 - Here's an example:
 
 ```{r roxygen}
+library(roxygen2)
 #' This is a sample function
 #'
 #' This function does something amazing.
@@ -703,21 +813,14 @@ amazing_function <- function(x) {
 
 ```
 
----
-
-# Other documentation in R
-
-- .hi[R Help System:] access using `?function_name`
-
-- .hi[Package vignettes:] access using `vignette("vignette_name")`
-
-- .hi[Cheatsheets:] access at [Posit Cheatsheets](https://posit.co/resources/cheatsheets/)
+- Use `roxygen::roxygenise()` to generate documentation for all functions in a file
+- Read more [here](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html)
 
 ---
 
 # Time management
 
-- Time management is key to writing clean code
+- Time management is key to writing clean code<sup>2</sup>
 
 - It is foolish to think that one can write clean code in a strained mental state
 
@@ -726,6 +829,8 @@ amazing_function <- function(x) {
 - Schedule long blocks of time (1.5 hours - 3 hours) to work on coding where you eliminate distractions (email, social media, etc.)
 
 - Stop coding when you feel that your focus or energy is dissipating
+
+.footnote[<sup>2</sup> Your professor needs this lecture too]
 
 ---
 
@@ -747,6 +852,7 @@ amazing_function <- function(x) {
 ## The Cunningham Empirical Workflow Conjecture
 
 - The cause of most of your errors is **not** due to insufficient knowledge of syntax in your chosen programming language
+
 - The cause of most of your errors is due to a poorly designed .hi[Empirical Workflow]
 
 ---
@@ -754,13 +860,17 @@ amazing_function <- function(x) {
 
 - A workflow is a fixed set of routines you bind yourself to which when followed identifies the most common errors
 	- Think of it as your morning routine: alarm goes off, go to wash up, make your coffee/tea, put pop tart in toaster, contemplate your existence in the universe until **ding**, eat pop tart repeat *ad infinitum*
+
+
 - Finding the outlier errors is a different task;  empirical workflows catch typical and common errors created by the modal data generating processes
+
+
 - Empirical workflows follow a checklist
 
 ---
 # Why do we use checklists?
 
-- I got engaged in July and am planning a wedding in Princeton for next July 
+- I got engaged in July and am planning a wedding in Princeton for next July
 - I also moved to New England in August and am still unpacking (in ME and MA)
 - I am teaching two upper-level electives
 - I am trying to submit several papers to conferences/journals this year
@@ -768,7 +878,7 @@ amazing_function <- function(x) {
 
 .pull-left[
 - **Wedding:**
-    
+
     ☐ Finalize tent configuration
 
     ☐ Pick wedding colors
@@ -788,23 +898,31 @@ amazing_function <- function(x) {
 .pull-right[
 - **Big Data:**
 
-    ☐ Prep GitHub demo
+    ☐ Write Problem Set 1 solutions
 
-    ☐ Create presentations repo
+    ☐ Develop Opportunity Atlas module
 
 - **Public Economics:**
 
-    ☐ Update solutions for PS1
+    ☐ Update solutions for PS2
 
-    ☐ Amend 2nd Welfare Theorem slides
+    ☐ Window Taxes demo
 
-etc.
+- **Disaster GoFundMe spillovers:**
+  
+    ☐ Skeleton code for Hurricane Iliana DiD
+
+    ☐ Submit to NBER conference by 10/8
 ]
 ---
 # To remember the obvious stuff you keep forgetting
-- When I stop to think, I know I need to do everything on my checklists 
+
+- When I stop to think, I know I need to do everything on my checklists
+
 - But then I forget when I move onto the next task
+
 - Programming is the same, except you have an **empirical checklist**:
+
 - The **empirical checklist**:
     - Covers the intermediate step between "getting the data" and "analyzing the data"
     - It largely focuses on ensuring data quality for the most common, easy to identify problems
@@ -813,21 +931,17 @@ etc.
 ---
 # Simple data checks
 
-- Simple, yet non-negotiable, programming commands and exercises to check for data errors 
+- Simple, yet non-negotiable, programming commands and exercises to check for data errors
 
-### Look at the data
-
-- "Real eyes realize real lies" --Troy Ave via some dude from my high school 
-
-- This is a messy dataset of blood pressure adapted from [work](https://github.com/higgi13425/medicaldata/tree/master/data-raw/messy_data) by Peter Higgins
+### Look at the data: "Real eyes realize real lies"<sup>1</sup>
 
 .scroll-box-8[
 ```{r funky_data}
+# This is a messy dataset of blood pressure adapted from Peter Higgins at https://github.com/higgi13425/medicaldata/tree/master/data-raw/messy_data
 bp <- read.csv('data/messier_bp.csv')
 bp
 ```
 ]
-
 ### Check factor variables
 
 ```{r factor}
@@ -835,6 +949,8 @@ bp
 table(bp$race,bp$sex)
 
 ```
+
+.footnote[<sup>1</sup> Attributed to Ray Charlies, Woody Guthrie, Tupac Shakur, Machine Head, and others]
 
 ---
 # Before you summarize the data...
@@ -844,12 +960,12 @@ bp <- read_csv('data/messier_bp.csv',skip=4,
 
 ggplot(data=bp,aes(y=hr_visit1,x=race)) + geom_bar(stat='summary',fun='mean')
 ```
-- Are Black people's heart rates really twice as high? 
+- Are Black people's heart rates really more than twice as high?
 
 ---
 # Visualize the raw data
 
-- Go beyond the eyeball and graph the data 
+- Go beyond the eyeball and graph the data
 ```{r funky_data2, dev="svg"}
 # Get the first three rows of the data frame (or as many rows as needed)
 
@@ -877,6 +993,16 @@ ggplot(data=bp %>% mutate(race=ifelse(race=='WHITE' | race=='Caucasian','White',
 
 - If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
 
+```{r data check, collapse=TRUE}
+library(causaldata)
+country_count <- length(unique(gapminder$country))
+year_count <- length(unique(gapminder$year))
+
+print(country_count*year_count)
+print(nrow(gapminder))
+
+```
+
 - If not, find out why! Maybe there are 1020 because DC is (rightfully) included
 
 - Search for outliers or oddities and work out possible explanations using:
@@ -891,6 +1017,10 @@ ggplot(data=bp %>% mutate(race=ifelse(race=='WHITE' | race=='Caucasian','White',
 - The only way to know that your code works is to test it!
 
 - Test-driven development (TDD) consists of a suite of tools for writing code that can be automatically tested
+
+- Simplest test is to check if the code gives you the output you expected
+
+- More complicated is to write a unit test
 
 - .hi[Unit testing] is nearly universally used in professional software development
 
@@ -912,12 +1042,10 @@ ggplot(data=bp %>% mutate(race=ifelse(race=='WHITE' | race=='Caucasian','White',
 
 - [testthat](https://testthat.r-lib.org/) is a nice step-by-step guide for doing this in R
 
----
-
-# Assertions
+### Assertions
 
 - Assert statements are extremely useful
-- They exist in every langage 
+- They exist in every langage
 - In R it is called stopifnot()
 
 ```{r assert, error=TRUE}
@@ -929,44 +1057,82 @@ stopifnot(y)
 ```
 
 ---
+# Troubleshooting tip: 
+
+- Sometimes you've made several changes to your code and suddenly it stops running
+    - Was it the new `if` statement?
+    - That sick new vectorized function to replace the `for` loop?
+    - A stray typo?
+
+
+- How do you find the bug in hundreds of lines of code? 
+
+
+- Read your code to see if there is an obvious mistake
+
+
+- .hi[Binary search]: Comment<sup>1</sup> half your code, run the script, and see if the bug persists
+    - If it does, the bug is in the other half
+    - If it doesn't, the bug is in the commented half
+    - Use `#` to comment out lines of code in R, or highlight and press `Ctrl+Shift+C`
+
+- Repeat on each half until you narrow to set of lines
+
+- If you can solve the bug from that line, great! 
+
+- If not, make a .hi[Minimal reproducible example]!
+
+.footnote[<sup>1</sup> Comment in R with `#`. Comment in RMarkdown with `<!-- code -->`. Or highlight and press `Ctrl+Shift+C` in RStudio.]
+
+---
 
 # Minimal reproducible example (MRE)
 
-- Sometimes you've made several changes to your code and suddenly it stops running 
-    - Was it the new `if` statement? 
-    - That sick new vectorized function to replace the `for` loop? 
-    - A stray typo?
 - There's likely a ton of superfluous stuff in your code that is not relevant to the error
-- [Minimal reproducible examples](https://stackoverflow.com/help/minimal-reproducible-example) (reprex), a concept from Stack Overflow, are a great way to isolate the error
-    - Minimal: Use as little code as possible that still produces the same problem
-    - Complete: Provide all parts someone else needs to reproduce your problem in the question itself
-    - Reproducible: Test the code you're about to provide to make sure it reproduces the problem
+
+
+- [Minimal reproducible examples](https://stackoverflow.com/help/minimal-reproducible-example) (reprex) are a great way to isolate the error
+    - **Minimal**: Use as little code as possible that still produces the same problem
+    - **Complete**: Provide all parts needed to reproduce your problem in the question itself
+    - **Reproducible**: Test the code you'll provide to make sure it reproduces the problem
+
+
 - That means you should be able to copy and paste the code into R and run it yourself
     - Name all packages and data needed to reproduce error
-    - Cut out irrelevant packages and data that are not relevant to the error
+    - Cut out irrelevant packages, steps, and data that are not relevant to the error
+
+
 - Sometimes writing one will help you find the bug, sometimes it'll help a stranger find the bug in your code faster, and sometimes it'll identify a very real bug in the package itself
 
 ---
 
-# Min Reprex 
+# Min Reprex from [RStudio community](https://community.rstudio.com/t/faq-how-to-do-a-minimal-reproducible-example-reprex-for-beginners/23061)
 
-Example taken from [RStudio community](https://community.rstudio.com/t/faq-how-to-do-a-minimal-reproducible-example-reprex-for-beginners/23061)
+- If someone does not have `hrbrthemes` installed, they will not be able to run your code. 
+  - You can remove this package from your code and still reproduce the error.
 
 ```{r initial code, error=TRUE}
 library(ggplot2)
-
-df <- data('iris') %>% 
+library(datasets)
+library(hrbrthemes)
+data(iris)
+df <- iris %>%
     mutate(Sepal.Length = Sepal.Length * 1000,
            Sepal.Width = Sepal.Width * 1000)
 
-ggplot(data = df, x = Sepal.Length, y = Sepal.Width) +
+ggplot(data = df,x = Sepal.Length, y = Sepal.Width) +
+    theme_modern_rc() +
     geom_point() +
     scale_x_log10() +
-    theme_minimal() + 
     labs(title = "Iris Sepal Width vs. Sepal Length",
          subtitle = "Log10 Scaled X Axis")
 
 ```
+
+---
+# How to write MREs
+
+- Cut out the unnecessary steps
 
 ```{r min_reprex, error=TRUE}
 library(ggplot2)
@@ -980,13 +1146,15 @@ ggplot(data = df, x = Sepal.Length, y = Sepal.Width) +
 #> Error: geom_point requires the following missing aesthetics: x, y
 ```
 
+- You can use [reprex](https://reprex.tidyverse.org/) to make sure that your code is reproducible by others.
+
+- You can use [dput](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/dput) to make sure that your data is reproducible by others.
+
 ---
 
 # Refactoring
 
 - Refactoring refers to the action of restructuring code without changing its external behavior or functionality. Think of it as "reorganizing"
-
-- Example:
 
 .scroll-box-8[
 ```{r refactor,eval=FALSE}
@@ -1009,7 +1177,7 @@ get_some_data <- function(config, outfile) {
       ## uhm. What was this else for again?
     }
   } else {
-    ## maybe, some bad news about ... the config? 
+    ## maybe, some bad news about ... the config?
   }
 }
 ```
@@ -1021,20 +1189,20 @@ get_some_data <- function(config, outfile) {
   if (config_bad(config)) {
     stop("Bad config")
   }
-  
+
   if (!can_write(outfile)) {
     stop("Can't write outfile")
   }
-  
+
   if (!can_open_network_connection(config)) {
     stop("Can't access network")
   }
-  
+
   data <- parse_something_from_network()
   if(!makes_sense(data)) {
     return(FALSE)
   }
-  
+
   data <- beautify(data)
   write_it(data, outfile)
   TRUE
@@ -1055,17 +1223,23 @@ get_some_data <- function(config, outfile) {
 
 - Profiling refers to checking the resource demands of your code
 
+
 - How much processing time does your script take? How much memory?
+
 
 - Clean code should be highly performant: it uses minimal computational resources
 
+
 - Profiling and refactoring go hand in hand, along with unit testing, to ensure that code is maximally optimized
 
-- [Here](https://www.geeksforgeeks.org/benchmarking-in-julia/) is an intro guide to profiling in Julia using the `@time` macro
+
+- Here are two intro guides to profiling in R:
+  - Using `system.time` and `Rprofs` from R Programming for Data Science[https://bookdown.org/rdpeng/rprogdatascience/profiling-r-code.html]
+  - Using `lineprof` from Advanced R[http://adv-r.had.co.nz/Profiling.html]
 
 ---
 
-# Pair programming
+# Pair programming - work with a buddy
 
 - An essential part of clean code is reviewing code
 
@@ -1084,6 +1258,12 @@ get_some_data <- function(config, outfile) {
 
 ---
 class: inverse, center, middle
+
+# Next lecture: R basics, data wrangling, tidyverse and data.table
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+---
+class: inverse, center, middle
 name: appendix
 # Appendix
 
@@ -1096,6 +1276,10 @@ name: appendix
 - Angrist and Pischke (2009) [Mostly Harmless Econometrics](http://www.amazon.com/Mostly-Harmless-Econometrics-Empiricists-Companion/dp/0691120358/) (MHE)
 - Morgan and Winship (2014) [Counterfactuals and Causal Inference](http://www.amazon.com/Counterfactuals-Causal-Inference-Principles-Analytical/dp/1107694167/) (MW)
 - Sweigart (2019) [Automate The Boring Stuff With Python](https://automatetheboringstuff.com/)
+- Wickham (2023) [Advanced R](http://adv-r.had.co.nz/)
+- Wickham and Grolemund (2023) [R for Data Science](https://r4ds.had.co.nz/)
+- Peng (2022) [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/)
+---
 
 # Non-textbook readings
 
@@ -1105,6 +1289,8 @@ name: appendix
 - Ljubica "LJ" Ristovska's language agnostic guide to programming for economists
 - Grant McDermott on Version Control using Github [Link](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html#1)
 
+---
+
 # Helpful for troubleshooting
 
 - The help documentation associated with your language (no really)
@@ -1112,6 +1298,8 @@ name: appendix
 - Stata-specific (all hail Nick Cox): [Statalist](https://www.statalist.org/forums/forum/general-stata-discussion/general)
 - Cheatsheets: [Stata](https://www.stata.com/bookstore/statacheatsheets.pdf), [RStudio](https://www.rstudio.com/resources/cheatsheets/), [Python](https://betterprogramming.pub/10-must-have-python-cheatsheets-2b74e8097bc3?gi=cfdb14820caa)
 - Me: [Sign up for office hours](https://calendar.google.com/calendar/u/1/selfsched?sstoken=UUF5d0hzbmlvemxVfGRlZmF1bHR8NDRjMWFiMjA5OTNkNzMwNTVkYzBkYWYyYzc2NmQ5Yjc/)
+
+---
 
 # Learn by Immersion
 
@@ -1121,6 +1309,7 @@ name: appendix
   - Help files are your grammar books.
   - ChatGPT is your phrasebook.
   - A great way to start coding is to see lots of other people's code and copy what you read.
+
 - You must learn how to ask the “right” question:
   - Never: "Importing csv file into R not working."
   - Better: "read_csv R [specific error message]."
@@ -1128,45 +1317,7 @@ name: appendix
 
 ---
 
-# More complicated example of eliminating redundancy
-
-```{r redundancy}
-set.seed(16)
-prod1  = rnorm(1, 0, 1)*rnorm(1,4,6)
-prod2  = rnorm(2, 0, 1)*rnorm(2,4,6)
-prod3  = rnorm(3, 0, 1)*rnorm(3,4,6)
-print(prod1)
-print(prod2)
-print(prod3)
-```
-
-```{r redundancy_eliminated}
-set.seed(16)
-multiply = function(count,mean1=0,sd1=1,mean2=4,sd2=6) {
-    prod = rnorm(count,mean1,sd1)*rnorm(count,mean2,sd2)
-    return(prod)
-} 
-prod1=multiply(1)
-prod2=multiply(2)
-prod3=multiply(3)
-
-print(prod1)
-print(prod2)
-print(prod3)
-```
-
----
-# Note on seeds
-
-- When randomizing in any language, you aren't really randomizing
-- You're producing pseudo-random numbers that return in a deterministic ordered list
-- If you set the seed, you can reproduce the same "random" numbers
-- This is useful for debugging and sharing code
-- Use `set.seed` in R
-
----
-
-# Neat R functions to help reduce redundancy like replicate, lapply, etc. 
+# Neat R functions to help reduce redundancy
 
 ```{r forloop}
 set.seed(16)
@@ -1186,13 +1337,7 @@ map(1:3, multiply)
 
 > - More on these later!
 
-<!-- Now if I need to adjust the `constructor()` function, I only have to modify one line of code instead of three. This approach also minimizes typos in copy-pasting lines that are largely similar. -->
-
----
-class: inverse, center, middle
-
-# Next lecture: R basics and data wrangling
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+<!-- Now if I need to adjust the `constructor()` function, I only have to modify one line of code instead of three. This approach also minimizes typos in copy-pasting lines that are largely similar. --> 
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile = list.files(pattern = '.html')
