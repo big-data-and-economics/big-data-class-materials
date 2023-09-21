@@ -18,7 +18,6 @@ This is in progress. Check back in for progress to be made.
 | 2023-09-12  | T | [Git slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-git/02-Git.html#1) by Grant McDermott | N/A | |
 | 2023-09-21  | Th | [Empirical Organization slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-empirical-workflow/02-empirical-workflow.html) | N/A | |
 | 2023-09-26 | T | [R Basics](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/04/04-rlang.html) | N/A | |
-
 | 2023-09-28 | Th | [Data Table](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/05-datatable/05-datatable.html), [Tidyverse](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/05-tidyverse/05-tidyverse.html) | N/A | |
 | 2023-10-03 | T | [CSS](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/07-web-css/07-web-css.html) | [SelectorGadget](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb) (Chrome), [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/) (Firefox) | |
 | 2023-10-05 | Th | [APIs](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/07-web-apis/07-web-apis.html) | [JSONView](https://jsonview.com/) | |
