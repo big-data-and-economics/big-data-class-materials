@@ -271,6 +271,104 @@ name: principles
 - A single script that shows the sequence of steps taken is the equivalent to "showing your work"
 
 ---
+# How to write scripts
+
+## Keep them modular
+- Each script should do one thing and one thing only
+- e.g. It takes an input in, it returns an output
+
+    - Taking in a raw file and returning a cleaned version
+    - Taking in two files and merging them
+    - Taking in a cleaned file and returning a figure
+
+## Have a main script that runs all scripts in order
+
+- This is the script that you run to reproduce your results
+- You will rarely run it all at once, but it will be a nice way to organize your thoughts
+- This is a further benefit of a well-organized directory -- you can easily see what scripts you need to run in what order
+- Use `source('rscript.R')` to run an external script
+
+---
+# Main script
+
+
+```r
+#File: main.R
+#By: Kyle Coombs
+#What: Runs the project from start to finish in Python
+#Date: 2023/09/12
+
+#Install packages with housekeeping. Also put together paths.
+source('housekeeping.R')
+#User written functions can be sourced -- or you could write a package, your call
+source(paste0(build,'clean_functions.R'))
+source(paste0(analysis,'analysis_functions.R'))
+
+#Import files
+df1 &lt;- read_csv(paste0(raw,'file1.csv'))
+df2 &lt;- read_parquet(paste0(raw,'file2.parquet'))
+df3 &lt;- read_dta(paste0(raw,'file3.dta'))
+
+#Clean files
+cleaned_df1  &lt;- clean_df1(df1)
+cleaned_df2  &lt;- clean_df2(df2)
+cleaned_df3  &lt;- cf.clean_df3(df3)
+
+#Merge files 1 to 2
+merged_df1_df2 = merge(cleaned_df1, cleaned_df2, on=c('merge','vars'))
+
+#Append file 1 to
+append_df1_df2_df3 = rbind(merged_df1_df2, cleaned_df2)
+
+#Analysis
+sum_stats=summary_stats(append_df1_df2_df3,stats=c('mean','median','max'))
+reg_results=basic_regression(append_df1_df2_df3)
+
+#Tables will likely be made with a host of R packages
+make_sum_figures(sum_stats)
+make_figures(reg_results)
+make_sum_tables(sum_stats)
+make_tables(reg_results)
+```
+
+---
+# Alternate main script
+
+```r
+#File: main.R
+#By: Kyle Coombs
+#What: Runs the project from start to finish in Python
+#Date: 2023/09/12
+
+#Install packages with housekeeping. Also put together paths.
+source('housekeeping.R')
+#User written functions can be sourced -- or you could write a package, your call
+source(paste0(build,'clean_functions.R'))
+source(paste0(analysis,'analysis_functions.R'))
+
+#Import files
+source(paste0(build,'import_census.R'))
+source(paste0(build,'import_admin_data.R'))
+
+#Clean files
+source(paste0(build,'clean_census.R'))
+source(paste0(build,'clean_admin_data.R'))
+
+#Merge files 1 to 2
+source(paste0(build,'merge_census_admin.R'))
+
+#Analysis
+source('analysis/summary_stats.R')
+source('analysis/basic_regression.R')
+
+#Tables will likely be made with a host of R packages
+source('analysis/make_sum_figures.R')
+source('analysis/make_reg_figures.R')
+source('analysis/make_sum_tables.R')
+source('analysis/make_reg_tables.R')
+```
+
+---
 
 # Version control
 
@@ -502,104 +600,6 @@ here('data/raw','my_data.csv')
 ```
 
 - Can be less clunky than `paste()` and `sep="/"`
-
----
-# How to write scripts
-
-## Keep them modular
-- Each script should do one thing and one thing only
-- e.g. It takes an input in, it returns an output
-
-    - Taking in a raw file and returning a cleaned version
-    - Taking in two files and merging them
-    - Taking in a cleaned file and returning a figure
-
-## Have a main script that runs all scripts in order
-
-- This is the script that you run to reproduce your results
-- You will rarely run it all at once, but it will be a nice way to organize your thoughts
-- This is a further benefit of a well-organized directory -- you can easily see what scripts you need to run in what order
-- Use `source('rscript.R')` to run an external script
-
----
-# Main script
-
-
-```r
-#File: main.R
-#By: Kyle Coombs
-#What: Runs the project from start to finish in Python
-#Date: 2023/09/12
-
-#Install packages with housekeeping. Also put together paths.
-source('housekeeping.R')
-#User written functions can be sourced -- or you could write a package, your call
-source(paste0(build,'clean_functions.R'))
-source(paste0(analysis,'analysis_functions.R'))
-
-#Import files
-df1 &lt;- read_csv(paste0(raw,'file1.csv'))
-df2 &lt;- read_parquet(paste0(raw,'file2.parquet'))
-df3 &lt;- read_dta(paste0(raw,'file3.dta'))
-
-#Clean files
-cleaned_df1  &lt;- clean_df1(df1)
-cleaned_df2  &lt;- clean_df2(df2)
-cleaned_df3  &lt;- cf.clean_df3(df3)
-
-#Merge files 1 to 2
-merged_df1_df2 = merge(cleaned_df1, cleaned_df2, on=c('merge','vars'))
-
-#Append file 1 to
-append_df1_df2_df3 = rbind(merged_df1_df2, cleaned_df2)
-
-#Analysis
-sum_stats=summary_stats(append_df1_df2_df3,stats=c('mean','median','max'))
-reg_results=basic_regression(append_df1_df2_df3)
-
-#Tables will likely be made with a host of R packages
-make_sum_figures(sum_stats)
-make_figures(reg_results)
-make_sum_tables(sum_stats)
-make_tables(reg_results)
-```
-
----
-# Alternate main script
-
-```r
-#File: main.R
-#By: Kyle Coombs
-#What: Runs the project from start to finish in Python
-#Date: 2023/09/12
-
-#Install packages with housekeeping. Also put together paths.
-source('housekeeping.R')
-#User written functions can be sourced -- or you could write a package, your call
-source(paste0(build,'clean_functions.R'))
-source(paste0(analysis,'analysis_functions.R'))
-
-#Import files
-source(paste0(build,'import_census.R'))
-source(paste0(build,'import_admin_data.R'))
-
-#Clean files
-source(paste0(build,'clean_census.R'))
-source(paste0(build,'clean_admin_data.R'))
-
-#Merge files 1 to 2
-source(paste0(build,'merge_census_admin.R'))
-
-#Analysis
-source('analysis/summary_stats.R')
-source('analysis/basic_regression.R')
-
-#Tables will likely be made with a host of R packages
-source('analysis/make_sum_figures.R')
-source('analysis/make_reg_figures.R')
-source('analysis/make_sum_tables.R')
-source('analysis/make_reg_tables.R')
-```
 
 ---
 
