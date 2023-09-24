@@ -21,6 +21,22 @@ This is in progress. Check back in for progress to be made.
 | 2023-09-28 | Th | [Data Table](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/05-datatable/05-datatable.html), [Tidyverse](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/05-tidyverse/05-tidyverse.html) | N/A | |
 | 2023-10-03 | T | [CSS](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/07-web-css/07-web-css.html) | [SelectorGadget](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb) (Chrome), [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/) (Firefox) | |
 | 2023-10-05 | Th | [APIs](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/07-web-apis/07-web-apis.html) | [JSONView](https://jsonview.com/), [Sign-up](https://research.stlouisfed.org/useraccount/apikey) and register for [Personal API Key](https://research.stlouisfed.org/useraccount/apikey) | |
+| 2023-10-10 | T | Spatial Analysis with Opportunity Atlas | | |
+| 2023-10-12 | Th | Functions & Parallel Programming | | |
+| 2023-10-17 | T | SQL | | |
+| 2023-10-24 | T | Regression Review & Causal Inference | | |
+| 2023-10-26 | Th | Panel data and two-way fixed effects | | |
+| 2023-10-31 | T | Regression Discontinuity Design | | |
+| 2023-11-02 | Th | Applications: college wage premia, Neighborhoods and Mobility, MITA and mining | | |
+| 2023-11-07 | T | Machine Learning: Decision trees | | |
+| 2023-11-09 | Th | Machine Learning: Bias and Judicial Decisions | | |
+| 2023-11-14 | T | Machine Learning: Regressional penalization | | |
+| 2023-11-16 | Th | Machine Learning: Causal Forests, at-risk youth application | | |
+| 2023-11-28 | T | Regular expressions, WordClouds | | |
+| 2023-11-30 | Th | Sentiment Analysis | | |
+| 2023-12-05 | T | Topics Modeling, LLMs | | |
+| 2023-12-07 | Th | AI and bias | | |
+
 
 
 <!-- 2. Version control with Git(Hub) \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.Rmd)\]
