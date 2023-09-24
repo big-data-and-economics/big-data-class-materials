@@ -768,7 +768,6 @@ INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplr9e.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
-INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplri9e.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/vf/adobe/palatino/pplr9e.vf
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplr8r.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/mathpazo/fplmr.tfm
@@ -788,9 +787,7 @@ INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/mathpazo/fplmb.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/vf/adobe/palatino/pplb9e.vf
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplb8r.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/mathpazo/fplmb.tfm
-INPUT c:/texlive/2022/texmf-dist/fonts/vf/adobe/palatino/pplri9e.vf
-INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplri8r.tfm
-INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/mathpazo/fplmri.tfm
+INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplri9e.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplbi9e.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplr9e.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplr9e.tfm
@@ -804,6 +801,9 @@ INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplr9e.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/vf/adobe/palatino/pplr9e.vf
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplr8r.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/mathpazo/fplmr.tfm
+INPUT c:/texlive/2022/texmf-dist/fonts/vf/adobe/palatino/pplri9e.vf
+INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplri8r.tfm
+INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/mathpazo/fplmri.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/vf/adobe/palatino/pplbi9e.vf
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/adobe/palatino/pplbi8r.tfm
 INPUT c:/texlive/2022/texmf-dist/fonts/tfm/public/mathpazo/fplmbi.tfm
