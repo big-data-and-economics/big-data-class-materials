@@ -1247,7 +1247,7 @@ stopifnot(y)
 ```
 
 ---
-# Troubleshooting tip: 
+# Troubleshooting tips
 
 - Sometimes you've made several changes to your code and suddenly it stops running
     - Was it the new `if` statement?
@@ -1359,6 +1359,37 @@ ggplot(data = df, x = Sepal.Length, y = Sepal.Width) +
 - You can use [reprex](https://reprex.tidyverse.org/) to make sure that your code is reproducible by others.
 
 - You can use [dput](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/dput) to make sure that your data is reproducible by others.
+
+---
+# Troubleshooting tips (cont.)
+
+- Check for superfluous stuff you can remove
+  - e.g. Wait, I don't need to include absolute file paths, I can use relative paths
+  - Bonus: I'll make fewer typos!
+
+- Try small fixes, then apply broadly
+  - e.g. I think the problem is with how I wrote my file paths, let me try to get just one file path to work
+
+- Change one thing at a time
+  - e.g. The problem is either with my `paste0()` statement or the `ggsave` function, let me try to get the `paste0()` statement to work first
+
+---
+# Troubleshooting tips (cont.)
+
+- Embrace GitHub committing
+  - When you have code that works, stage, commit and push it -- even if it is only a small piece of the puzzle
+  - If it breaks, [revert](https://docs.github.com/en/desktop/managing-commits/reverting-a-commit-in-github-desktop)
+  - This minimizes how much you need to re-do/keep track of
+
+- Sometimes it is easier to change things on yourside than it is to force a programming language to work a certain way
+  - e.g. Rmarkdown doesn't like the character `#` in filepaths, but I can change the filepaths rather than trying to force Rmarkdown to accept it
+
+- There's more than one way to skin a cat
+  - e.g. If I can't get `read.csv()` to work, I'll try `read.table()`
+  - e.g. This `googlesheets4` package doesn't seem to work -- what about `gsheet` or `googledrive`?
+
+- With ChatGPT, make very specific asks
+  - e.g. "How do I get a file named `/my/path/name/my_file.pdf` into `other/folder/name/file.Rmd`?"
 
 ---
 
