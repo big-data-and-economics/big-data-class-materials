@@ -7,8 +7,8 @@
 
 # Office hours:
 My office hours are: 
-- Tuesdays 10:30-11:30am
-- Wednesdays 4pm-5pm
+- Tuesdays 4pm-5pm
+- Wednesdays 10:30-11:30am
 
 You can book time [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61).
 
