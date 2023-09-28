@@ -14,10 +14,18 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
+.title[
 # Data Science for Economists
+]
+.subtitle[
 ## Lecture 5: Data cleaning &amp; wrangling: (2) data.table
+]
+.author[
 ### Grant McDermott
+]
+.date[
 ### University of Oregon | <a href="https://github.com/uo-ec607">EC 607</a>
+]
 
 ---
 
@@ -74,7 +82,7 @@ name: prologue
 
 # Checklist
 
-We'll be using the following packages in today's lecture:
+We'll be using the following packages in this lecture:
 - Already installed: **dplyr**, **ggplot2**, **nycflights13**
 - New: **data.table**, **tidyfast**, **dtplyr**, **microbenchmark**
 
@@ -101,7 +109,7 @@ name: intro
 
 # Why learn data.table?
 
-The **tidyverse** is great. As I keep hinting, it will also provide a bridge to many of the big data tools that we'll encounter later in the course (SQL databases, etc.)
+The **tidyverse** is great. It will also provide a bridge to many of the big data tools that we'll encounter later in the course (SQL databases, etc.)
 
 --
 
@@ -173,19 +181,16 @@ microbenchmark(collapse_dplyr(), collapse_dt(), times = 1)
 
 ```
 ## Unit: milliseconds
-##              expr        min         lq       mean     median         uq
-##  collapse_dplyr() 112.396376 112.396376 112.396376 112.396376 112.396376
-##     collapse_dt()   5.982716   5.982716   5.982716   5.982716   5.982716
-##         max neval
-##  112.396376     1
-##    5.982716     1
+##              expr      min       lq     mean   median       uq      max neval
+##  collapse_dplyr() 402.3867 402.3867 402.3867 402.3867 402.3867 402.3867     1
+##     collapse_dt()  14.5037  14.5037  14.5037  14.5037  14.5037  14.5037     1
 ```
 ]
 
 --
 
 .small90[
-**Result:** data.table is 20x faster! (Thanks to [Keith Head](https://twitter.com/ckhead) for this example.)
+**Result:** data.table is 30x faster! (Thanks to [Keith Head](https://twitter.com/ckhead) for this example.)
 ]
 
 ---
@@ -320,7 +325,7 @@ While the tidyverse tends to break up operations step-by-step, data.table aims t
 
 We'll dive into the details (and quirks) of data.table shortly. 
 
-But first, a quick side-by-side comparison with dplyr, since that will help to orientate us for the rest of the lecture. Using our starwars dataset, say we want to know:
+But first, a quick side-by-side comparison with dplyr, since that will help to orient us for the rest of the lecture. Using our starwars dataset, say we want to know:
 &gt; What is the average height of the human characters by gender?
 
 --
@@ -473,7 +478,7 @@ starwars %&gt;%
 ```
 
 ```
-## # A tibble: 2 x 2
+## # A tibble: 2 × 2
 ##   gender    `mean(height, na.rm = T)`
 ##   &lt;chr&gt;                         &lt;dbl&gt;
 ## 1 feminine                       160.
@@ -919,7 +924,7 @@ You can rename (set) a column by reference. Again, run this yourself:
 
 
 ```r
-setnames(starwars_dt, old = c("name", "homeworld"), new = c"(alias", "crib"))[]
+setnames(starwars_dt, old = c("name", "homeworld"), new = c("alias", "crib"))[]
 ## Better change it back, in case we use "name" or "homeworld" on a later slide
 setnames(starwars_dt, old = c("alias", "crib"), new = c("name", "homeworld"))
 ```
@@ -983,12 +988,12 @@ starwars_dt[, mean_height := mean(height, na.rm=T)] %&gt;% ## Add mean height as
 ```
 
 ```
-##              name height mean_height
-## 1: Luke Skywalker    172     174.358
-## 2:          C-3PO    167     174.358
-## 3:          R2-D2     96     174.358
-## 4:    Darth Vader    202     174.358
-## 5:    Leia Organa    150     174.358
+##                     name height mean_height
+## 1: Wicket Systri Warrick     88     174.358
+## 2:                 IG-88    200     174.358
+## 3:        Luke Skywalker    172     174.358
+## 4:           Leia Organa    150     174.358
+## 5:        Wedge Antilles    170     174.358
 ```
 
 ---
@@ -1042,9 +1047,9 @@ starwars_dt[, .(mean_height = mean(height, na.rm=T)), by = .(species, homeworld)
 
 ```
 ##    species homeworld mean_height
-## 1:   Human  Tatooine    179.2500
-## 2:   Droid  Tatooine    132.0000
-## 3:   Droid     Naboo     96.0000
+## 1:    Ewok     Endor     88.0000
+## 2:   Droid      &lt;NA&gt;    148.0000
+## 3:   Human  Tatooine    179.2500
 ## 4:   Human  Alderaan    176.3333
 ```
 
@@ -1287,7 +1292,7 @@ P.S. Use the `key()` function to see what keys are currently set for your data.t
 
 # Example
 
-Recall the [speed benchmark](#fast) that we saw at the very beginning of the lecture: data.table ended up being 20x faster than dplyr for a fairly standard summarising task.
+Recall the [speed benchmark](#fast) that we saw at the very beginning of the lecture: data.table ended up being 30x faster than dplyr for a fairly standard summarising task.
 
 --
 
@@ -1320,12 +1325,9 @@ microbenchmark(collapse_dplyr(), collapse_dt(), collapse_dt_key(), times = 1)
 
 ```
 ## Unit: milliseconds
-##               expr        min         lq       mean     median         uq
-##   collapse_dplyr() 112.849845 112.849845 112.849845 112.849845 112.849845
-##  collapse_dt_key()   1.107796   1.107796   1.107796   1.107796   1.107796
-##         max neval
-##  112.849845     1
-##    1.107796     1
+##               expr      min       lq     mean   median       uq      max neval
+##   collapse_dplyr() 370.7529 370.7529 370.7529 370.7529 370.7529 370.7529     1
+##  collapse_dt_key()   3.8080   3.8080   3.8080   3.8080   3.8080   3.8080     1
 ```
 
 --
@@ -1441,17 +1443,14 @@ microbenchmark(merge_dt(), merge_dt_key(), times = 1)
 
 ```
 ## Unit: milliseconds
-##            expr       min        lq      mean    median        uq       max
-##      merge_dt() 301.44576 301.44576 301.44576 301.44576 301.44576 301.44576
-##  merge_dt_key()  36.09671  36.09671  36.09671  36.09671  36.09671  36.09671
-##  neval
-##      1
-##      1
+##            expr      min       lq     mean   median       uq      max neval
+##      merge_dt() 154.7839 154.7839 154.7839 154.7839 154.7839 154.7839     1
+##  merge_dt_key() 119.2623 119.2623 119.2623 119.2623 119.2623 119.2623     1
 ```
 
 --
 
-So, we get about a **10x** speed-up for this simple case just by setting keys. More importantly, ordering your data by setting keys will make a huge difference once you start working with big datasets and making complicated joins. Trust me. (FWIW, the [same is true](https://tysonbarrett.com//jekyll/update/2019/10/11/speed_of_joins/) for dplyr.) 
+So, we get about a **0x** speed-up for this simple case just by setting keys. More importantly, ordering your data by setting keys will make a huge difference once you start working with big datasets and making complicated joins. Trust me. (FWIW, the [same is true](https://tysonbarrett.com//jekyll/update/2019/10/11/speed_of_joins/) for dplyr.) 
 
 ---
 name: reshape
@@ -1499,9 +1498,9 @@ stocks
 ```
 
 ```
-##          time           X         Y         Z
-## 1: 2009-01-01 -0.36176990 -3.863700 -3.806386
-## 2: 2009-01-02  0.04221233  1.064251 -9.912991
+##          time          X          Y         Z
+## 1: 2009-01-01  0.4683766  0.4415628 -2.130082
+## 2: 2009-01-02 -0.9981077 -1.9668950  9.293376
 ```
 
 To convert this into long format, we could do either of the following:
@@ -1514,13 +1513,13 @@ melt(stocks, id.vars ="time")
 ```
 
 ```
-##          time variable       value
-## 1: 2009-01-01        X -0.36176990
-## 2: 2009-01-02        X  0.04221233
-## 3: 2009-01-01        Y -3.86370033
-## 4: 2009-01-02        Y  1.06425112
-## 5: 2009-01-01        Z -3.80638594
-## 6: 2009-01-02        Z -9.91299065
+##          time variable      value
+## 1: 2009-01-01        X  0.4683766
+## 2: 2009-01-02        X -0.9981077
+## 3: 2009-01-01        Y  0.4415628
+## 4: 2009-01-02        Y -1.9668950
+## 5: 2009-01-01        Z -2.1300818
+## 6: 2009-01-02        Z  9.2933756
 ```
 ]]
 
@@ -1532,13 +1531,13 @@ stocks %&gt;%
 ```
 
 ```
-##          time stock       price
-## 1: 2009-01-01     X -0.36176990
-## 2: 2009-01-02     X  0.04221233
-## 3: 2009-01-01     Y -3.86370033
-## 4: 2009-01-02     Y  1.06425112
-## 5: 2009-01-01     Z -3.80638594
-## 6: 2009-01-02     Z -9.91299065
+##          time stock      price
+## 1: 2009-01-01     X  0.4683766
+## 2: 2009-01-02     X -0.9981077
+## 3: 2009-01-01     Y  0.4415628
+## 4: 2009-01-02     Y -1.9668950
+## 5: 2009-01-01     Z -2.1300818
+## 6: 2009-01-02     Z  9.2933756
 ```
 ]]
 
@@ -1556,13 +1555,13 @@ stocks_long
 ```
 
 ```
-##          time stock       price
-## 1: 2009-01-01     X -0.36176990
-## 2: 2009-01-02     X  0.04221233
-## 3: 2009-01-01     Y -3.86370033
-## 4: 2009-01-02     Y  1.06425112
-## 5: 2009-01-01     Z -3.80638594
-## 6: 2009-01-02     Z -9.91299065
+##          time stock      price
+## 1: 2009-01-01     X  0.4683766
+## 2: 2009-01-02     X -0.9981077
+## 3: 2009-01-01     Y  0.4415628
+## 4: 2009-01-02     Y -1.9668950
+## 5: 2009-01-01     Z -2.1300818
+## 6: 2009-01-02     Z  9.2933756
 ```
 
 --
@@ -1576,9 +1575,9 @@ dcast(stocks_long,
 ```
 
 ```
-##          time           X         Y         Z
-## 1: 2009-01-01 -0.36176990 -3.863700 -3.806386
-## 2: 2009-01-02  0.04221233  1.064251 -9.912991
+##          time          X          Y         Z
+## 1: 2009-01-01  0.4683766  0.4415628 -2.130082
+## 2: 2009-01-02 -0.9981077 -1.9668950  9.293376
 ```
 ]]
 
@@ -1591,9 +1590,9 @@ stocks_long %&gt;%
 ```
 
 ```
-##          time           X         Y         Z
-## 1: 2009-01-01 -0.36176990 -3.863700 -3.806386
-## 2: 2009-01-02  0.04221233  1.064251 -9.912991
+##          time          X          Y         Z
+## 1: 2009-01-01  0.4683766  0.4415628 -2.130082
+## 2: 2009-01-02 -0.9981077 -1.9668950  9.293376
 ```
 ]]
 
@@ -1719,17 +1718,14 @@ microbenchmark::microbenchmark(collapse_dplyr(), collapse_dtplyr(), times = 1)
 
 ```
 ## Unit: milliseconds
-##               expr        min         lq       mean     median         uq
-##   collapse_dplyr() 117.106259 117.106259 117.106259 117.106259 117.106259
-##  collapse_dtplyr()   5.416915   5.416915   5.416915   5.416915   5.416915
-##         max neval
-##  117.106259     1
-##    5.416915     1
+##               expr      min       lq     mean   median       uq      max neval
+##   collapse_dplyr() 211.2342 211.2342 211.2342 211.2342 211.2342 211.2342     1
+##  collapse_dtplyr()  14.9599  14.9599  14.9599  14.9599  14.9599  14.9599     1
 ```
 
 --
 
-A **20x** speed-up for free? I'd take it!
+A **15x** speed-up for free? I'd take it!
 
 --
 
@@ -1741,7 +1737,7 @@ lazy_dt(starwars) %&gt;% filter(species=="Human") %&gt;% group_by(gender) %&gt;%
 ```
 
 ```
-## Source: local data table [?? x 2]
+## Source: local data table [2 x 2]
 ## Call:   `_DT2`[species == "Human"][, .(height = mean(height, na.rm = TRUE)), 
 ##     keyby = .(gender)]
 ## 
@@ -1858,6 +1854,19 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     deleted = true;
   });
 })();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
 (function() {
   "use strict"
   // Replace <script> tags in slides area to make them executable

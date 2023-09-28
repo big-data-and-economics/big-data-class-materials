@@ -77,7 +77,7 @@ name: prologue
 
 # Checklist
 
-We'll be using the following packages in today's lecture:
+We'll be using the following packages in this lecture:
 - Already installed: **dplyr**, **ggplot2**, **nycflights13**
 - New: **data.table**, **tidyfast**, **dtplyr**, **microbenchmark**
 
@@ -1117,7 +1117,8 @@ microbenchmark(collapse_dplyr(), collapse_dt(), collapse_dt_key(), times = 1)
 
 # Example (cont.)
 
-```{r collapse_comp_key, dependson=collapse_dt, dependson=collapse_dplyr, echo=FALSE, message=FALSE}
+```{r collapse_comp_key,  echo=FALSE, message=FALSE}
+
 storms_dt_key = as.data.table(storms, key = c("name", "year", "month", "day"))
 collapse_dt_key = function() {
   storms_dt_key[, .(wind = mean(wind), pressure = mean(pressure), category = first(category)),
