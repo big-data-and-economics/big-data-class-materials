@@ -2,8 +2,8 @@
 title: "Data Science for Economists"
 # subtitle: "<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>"
 subtitle: "Lecture 5: Data cleaning & wrangling: (2) data.table"
-author: "Grant McDermott"
-date: "University of Oregon | [EC 607](https://github.com/uo-ec607)" #"`r format(Sys.time(), '%d %B %Y')`"
+author: "Grant McDermott, adapted by Kyle Coombs"
+date: "Bates College | [ECON368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/tree/main)" #"`r format(Sys.time(), '%d %B %Y')`"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts, "libs/cols.css"] 
@@ -91,6 +91,12 @@ pacman::p_load(dplyr, data.table, dtplyr, tidyfast, microbenchmark, ggplot2, nyc
 options(dplyr.summarise.inform = FALSE) ## Turn off annoying dplyr group_by messages (optional)
 ```
 
+```{r,echo=FALSE}
+# This is here to reset the category variable which changed to NA at some point.
+storms = mutate(storms, category=as.factor(ifelse(status=='hurricane', category,
+                              ifelse(status=='tropical storm', 0, -1))))
+```
+
 ---
 class: inverse, center, middle
 name: intro
@@ -167,7 +173,7 @@ collapse_dt = function() {
   storms_dt[, .(wind = mean(wind), pressure = mean(pressure), category = first(category)),
             by = .(name, year, month, day)]
   }
-
+ 
 microbenchmark(collapse_dplyr(), collapse_dt(), times = 1)
 ```
 
@@ -1113,6 +1119,7 @@ microbenchmark(collapse_dplyr(), collapse_dt(), collapse_dt_key(), times = 1)
 ]
 
 .right[*See next slide for results*]
+
 ---
 
 # Example (cont.)
@@ -1131,6 +1138,7 @@ mb_key_dt = as.data.table(mb_key) ## For easy calculation in text
 mbx_key = round((mb_key_dt[expr=="collapse_dplyr()", median(time)] /
                    mb_key_dt[expr=="collapse_dt_key()", median(time)]) / 10) * 10
 mb_key ## print result
+
 ```
 
 --
@@ -1385,7 +1393,7 @@ Case in point: Almost every hardcore data.table user I know is a hardcore **ggpl
 .small75[
 ```{r eval = FALSE}
 ## library(ggplot2) # already loaded
-storms_dt[, .(wind = mean(wind), 
+storms_dt_key[, .(wind = mean(wind), 
                   pressure = mean(pressure), 
                   category = first(category)), 
                 by = .(name, year, month, day)] %>%
@@ -1396,9 +1404,9 @@ storms_dt[, .(wind = mean(wind),
 ]]
 .pull-right[
 ```{r storms_ggplot, echo = FALSE, fig.height=6}
-#Note: Debug later. the "first" is not working.
-collapse_dt_key() %>% 
-  ggplot(aes(x = pressure, y = wind, col=category)) + 
+# I need to assign then feed to ggplot manually, pipes were messing this up for some reason. Dependencies, amirite?
+dt_key <- collapse_dt_key() 
+ggplot(data=dt_key,aes(x = pressure, y = wind, col=category)) + 
   geom_point(alpha = 0.3) + 
   theme_minimal() +
   coord_equal()

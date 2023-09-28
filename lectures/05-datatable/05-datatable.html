@@ -3,7 +3,7 @@
   <head>
     <title>Data Science for Economists</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Grant McDermott" />
+    <meta name="author" content="Grant McDermott, adapted by Kyle Coombs" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
@@ -21,10 +21,10 @@ class: center, middle, inverse, title-slide
 ## Lecture 5: Data cleaning &amp; wrangling: (2) data.table
 ]
 .author[
-### Grant McDermott
+### Grant McDermott, adapted by Kyle Coombs
 ]
 .date[
-### University of Oregon | <a href="https://github.com/uo-ec607">EC 607</a>
+### Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/tree/main">ECON368</a>
 ]
 
 ---
@@ -96,6 +96,8 @@ if (!require(pacman)) install.packages('pacman', repos = 'https://cran.rstudio.c
 pacman::p_load(dplyr, data.table, dtplyr, tidyfast, microbenchmark, ggplot2, nycflights13)
 options(dplyr.summarise.inform = FALSE) ## Turn off annoying dplyr group_by messages (optional)
 ```
+
+
 
 ---
 class: inverse, center, middle
@@ -174,7 +176,7 @@ collapse_dt = function() {
   storms_dt[, .(wind = mean(wind), pressure = mean(pressure), category = first(category)),
             by = .(name, year, month, day)]
   }
-
+ 
 microbenchmark(collapse_dplyr(), collapse_dt(), times = 1)
 ```
 
@@ -1318,6 +1320,7 @@ microbenchmark(collapse_dplyr(), collapse_dt(), collapse_dt_key(), times = 1)
 ]
 
 .right[*See next slide for results*]
+
 ---
 
 # Example (cont.)
@@ -1326,13 +1329,13 @@ microbenchmark(collapse_dplyr(), collapse_dt(), collapse_dt_key(), times = 1)
 ```
 ## Unit: milliseconds
 ##               expr      min       lq     mean   median       uq      max neval
-##   collapse_dplyr() 226.9598 226.9598 226.9598 226.9598 226.9598 226.9598     1
-##  collapse_dt_key()   2.5620   2.5620   2.5620   2.5620   2.5620   2.5620     1
+##   collapse_dplyr() 639.3497 639.3497 639.3497 639.3497 639.3497 639.3497     1
+##  collapse_dt_key()   5.1190   5.1190   5.1190   5.1190   5.1190   5.1190     1
 ```
 
 --
 
-The keyed data.table version is now **90x** (!!!) faster than dplyr.
+The keyed data.table version is now **120x** (!!!) faster than dplyr.
 --
 
 - That thing you feel... is your face melting.
@@ -1636,7 +1639,7 @@ Case in point: Almost every hardcore data.table user I know is a hardcore **ggpl
 
 ```r
 ## library(ggplot2) # already loaded
-storms_dt[, .(wind = mean(wind), 
+storms_dt_key[, .(wind = mean(wind), 
                   pressure = mean(pressure), 
                   category = first(category)), 
                 by = .(name, year, month, day)] %&gt;%
