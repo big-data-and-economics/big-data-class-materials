@@ -1296,7 +1296,7 @@ stocks = data.table(time = as.Date('2009-01-01') + 0:1,
 # Reshape from wide to long
 
 Our data are currently in wide format.
-```{r stocks_print, dependson=stocks}
+```{r stocks_print}
 stocks
 ```
 
@@ -1396,6 +1396,7 @@ storms_dt[, .(wind = mean(wind),
 ]]
 .pull-right[
 ```{r storms_ggplot, echo = FALSE, fig.height=6}
+#Note: Debug later. the "first" is not working.
 collapse_dt_key() %>% 
   ggplot(aes(x = pressure, y = wind, col=category)) + 
   geom_point(alpha = 0.3) + 
