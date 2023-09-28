@@ -74,6 +74,8 @@ name: prologue
 
 - Problem Set 2 has been posted and is due 10/9 by Midnight
 
+- Sync your fork, pull the latest changes to your computer
+
 ---
 
 # What is "tidy" data?
@@ -101,19 +103,11 @@ Basically, tidy data is more likely to be [long (i.e. narrow) format](https://en
 
 # Checklist
 
-### R packages you'll need today
+### R packages you'll need for this lecture
 
 ☑ [**tidyverse**](https://www.tidyverse.org/)
 
 ☑ [**nycflights13**](hhttps://github.com/hadley/nycflights13)
-
-☑ `data.table`
-
-☑ `tidyfast`
-
-☑ `dtplyr`
-
-☑ `microbenchmark`
 
 --
 

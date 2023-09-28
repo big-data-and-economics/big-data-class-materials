@@ -3,7 +3,7 @@
   <head>
     <title>Data Science for Economists</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Grant McDermott" />
+    <meta name="author" content="Grant McDermott, adapted by Kyle Coombs" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
@@ -20,10 +20,10 @@ class: center, middle, inverse, title-slide
 ## Lecture 5: Data cleaning &amp; wrangling: (1) Tidyverse
 ]
 .author[
-### Grant McDermott
+### Grant McDermott, adapted by Kyle Coombs
 ]
 .date[
-### University of Oregon | <a href="https://github.com/uo-ec607">EC 607</a>
+### Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics">EC/DCS 368</a>
 ]
 
 ---
@@ -73,6 +73,16 @@ name: prologue
 
 ---
 
+# Housekeeping 
+
+- Full version of these slides available on [Grant McDermott's website](https://github.com/uo-ec607/lectures)
+
+- Problem Set 2 has been posted and is due 10/9 by Midnight
+
+- Sync your fork, pull the latest changes to your computer
+
+---
+
 # What is "tidy" data?
 
 ### Resources:
@@ -98,19 +108,11 @@ Basically, tidy data is more likely to be [long (i.e. narrow) format](https://en
 
 # Checklist
 
-### R packages you'll need today
+### R packages you'll need for this lecture
 
 ☑ [**tidyverse**](https://www.tidyverse.org/)
 
 ☑ [**nycflights13**](hhttps://github.com/hadley/nycflights13)
-
-☑ `data.table`
-
-☑ `tidyfast`
-
-☑ `dtplyr`
-
-☑ `microbenchmark`
 
 --
 
@@ -122,30 +124,6 @@ The following code chunk will install (if necessary) and load everything for you
 ```r
 if (!require(pacman)) install.packages('pacman', repos = 'https://cran.rstudio.com')
 pacman::p_load(tidyverse, data.table, dtplyr, tidyfast, microbenchmark, ggplot2, nycflights13)
-```
-
-```
-## Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.3:
-##   cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.3/PACKAGES'
-```
-
-```
-## package 'tidyfast' successfully unpacked and MD5 sums checked
-## 
-## The downloaded binary packages are in
-## 	C:\Users\kgcsp\AppData\Local\Temp\RtmpCWWx1d\downloaded_packages
-```
-
-```
-## Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.3:
-##   cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.3/PACKAGES'
-```
-
-```
-## package 'microbenchmark' successfully unpacked and MD5 sums checked
-## 
-## The downloaded binary packages are in
-## 	C:\Users\kgcsp\AppData\Local\Temp\RtmpCWWx1d\downloaded_packages
 ```
 
 **Tip:** If you're on Linux, then I _strongly_ recommend installing the pre-compiled binary versions of these packages from [RSPM](https://packagemanager.rstudio.com/client/#/repos/1/overview) instead of CRAN. The exact repo mirror varies by distro (see the link). But on Ubuntu 20.04, for example, you'd use: 
