@@ -107,7 +107,7 @@ Basically, tidy data is more likely to be [long (i.e. narrow) format](https://en
 
 ☑ [**tidyverse**](https://www.tidyverse.org/)
 
-☑ [**nycflights13**](hhttps://github.com/hadley/nycflights13)
+☑ [**nycflights13**](https://github.com/hadley/nycflights13)
 
 --
 
@@ -124,10 +124,10 @@ pacman::p_load(tidyverse, data.table, dtplyr, tidyfast, microbenchmark, ggplot2,
 
 ```r
 install.packages(c('tidyverse', 'nycflights13','data.table','dtplyr','tidyfast','microbenchmark','ggplot2'), repos = 'https://packagemanager.rstudio.com/all/__linux__/focal/latest', dependencies  = TRUE)
-library(tidyverse, data.table, dtplyr, tidyfast, microbenchmark, ggplot2, nycflights13)
+library(tidyverse)
+library(data.table)
+#etc.
 ```
-```
-
 
 ---
 class: inverse, center, middle
@@ -276,7 +276,7 @@ name: filter
 
 # 1) dplyr::filter
 
-We can chain multiple filter commands with the pipe (`%>%`)[<sup>1<\sup>], or just separate them within a single filter command using commas.
+We can chain multiple filter commands with the pipe `%>%`<sup>1</sup>, or just separate them within a single filter command using commas.
 ```{r filter1}
 starwars %>% 
   filter( 
@@ -427,7 +427,7 @@ Lastly, combining `mutate` with the `across` feature allows you to easily work o
 ```{r, mutate4}
 starwars %>% 
   select(name:eye_color) %>% 
-  mutate(across(where(is.character), toupper)) %>% #<< 
+  mutate(across(where(is.character), \(x) toupper(x))) %>% #<< 
   head(5)
 ```
 
@@ -466,7 +466,7 @@ The same `across`-based workflow that we saw with `mutate` a few slides back als
 ```{r, summ4}
 starwars %>% 
   group_by(species) %>% 
-  summarise(across(where(is.numeric), mean, na.rm=T)) %>% #<<
+  summarise(across(where(is.numeric), \(x) (mean(x, na.rm=T)))) %>% #<<
   head(5)
 ```
 

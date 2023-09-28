@@ -112,7 +112,7 @@ Basically, tidy data is more likely to be [long (i.e. narrow) format](https://en
 
 ☑ [**tidyverse**](https://www.tidyverse.org/)
 
-☑ [**nycflights13**](hhttps://github.com/hadley/nycflights13)
+☑ [**nycflights13**](https://github.com/hadley/nycflights13)
 
 --
 
@@ -130,10 +130,10 @@ pacman::p_load(tidyverse, data.table, dtplyr, tidyfast, microbenchmark, ggplot2,
 
 ```r
 install.packages(c('tidyverse', 'nycflights13','data.table','dtplyr','tidyfast','microbenchmark','ggplot2'), repos = 'https://packagemanager.rstudio.com/all/__linux__/focal/latest', dependencies  = TRUE)
-library(tidyverse, data.table, dtplyr, tidyfast, microbenchmark, ggplot2, nycflights13)
+library(tidyverse)
+library(data.table)
+#etc.
 ```
-```
-
 
 ---
 class: inverse, center, middle
@@ -295,7 +295,7 @@ name: filter
 
 # 1) dplyr::filter
 
-We can chain multiple filter commands with the pipe (`%&gt;%`)[&lt;sup&gt;1&lt;\sup&gt;], or just separate them within a single filter command using commas.
+We can chain multiple filter commands with the pipe `%&gt;%`&lt;sup&gt;1&lt;/sup&gt;, or just separate them within a single filter command using commas.
 
 ```r
 starwars %&gt;% 
@@ -625,7 +625,7 @@ Lastly, combining `mutate` with the `across` feature allows you to easily work o
 ```r
 starwars %&gt;% 
   select(name:eye_color) %&gt;% 
-* mutate(across(where(is.character), toupper)) %&gt;%
+* mutate(across(where(is.character), \(x) toupper(x))) %&gt;%
   head(5)
 ```
 
@@ -718,23 +718,8 @@ The same `across`-based workflow that we saw with `mutate` a few slides back als
 ```r
 starwars %&gt;% 
   group_by(species) %&gt;% 
-* summarise(across(where(is.numeric), mean, na.rm=T)) %&gt;%
+* summarise(across(where(is.numeric), \(x) (mean(x, na.rm=T)))) %&gt;%
   head(5)
-```
-
-```
-## Warning: There was 1 warning in `summarise()`.
-## ℹ In argument: `across(where(is.numeric), mean, na.rm = T)`.
-## ℹ In group 1: `species = "Aleena"`.
-## Caused by warning:
-## ! The `...` argument of `across()` is deprecated as of dplyr 1.1.0.
-## Supply arguments directly to `.fns` through an anonymous function instead.
-## 
-##   # Previously
-##   across(a:b, mean, na.rm = TRUE)
-## 
-##   # Now
-##   across(a:b, \(x) mean(x, na.rm = TRUE))
 ```
 
 ```
