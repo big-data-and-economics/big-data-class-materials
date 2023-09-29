@@ -52,9 +52,9 @@ There are countless free resources on the internet that can be used to learn R. 
 
 - [_R_ For Data Science](https://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemund
 - [Advanced _R_](https://adv-r.hadley.nz/) by Hadley Wickham
-- [Geocomputation with _R_ by Robin Lovelace](ttps://geocompr.robinlovelace.net/), Jakub Nowosad, and Jannes Muenchow
+- [Geocomputation with _R_ by Robin Lovelace](ttps://geocompr.robinlovelace.net/) by Jakub Nowosad, and Jannes Muenchow
 - [_Posit_ Cheatsheets](https://rstudio.com/resources/cheatsheets/)
-- [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/)
+- [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/) by Roger D. Peng
 
 ### On R Markdown
 
