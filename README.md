@@ -44,31 +44,36 @@ This is in progress. Check back in for progress to be made.
 | 2023-12-05 | T | Topics Modeling, LLMs | | |
 | 2023-12-07 | Th | AI and bias | | |
 
+## Resources to use for class
 
+There are countless free resources on the internet that can be used to learn R. Here are a few that I recommend:
 
-<!-- 2. Version control with Git(Hub) \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.Rmd)\]
-3. Learning to love the shell \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/03-shell/03-shell.Rmd)\]
-4. R language basics \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/04-rlang/04-rlang.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/04-rlang/04-rlang.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/04-rlang/04-rlang.Rmd)\]
-5. Data wrangling & tidying
-    - Tidyverse \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/05-tidyverse/05-tidyverse.Rmd)\]
-    - data.table \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/05-datatable/05-datatable.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/05-datatable/05-datatable.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/05-datatable/05-datatable.Rmd)\]
-6. Webscraping: (1) Server-side & CSS \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/06-web-css/06-web-css.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/06-web-css/06-web-css.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/06-web-css/06-web-css.Rmd)\]
-7. Webscraping: (2) Client-side & APIs \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/07-web-apis/07-web-apis.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/07-web-apis/07-web-apis.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/07-web-apis/07-web-apis.Rmd)\]
-8. Regression analysis in R \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/08-regression/08-regression.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/08-regression/08-regression.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/08-regression/08-regression.Rmd)\]
-9. Spatial analysis in R \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/09-spatial/09-spatial.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/09-spatial/09-spatial.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/09-spatial/09-spatial.Rmd)\] 
-    - Rasters (bonus) \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/09a-spatial-rasters/09a-spatial-rasters.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/09a-spatial-rasters/09a-spatial-rasters.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/09a-spatial-rasters/09a-spatial-rasters.Rmd)\]
-10. Functions in R: (1) Introductory concepts \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/10-funcs-intro/10-funcs-intro.html) | [[**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/10-funcs-intro/10-funcs-intro.pdf) | [[**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/10-funcs-intro/10-funcs-intro.Rmd)\]
-11. Functions in R: (2) Advanced concepts \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/11-funcs-adv/11-funcs-adv.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/11-funcs-adv/11-funcs-adv.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/11-funcs-adv/11-funcs-adv.Rmd)\]
-12. Parallel programming \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/12-parallel/12-parallel.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/12-parallel/12-parallel.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/12-parallel/12-parallel.Rmd)\]
-13. Docker \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/13-docker/13-docker.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/13-docker/13-docker.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/13-docker/13-docker.Rmd)\]
-14. Google Compute Engine 
-    - Part 1 \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/14-gce-i/14-gce-i.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/14-gce-i/14-gce-i.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/14-gce-i/14-gce-i.Rmd)\]
-    - Part 2 \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/14-gce-ii/14-gce-ii.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/14-gce-ii/14-gce-ii.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/14-gce-ii/14-gce-ii.Rmd)\]
-15. HPC (UO Talapas cluster) \[[**Guest lecture**](https://docs.google.com/presentation/d/146u3W0J0ytGYBq7MZBOoE6wdbkEUrMIV-Fg5N3Cnsls/edit?usp=sharing)\]
-16. Databases \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/16-databases/16-databases.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/16-databases/16-databases.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/16-databases/16-databases.Rmd)\]
-17. Spark \[[**.html**](https://raw.githack.com/uo-ec607/lectures/master/17-spark/17-spark.html) | [**.pdf**](https://raw.githack.com/uo-ec607/lectures/master/17-spark/17-spark.pdf) | [**.Rmd**](https://raw.githack.com/uo-ec607/lectures/master/17-spark/17-spark.Rmd)\]
-18. Machine learning
-19. Workflow & project management -->
+### On R
+
+- [_R_ For Data Science](https://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemund
+- [Advanced _R_](https://adv-r.hadley.nz/) by Hadley Wickham
+- [Geocomputation with _R_ by Robin Lovelace](ttps://geocompr.robinlovelace.net/), Jakub Nowosad, and Jannes Muenchow
+- [_Posit_ Cheatsheets](https://rstudio.com/resources/cheatsheets/)
+- [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/)
+
+### On R Markdown
+
+- [_RStudio_ Gallery](https://rmarkdown.rstudio.com/gallery.html)
+- [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) by Yihui Xie, J. J. Allaire, and Garrett Grolemund
+
+### Econometrics, Statistics, Data Science with R examples
+
+- [An Introduction to Statistical Learning](https://statlearning.com) by Gareth James, Daniela Witten, Trevor Hastie, and Robert Tibshirani
+- [Data Science for Economists and Other Animals](https://grantmcdermott.com/ds4e/) by Grant McDermott and Ed Rubin
+- [Causal Inference: The Mixtape](https://mixtape.scunning.com/) by Scott Cunningham
+- [The Effect](https://www.theeffectbook.net/) by Nick Huntington-Klein
+- [Spatial Data Science](https://r-spatial.org/book/) by Edzer Pebesma and Roger Bivand
+- [Data Visualization: A practical introduction](http://socviz.co/) by Kieran Healy 
+
+### Staying organized
+
+- [Code and Data for the Social Sciences: A Practioner's Guide](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) by Matthew Gentzkow and Jesse Shapiro
+- [Coding for Economists: A Language-Agnostic Guide](https://scholar.harvard.edu/sites/scholar.harvard.edu/files/ristovska/files/coding_for_econs_20190221.pdf)
 
 ## Details
 
@@ -77,6 +82,12 @@ This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/)
 Economics is at the forefront of developing statistical methods for analyzing data collected from uncontrolled sources. Since econometrics addresses challenges in estimation such as sample selection bias and treatment effects identification, the discipline is well-suited for the analysis of large and unsystematically collected datasets. This course introduces statistical (machine) learning methods, which have been developed for analyzing such datasets but which have only recently been implemented in economic research. We will cover a variety of topics including data collection, data management, data description, causal inference, and data visualization.  The course also explores how econometrics and statistical learning methods cross-fertilize and can be used to advance knowledge in the numerous domains where large volumes of data are rapidly accumulating. We will also cover the ethics of data collection and analysis. The course will be taught in *R*. 
 
 ## FAQ
+
+### If you find a typo in these lecture notes
+
+Please raise an issue or submit a pull request. For those taking this course, I offer a 2.5% bonus on your final grade for issuing a *pull request* to any open source material -- including these lecture notes. This can be to fix a typo or to fix a bug in the code. 
+
+
 
 ### How do I download this material and keep up to date with any changes?
 
