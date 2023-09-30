@@ -26,7 +26,7 @@ This is in progress. Check back in for progress to be made.
 | 2023-09-21  | Th | [Empirical Organization slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-empirical-workflow/02-empirical-workflow.html) | N/A | |
 | 2023-09-26 | T | [R Basics](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/04-rlang/04-rlang.html) | N/A | |
 | 2023-09-28 | Th | [Data Table](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/05-datatable/05-datatable.html), [Tidyverse](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/05-tidyverse/05-tidyverse.html) | N/A | |
-| 2023-10-03 | T | [CSS](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/07-web-css/07-web-css.html) | [SelectorGadget](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb) (Chrome), [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/) (Firefox) | |
+| 2023-10-03 | T | [CSS](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/07-web-css/07-web-css.html), [Scraping Notes by Jesus Fernández Villaverde and Pablo Guerrón](https://www.sas.upenn.edu/~jesusfv/Lecture_HPC_10_Web_Scrapping.pdf) | [SelectorGadget](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb) (Chrome), [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/) (Firefox) | |
 | 2023-10-05 | Th | [APIs](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/mcdermott/07-web-apis/07-web-apis.html) | [JSONView](https://jsonview.com/), [Sign-up](https://research.stlouisfed.org/useraccount/apikey) and register for [Personal API Key](https://research.stlouisfed.org/useraccount/apikey) | |
 | 2023-10-10 | T | Spatial Analysis with Opportunity Atlas | | |
 | 2023-10-12 | Th | Functions & Parallel Programming | | |
@@ -44,9 +44,19 @@ This is in progress. Check back in for progress to be made.
 | 2023-12-05 | T | Topics Modeling, LLMs | | |
 | 2023-12-07 | Th | AI and bias | | |
 
+## Goals for this course
+
+This class is about helping you build good habits for doing organized and reproducible empirical work. It is not about learning specific R packages or functions. 
+
+- Organize empirical projects that are replicable, reproducible, and collaborative using good programming practices
+- Collect and clean big or novel datasets using APIs, web scraping, and other methods
+- Use Big Data to generate key insights about economic opportunity, inequality, and other social problems
+- Understand the differences between prediction, causality, and description, and when to apply each
+- Explain what data science is, and how Big Data differs from other types of data 
+
 ## Resources to use for class
 
-There are countless free resources on the internet that can be used to learn R. Here are a few that I recommend:
+This course is taught in R, but the goal is not for students to learn individual R functions and packages. That is something a person could do using generative AI, existing R vignettes and demos, and other online resources. With that in mind, I expect students in this course to make ample use of the countless free resources on the internet to learn R. Here are a few that I recommend:
 
 ### On R
 
@@ -74,6 +84,8 @@ There are countless free resources on the internet that can be used to learn R. 
 
 - [Code and Data for the Social Sciences: A Practioner's Guide](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) by Matthew Gentzkow and Jesse Shapiro
 - [Coding for Economists: A Language-Agnostic Guide](https://scholar.harvard.edu/sites/scholar.harvard.edu/files/ristovska/files/coding_for_econs_20190221.pdf)
+- [happygitwithr](https://happygitwithr.com/) by Jenny Bryan
+
 
 ## Details
 
@@ -81,13 +93,31 @@ This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/)
 
 Economics is at the forefront of developing statistical methods for analyzing data collected from uncontrolled sources. Since econometrics addresses challenges in estimation such as sample selection bias and treatment effects identification, the discipline is well-suited for the analysis of large and unsystematically collected datasets. This course introduces statistical (machine) learning methods, which have been developed for analyzing such datasets but which have only recently been implemented in economic research. We will cover a variety of topics including data collection, data management, data description, causal inference, and data visualization.  The course also explores how econometrics and statistical learning methods cross-fertilize and can be used to advance knowledge in the numerous domains where large volumes of data are rapidly accumulating. We will also cover the ethics of data collection and analysis. The course will be taught in *R*. 
 
+## Grading policy
+
+| Component                                 | Weight | Graded |
+|:-||-:|
+| 7 × problem sets (10% each)               | 50%    | Top 5 |
+| 1 × short presentation                	| 10%    | Top 1 |
+| 1 × final project   				        | 40%    | [In parts](https://github.com/ECON368-fall2023-big-data-and-economics/final-project) |
+
+- Short presentations summarize either a key lecture reading, or an (approved) software package/platform.
+- Extensions: Each of you gets three ''grace period'' days to extend deadlines. 
+- You can use these days in any way you like, but once they're gone, they're gone.
+
+### Problem sets
+
+- Problem sets are coding assignments that get you to play with data using R
+- They are extremely challenging, but also extremely rewarding
+- With rare exceptions: You will not be given clear-cut code to copy and paste to accomplish these data cleaning tasks, but instead given a set of instructions and asked to figure out how to write code yourself
+- You are encouraged to work together on problem sets, but you must write up your own answers (unless it is a group assignment)
+- All problem sets will be completed and turned in as GitHub repositories
+
 ## FAQ
 
 ### If you find a typo in these lecture notes
 
 Please raise an issue or submit a pull request. For those taking this course, I offer a 2.5% bonus on your final grade for issuing a *pull request* to any open source material -- including these lecture notes. This can be to fix a typo or to fix a bug in the code. 
-
-
 
 ### How do I download this material and keep up to date with any changes?
 
