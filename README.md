@@ -14,7 +14,7 @@ You can book time [here](https://calendar.google.com/calendar/u/0/appointments/s
 
 # Lectures 
 
-*Note: While I have provided PDF versions of the lectures, they are best viewed 
+*Note: While I have provided PDF versions of the lectures (in folders above), they are best viewed 
 in the original HTML format.*
 
 This is in progress. Check back in for progress to be made. 
