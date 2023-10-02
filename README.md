@@ -87,6 +87,17 @@ This course is taught in R, but the goal is not for students to learn individual
 - [Coding for Economists: A Language-Agnostic Guide](https://scholar.harvard.edu/sites/scholar.harvard.edu/files/ristovska/files/coding_for_econs_20190221.pdf)
 - [happygitwithr](https://happygitwithr.com/) by Jenny Bryan
 
+### Student Academic Support Center
+Scheduled hours for R held in the Student Academic Support Center (SASC) of the Library are:
+
+- Sunday | 7:30-9pm
+- Monday | 12-1pm, 2:30pm-4pm
+- Tuesday |12-2:30pm, 6-7:30pm
+- Wednesday | 11am-1pm, 6-7:30pm
+- Thursday | 12-4pm, 6-7:30pm
+- Friday | 11am-12pm
+
+I will also try to get a Course-Attached Tutor for this class.
 
 ## Details
 
