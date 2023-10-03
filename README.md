@@ -139,6 +139,8 @@ There are several opportunities for bonus points during the semester:
 2. A 2.5% participation bonus on your final grade that I will award at my discretion.
 3. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. 
 
+I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
+
 ### Problem sets
 
 Throughout the course you will engage in problem sets that deal with actual data. These may seem out of step with what we do in class, but they are designed to get you to think about how to apply the tools we learn in class to real data. As the class progresses, the problem sets will align more neatly with the material.
@@ -202,6 +204,38 @@ Please [open a new issue](https://help.github.com/articles/creating-an-issue/). 
 ### Can I use/adapt your material for a similar course that I'm teaching?
 
 Sure. I already borrowed half of it Grant McDermott, Tyler Ransom, Raj Chetty, and Stephen Hansen (links to their pages to come). I have also kept everything publicly available. I ask two favours (like Grant McDermott) 1) Please let me know ([email](mailto:kcoombs@bates.edu) if you do use material from this course, or have found it useful in other ways. 2) An acknowledgment somewhere in your own syllabus or notes would be much appreciated.
+
+### Pull Request of a Specific Commit
+
+If you want to make a pull request of a specific commit (and not all changes you have made), you have two options:
+
+**Option 1: Manually create a new fork**
+
+1. Create a separate fork of the upstream repository for each commit you want to make a pull request for. 
+2. Clone this separate fork to your local machine, make the changes, commit, and push.
+3. Pull request from this separate fork.
+
+This is the easiest option, but it does mean you will have to clone multiple forks to your local machine.
+
+**Option 2: Use the command line (Git Bash, WSL, Terminal)**
+
+1. Create a fork of this repository (called the upstream repository) if you not before
+2. Clone the forked repo to your local computer
+3. Add the original repo as a remote called `upstream` (enter `git remote add upstream <upstream-repo-url>`)
+4. Fetch the upstream repo (`git fetch upstream`)
+5. Create a branch of this upstream repo (`git checkout -b <pull-request-branch-name> upstream/main`)
+6. Either:
+    - Make the changes you want to make to the code
+    - Cherry pick the specific commit you want to merge as a pull request by typing `git cherry pick <commit-hash>` into the command line
+        - A commit hash is a unique combination of letters and numbers that identifies a specific commit. You can find the commit hash by running `git log` and copying the hash of the commit you want to make a pull request for OR by clicking on the commit history on GitHub and copying the SHA (the icon with two interlocked squares.)
+7. Push this branch to the forked repository with `git push -u origin <pull-request-branch-name>`
+8. Return to your forked repo's main branch with `git checkout -b origin/main`
+9. Navigate to your forked repository on GitHub and create a pull request from the branch you just pushed (you should see a banner that says "Compare & pull request" when you navigate to your forked repo)
+10. Make sure: 
+    - The **base repository** is the upstream repo and the base is the main branch
+    - The **head repository** is your forked repo and the compare is the the branch named `<pull-request-branch-name>`
+11. *Optional*: Destroy the pull-request-branch once it has served its purpose with `git branch -d <pull-request-branch-name>`
+
 
 ## License
 
