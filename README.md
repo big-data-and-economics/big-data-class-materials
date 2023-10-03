@@ -62,7 +62,7 @@ This course is taught in R, but the goal is not for students to learn individual
 
 - [_R_ For Data Science](https://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemund
 - [Advanced _R_](https://adv-r.hadley.nz/) by Hadley Wickham
-- [Geocomputation with _R_ by Robin Lovelace](ttps://geocompr.robinlovelace.net/) by Jakub Nowosad, and Jannes Muenchow
+- [Geocomputation with _R_ by Robin Lovelace](https://geocompr.robinlovelace.net/) by Jakub Nowosad, and Jannes Muenchow
 - [_Posit_ Cheatsheets](https://rstudio.com/resources/cheatsheets/)
 - [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/) by Roger D. Peng
 
