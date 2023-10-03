@@ -17,6 +17,14 @@ You can book time [here](https://calendar.google.com/calendar/u/0/appointments/s
 *Note: While I have provided PDF versions of the lectures (in folders above), they are best viewed 
 in the original HTML format.*
 
+The course is broken up into three rough sections. 
+
+- Part 1 covers basics of empirical organization, data gathering, and organizing that are not "big data" specific
+- Part 2 covers data description, econometrics, and causal inference that are possible with big data
+- Part 3 covers machine learning techniques that are possible with big data
+
+Throughout the course you will engage in problem sets that deal with actual data. These may seem out of step with what we do in class, but they are designed to get you to think about how to apply the tools we learn in class to real data. As the class progresses, the problem sets will align more neatly with the material.
+
 This is in progress. Check back in for progress to be made. 
 
 | Date | Day | Topic | Download | Due | 
