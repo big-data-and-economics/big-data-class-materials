@@ -63,8 +63,6 @@ pacman::p_load(tidyverse, rvest, lubridate, janitor, data.table, hrbrthemes,gshe
 theme_set(theme_minimal())
 ```
 
-> **Tip:** If you can get an error about missing fonts whilst following along with this lecture, that's probably because you don't have [Arial Narrow](https://freefontsdownload.net/free-arial-narrow-font-30388.htm) --- required by the `hrbrthemes::theme_ipsum()` **ggplot2** theme that I'm using here --- installed on your system. You can resolve this by downloading the font and adding it to your font book (Google it), or by switching to a different theme (e.g. `theme_set(theme_minimal())`). 
-
 ## Webscraping basics
 
 The next two lectures are about getting data, or "content", off the web and onto our computers. We're all used to seeing this content in our browsers (Chrome, Firefox, etc.). So we know that it must exist somewhere. However, it's important to realise that there are actually two ways that web content gets rendered in a browser: 
