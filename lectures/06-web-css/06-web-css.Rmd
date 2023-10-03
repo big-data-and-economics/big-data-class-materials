@@ -60,7 +60,7 @@ Recall that **rvest** was automatically installed with the rest of the tidyverse
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, rvest, lubridate, janitor, data.table, hrbrthemes,gsheet,polite)
 ## My preferred ggplot2 plotting theme (optional)
-theme_set(hrbrthemes::theme_ipsum())
+theme_set(theme_minimal())
 ```
 
 > **Tip:** If you can get an error about missing fonts whilst following along with this lecture, that's probably because you don't have [Arial Narrow](https://freefontsdownload.net/free-arial-narrow-font-30388.htm) --- required by the `hrbrthemes::theme_ipsum()` **ggplot2** theme that I'm using here --- installed on your system. You can resolve this by downloading the font and adding it to your font book (Google it), or by switching to a different theme (e.g. `theme_set(theme_minimal())`). 
@@ -366,7 +366,7 @@ wr100 %>%
 
 ## Application 2: New York Times
 
-There are several features of the previous Wikipedia example that make it a good introductory application. Most notably, the HTML table format provides a regular structure that is easily coercible into a data frame (via `html_table()`). Oftentimes, however, the information that we want to scrape off the web doesn't have this nice regular structure. For this next example, then, I'm going to walk you through a slightly more messy application: Scraping items from [The New York Times](https://www.nytimes.com/). The following is adapted from an R notebook of a Medium [blog post](https://towardsdatascience.com/web-scraping-tutorial-in-r-5e71fd107f32) from August 2, 2017 by José Roberto Ayala Solares, who in term adapted it from work by [Kevin Markham](https://twitter.com/justmarkham?lang=en). The post walks through a tutorial to scrape the [Trump Lies](https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html) article from the NYT. I've made some minor modifications to the code and added some extra commentary.
+There are several features of the previous Wikipedia example that make it a good introductory application. Most notably, the HTML table format provides a regular structure that is easily coercible into a data frame (via `html_table()`). Oftentimes, however, the information that we want to scrape off the web doesn't have this nice regular structure. For this next example, then, I'm going to walk you through a slightly more messy application: Scraping items from [The New York Times](https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html). The following is adapted from an R notebook of a Medium [blog post](https://towardsdatascience.com/web-scraping-tutorial-in-r-5e71fd107f32) from August 2, 2017 by José Roberto Ayala Solares, who in term adapted it from work by [Kevin Markham](https://twitter.com/justmarkham?lang=en). The post walks through a tutorial to scrape the [Trump Lies](https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html) article from the NYT. I've made some minor modifications to the code and added some extra commentary.
 
 ## Examining the New York Times Article
 For a nice description about the article that we'll be working with, look at Kevin's [tutorial](http://www.dataschool.io/python-web-scraping-of-president-trumps-lies/). In summary, the data that we are interested in consists of a record of lies, each with 4 parts:
@@ -382,20 +382,17 @@ For a nice description about the article that we'll be working with, look at Kev
 
 I will show you how to read with **rvest** and **polite** here. Note for yourself that the output is the same, but the polite version is requires to steps and a little slower.
 
-```{r}
+```{r, collapse=TRUE}
 # library(polite)
 
 nyt_session = polite::bow("https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html") #start your session
 
-webpage_html <- read_html("https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html")
+webpage <- polite::scrape(nyt_session)
+webpage
+
+webpage_html <- rvest::read_html("https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html")
 webpage_html
 
-webpage <- scrape(nyt_session)
-webpage
-#> {xml_document}
-#> <html lang="en" class="no-js page-interactive section-opinion page-theme-standard tone-opinion page-interactive-default  limit-small layout-xlarge app-interactive" itemid="https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html" itemtype="http://schema.org/NewsArticle" itemscope="" xmlns:og="http://opengraphprotocol.org/schema/">
-#> [1] <head>\n<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n<title>President Trump's L ...
-#> [2] <body>\n    \n    <style>\n    .lt-ie10 .messenger.suggestions {\n        display: block !important;\n  ...
 ```
 
 ## Collecting all of the records
@@ -408,7 +405,7 @@ Therefore, to collect all the lies, we need to identify all the `<span>` tags th
 ```{r}
 results <- webpage %>% html_elements(".short-desc")
 results
-#> {xml_nodeset (116)}
+#> {xml_nodeset (180)}
 #> [1] <span class="short-desc"><strong>Jan. 21 </strong>"I wasn't a fan of Iraq. I didn't want to go into Ir ...
 #> [2] <span class="short-desc"><strong>Jan. 21 </strong>"A reporter for Time magazine — and I have been on t ...
 #> [3] <span class="short-desc"><strong>Jan. 23 </strong>"Between 3 million and 5 million illegal votes cause ...
@@ -420,11 +417,11 @@ results
 #> ...
 ```
 
-This returns a list with 116 XML nodes that contain the information for each of the 116 lies in the web page.
+This returns a list with 180 XML nodes that contain the information for each of the 180 lies in the web page.
 
-## Extracing the date
+## Extracting the date
 
-You might be tempted to just immediately use the `html_table` function again. But if we try that, what happens? We don't get a table. We get 116 empty tibbles because we have not yet added structure.
+You might be tempted to just immediately use the `html_table` function again. But if we try that, what happens? We don't get a table. We get 180 empty tibbles because we have not yet added structure.
 
 ```{r,eval=FALSE}
 #Head keeps the output short.
@@ -435,7 +432,7 @@ Let's start simple and focus on extracting all the necessary details from the fi
 
 `<span class="short-desc"><strong> DATE </strong> LIE <span class="short-truth"><a href="URL"> EXPLANATION </a></span></span>`
 
-Notice that the date is embedded within the `<strong>` tag. To select it, we can use the `html_nodes()` function using the selector `"strong"`.
+Notice that the date is embedded within the `<strong>` tag. To select it, we can use the `html_elements()` or `html_nodes()` function using the selector `"strong"`.
 
 ```{r}
 first_result <- results[1]
@@ -474,7 +471,7 @@ str_sub(lie, 2, -2)
 ```
 
 ## Extracting the explanation
-Hopefully by now it shouldn't be too complicated to see that to extract the explanation we simply need to select the text within the `<span>` tag that belongs to `class=".short-truth"`. This will extract the text together with the opening and closing parentheses, but we can easily get rid of them.
+Hopefully by now it shouldn't be too complicated to see that to extract the explanation we simply need to select the text within the `<span>` tag that belongs to `class=".short-truth"`. This will extract the text together with the opening and closing quotations, but we can easily get rid of them.
 
 ```{r}
 explanation <- first_result %>% html_element(".short-truth") %>% html_text(trim = TRUE)
@@ -483,7 +480,7 @@ str_sub(explanation, 2, -2)
 ```
 
 ## Extracting the URL
-Finally, to get the URL, notice that this is an attribute within the `<a>` tag. We simply select this node with the `html_element()` function, and then select the href attribute with the `html_attr()` function.
+Finally, to get the URL, notice that this is an attribute within the `<a>` tag. We simply select this element with the `html_element()` function, and then select the href attribute with the `html_attr()` function.
 
 ```{r}
 url <- first_result %>% html_element("a") %>% html_attr("href")
@@ -492,7 +489,7 @@ url
 ```
 
 ## Building the dataset
-We found a way to extract each of the 4 parts of the first record. We can extend this process to all the rest using a for loop. In the end, we want to have a data frame with 116 rows (one for each record) and 4 columns (to keep the date, the lie, the explanation and the URL). One way to do so is to create an empty data frame and simply add a new row as each new record is processed. However, this is not considered a good practice. As suggested [here](http://r4ds.had.co.nz/iteration.html#unknown-output-length), we are going to create a single data frame for each record and store all of them in a list. Once we have the 116 data frames, we'll bind them together using the `bind_rows()` function from the [dplyr](http://dplyr.tidyverse.org/) package. This creates our desired dataset.
+We found a way to extract each of the 4 parts of the first record. We can extend this process to all the rest using a for loop. In the end, we want to have a data frame with 180 rows (one for each record) and 4 columns (to keep the date, the lie, the explanation and the URL). One way to do so is to create an empty data frame and simply add a new row as each new record is processed. However, this is not considered a good practice. As suggested [here](http://r4ds.had.co.nz/iteration.html#unknown-output-length), we are going to create a single data frame for each record and store all of them in a list. Once we have the 180 data frames, we'll bind them together using the `bind_rows()` function from the [dplyr](http://dplyr.tidyverse.org/) package. This creates our desired dataset.
 
 ```{r}
 library(dplyr)
@@ -508,12 +505,6 @@ for (i in seq_along(results)) {
 
 df <- bind_rows(records)
 glimpse(df)
-#> Observations: 116
-#> Variables: 4
-#> $ date        <chr> "Jan. 21, 2017", "Jan. 21, 2017", "Jan. 23, 2017", "Jan. 25, 2017", "...
-#> $ lie         <chr> "I wasn't a fan of Iraq. I didn't want to go into Iraq.", "A reporter...
-#> $ explanation <chr> "He was for an invasion before he was against it.", "Trump was on the...
-#> $ url         <chr> "https://www.buzzfeed.com/andrewkaczynski/in-2002-donald-trump-said-h...
 ```
 
 Notice that the column for the date is considered a character vector. It'd be nice to have it as a datetime vector instead. To do so, we can use the lubridate package and use the `mdy()` function (month-day-year) to make the conversion.
@@ -522,12 +513,6 @@ Notice that the column for the date is considered a character vector. It'd be ni
 library(lubridate)
 df$date <- mdy(df$date)
 glimpse(df)
-#> Observations: 116
-#> Variables: 4
-#> $ date        <date> 2017-01-21, 2017-01-21, 2017-01-23, 2017-01-25, 2017-01-25, 2017-01-...
-#> $ lie         <chr> "I wasn't a fan of Iraq. I didn't want to go into Iraq.", "A reporter...
-#> $ explanation <chr> "He was for an invasion before he was against it.", "Trump was on the...
-#> $ url         <chr> "https://www.buzzfeed.com/andrewkaczynski/in-2002-donald-trump-said-h...
 ```
 
 ## Exporting the dataset to a CSV file
@@ -541,16 +526,9 @@ Similarly, to retrieve your dataset, you can use either the default function `re
 
 ```{r}
 df <- read_csv("trump_lies.csv")
-#> Parsed with column specification:
-#> cols(
-#>   date = col_date(format = ""),
-#>   lie = col_character(),
-#>   explanation = col_character(),
-#>   url = col_character()
-#> )
 ```
 
-## Summary
+## Full code summary
 The full code for this tutorial is shown below:
 
 ```{r}
@@ -594,6 +572,31 @@ write_csv(df, "trump_lies.csv")
 I also want to mention that the stringr, dplyr, lubridate and readr packages are all part of the [tidyverse](http://tidyverse.org/) family. In fact, you could also use the popular [purrr](http://purrr.tidyverse.org/) package to avoid the for loop. However, this would require the creation of a function that maps each record to a data frame. For another example on how to do web scraping, have a look at this awesome [blog post](http://deanattali.com/blog/user2017/) from [Dean Attali](https://twitter.com/daattali).
 
 Hopefully you find this tutorial useful. Its purpose is not to show which programming language is better, but instead to learn from both Python and R, as well as to increase your programming skills and tools to tackle a more diverse set of problems.
+
+
+### *Quick aside on HTML elements, nodes, and attributes*
+
+We played fast and loose with HTML nodes, elements, and attributes above. Let me more carefully explain them here (with help from ChatGPT and GitHub CoPilot). HTML nodes, elements, and attributes are related, but slightly different concepts. Here's a quick summary:
+
+- **HTML nodes**: The building blocks of any HTML document. Everything from text on the page, comments in the code, whitespace, and HTML elements themselves are considered nodes. They are subdivided into text, element, and comment nodes (among others). 
+
+- **HTML elements**: The structural and semantic parts of the webpage. These define the type of content and how to display/structure it on the web page. Each HTML element has an opening and closing tag. For example, `<p>` is the opening tag for a paragraph element, while `</p>` is the closing tag. Other examples:
+  - `<a>`, `</a>`: Anchor element, used to create hyperlinks.
+  - `<div>`, `</div>`: Division element, used to group other elements together.
+  - `<divpath>`, `</divpath>`: Generic block container for other elements.
+  - `<span>`, `</span>`: Generic inline container for other elements.
+  - `<ul>`, `</ul>`: Unordered list element.
+These can be nested, i.e. if you have an anchor element within a paragraph element. 
+
+*Every HTML element is an HTML node, but not every HTML node is an HTML element. For example, text nodes are not elements.*
+
+- **HTML attributes**: Additional information within a HTML element that modify the element in some way. As a result, they are always found within an HTML element and follow the syntax `attribute=value_of_attribute`. For example, the `<a>` element can have an `href` attribute with the syntax `<a href="https://www.google.com">`. Other examples:
+  - `src`: Specifies the URL of an image to be displayed within an `<img>` element.
+  - `class`: Specifies one or more class names for an element. Used to reference elements from CSS.
+  - `id`: Specifies a unique id for an element. Used to reference elements from JavaScript.
+  - `style`: Specifies an inline CSS style for an element.
+  - `width`: Specifies the width of an element.
+  - `height`: Specifies the height of an element.
 
 ## Summary
 

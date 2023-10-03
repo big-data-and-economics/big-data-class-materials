@@ -4,30 +4,31 @@
 \contentsline {subsection}{Webscraping basics}{2}{section*.5}%
 \contentsline {subsubsection}{1. Server-side}{2}{section*.6}%
 \contentsline {subsubsection}{2. Client-side}{2}{section*.7}%
-\contentsline {subsubsection}{Caveat: Ethical \textst {and legal} considerations}{3}{section*.8}%
+\contentsline {subsubsection}{Caveat: Ethical \textst {and legal} considerations}{2}{section*.8}%
 \contentsline {subsubsection}{Caveat: Stability and dependencies}{3}{section*.9}%
 \contentsline {subsection}{Easy webscraping for popular platforms}{3}{section*.10}%
 \contentsline {subsubsection}{Packages to scrape Google Sheets}{3}{section*.11}%
 \contentsline {subsubsection}{Clean Code alert: Abstraction}{5}{section*.12}%
 \contentsline {subsection}{Webscraping with \textbf {rvest} (server-side)}{5}{section*.13}%
 \contentsline {subsubsection}{Some notes on Cascading Style Sheets (\href {https://developer.mozilla.org/en-US/docs/Learn/CSS/Introduction_to_CSS/How_CSS_works}{CSS}) and Seletor Gadgets (\href {http://selectorgadget.com/}{SelectorGadget}).}{5}{section*.14}%
-\contentsline {subsection}{Application 1: Wikipedia}{7}{section*.15}%
+\contentsline {subsection}{Application 1: Wikipedia}{6}{section*.15}%
 \contentsline {subsubsection}{Table 1: Pre-IAAF (1881--1912)}{7}{section*.16}%
 \contentsline {paragraph}{Aside: Get CSS selectors via browser inspection tools}{8}{section*.17}%
-\contentsline {subsubsection}{Challenge}{9}{section*.18}%
+\contentsline {subsubsection}{Challenge}{8}{section*.18}%
 \contentsline {paragraph}{Table 2: Pre-automatic timing (1912--1976)}{9}{section*.19}%
-\contentsline {paragraph}{Table 3: Modern Era (1977 onwards)}{10}{section*.20}%
+\contentsline {paragraph}{Table 3: Modern Era (1977 onwards)}{9}{section*.20}%
 \contentsline {subsubsection}{Combined eras plot}{10}{section*.21}%
-\contentsline {subsection}{Application 2: New York Times}{12}{section*.22}%
-\contentsline {subsection}{Examining the New York Times Article}{12}{section*.23}%
-\contentsline {subsection}{Reading the web page into R}{12}{section*.24}%
-\contentsline {subsection}{Collecting all of the records}{13}{section*.25}%
-\contentsline {subsection}{Extracing the date}{14}{section*.26}%
-\contentsline {subsection}{Extracting the lie}{15}{section*.27}%
-\contentsline {subsection}{Extracting the explanation}{15}{section*.28}%
-\contentsline {subsection}{Extracting the URL}{16}{section*.29}%
-\contentsline {subsection}{Building the dataset}{16}{section*.30}%
-\contentsline {subsection}{Exporting the dataset to a CSV file}{17}{section*.31}%
-\contentsline {subsection}{Summary}{18}{section*.32}%
-\contentsline {subsection}{Summary}{18}{section*.33}%
-\contentsline {subsection}{Further resources and exercises}{19}{section*.34}%
+\contentsline {subsection}{Application 2: New York Times}{11}{section*.22}%
+\contentsline {subsection}{Examining the New York Times Article}{11}{section*.23}%
+\contentsline {subsection}{Reading the web page into R}{11}{section*.24}%
+\contentsline {subsection}{Collecting all of the records}{12}{section*.25}%
+\contentsline {subsection}{Extracting the date}{13}{section*.26}%
+\contentsline {subsection}{Extracting the lie}{14}{section*.27}%
+\contentsline {subsection}{Extracting the explanation}{14}{section*.28}%
+\contentsline {subsection}{Extracting the URL}{15}{section*.29}%
+\contentsline {subsection}{Building the dataset}{15}{section*.30}%
+\contentsline {subsection}{Exporting the dataset to a CSV file}{16}{section*.31}%
+\contentsline {subsection}{Full code summary}{16}{section*.32}%
+\contentsline {subsubsection}{\emph {Quick aside on HTML elements, nodes, and attributes}}{17}{section*.33}%
+\contentsline {subsection}{Summary}{17}{section*.34}%
+\contentsline {subsection}{Further resources and exercises}{18}{section*.35}%
