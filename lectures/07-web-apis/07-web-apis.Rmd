@@ -559,6 +559,8 @@ if (!knitr::is_html_output()){
 
 ## Further resources and exercises
 
+- There are thousands of easily accessible APIs out there. Here's a [list](https://github.com/public-apis/public-apis). 
+
 - [Here](https://www.pscp.tv/w/1ynKOpVnERrGR) is a short, live video stream that I did for scraping traffic fatality data from [LA's Open Data portal](https://data.lacity.org/). As Grant mentions in the video, this covers very similar ground to today's lecture. But he expands a bit on using API parameters to query (i.e. wrangle and summarise) data directly up on the host server before scraping it.
 
 - Hadley Wickham has started creating a package called [**httr2**](https://httr2.r-lib.org/index.html) that is a rewrite of **httr**. The goal is to be a more flexible tool for working with APIs, handle encryption, and report errors as R errors, which are more tractable for an R user. It's still in development, but you can take a look at the [introductory vignette](https://httr2.r-lib.org/articles/httr2.html) to see how it compares to the current version of **httr**.
@@ -569,6 +571,6 @@ if (!knitr::is_html_output()){
 
 - Greg Reda's "[Web Scraping 201: finding the API](http://www.gregreda.com/2015/02/15/web-scraping-finding-the-api/)" covers much of the same ground as we have here. While he focuses on Python tools, I've found it to be a handy reference over the years. (You can also take a look at the earlier posts in Greg's webscraping series --- [Part 1](http://www.gregreda.com/2013/03/03/web-scraping-101-with-python/) and [Part 2](http://www.gregreda.com/2013/04/29/more-web-scraping-with-python/) --- to see some Python equivalents of the `rvest` tools that we've been using.) 
 
-- Ian London (another Python user) has a nice blog post on "[Discovering hidden APIs](https://ianlondon.github.io/blog/web-scraping-discovering-hidden-apis/)" from Airbnb.
+- Ian London (another Python user) has a nice blog post on "[Discovering hidden APIs](https://ianlondon.github.io/blog/web-scraping-discovering-hidden-apis/)" from Airbnb. Leon Yin has a similar post entitled "[Journalists, You Should Be Looking for Undocumented APIs. Here’s How to Start](https://themarkup.org/levelup/2023/03/03/journalists-you-should-be-looking-for-undocumented-apis-heres-how-to-start)" with a [step-by-step tutorial](https://inspectelement.org/apis.html)
 
 - Finally, while the methods covered in the last two lectures should have you covered for 95% (99%?) of your webscraping needs, there are some corner cases where they won't work. In particular, you may run into cases where website content is rendered dynamically with JavaScript. In times like these, you'll need to spin up a so-called "headless" browser to extract the content. More [here](https://rud.is/b/2017/02/09/diving-into-dynamic-website-content-with-splashr/) and [here](https://twitter.com/grant_mcdermott/status/1192889722672041984).
