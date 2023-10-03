@@ -5,6 +5,10 @@
 [`Lectures`](#lectures) | [`Details`](#details) |
 [`FAQ`](#faq) | [`License`](#license)
 
+# Feedback
+
+I am constantly trying to improve this course. Provide [feedback](https://docs.google.com/forms/d/e/1FAIpQLScZyphM1fwb6GBH7HtGx4H_hwW6sGGVfZ3MXFnFLNlawQoOsQ/viewform?usp=sf_link).
+
 # Office hours:
 My office hours are: 
 - Tuesdays 4pm-5pm
