@@ -65,7 +65,7 @@ theme_set(theme_minimal())
 
 ## Webscraping basics
 
-The next two lectures are about getting data, or "content", off the web and onto our computers. We're all used to seeing this content in our browsers (Chrome, Firefox, etc.). So we know that it must exist somewhere. However, it's important to realise that there are actually two ways that web content gets rendered in a browser: 
+The next two lectures are about getting data, or "content", off the web and onto our computers. We're all used to seeing this content in our browsers (Chrome, Firefox, etc.). So we know that it must exist somewhere. However, it's important to realize that there are actually two ways that web content gets rendered in a browser: 
 
 1. Server-side
 2. Client side
@@ -76,7 +76,7 @@ You can read [here](https://www.codeconquest.com/website/client-side-vs-server-s
 - The scripts that "build" the website are not run on our computer, but rather on a host server that sends down all of the HTML code.
   - E.g. Wikipedia tables are already populated with all of the information --- numbers, dates, etc. --- that we see in our browser.
 - In other words, the information that we see in our browser has already been processed by the host server. 
-- You can think of this information being embeded directly in the webpage's HTML.
+- You can think of this information being embedded directly in the webpage's HTML.
 - **Webscraping challenges:** Finding the correct CSS (or Xpath) "selectors". Iterating through dynamic webpages (e.g. "Next page" and "Show More" tabs).
 - **Key concepts:** CSS, Xpath, HTML
   
@@ -94,7 +94,7 @@ The good news is that both server-side and client-side websites allow for webscr
 
 ### Caveat: Ethical ~~and legal~~ considerations
 
-The previous sentence elides some important ethical considerations. Just because you *can* scrape it, doesn't mean you *should*. Now, I first have to tell you that this paragraph used to contain a warning about the legal restrictions pertaining to webscraping activity. I've decided to drop those in the wake of the landmark [*hiQ Labs vs LinkedIn*](https://twitter.com/kjhealy/status/1255636154453549057) court ruling. (Short version: It is currently legal to scrape data from the web using automated tools, as long as the data are publicly available.) However, it's still important to realise that the tools we'll be using over these next two lectures are very powerful. A computer can process commands much, much faster than we can ever type them up manually. It's pretty easy to write up a function or program that can overwhelm a host server or application through the sheer weight of requests.Or, just as likely, the host server has built-in safeguards that will block you in case of a suspected malicious [attack](https://en.wikipedia.org/wiki/Denial-of-service_attack). We'll return to the "be nice" mantra at the end of this lecture, as well as in the next lecture. 
+The previous sentence elides some important ethical considerations. Just because you *can* scrape it, doesn't mean you *should*. Now, I first have to tell you that this paragraph used to contain a warning about the legal restrictions pertaining to webscraping activity. I've decided to drop those in the wake of the landmark [*hiQ Labs vs LinkedIn*](https://twitter.com/kjhealy/status/1255636154453549057) court ruling. (Short version: It is currently legal to scrape data from the web using automated tools, as long as the data are publicly available.) However, it's still important to realize that the tools we'll be using over these next two lectures are very powerful. A computer can process commands much, much faster than we can ever type them up manually. It's pretty easy to write up a function or program that can overwhelm a host server or application through the sheer weight of requests.Or, just as likely, the host server has built-in safeguards that will block you in case of a suspected malicious [attack](https://en.wikipedia.org/wiki/Denial-of-service_attack). We'll return to the "be nice" mantra at the end of this lecture, as well as in the next lecture. 
 
 One way to stay ethical is to use the [**polite**](https://github.com/dmi3kno/polite) package. I'll show you how to use this package alongside the **rvest** package below when we start scraping the NYT website. Essentially, polite checks the robots.txt file of a website to see if it is okay to scrape. If it is, then it will automatically add a delay between each request that you make. This is a good way to avoid overwhelming a host server. A robots.txt function is a file that is hosted on a website that tells you what you can and cannot scrape. You can find the robots.txt file for any website by typing the url of the website followed by "/robots.txt". For example, here is the [robots.txt](https://www.nytimes.com/robots.txt) file for the New York Times and the [robots.txt](https://en.wikipedia.org/robots.txt) for Wikipedia. Technically these are not legally binding, but they give guidance on how to proceed. Here is a deeper dive into [robots.txt](https://developers.google.com/search/docs/crawling-indexing/robots/intro) files and how they are used to help regulate traffic from search engines like Google. 
 
