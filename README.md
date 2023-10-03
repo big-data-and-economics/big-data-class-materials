@@ -17,10 +17,19 @@ You can book time [here](https://calendar.google.com/calendar/u/0/appointments/s
 *Note: While I have provided PDF versions of the lectures (in folders above), they are best viewed 
 in the original HTML format.*
 
+The course is broken up into three rough sections. 
+
+- Part 1 covers basics of empirical organization, data gathering, and organizing that are not "big data" specific
+- Part 2 covers data description, econometrics, and causal inference that are possible with big data
+- Part 3 covers machine learning techniques that are possible with big data
+
+Parts 2 and 3 will highlight examples of using big data to address social problems.
+
 This is in progress. Check back in for progress to be made. 
 
 | Date | Day | Topic | Download | Due | 
 |------|-----|-------|----------|-----|
+| **Data Science Basics** | | |
 | 2023-09-07  | Th | [Introduction to Big Data](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html) | N/A  |  |
 | 2023-09-12  | T | [Git slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-git/02-Git.html#1) by Grant McDermott | N/A | |
 | 2023-09-21  | Th | [Empirical Organization slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-empirical-workflow/02-empirical-workflow.html) | N/A | |
@@ -31,10 +40,12 @@ This is in progress. Check back in for progress to be made.
 | 2023-10-10 | T | Spatial Analysis with Opportunity Atlas | | |
 | 2023-10-12 | Th | Functions & Parallel Programming | | |
 | 2023-10-17 | T | SQL | | |
+| **Causal Inference** | | |
 | 2023-10-24 | T | Regression Review & Causal Inference | | |
 | 2023-10-26 | Th | Panel data and two-way fixed effects | | |
 | 2023-10-31 | T | Regression Discontinuity Design | | |
 | 2023-11-02 | Th | Applications: college wage premia, Neighborhoods and Mobility, MITA and mining | | |
+| **Machine Learning** | | |
 | 2023-11-07 | T | Machine Learning: Decision trees | | |
 | 2023-11-09 | Th | Machine Learning: Bias and Judicial Decisions | | |
 | 2023-11-14 | T | Machine Learning: Regressional penalization | | |
@@ -117,13 +128,55 @@ Economics is at the forefront of developing statistical methods for analyzing da
 - Extensions: Each of you gets three ''grace period'' days to extend deadlines. 
 - You can use these days in any way you like, but once they're gone, they're gone.
 
+### Bonus points:
+
+There are several opportunities for bonus points during the semester:
+
+1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material -- including these lecture notes. This can be to fix a typo or to fix a bug in the code.
+2. A 2.5% participation bonus on your final grade that I will award at my discretion.
+3. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. 
+
 ### Problem sets
+
+Throughout the course you will engage in problem sets that deal with actual data. These may seem out of step with what we do in class, but they are designed to get you to think about how to apply the tools we learn in class to real data. As the class progresses, the problem sets will align more neatly with the material.
 
 - Problem sets are coding assignments that get you to play with data using R
 - They are extremely challenging, but also extremely rewarding
 - With rare exceptions: You will not be given clear-cut code to copy and paste to accomplish these data cleaning tasks, but instead given a set of instructions and asked to figure out how to write code yourself
 - You are encouraged to work together on problem sets, but you must write up your own answers (unless it is a group assignment)
 - All problem sets will be completed and turned in as GitHub repositories
+
+**Grading**
+
+Your problem sets are graded on three dimensions: 
+
+1. Submission via GitHub (10%): Did you use GitHub to commit and push your code? Did you submit the assignment on time? Did you submit the assignment in the correct format?
+2. Quality of code (30%): Is it well-commented? Is it easy to follow? Can I run it?
+3. Quality of oresentation of graphs and tables (30%): Are they well-labeled? Do they have titles? Do they have legends? Are they formatted well?
+4. Quality of answers (30%): Are they clear? Do they answer the question?
+
+### Solutions 
+
+The solutions are made public once everyone has turned in the assignment (or the grace period has expired). 
+
+### Improving your grade
+
+In an effort to incentivize you to see coding as an ongoing process of learning and improvement, I will allow you to improve the coding and presentation quality portions of your grade on any problem set. However, you cannot just copy and paste the solutions. 
+
+Instead, you must provide carefully commented explanations of each step of the code -- whether from the solutions or of your own invention. This is a great way to learn, but it is also a lot of work. 
+
+*Example.* You might write add a comment like this to the top of your code:
+
+```r
+# Create directories, suppress warning that the directory already exists
+suppressWarnings({
+    dir.create(data)
+    dir.create(documentation)
+    dir.create(code)
+    dir.create(output)
+    dir.create(writing)
+})
+```
 
 ## FAQ
 
