@@ -2,8 +2,8 @@
 title: "Data Science for Economists"
 subtitle: "Lecture 7: Webscraping: (2) Client-side and APIs"
 author:
-  name: Grant R. McDermott
-  affiliation: University of Oregon | [EC 607](https://github.com/uo-ec607/lectures)
+  name: Kyle Coombs
+  affiliation: "Bates College | [EC/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
 # date: Lecture 7  #"`r format(Sys.time(), '%d %B %Y')`"
 output: 
   html_document:
@@ -54,8 +54,10 @@ Today I'll be using [JSONView](https://jsonview.com/), a browser extension that 
 
 ### R packages 
 
-- New: **jsonlite**, **httr**, **listviewer**, **usethis**, **fredr**
+- New: **jsonlite**, **httr**, **listviewer**, **usethis**, **fredr**, **tidycensus**
 - Already used: **tidyverse**, **lubridate**, **hrbrthemes**, **janitor**
+
+As a note, **httr2** is a newer version of **httr** that is currently in development. It is recommended to use it, but I'm sticking with **httr** for now since it has fewer bells and whistles to teach. I'll probably switch to **httr2** in the next iteration of this course once the package is more stable.
 
 Here's a convenient way to install (if necessary) and load all of the above packages.
 
@@ -63,11 +65,10 @@ Here's a convenient way to install (if necessary) and load all of the above pack
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, httr, lubridate, hrbrthemes, janitor, jsonlite, fredr, 
-               listviewer, usethis)
+               listviewer, usethis, tidycensus)
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
 ```
-
 
 ## Recap from last time
 
@@ -366,7 +367,21 @@ We're going to be revisiting (and setting) environment variables once we get to 
 
 One of the great features about the R (and data science community in general) is that someone has probably written a package that does all the heavy API lifting for you. We'll come across many examples during the remainder of this course, but for the moment I want to flag the **fredr** package ([link](http://sboysel.github.io/fredr/index.html)). Take a look at the "Get started" page to see how you could access the same GDP data as above, but this time going through a package. 
 
-The same goes for **censusapi** or **tidycensus**, which you can use on your problem set. These packages allow you to access data from the Census API. **censusapi** is a more general package that allows you to access any Census API endpoint. **tidycensus** is a more specific package that allows you to access a subset of the Census API endpoints (e.g. American Community Survey and the Decennial census), but does so in a more user-friendly way. As is always the case, you can use **httr** or **httr2** to do the same thing! 
+The same goes for **censusapi** or **tidycensus**, which you can use on your problem set. These packages allow you to access data from the Census API. **censusapi** is a more general package that allows you to access any Census API endpoint. **tidycensus** is a more specific package that allows you to access a subset of the Census API endpoints (e.g. American Community Survey and the Decennial census), but does so in a more user-friendly way. As is always the case, you can use **httr** or **httr2** to do the same thing! See the [Census Available API](https://www.census.gov/data/developers/data-sets.html) webpage for more on how to access different API endpoints.
+
+Do you learn to learn by doing? Well you're in luck! Many of these packages include a `show_call` option to see the actual API call that is being used. This can help you learn the ins and outs, so that you can eventually write your own API calls from scratch. For example, here's how to see the API call that **tidycensus** is using to get Median Household Income in the Past 12 Months (inflation-adjusted dollars) from 5-year American Community Survey for each county in Maine in 2017:
+
+```{r tidycensus}
+#library(tidycensus) # Already loaded
+get_acs(geography = "county", state="ME", variables = "B19013_001", year = 2017, show_call = TRUE,survey='acs5')
+```
+
+Curious how to figure out variable names in these APIs? Here are some options:
+
+1. Read the documentation. For example, the Census Bureau has a [variable lookup tool](https://api.census.gov/data/2017/acs/acs5/variables.html) for each year that you can use to search for variables. The syntax of the link is simple: https://api.census.gov/data/<year>/<survey>/<sub-survey>/variables.html But be warned, these lists are large and may freeze your browser if you have too much happening on your computer. 
+2. Ask ChatGPT or GitHub CoPilot to tell you the code for a given variable. 
+
+Want to find a list of all the Census APIs? Navigate to: https://api.census.gov/data.html. If you want to look within a specific year, https://api.census.gov/data/<year>.html, and so on.
 
 ## Application 3: World rugby rankings
 
@@ -559,7 +574,7 @@ if (!knitr::is_html_output()){
 
 ## Further resources and exercises
 
-- There are thousands of easily accessible APIs out there. Here's a [list](https://github.com/public-apis/public-apis). 
+- There are thousands of easily accessible APIs out there. Here's a [list](https://github.com/public-apis/public-apis). Look out for one on one of the problem sets. 
 
 - [Here](https://www.pscp.tv/w/1ynKOpVnERrGR) is a short, live video stream that I did for scraping traffic fatality data from [LA's Open Data portal](https://data.lacity.org/). As Grant mentions in the video, this covers very similar ground to today's lecture. But he expands a bit on using API parameters to query (i.e. wrangle and summarise) data directly up on the host server before scraping it.
 
