@@ -68,6 +68,7 @@ pacman::p_load(tidyverse, httr, lubridate, hrbrthemes, janitor, jsonlite, fredr,
                listviewer, usethis, tidycensus)
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
+
 ```
 
 ## Recap from last time
@@ -150,7 +151,7 @@ fromJSON("https://data.cityofnewyork.us/resource/nwxe-4ae8.json?$limit=5")
 
 Getting back on track, let's plot our tree data just to show it worked. One minor thing I want to point out is that `jsonlite::fromJSON()` automatically coerces everything into a character, so we'll also need to convert some columns to numeric before we plot.
 
-```{r nyc3}
+```{r nyc3, warning=FALSE}
 nyc_trees %>% 
   select(longitude, latitude, stump_diam, spc_common, spc_latin, tree_id) %>% 
   mutate_at(vars(longitude:stump_diam), as.numeric) %>% 
