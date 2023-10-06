@@ -31,33 +31,33 @@ Parts 2 and 3 will highlight examples of using big data to address social proble
 
 This is in progress. Check back in for progress to be made. 
 
-| Date | Day | Topic | Download | Due | 
+| Date | Day | Topic | Do before class | Due | 
 |------|-----|-------|----------|-----|
 | **Data Science Basics** | | |
-| 2023-09-07  | Th | [Introduction to Big Data](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html) | N/A  |  |
-| 2023-09-12  | T | [Git slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-git/02-Git.html#1) by Grant McDermott | N/A | |
-| 2023-09-21  | Th | [Empirical Organization slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-empirical-workflow/02-empirical-workflow.html) | N/A | |
-| 2023-09-26 | T | [R Basics](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/04-rlang/04-rlang.html) | N/A | |
-| 2023-09-28 | Th | [Data Table](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/05-datatable/05-datatable.html), [Tidyverse](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/05-tidyverse/05-tidyverse.html) | N/A | |
+| 2023-09-07  | Th | [Introduction to Big Data](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html) |  [Read and Install Ch 1, 4-8 of happygitwihtr](https://happygitwithr.com/) |  |
+| 2023-09-12  | T | [Git slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-git/02-Git.html#1) | [Work through Ch 9-19 of happygitwithr](https://happygitwithr.com/connect-intro) | |
+| 2023-09-21  | Th | [Empirical Organization slides](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-empirical-workflow/02-empirical-workflow.html) | [Read Code and Data for Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) | |
+| 2023-09-26 | T | [R Basics](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/04-rlang/04-rlang.html) | | |
+| 2023-09-28 | Th | [Data Table](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/05-datatable/05-datatable.html), [Tidyverse](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/05-tidyverse/05-tidyverse.html) | [Ch 1 DS4E](https://grantmcdermott.com/ds4e/tidyverse.html) | |
 | 2023-10-03 | T | [CSS](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/06-web-css/06-web-css.html), [Scraping Notes by Jesus Fernández Villaverde and Pablo Guerrón](https://www.sas.upenn.edu/~jesusfv/Lecture_HPC_10_Web_Scrapping.pdf) | [SelectorGadget](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb) (Chrome), [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/) (Firefox) | |
 | 2023-10-05 | Th | [APIs](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/07-web-apis/07-web-apis.html) | [JSONView](https://jsonview.com/), [Sign-up](https://research.stlouisfed.org/useraccount/apikey) and register for [Personal API Key](https://research.stlouisfed.org/useraccount/apikey) | |
-| 2023-10-10 | T | Spatial Analysis with Opportunity Atlas | | |
-| 2023-10-12 | Th | Functions & Parallel Programming | | |
+| 2023-10-10 | T | Spatial Analysis with Opportunity Atlas | [Watch Geography of Upward Mobility in America starting at 39min](https://www.youtube.com/watch?v=P0NvsWDKwvs&t=2340s) | |
+| 2023-10-12 | Th | Functions & Parallel Programming | [Refer to Chapters 2-4 of DS4E](https://grantmcdermott.com/ds4e/funcs-intro.html) | |
 | 2023-10-17 | T | SQL | | |
 | **Causal Inference** | | |
-| 2023-10-24 | T | Regression Review & Causal Inference | | |
-| 2023-10-26 | Th | Panel data and two-way fixed effects | | |
-| 2023-10-31 | T | Regression Discontinuity Design | | |
-| 2023-11-02 | Th | Applications: college wage premia, Neighborhoods and Mobility, MITA and mining | | |
+| 2023-10-24 | T | Regression Review & Causal Inference | Read [Effect Ch 13](https://theeffectbook.net/ch-StatisticalAdjustment.html) or [Mixtape Ch 2](https://mixtape.scunning.com/02-probability_and_regression), [Watch Causal Effects of Neighborhoods](https://youtu.be/_7epNon8wi8?si=VM_f24hrwhVzwE9K) | |
+| 2023-10-26 | Th | Panel data and two-way fixed effects | [Watch first 40min of Teachers and Charter Schools](https://youtu.be/iIIlb1hTbTc?si=rGHD2LCckhG7Rdwn) | |
+| 2023-10-31 | T | Regression Discontinuity Design | Read [Effect Ch 20](https://theeffectbook.net/ch-RegressionDiscontinuity.html) or [Mixtape Ch 6](https://mixtape.scunning.com/06-regression_discontinuity) | |
+| 2023-11-02 | Th | Applications: college wage premia, Neighborhoods and Mobility, MITA and mining | [Watch first 25min of The Causal Effect of Colleges](https://youtu.be/yo3axaZBm_g?si=3Jaw7B3Dzlvn3Cnj) | |
 | **Machine Learning** | | |
-| 2023-11-07 | T | Machine Learning: Decision trees | | |
-| 2023-11-09 | Th | Machine Learning: Bias and Judicial Decisions | | |
-| 2023-11-14 | T | Machine Learning: Regressional penalization | | |
-| 2023-11-16 | Th | Machine Learning: Causal Forests, at-risk youth application | | |
-| 2023-11-28 | T | Regular expressions, WordClouds | | |
-| 2023-11-30 | Th | Sentiment Analysis | | |
-| 2023-12-05 | T | Topics Modeling, LLMs | | |
-| 2023-12-07 | Th | AI and bias | | |
+| 2023-11-07 | T | Machine Learning: Decision trees | [Read ISLR 8.1](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf) | |
+| 2023-11-09 | Th | Machine Learning: Bias and Judicial Decisions | [Watch Improving Judicial Decisions](https://youtu.be/AuNzoCk_uxM?si=dFpn0aQel4amdH-_) | |
+| 2023-11-14 | T | Machine Learning: Regressional penalization | [Read ISLR Ch 6.1, 6.2](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf)  | |
+| 2023-11-16 | Th | Machine Learning: Causal Forests, at-risk youth application | [Read ISLR 8.2](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf) | |
+| 2023-11-28 | T | Regular expressions, WordClouds | [Read Gentzkow (2019): Text as Data](https://bates.primo.exlibrisgroup.com/discovery/openurl?institution=01CBB_BCOLL&vid=01CBB_BCOLL:BATES&volume=57&date=2019&aulast=Gentzkow&issue=3&issn=0022-0515&spage=535&id=doi:10.1257%2Fjel.20181020&auinit=M&title=Journal%20of%20Economic%20Literature&atitle=Text%20as%20data&sid=google) | |
+| 2023-11-30 | Th | Sentiment Analysis | [Read Stephens-Davidowitz (2014)](https://www.sciencedirect.com/science/article/pii/S0047272714000929) | |
+| 2023-12-05 | T | Topics Modeling, LLMs | [Read Ash and Hansen (2023): Text Algorithms](https://www.annualreviews.org/doi/pdf/10.1146/annurev-economics-082222-074352) | |
+| 2023-12-07 | Th | AI and bias | Read [Rambachan et al (2020)](https://www.jstor.org/stable/pdf/27042527.pdf) and [Cowgill et al. (2019)](https://conference.nber.org/confer/2019/YSAIf19/SSRN-id3361280.pdf) | |
 
 ## Goals for this course
 
@@ -98,9 +98,17 @@ This course is taught in R, but the goal is not for students to learn individual
 
 ### Staying organized
 
-- [Code and Data for the Social Sciences: A Practioner's Guide](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) by Matthew Gentzkow and Jesse Shapiro
+- [Code and Data for the Social Sciences: A Practitioner's Guide](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) by Matthew Gentzkow and Jesse Shapiro
 - [Coding for Economists: A Language-Agnostic Guide](https://scholar.harvard.edu/sites/scholar.harvard.edu/files/ristovska/files/coding_for_econs_20190221.pdf)
 - [happygitwithr](https://happygitwithr.com/) by Jenny Bryan
+
+### Large Language Models
+
+You are actively encouraged to use generative AI assistants in this class. These can be used to improve your code, refine your writing, iterate on your ideas, and more.
+
+- [Sign-up for ChatGPT](https://chat.openai.com/auth/login)
+- [Sign-up for GitHub CoPilot](https://github.com/features/copilot)
+- [Tips to get better with ChatGPT](https://raw.githack.com/tyleransom/DScourseS23/master/LectureNotes/27-GPT/27slides.html#1)
 
 ### Student Academic Support Center
 Scheduled hours for R held in the Student Academic Support Center (SASC) of the Library are:
