@@ -164,9 +164,9 @@ Throughout the course you will engage in problem sets that deal with actual data
 
 Your problem sets are graded on three dimensions: 
 
-1. Submission via GitHub (10%): Did you use GitHub to commit and push your code? Did you submit the assignment on time? Did you submit the assignment in the correct format?
+1. Submission via GitHub (10%): Did you use GitHub to stage, commit, and push your code? Did you submit the assignment on time? Did you submit the assignment in the correct format?
 2. Quality of code (30%): Is it well-commented? Is it easy to follow? Can I run it?
-3. Quality of oresentation of graphs and tables (30%): Are they well-labeled? Do they have titles? Do they have legends? Are they formatted well?
+3. Quality of presentation of graphs and tables (30%): Are they well-labeled? Do they have titles? Do they have legends? Are they formatted well?
 4. Quality of answers (30%): Are they clear? Do they answer the question?
 
 ### Solutions 
@@ -228,7 +228,7 @@ This is the easiest option, but it does mean you will have to clone multiple for
 
 **Option 2: Use the command line (Git Bash, WSL, Terminal)**
 
-1. Create a fork of this repository (called the upstream repository) if you not before
+1. Create a fork of this repository (called the upstream repository) if you have not before
 2. Clone the forked repo to your local computer
 3. Add the original repo as a remote called `upstream` (enter `git remote add upstream <upstream-repo-url>`)
 4. Fetch the upstream repo (`git fetch upstream`)
