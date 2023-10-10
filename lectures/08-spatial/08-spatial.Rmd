@@ -13,7 +13,7 @@ output:
     toc: yes
     toc_depth: 4
     toc_float: yes
-    keep_md: false
+    keep_md: true
     keep_tex: false ## Change to true if want keep intermediate .tex file
     css: css/preamble.css ## For multi-col environments
   pdf_document:
@@ -140,7 +140,7 @@ me = tidycensus::get_acs(
 
 [**tigris**](https://github.com/walkerke/tigris) is explained in greater detail below, but it contains just about every TIGER shapefile that you could want, which come with more spatial info than **tidycensus** will give. For example, here's how we can download the Maine counties shapefile:
 
-```{r maine, message=FALSE,warning=FALSE}
+```{r maine, message=F, results = FALSE}
 # library(tigris) ## Already loaded
 me = tigris::counties(state='ME',
   year=2010)
@@ -312,14 +312,14 @@ A sub-genre of binary geometric operations falls into the category of logic rule
 
 For example, we can calculate the intersection of different spatial objects using `sf::st_intersection()`. For this next example, I'm going to use two new spatial objects: 1) A state map of the USA from the **maps** package and 2) the primary roads from the **tigris** package. Don't worry too much about the process used for loading these datasets; I'll cover that in more depth shortly. For the moment, just focus on the idea that we want to see which adminstrative regions are intersected by the river network. Start by plotting all of the data to get a visual sense of the overlap:
 
-```{r usa}
+```{r usa, message=F, results = FALSE}
 ## Get the data
 usa = st_as_sf(map('state', plot = FALSE, fill = TRUE))
 road = tigris::primary_roads()
-
+```
 ## Make sure they have the same projection
 road = st_transform(road, crs = st_crs(usa))
-
+```{r usa_plot}
 ggplot() + 
   geom_sf(data = usa, alpha = 0.8, fill = "white", col = "black") + 
   geom_sf(data = road, col = "red", lwd = 1) + 
