@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Big Data and Economics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kyle Coombs" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Big Data and Economics
+]
+.subtitle[
+## Neighborhoods and Upward Mobility
+]
+.author[
+### Kyle Coombs
+]
+.date[
+### Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics">EC/DCS 368</a>
+]
+
+---
+
+name: toc
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+
+# Table of contents
+
+1. [Prologue](#prologue)
+
+2. [Geographical Variation in Upward Mobility](#geo-vary)
+
+3. [Characteristics of High-Mobility Areas](#characteristics)
+
+4. [Spatial Correlation and Decay](#spatial)
+
+---
+class: inverse, center, middle
+name: prologue
+
+# Prologue
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+&lt;img src="pics/fading_dream.png" width="90%" style="display: block; margin: auto;" /&gt;
+Source: [Chetty et al. (2014)](https://opportunityinsights.org/paper/recentintergenerationalmobility/)
+
+---
+# Why is the "American Dream" Fading? 
+
+- Why are children's chances of climbing the income ladder falling in the USA?
+  
+  - What can be done to reverse this trend?
+
+- Need to go beyond macroeconomic data to ansawer this question. Why?
+  
+  - Too many changes happening over time and across space to separate out the causal factors.
+
+  - Also: only a handful of data points (classic macro problem)
+
+---
+# Enter the Opportunity Atlas 
+
+- Created in 2018, the Opportunity Atlas offers one measure of how income mobility differs by location in the USA
+  
+  - If some areas have more mobility than others, can we learn why and apply those lessons elsewhere?
+
+- Data sources: 
+  - Anonymized Census data (2000, 2010 ACS) covering U.S. population
+  - Federal income tax returns from 1989-2015.
+
+- Method: Link parents based on dependent claiming on tax returns 
+
+- Target sample: Children born between 1978-1983 (U.S. citizens and authorized immigrants who arrived as children)
+
+There's bound to be a messy with this much data, so they create an analysis sample
+
+- **Analysis sample**: 20.5 million children, 96% coverge of target sample
+
+---
+# Parent and Children Incomes in Tax Data
+
+- Parent household incomes: average income reported on Form 1040 tax return from 1994-2000
+
+- Children incomes measured from tax returns in 2014-15 (ages 31-37)
+
+- But income levels differ over time! How do we compare them?
+
+  - Use percentile ranks in the *national* distribution
+  - Rank children relative to others born in same year and parents relative to other parents
+
+- **Income percentile**: The fraction of the national income distribution that a person's income exceeds
+
+- Take average income percentile of children by parental income percentile
+
+---
+# Average Child Income Percentile by Parent Income Percentile
+&lt;img src="09-oppatlas_files/figure-html/oppatlas-1.svg" style="display: block; margin: auto;" /&gt;
+Source: [The Opportunity Atlas](https://opportunityinsights.org/data/)
+
+---
+class: inverse, center, middle
+name: geo-vary
+# Geographic Variation in Upward Mobility
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+# What is mobility for each Census tract? 
+
+- Run this same regression of income ranks by Census tract in the USA 
+  - Census tracts are small geographic areas that contain 1,200-8,000 people
+  
+- Technical detail: Weight each child by fraction of childhood (up to 23) in a given area
+  - Accounts for movement across areas during childhood
+
+---
+&lt;img src="pics/op_atlas_map.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+*Note: Blue = More Upward Mobility, Red = Less Upward Mobility*
+Source: [The Opportunity Atlas](https://opportunityinsights.org/data/)
+
+---
+class: inverse, center, middle
+name: characteristics
+# Characteristics of High-Mobility Areas
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+# Why does upward mobility differ across areas? 
+
+- Why do some areas have more upward mobility than others?
+
+- Spatial and correlational analysis is a good place to start
+
+- What are potential characteristics of high mobility areas?
+
+  - Better jobs?
+  - Better schools? 
+  - Institutional differences?
+  - Culture? 
+
+---
+# Upward Mobility vs. Job Growth in 30 Largest Metro Areas
+
+&lt;img src="pics/metro_areas.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+*Note: You'll make a version of this on your problem set.*
+*Source: [Using Big Data to Solve Economic and Social Problems: Neighborhood Effects lecture](https://opportunityinsights.org/wp-content/uploads/2019/05/Lecture-2-neighborhood-effects-1.pdf)*
+
+---
+# Actual correlates
+
+1. Segregation: Greater racial and income segregation associated with lower levels of mobility
+
+2. Income Inequality: Places with smaller middle class have less mobility
+
+3. School Quality: Higher expenditure, smaller classes, higher test scores correlated with more mobility
+
+4. Family Structure: 
+  - Areas with more single parents have lower mobility
+  - Strong correlation even for kids whose *own* parents are married
+
+5. Social Capital
+  - It takes a village to raise a child
+  - Chetty et al. (2023) leveraged Facebook Data to create the Social Capital Atlas
+
+We'll look at some of these relationships (and their applications) in more detail in the coming weeks.
+
+---
+class: inverse, center, middle
+name: spatial
+
+# Spatial Correlation and Decay
+
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+# Big question: why don't people move? 
+
+- If some areas have more mobility than others, why don't people move to those areas?
+
+- Is it rent? 
+
+---
+# The Price of Opportunity in Seattle
+Upward Mobility vs Median Rent by Neighborhood
+
+&lt;img src="pics/seattle_opportunity.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+# Big question: why don't people move? 
+
+- Initial experiments indicate benefits exist from moving (we'll see later)
+
+- If some areas have more mobility than others, why don't people move to those areas?
+
+- Is it rent? 
+
+- Other costs of moving? 
+
+- Maybe they do not want to move as far? 
+
+- Overall, this is not a highly effective approach
+
+---
+# Well what if we invest locally? 
+
+- What if we invest in the areas that have low mobility? (place-based approach)
+
+- Would there be spillovers between locations? 
+  - It is tough to improve one neighborhood (e.g. a tract), let alone many at once
+  - Do we have to improve them all at once to help people? 
+
+- The answer to this question changes the policy approach
+
+---
+# Spatial decay of Correlation between Upward Mobility and Tract-level poverty
+
+&lt;img src="pics/spatial_correlation_decay.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+# Toolkit
+
+- We need to beef up our spatial analysis tools
+
+- That's what we'll do today
+
+---
+class: inverse, center, middle
+
+# Next lecture: Regression and Opportunity Atlas 
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
