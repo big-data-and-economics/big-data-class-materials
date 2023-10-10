@@ -13,7 +13,7 @@ output:
     toc: yes
     toc_depth: 4
     toc_float: yes
-    keep_md: false
+    keep_md: true
     keep_tex: false ## Change to true if want keep intermediate .tex file
     css: css/preamble.css ## For multi-col environments
   pdf_document:
