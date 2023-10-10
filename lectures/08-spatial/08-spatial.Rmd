@@ -78,10 +78,8 @@ Finally, we'll be accessing some data from the US Census Bureau through the [tid
 tidycensus::census_api_key("PLACE_YOUR_API_KEY_HERE", install = TRUE)
 ```
 
-## Also tell the tigris package to automatically cache its results to save on
-## repeated downloading. I recommend adding this line to your ~/.Rprofile file
-## so that caching is automatically enabled for future sessions. A quick way to
-## do that is with the `usethis::edit_r_profile()` function.
+Also tell the tigris package to automatically cache its results to save on repeated downloading. I recommend adding this line to your ~/.Rprofile file
+so that caching is automatically enabled for future sessions. A quick way to do that is with the `usethis::edit_r_profile()` function.
 
 ```{r,eval=FALSE}
 options(tigris_use_cache=TRUE)
