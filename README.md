@@ -121,7 +121,14 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 - Thursday | 12-4pm, 6-7:30pm
 - Friday | 11am-12pm
 
-I will also try to get a Course-Attached Tutor for this class.
+#### Course-Attached Tutor
+
+Chrissy Aman is our Course-Attached tutor. She will host office hours in the SASC and will be available for individual appointments. Her hours are:
+
+- Fridays at 6:45pm
+- Sundays at TBD
+
+Chrissy can help you troubleshoot *R*. She does not know have solution to the problem sets, but she can help you figure them out. 
 
 ## Details
 
