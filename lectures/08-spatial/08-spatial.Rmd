@@ -78,6 +78,14 @@ Finally, we'll be accessing some data from the US Census Bureau through the [tid
 tidycensus::census_api_key("PLACE_YOUR_API_KEY_HERE", install = TRUE)
 ```
 
+## Also tell the tigris package to automatically cache its results to save on
+## repeated downloading. I recommend adding this line to your ~/.Rprofile file
+## so that caching is automatically enabled for future sessions. A quick way to
+## do that is with the `usethis::edit_r_profile()` function.
+
+```{r,eval=FALSE}
+options(tigris_use_cache=TRUE)
+```
 
 ## Introduction: CRS and map projections
 
@@ -132,7 +140,7 @@ me = tidycensus::get_acs(
 
 [**tigris**](https://github.com/walkerke/tigris) is explained in greater detail below, but it contains just about every TIGER shapefile that you could want, which come with more spatial info than **tidycensus** will give. For example, here's how we can download the Maine counties shapefile:
 
-```{r maine, message=FALSE}
+```{r maine, message=FALSE,warning=FALSE}
 # library(tigris) ## Already loaded
 me = tigris::counties(state='ME',
   year=2010)
