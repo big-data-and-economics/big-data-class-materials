@@ -1,5 +1,5 @@
 ---
-title: "Data Science for Economists"
+title: "Big Data and Economics"
 # subtitle: "<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>"
 subtitle: "Lecture 5: Data cleaning & wrangling: (1) Tidyverse"
 author: "Grant McDermott, adapted by Kyle Coombs"

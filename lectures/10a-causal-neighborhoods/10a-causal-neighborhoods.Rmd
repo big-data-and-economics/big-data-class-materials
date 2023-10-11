@@ -1,0 +1,721 @@
+---
+title: Big Data and Economics
+subtitle: Causal Effects of Neighborhoods
+author: Kyle Coombs
+date: "Bates College | [ECON/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)"
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts,css/my-css.css] 
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+---
+name: toc
+
+```{css, echo=FALSE}
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+```
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  #comment = "#>",
+  fig.align='center', fig.width=6, fig.height=4, 
+  # out.width=748px, #out.length=520.75px,
+  dpi=300, #fig.path='Figs/',
+  cache=T, warning=F, message=F
+  )
+
+#knitr::opts_chunk$set(dev = "svg")
+
+devtools::install_github("dill/emoGG")
+library(pacman)
+p_load(
+  broom, here, tidyverse,
+  emoGG, latex2exp, ggplot2, ggthemes, viridis, extrafont, gridExtra,
+  kableExtra,
+  data.table,
+  dplyr,
+  lubridate,
+  magrittr, knitr, parallel
+)
+# Define pink color
+red_pink <- "#e64173"
+turquoise <- "#20B2AA"
+grey_light <- "grey70"
+grey_mid <- "grey50"
+grey_dark <- "grey20"
+purple <- "#6A5ACD"
+# Dark slate grey: #314f4f
+# Knitr options
+# A blank theme for ggplot
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -0.5, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_simple <- theme_bw() + theme(
+  line = element_blank(),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text.x = element_text(size = 18, family = "STIXGeneral"),
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  # plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_math <- theme_void() + theme(
+  text = element_text(family = "MathJax_Math"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_serif <- theme_void() + theme(
+  text = element_text(family = "MathJax_Main"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes <- theme_void() + theme(
+  text = element_text(family = "Fira Sans Book"),
+  axis.title = element_text(size = 18),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = grey_light,
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+# theme_set(theme_gray(base_size = 20))
+```
+
+# Table of contents
+
+- [Prologue](#prologue)
+
+- [The challenges](#challenges)
+
+- [Example: Causal Effects of Neighborhoods](#Neighborhoods)
+
+---
+name: prologue
+class: inverse, center, middle
+# Prologue
+
+---
+
+# Prologue
+
+- We saw in the Opportunity Atlas that neighborhood income mobility is correlated with many outcomes 
+
+- But are any of these correlations .pink[causal]?
+
+- If so, we should be able to .pink[change] neighborhood characteristics to .pink[change] outcomes
+
+- .pink[How] do we know if a correlation is causal?
+
+---
+
+# Prediction vs. causation
+
+Most tasks in econometrics boil down to one of two goals:
+
+$$
+\begin{align}
+  y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_k x_k + u
+\end{align}
+$$
+
+--
+
+1. .hi-purple[Prediction:] Accurately and dependably .purple[predict/forecast] $\color{#6A5ACD}{y}$ using on some set of explanatory variables—doesn't need to be $x_1$ through $x_k$. Focuses on $\color{#6A5ACD}{\hat{y}}$. $\beta_j$ doesn't really matter.
+
+--
+
+1. .hi[Causal estimation:].super[.pink[†]] Estimate the actual data-generating process—learning about the true, population model that explains .pink[how] $\color{#e64173}{y}$ .pink[changes when we change] $\color{#e64173}{x_j}$—focuses on $\color{#e64173}{\beta_j}$. Accuracy of $\hat{y}$ is not important.
+
+.footnote[
+.pink[†] Often called *causal identification*.
+]
+
+--
+
+For the rest of the term, we will focus on .hi[causally estimating] $\color{#e64173}{\beta_j}$.
+---
+name: challenges
+
+# The challenges
+
+As you saw in the data-analysis exercise, determining and estimating the true model can be pretty difficult—both .purple[practically] and .pink[econometrically].
+
+--
+
+.pull-left[.purple[
+**Practical challenges**
+
+- Which variables?
+- Which functional form(s)?
+- Do data exist? How much?
+- Is the sample representative?
+]]
+
+--
+
+.pull-right[.pink[
+**Econometric challenges**
+
+- Omitted-variable bias
+- Reverse causality
+- Measurement error
+- How precise can/must we be?
+]]
+
+--
+
+Many of these challenges relate to .hi-slate[exogeneity], _i.e._, $\color{#314f4f}{\mathop{\boldsymbol{E}}\left[ u_i | X \right] = 0}$.
+--
+<br>Causality requires us to .hi-slate[hold all else constant] (*ceterus paribus*).
+
+---
+
+# It's complicated
+
+Occasionally, .hi[*causal*] relationships are simply/easily understood, _e.g._,
+
+--
+
+- What .pink[caused] the forest fire?
+- .pink[How] did this baby get here?
+
+--
+
+Generally, .hi[*causal*] relationships are complex and challenging to answer, _e.g._,
+
+--
+
+- What .pink[causes] some countries to grow and others to decline?
+- What .pink[caused] the capital riot?
+- Did lax regulation .pink[cause] Texas's recent energy problems?
+- .pink[How] does the number of police officers affect crime?
+- What is the .pink[effect] of better air quality on test scores?
+- Do longer prison sentences .pink[decrease] crime?
+- How did cannabis legalization .pink[affect] mental health/opioid addiction?
+---
+
+# Correlation ≠ Causation
+
+You've likely heard the saying
+
+> Correlation is not causation.
+
+The saying is just pointing out that there are violations of exogeneity.
+
+--
+
+Although correlation is not causation, .hi[causation *requires* correlation].
+
+--
+
+.hi-slate[New saying:]
+
+> Correlation plus exogeneity is causation.
+
+---
+layout: false
+class: clear, middle
+
+Let's work through a few examples.
+
+---
+class: inverse, center, middle
+# Causation
+
+---
+<!-- TK: Switch this to look at affordable housing cash grants. -->
+name: fertilizer
+
+# Example: The causal effect of fertilizer.super[.pink[†]]
+
+.footnote[
+.pink[†] Many of the early statistical and econometric studies involved agricultural field trials.
+]
+
+Suppose we want to know the causal effect of fertilizer on corn yield.
+
+--
+
+**Q:** Could we simply regress yield on fertilizer?
+--
+<br>**A:** Probably not (if we want the causal effect).
+--
+<br><br>**Q:** Why not?
+--
+<br>**A:** Omitted-variable bias: Farmers may apply less fertilizer in areas that are already worse on other dimensions that affect yield (soil, slope, water).<br>.pink[Violates *all else equal* (exogeneity). Biased and/or spurious results.]
+--
+<br><br>**Q:** So what *should* we do?
+--
+<br>**A:** .hi[Run an experiment!]
+--
+ 💩
+---
+
+# Example: The causal effect of fertilizer
+
+Randomized experiments help us maintain *all else equal* (exogeneity).
+
+--
+
+We often call these experiments .hi[*randomized control trials*] (RCTs)..super[.pink[†]]
+
+.footnote[
+.pink[†] Econometrics (and statistics) borrows this language from biostatistics and pharmaceutical trials.
+]
+
+--
+
+Imagine an RCT where we have two groups:
+
+- .hi-slate[Treatment:] We apply fertilizer.
+- .hi-slate[Control:] We do not apply fertilizer.
+
+--
+
+By randomizing plots of land into .hi-slate[treatment] or .hi-slate[control], we will, on average, include all kinds of land (soild, slope, water, *etc.*) in both groups.
+
+--
+
+*All else equal*!
+---
+class: clear
+
+.hi-slate[54 equal-sized plots]
+```{r, fertilizer_plot1, echo = F}
+xd <- 9
+yd <- 6
+set.seed(123)
+fert_df <- expand.grid(x = 1:xd, y = 1:yd) %>%
+  mutate(
+    q = x + y + 1.25 * rnorm(xd*yd),
+    trt = sample(x = c(T, F), size = xd*yd, replace = T, prob = c(0.51, 0.49)),
+  ) %>%
+  arrange(-y, x) %>%
+  mutate(id = 1:(xd*yd) %>% str_pad(2, "left", "0")) %>%
+  arrange(y, x)
+ggplot(data = fert_df, aes(x, y)) +
+geom_tile(color = "grey40", fill = "grey93", size = 0.2) +
+geom_text(aes(label = id), color = "grey45", size = 5, family = "Roboto Mono") +
+theme_void() +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality]
+```{r, fertilizer_plot2, echo = F}
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_1, echo = F}
+set.seed(246)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, 1), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_2, echo = F}
+set.seed(246)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, 2), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_3, echo = F}
+set.seed(246)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, 3), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_4, echo = F}
+set.seed(246)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, 4), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_5, echo = F}
+set.seed(246)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, 5), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_6, echo = F}
+set.seed(246)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, 6), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_7, echo = F}
+set.seed(246)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, 7), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_8, echo = F}
+set.seed(246)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, 8), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_9, echo = F}
+set.seed(246)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, 9), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_10, echo = F}
+set.seed(246)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, round(xd * yd / 2, 0)), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_11, echo = F}
+set.seed(248)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, round(xd * yd / 2, 0)), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+```{r, fertilizer_plot3_12, echo = F}
+set.seed(250)
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = sample_n(fert_df, round(xd * yd / 2, 0)), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+---
+
+# Example: The causal effect of fertilizer
+
+We can estimate the .hi[causal effect] of fertilizer on crop yield by comparing the average yield in the treatment group (💩) with the control group (no 💩).
+
+$$
+\begin{align}
+  \overline{\text{Yield}}_\text{Treatment} - \overline{\text{Yield}}_\text{Control}
+\end{align}
+$$
+
+--
+
+Alternatively, we can use the regression
+
+--
+
+$$
+\begin{align}
+  \text{Yield}_i = \beta_0 + \beta_1 \text{Trt}_i + u_i \tag{1}
+\end{align}
+$$
+
+where $\text{Trt}_i$ is a binary variable (=1 if plot $i$ received the fertilizer treatment).
+
+--
+
+**Q:** Should we expect $(1)$ to satisfy exogeneity? Why?
+--
+<br>**A:** On average, .hi[randomly assigning treatment should balance] trt. and control across the other dimensions that affect yield (soil, slope, water).
+
+---
+# Causal Effects of Neighborhoods vs. Sorting
+
+- Two very different explanations for variation in children's outcomes across areas
+
+  1. Sorting: different people live in different places
+
+  2. Causal effects: places have a causal effect on upward mobility for a given person
+
+---
+# Identifying Causal Effects of Neighborhoods
+
+- Ideal experiment: randomly assign children to neighborhoods and compare outcomes in adulthood
+  - Any issues with this?
+
+- How can we approximate this same thing?
+
+<br>
+
+- Chetty and Hendren (2018) use a .hi[quasi-experimental] design:
+
+  - Sample of 3 million families that move across Census tracts
+
+  - Key idea: exploit variation in the _age of child_ when the family moves to identify causal effects of neighborhood
+
+
+---
+# Moving a short distance in Boston
+
+<figure>
+    <img src="pics/roxbury_to_savin_oppatlas.png" height="50%"
+         alt="Roxbury to Savin Hill in Opportunity Atlas">
+    <figcaption>Opportunity Atlas of MA: Savin Hill outlined, Roxbury nextdoor.</figcaption>
+</figure>
+
+---
+# Moving to a Higher Mobility Neighborhood and Income 
+
+<figure>
+    <img src="./pics/blank_income_gain.png" height="50%"
+         alt="Blank graph space with income gain on y-axis and age of move on x-axis">
+    <figcaption>Chetty and Hendren (2018).</figcaption>
+</figure>
+
+---
+# Moving to a Higher Mobility Neighborhood and Income
+
+<figure>
+    <img src="./pics/first_data_point_income_gain.png" height="50%"
+         alt="First data point on graph with income gain on y-axis and age of move on x-axis. Data point is for moving at age 2 from Roxbury to Savin Hill leads to average earnings of $38K">
+    <figcaption>Chetty and Hendren (2018).</figcaption>
+</figure>
+
+---
+# Moving to a Higher Mobility Neighborhood and Income
+
+<figure>
+    <img src="./pics/all_data_points_income_gain.png" height="50%"
+         alt="All data points on graph with income gain on y-axis and age of move on x-axis for ages up to 23 with a downward slope from $38K to $23K.">
+    <figcaption>Chetty and Hendren (2018).</figcaption>
+</figure>
+
+---
+# Moving to a Higher Mobility Neighborhood and Income
+
+<figure>
+    <img src="./pics/level_off_data_points_income_gain.png" height="50%"
+         alt="All data points on graph with income gain on y-axis and age of move on x-axis for ages up to 28 with a downward slope from $38K to $23K at age 23, then levels off to 28.">
+    <figcaption>Chetty and Hendren (2018).</figcaption>
+</figure>
+
+---
+# We have to make some assumptions
+
+- All causal work requires assumptions
+
+- .pink[Key assumption:] _timing_ of moves between areas is unrelated to other determinants of a child's outcomes
+
+- Why might this not hold? 
+
+--
+
+  1. Parents who move to good areas when their children ar young might be different from those who move later 
+
+  2. Moving may be related to other factors (e.g., change in parents' job) that affect children directly
+
+---
+# "Testing" assumptions
+
+- You cannot fully test assumptions, but you can look for evidence they are violated
+
+- Two approaches to evaluate validity of timing of move assumption:
+
+  1. Compare siblings' outcomes to control for family "fixed" effects
+
+  2. Use differences in neighborhood effects across subgroups to implement "placebo" tests
+
+  - Ex: some places (e.g. low-crime areas) have better outcomes for boys than girls
+
+  - Move to place where boys have higher earnings --> son improves in proportion to exposure, but not daughter
+
+- Conclude that ~2/3 of variation in upward mobility across areas is due to causal effects of neighborhoods
+
+---
+class: inverse, center, middle
+
+# Next lecture: Fixed effects and difference-in-differences
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
+#print(infile)
+pagedown::chrome_print(input = infile, timeout = 100)
+```
+
+

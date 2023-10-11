@@ -110,6 +110,7 @@ You are actively encouraged to use generative AI assistants in this class. These
 - [Sign-up for ChatGPT](https://chat.openai.com/auth/login)
 - [Sign-up for GitHub CoPilot](https://github.com/features/copilot)
 - [Tips to get better with ChatGPT](https://raw.githack.com/tyleransom/DScourseS23/master/LectureNotes/27-GPT/27slides.html#1)
+- [Integration of AI with R](https://intro2r.library.duke.edu/ai.html)
 
 ### Student Academic Support Center
 Scheduled hours for R held in the Student Academic Support Center (SASC) of the Library are:

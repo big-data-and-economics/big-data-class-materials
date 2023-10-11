@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Big Data and Economics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kyle Coombs" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Big Data and Economics
+]
+.subtitle[
+## Causal Effects of Neighborhoods
+]
+.author[
+### Kyle Coombs
+]
+.date[
+### Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics">ECON/DCS 368</a>
+]
+
+---
+
+name: toc
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+
+# Table of contents
+
+- [Prologue](#prologue)
+
+- [The challenges](#challenges)
+
+- [Example: Causal Effects of Neighborhoods](#Neighborhoods)
+
+---
+name: prologue
+class: inverse, center, middle
+# Prologue
+
+---
+
+# Prologue
+
+- We saw in the Opportunity Atlas that neighborhood income mobility is correlated with many outcomes 
+
+- But are any of these correlations .pink[causal]?
+
+- If so, we should be able to .pink[change] neighborhood characteristics to .pink[change] outcomes
+
+- .pink[How] do we know if a correlation is causal?
+
+---
+
+# Prediction vs. causation
+
+Most tasks in econometrics boil down to one of two goals:
+
+$$
+`\begin{align}
+  y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_k x_k + u
+\end{align}`
+$$
+
+--
+
+1. .hi-purple[Prediction:] Accurately and dependably .purple[predict/forecast] `\(\color{#6A5ACD}{y}\)` using on some set of explanatory variables—doesn't need to be `\(x_1\)` through `\(x_k\)`. Focuses on `\(\color{#6A5ACD}{\hat{y}}\)`. `\(\beta_j\)` doesn't really matter.
+
+--
+
+1. .hi[Causal estimation:].super[.pink[†]] Estimate the actual data-generating process—learning about the true, population model that explains .pink[how] `\(\color{#e64173}{y}\)` .pink[changes when we change] `\(\color{#e64173}{x_j}\)`—focuses on `\(\color{#e64173}{\beta_j}\)`. Accuracy of `\(\hat{y}\)` is not important.
+
+.footnote[
+.pink[†] Often called *causal identification*.
+]
+
+--
+
+For the rest of the term, we will focus on .hi[causally estimating] `\(\color{#e64173}{\beta_j}\)`.
+---
+name: challenges
+
+# The challenges
+
+As you saw in the data-analysis exercise, determining and estimating the true model can be pretty difficult—both .purple[practically] and .pink[econometrically].
+
+--
+
+.pull-left[.purple[
+**Practical challenges**
+
+- Which variables?
+- Which functional form(s)?
+- Do data exist? How much?
+- Is the sample representative?
+]]
+
+--
+
+.pull-right[.pink[
+**Econometric challenges**
+
+- Omitted-variable bias
+- Reverse causality
+- Measurement error
+- How precise can/must we be?
+]]
+
+--
+
+Many of these challenges relate to .hi-slate[exogeneity], _i.e._, `\(\color{#314f4f}{\mathop{\boldsymbol{E}}\left[ u_i | X \right] = 0}\)`.
+--
+&lt;br&gt;Causality requires us to .hi-slate[hold all else constant] (*ceterus paribus*).
+
+---
+
+# It's complicated
+
+Occasionally, .hi[*causal*] relationships are simply/easily understood, _e.g._,
+
+--
+
+- What .pink[caused] the forest fire?
+- .pink[How] did this baby get here?
+
+--
+
+Generally, .hi[*causal*] relationships are complex and challenging to answer, _e.g._,
+
+--
+
+- What .pink[causes] some countries to grow and others to decline?
+- What .pink[caused] the capital riot?
+- Did lax regulation .pink[cause] Texas's recent energy problems?
+- .pink[How] does the number of police officers affect crime?
+- What is the .pink[effect] of better air quality on test scores?
+- Do longer prison sentences .pink[decrease] crime?
+- How did cannabis legalization .pink[affect] mental health/opioid addiction?
+---
+
+# Correlation ≠ Causation
+
+You've likely heard the saying
+
+&gt; Correlation is not causation.
+
+The saying is just pointing out that there are violations of exogeneity.
+
+--
+
+Although correlation is not causation, .hi[causation *requires* correlation].
+
+--
+
+.hi-slate[New saying:]
+
+&gt; Correlation plus exogeneity is causation.
+
+---
+layout: false
+class: clear, middle
+
+Let's work through a few examples.
+
+---
+class: inverse, center, middle
+# Causation
+
+---
+&lt;!-- TK: Switch this to look at affordable housing cash grants. --&gt;
+name: fertilizer
+
+# Example: The causal effect of fertilizer.super[.pink[†]]
+
+.footnote[
+.pink[†] Many of the early statistical and econometric studies involved agricultural field trials.
+]
+
+Suppose we want to know the causal effect of fertilizer on corn yield.
+
+--
+
+**Q:** Could we simply regress yield on fertilizer?
+--
+&lt;br&gt;**A:** Probably not (if we want the causal effect).
+--
+&lt;br&gt;&lt;br&gt;**Q:** Why not?
+--
+&lt;br&gt;**A:** Omitted-variable bias: Farmers may apply less fertilizer in areas that are already worse on other dimensions that affect yield (soil, slope, water).&lt;br&gt;.pink[Violates *all else equal* (exogeneity). Biased and/or spurious results.]
+--
+&lt;br&gt;&lt;br&gt;**Q:** So what *should* we do?
+--
+&lt;br&gt;**A:** .hi[Run an experiment!]
+--
+ 💩
+---
+
+# Example: The causal effect of fertilizer
+
+Randomized experiments help us maintain *all else equal* (exogeneity).
+
+--
+
+We often call these experiments .hi[*randomized control trials*] (RCTs)..super[.pink[†]]
+
+.footnote[
+.pink[†] Econometrics (and statistics) borrows this language from biostatistics and pharmaceutical trials.
+]
+
+--
+
+Imagine an RCT where we have two groups:
+
+- .hi-slate[Treatment:] We apply fertilizer.
+- .hi-slate[Control:] We do not apply fertilizer.
+
+--
+
+By randomizing plots of land into .hi-slate[treatment] or .hi-slate[control], we will, on average, include all kinds of land (soild, slope, water, *etc.*) in both groups.
+
+--
+
+*All else equal*!
+---
+class: clear
+
+.hi-slate[54 equal-sized plots]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot1-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot2-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_1-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_2-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_3-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_4-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_5-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_6-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_7-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_8-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_9-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_10-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_11-1.png" style="display: block; margin: auto;" /&gt;
+---
+class: clear
+count: false
+
+.hi-slate[54 equal-sized plots] .hi[of varying quality] .hi-orange[plus randomly assigned treatment]
+&lt;img src="10a-causal-neighborhoods_files/figure-html/fertilizer_plot3_12-1.png" style="display: block; margin: auto;" /&gt;
+---
+
+# Example: The causal effect of fertilizer
+
+We can estimate the .hi[causal effect] of fertilizer on crop yield by comparing the average yield in the treatment group (💩) with the control group (no 💩).
+
+$$
+`\begin{align}
+  \overline{\text{Yield}}_\text{Treatment} - \overline{\text{Yield}}_\text{Control}
+\end{align}`
+$$
+
+--
+
+Alternatively, we can use the regression
+
+--
+
+$$
+`\begin{align}
+  \text{Yield}_i = \beta_0 + \beta_1 \text{Trt}_i + u_i \tag{1}
+\end{align}`
+$$
+
+where `\(\text{Trt}_i\)` is a binary variable (=1 if plot `\(i\)` received the fertilizer treatment).
+
+--
+
+**Q:** Should we expect `\((1)\)` to satisfy exogeneity? Why?
+--
+&lt;br&gt;**A:** On average, .hi[randomly assigning treatment should balance] trt. and control across the other dimensions that affect yield (soil, slope, water).
+
+---
+# Causal Effects of Neighborhoods vs. Sorting
+
+- Two very different explanations for variation in children's outcomes across areas
+
+  1. Sorting: different people live in different places
+
+  2. Causal effects: places have a causal effect on upward mobility for a given person
+
+---
+# Identifying Causal Effects of Neighborhoods
+
+- Ideal experiment: randomly assign children to neighborhoods and compare outcomes in adulthood
+  - Any issues with this?
+
+- How can we approximate this same thing?
+
+&lt;br&gt;
+
+- Chetty and Hendren (2018) use a .hi[quasi-experimental] design:
+
+  - Sample of 3 million families that move across Census tracts
+
+  - Key idea: exploit variation in the _age of child_ when the family moves to identify causal effects of neighborhood
+
+
+---
+# Moving a short distance in Boston
+
+&lt;figure&gt;
+    &lt;img src="pics/roxbury_to_savin_oppatlas.png" height="50%"
+         alt="Roxbury to Savin Hill in Opportunity Atlas"&gt;
+    &lt;figcaption&gt;Opportunity Atlas of MA: Savin Hill outlined, Roxbury nextdoor.&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+---
+# Moving to a Higher Mobility Neighborhood and Income 
+
+&lt;figure&gt;
+    &lt;img src="./pics/blank_income_gain.png" height="50%"
+         alt="Blank graph space with income gain on y-axis and age of move on x-axis"&gt;
+    &lt;figcaption&gt;Chetty and Hendren (2018).&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+---
+# Moving to a Higher Mobility Neighborhood and Income
+
+&lt;figure&gt;
+    &lt;img src="./pics/first_data_point_income_gain.png" height="50%"
+         alt="First data point on graph with income gain on y-axis and age of move on x-axis. Data point is for moving at age 2 from Roxbury to Savin Hill leads to average earnings of $38K"&gt;
+    &lt;figcaption&gt;Chetty and Hendren (2018).&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+---
+# Moving to a Higher Mobility Neighborhood and Income
+
+&lt;figure&gt;
+    &lt;img src="./pics/all_data_points_income_gain.png" height="50%"
+         alt="All data points on graph with income gain on y-axis and age of move on x-axis for ages up to 23 with a downward slope from $38K to $23K."&gt;
+    &lt;figcaption&gt;Chetty and Hendren (2018).&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+---
+# Moving to a Higher Mobility Neighborhood and Income
+
+&lt;figure&gt;
+    &lt;img src="./pics/level_off_data_points_income_gain.png" height="50%"
+         alt="All data points on graph with income gain on y-axis and age of move on x-axis for ages up to 28 with a downward slope from $38K to $23K at age 23, then levels off to 28."&gt;
+    &lt;figcaption&gt;Chetty and Hendren (2018).&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+---
+# We have to make some assumptions
+
+- All causal work requires assumptions
+
+- .pink[Key assumption:] _timing_ of moves between areas is unrelated to other determinants of a child's outcomes
+
+- Why might this not hold? 
+
+--
+
+  1. Parents who move to good areas when their children ar young might be different from those who move later 
+
+  2. Moving may be related to other factors (e.g., change in parents' job) that affect children directly
+
+---
+# "Testing" assumptions
+
+- You cannot fully test assumptions, but you can look for evidence they are violated
+
+- Two approaches to evaluate validity of timing of move assumption:
+
+  1. Compare siblings' outcomes to control for family "fixed" effects
+
+  2. Use differences in neighborhood effects across subgroups to implement "placebo" tests
+
+  - Ex: some places (e.g. low-crime areas) have better outcomes for boys than girls
+
+  - Move to place where boys have higher earnings --&gt; son improves in proportion to exposure, but not daughter
+
+- Conclude that ~2/3 of variation in upward mobility across areas is due to causal effects of neighborhoods
+
+---
+class: inverse, center, middle
+
+# Next lecture: Fixed effects and difference-in-differences
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
