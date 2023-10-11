@@ -772,6 +772,76 @@ The final set of dplyr "goodies" are the family of join operations. However, the
 - We will encounter and practice these many more times as the course progresses.
 
 ---
+name: combining
+
+# Combining data frames
+
+- Imagine you have two data frames, `df1` and `df2`, that you want to combine.
+
+  - You can **append**: stack the datasets on top of each other and match up the columns
+  - You can **merge** (AKA a **join**): match the rows based on a common identifier
+
+- Each of these is possible with base R, **dplyr**, and **data.table**.
+
+- The appropriate choice depends on the task you are trying to accomplish
+  
+  - Are you trying to add new observations or new variables?
+
+---
+# Visualize the difference
+
+&lt;div align="center"&gt;
+&lt;img src="pics/merge_append-1536x867.png" height=500&gt;
+&lt;/div&gt;
+
+Taken from [Pere A. Taberner](https://www.peretaberner.eu/merging-and-appending-datasets-with-dplyr/).
+
+---
+name: append
+# Appending 
+
+- One way to append in the `tidyverse` is with `bind_rows()`
+  - Base R has `rbind()`, which requires column names to match 
+  - `data.table` has `rbindlist()`, which requires column names to match unless you specify `fill`
+
+
+```r
+df1 &lt;- data.frame(x = 1:3, y = 4:6)
+df2 &lt;- data.frame(x = 1:4, y = 10:13, z=letters[1:4])
+
+## Append df2 to df1
+bind_rows(df1, df2)
+```
+
+```
+##   x  y    z
+## 1 1  4 &lt;NA&gt;
+## 2 2  5 &lt;NA&gt;
+## 3 3  6 &lt;NA&gt;
+## 4 1 10    a
+## 5 2 11    b
+## 6 3 12    c
+## 7 4 13    d
+```
+
+```r
+#rbind(df1, df2) # fails because columns differ
+rbind(df1, select(df2,x,y), fill = TRUE) # this works because of fill
+```
+
+```
+##   x  y
+## 1 1  4
+## 2 2  5
+## 3 3  6
+## 4 1 10
+## 5 2 11
+## 6 3 12
+## 7 4 13
+## 8 1  1
+```
+
+---
 name: joins
 
 # Joins
@@ -804,6 +874,14 @@ planes
 
 - Any variable names in common?
 - Are the definitions of these variables consistent across data frames?
+
+---
+
+# Joins (cont.)
+
+&lt;div align="center"&gt;
+&lt;img src="pics/merge_ex-1536x936.png" height=500&gt;
+&lt;/div&gt;
 
 ---
 
