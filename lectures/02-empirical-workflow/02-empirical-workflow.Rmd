@@ -1186,7 +1186,7 @@ ggplot(data = df, x = Sepal.Length, y = Sepal.Width) +
   - e.g. If I can't get `read.csv()` to work, I'll try `read.table()`
   - e.g. This `googlesheets4` package doesn't seem to work -- what about `gsheet` or `googledrive`?
 
-- With ChatGPT pr Google, make very specific asks
+- With ChatGPT or Google, make very specific asks
   - e.g. "How do I get a file named `/my/path/name/my_file.pdf` into `other/folder/name/file.Rmd`?"
 
 ---
