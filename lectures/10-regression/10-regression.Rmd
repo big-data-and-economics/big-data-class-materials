@@ -51,7 +51,7 @@ This lecture covers the bread-and-butter tool of applied econometrics and data s
 
 It's important to note that "base" R already provides all of the tools we need for basic regression analysis. However, we'll be using several additional packages today, because they will make our lives easier and offer increased power for some more sophisticated analyses.
 
-- New: **fixest**, **estimatr**, **ivreg**, **sandwich**, **lmtest**,  **mfx**, **margins**, **broom**, **modelsummary**, **vtable**, **rstanarm**, 
+- New: **fixest**, **estimatr**, **ivreg**, **sandwich**, **lmtest**,  **mfx**, **margins**, **broom**, **modelsummary**, **vtable**
 - Already used: **tidyverse**, **hrbrthemes**, **listviewer**, **tidycensus**,  **tigris**
 
 A convenient way to install (if necessary) and load everything is by running the below code chunk.
@@ -60,7 +60,7 @@ A convenient way to install (if necessary) and load everything is by running the
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, 
-               lmtest, margins, vtable, broom, modelsummary,rstanarm,tidycensus,tigris)
+               lmtest, margins, vtable, broom, modelsummary,tidycensus,tigris)
 ## Make sure we have at least version 0.6.0 of ivreg
 if (numeric_version(packageVersion("ivreg")) < numeric_version("0.6.0")) install.packages("ivreg")
 
@@ -71,7 +71,7 @@ theme_set(theme_minimal())
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, 
-               lmtest, margins, vtable, broom, modelsummary,rstanarm,tigris,kableExtra)
+               lmtest, margins, vtable, broom, modelsummary,tidycensus,tigris,kableExtra)
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
 ```

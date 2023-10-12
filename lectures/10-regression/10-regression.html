@@ -3704,7 +3704,7 @@ analyses.</p>
 <strong>ivreg</strong>, <strong>sandwich</strong>,
 <strong>lmtest</strong>, <strong>mfx</strong>, <strong>margins</strong>,
 <strong>broom</strong>, <strong>modelsummary</strong>,
-<strong>vtable</strong>, <strong>rstanarm</strong>,</li>
+<strong>vtable</strong></li>
 <li>Already used: <strong>tidyverse</strong>,
 <strong>hrbrthemes</strong>, <strong>listviewer</strong>,
 <strong>tidycensus</strong>, <strong>tigris</strong></li>
@@ -3714,7 +3714,7 @@ running the below code chunk.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="do">## Load and install the packages that we&#39;ll be using today</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;pacman&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, </span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>               lmtest, margins, vtable, broom, modelsummary,rstanarm,tidycensus,tigris)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>               lmtest, margins, vtable, broom, modelsummary,tidycensus,tigris)</span>
 <span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="do">## Make sure we have at least version 0.6.0 of ivreg</span></span>
 <span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">numeric_version</span>(<span class="fu">packageVersion</span>(<span class="st">&quot;ivreg&quot;</span>)) <span class="sc">&lt;</span> <span class="fu">numeric_version</span>(<span class="st">&quot;0.6.0&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;ivreg&quot;</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
