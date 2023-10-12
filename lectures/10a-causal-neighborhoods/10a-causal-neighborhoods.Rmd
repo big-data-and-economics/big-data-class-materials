@@ -28,8 +28,7 @@ options(htmltools.dir.version = FALSE)
 library(knitr)
 opts_chunk$set(
   #comment = "#>",
-  fig.align='center', fig.width=6, fig.height=4, 
-  # out.width=748px, #out.length=520.75px,
+  fig.align='center', fig.width=6, fig.height=4,
   dpi=300, #fig.path='Figs/',
   cache=T, warning=F, message=F
   )

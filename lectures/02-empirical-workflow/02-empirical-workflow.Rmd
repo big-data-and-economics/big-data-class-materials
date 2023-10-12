@@ -289,11 +289,15 @@ name: principles
 - This is a further benefit of a well-organized directory -- you can easily see what scripts you need to run in what order
 - Use `source('rscript.R')` to run an external script
 
+-- 
+
+- A main script could be a `.Rmd`, a `.R`, a `.sh`, a `.py`, etc.
+
 ---
 # Main script
 
 ```{r main_script, eval=FALSE}
-#File: main.R
+#File: main.Rmd or main.R
 #By: Kyle Coombs
 #What: Runs the project from start to finish in Python
 #Date: 2023/09/12
@@ -334,7 +338,7 @@ make_tables(reg_results)
 ---
 # Alternate main script
 ```{r main_script2, eval=FALSE}
-#File: main.R
+#File: main.Rmd or main.R
 #By: Kyle Coombs
 #What: Runs the project from start to finish in Python
 #Date: 2023/09/12
@@ -1012,7 +1016,7 @@ print(nrow(gapminder))
 
 ---
 
-# Test-driven dev (unit testing, refactoring, profiling)
+# Test-driven development
 
 - The only way to know that your code works is to test it!
 
@@ -1153,7 +1157,11 @@ ggplot(data = df, x = Sepal.Length, y = Sepal.Width) +
 ---
 # Troubleshooting tips (cont.)
 
-- Check for superfluous stuff you can remove
+- Step back and ask if you're solving the right problem
+  - e.g. I'm trying to make a plot, but I'm getting an error about a missing variable. Maybe I should check if I'm loading the right data
+  - e.g. I have to create a long data set and I have annual files, but my code is merging instead of appending...
+
+- Check for superfluous things you can remove
   - e.g. Wait, I don't need to include absolute file paths, I can use relative paths
   - Bonus: I'll make fewer typos!
 
@@ -1178,7 +1186,7 @@ ggplot(data = df, x = Sepal.Length, y = Sepal.Width) +
   - e.g. If I can't get `read.csv()` to work, I'll try `read.table()`
   - e.g. This `googlesheets4` package doesn't seem to work -- what about `gsheet` or `googledrive`?
 
-- With ChatGPT, make very specific asks
+- With ChatGPT pr Google, make very specific asks
   - e.g. "How do I get a file named `/my/path/name/my_file.pdf` into `other/folder/name/file.Rmd`?"
 
 ---
