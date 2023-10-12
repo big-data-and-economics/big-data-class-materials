@@ -16,10 +16,10 @@
 \contentsline {subsection}{Marginal effects}{13}{section*.17}%
 \contentsline {subsubsection}{The \textbf {margins} package}{14}{section*.18}%
 \contentsline {subsubsection}{Special case: \texttt {/} shortcut for interaction terms}{16}{section*.19}%
-\contentsline {subsection}{Presentation}{16}{section*.20}%
-\contentsline {subsubsection}{Tables}{16}{section*.21}%
-\contentsline {paragraph}{Regression tables}{16}{section*.22}%
-\contentsline {paragraph}{Summary tables}{17}{section*.23}%
+\contentsline {subsection}{Presentation}{17}{section*.20}%
+\contentsline {subsubsection}{Tables}{17}{section*.21}%
+\contentsline {paragraph}{Regression tables}{17}{section*.22}%
+\contentsline {paragraph}{Summary tables}{18}{section*.23}%
 \contentsline {subsubsection}{Figures}{18}{section*.24}%
 \contentsline {paragraph}{Coefficient plots}{18}{section*.25}%
 \contentsline {paragraph}{Prediction and model validation}{20}{section*.26}%

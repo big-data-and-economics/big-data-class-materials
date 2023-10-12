@@ -80,8 +80,13 @@ While we've already loaded all of the required packages for today, I'll try to b
 
 Something else to mention up front is that we are using the Opportunity Atlas today for our regressions. Some of these regressions will be a bit simple, but the point is to show you how to run them in R with data that are meaningful. We'll also use the `fips_codes` data from the **tidycensus** package to merge in county names and state abbreviations. 
 
+The Opportunity Atlas file lives on GitHub, so we'll download it from there (*Note*: I am using the githack URL. You could also sync your fork, pull to your cloned repo, and navigate to `lectures/10-regression/` and the file is there too.). I've also amended the file to make it smaller so it can be easily pushed to GitHub. _Note_: This is bad practice generally, do not store data files on GitHub unless you have a really good reason to do so.
+
 ```{r opp_atlas}
-opp_atlas <- read_csv("opp_atlas_amended.csv") 
+# UNCOMMENT THIS DOWNLOAD THE FIRST TIME YOU RUN THIS
+# Download the data from GitHub into your working directory -- uncomment the line 
+# Create opp atlas object
+opp_atlas <- read_csv("https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/10-regression/opp_atlas_amended.csv") 
 
 #Quickly renaming fips data to make it easier to merge
 fips <- fips_codes %>% 
