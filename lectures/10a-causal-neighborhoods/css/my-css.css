@@ -143,14 +143,16 @@
 .remark-slide-content {
   background-color: #ffffff;
   font-size: 24px;
+  border-top: 80px solid rgb(132,22,23); /*rgb(255,253,218)*/
   /* font-weight: 300; */
   /* line-height: 1.5; */
   /* padding: 1em 2em 1em 2em; */
 }
 
 .inverse {
-  background-color: #23373B;
+  background-color:  rgb(132,22,23);
   text-shadow: 0 0 20px #333;
+  border-top: rgb(132,22,23);
   /* text-shadow: none; */
 }
 
@@ -164,8 +166,8 @@
 }
 
 .dark-slide {
-  background-color: #23373B;
-  border-top: 0px solid #23373B;
+  background-color:  rgb(132,22,23);
+  border-top: 0px solid  rgb(132,22,23);
 }
 .dark-slide .remark-slide-number {
   display: none;
