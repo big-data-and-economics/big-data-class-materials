@@ -1,32 +1,32 @@
 \contentsline {subsection}{Software requirements}{1}{section*.2}%
 \contentsline {subsubsection}{R packages}{1}{section*.3}%
-\contentsline {subsection}{Regression basics}{2}{section*.4}%
-\contentsline {subsubsection}{The \texttt {lm()} function}{2}{section*.5}%
-\contentsline {subsubsection}{Get ``tidy'' regression coefficients with the \texttt {broom} package}{3}{section*.6}%
+\contentsline {subsection}{Regression basics}{3}{section*.4}%
+\contentsline {subsubsection}{The \texttt {lm()} function}{3}{section*.5}%
+\contentsline {subsubsection}{Get ``tidy'' regression coefficients with the \texttt {broom} package}{4}{section*.6}%
 \contentsline {subsubsection}{Regressing on subsetted data}{4}{section*.7}%
-\contentsline {paragraph}{1) Create a new data frame}{4}{section*.8}%
-\contentsline {paragraph}{2) Subset directly in the \texttt {lm()} call}{5}{section*.9}%
+\contentsline {paragraph}{1) Create a new data frame}{5}{section*.8}%
+\contentsline {paragraph}{2) Subset directly in the \texttt {lm()} call}{6}{section*.9}%
 \contentsline {subsection}{Nonstandard errors}{6}{section*.10}%
 \contentsline {subsubsection}{Robust standard errors}{6}{section*.11}%
-\contentsline {paragraph}{Aside on HAC (Newey-West) standard errors}{6}{section*.12}%
-\contentsline {subsubsection}{Clustered standard errors}{7}{section*.13}%
-\contentsline {subsection}{Dummy variables and interaction terms}{7}{section*.14}%
-\contentsline {subsubsection}{Dummy variables as \emph {factors}}{8}{section*.15}%
-\contentsline {subsubsection}{Interaction effects}{9}{section*.16}%
-\contentsline {subsection}{Instrumental variables}{10}{section*.17}%
-\contentsline {subsubsection}{Option 1: \texttt {ivreg::ivreg()}}{11}{section*.18}%
-\contentsline {subsubsection}{Option 2: \texttt {estimatr::iv\_robust()}}{12}{section*.19}%
-\contentsline {subsection}{Other models}{13}{section*.20}%
-\contentsline {subsubsection}{Generalised linear models (logit, etc.)}{13}{section*.21}%
-\contentsline {subsubsection}{Even more models}{14}{section*.22}%
-\contentsline {subsection}{Marginal effects}{14}{section*.23}%
-\contentsline {subsubsection}{The \textbf {margins} package}{14}{section*.24}%
-\contentsline {subsubsection}{Special case: \texttt {/} shortcut for interaction terms}{16}{section*.25}%
-\contentsline {subsection}{Presentation}{17}{section*.26}%
-\contentsline {subsubsection}{Tables}{17}{section*.27}%
-\contentsline {paragraph}{Regression tables}{17}{section*.28}%
-\contentsline {paragraph}{Summary tables}{17}{section*.29}%
-\contentsline {subsubsection}{Figures}{18}{section*.30}%
-\contentsline {paragraph}{Coefficient plots}{18}{section*.31}%
-\contentsline {paragraph}{Prediction and model validation}{20}{section*.32}%
-\contentsline {subsection}{Further resources}{23}{section*.33}%
+\contentsline {paragraph}{Aside on HAC (Newey-West) standard errors}{8}{section*.12}%
+\contentsline {subsubsection}{Clustered standard errors}{9}{section*.13}%
+\contentsline {subsection}{Dummy variables and interaction terms}{10}{section*.14}%
+\contentsline {subsubsection}{Dummy variables as \emph {factors}}{11}{section*.15}%
+\contentsline {subsubsection}{Interaction effects}{13}{section*.16}%
+\contentsline {subsection}{Marginal effects}{13}{section*.17}%
+\contentsline {subsubsection}{The \textbf {margins} package}{14}{section*.18}%
+\contentsline {subsubsection}{Special case: \texttt {/} shortcut for interaction terms}{16}{section*.19}%
+\contentsline {subsection}{Presentation}{16}{section*.20}%
+\contentsline {subsubsection}{Tables}{16}{section*.21}%
+\contentsline {paragraph}{Regression tables}{16}{section*.22}%
+\contentsline {paragraph}{Summary tables}{17}{section*.23}%
+\contentsline {subsubsection}{Figures}{18}{section*.24}%
+\contentsline {paragraph}{Coefficient plots}{18}{section*.25}%
+\contentsline {paragraph}{Prediction and model validation}{20}{section*.26}%
+\contentsline {subsection}{Other models}{23}{section*.27}%
+\contentsline {subsection}{Instrumental variables}{23}{section*.28}%
+\contentsline {subsubsection}{Option 1: \texttt {ivreg::ivreg()}}{24}{section*.29}%
+\contentsline {subsubsection}{Option 2: \texttt {estimatr::iv\_robust()}}{25}{section*.30}%
+\contentsline {subsubsection}{Generalised linear models (logit, etc.)}{26}{section*.31}%
+\contentsline {subsubsection}{Even more models}{27}{section*.32}%
+\contentsline {subsection}{Further resources}{27}{section*.33}%
