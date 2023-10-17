@@ -353,6 +353,51 @@ where `\(\text{Trt}_i\)` is a binary variable (=1 if plot `\(i\)` received the f
 &lt;br&gt;**A:** On average, .hi[randomly assigning treatment should balance] trt. and control across the other dimensions that affect yield (soil, slope, water).
 
 ---
+# Example 2: The Causal Effect of Neighborhoods
+
+- Fertilizer is relatively easy to randomize and run an RCT
+
+- But most policy questions are not so easy to answer with an RCT
+
+- Why?
+
+  - "Noisy" economic outcomes require larger sample sizes, but it is infeasible to randomize at scale
+  - Also, unethical to randomize certain types of characteristics
+
+- When we cannot experiment happens, we look for .hi[quasi-experimental] designs
+
+---
+# Quasi-experimental designs
+
+- Quasi-experimental designs are not true experiments, but they can be used to estimate causal effects
+
+- Key idea: .hi[exploit] some kind of .hi[exogenous] variation in the explanatory variable of interest
+
+  - If the variation is exogenous, then we can use it to estimate causal effects
+  - Why? It is uncorrelated with the error term in the regression
+  - We have .hi[as good as] random assignment because the assignment is unrelated to other factors that affect the outcome
+  - Intuition: 
+
+- Sometimes the term "natural" experiments is used to introduce a quasi-experimental design
+  - This means that the as good as random assignment was created by "nature" or oftentimes, policy
+
+---
+# Quasi-experiments and assumptions
+
+- Every quasi-experimental design requires an assumption 
+- Leads to contentious debates over their validity
+
+--
+
+Common Examples:
+  - **Difference-in-differences**: Compare outcomes in units that do and do not experience a treatment, before and after the treatment
+    - Compare employment outcomes in states that change and do not change minimum wage (Card and Krueger (1993))
+  - **Regression Discontinuity Design**: Compare outcomes for units just above and just below some cutoff that determines a treatment
+    - Compare economic outcomes for students just above and just below GPA cutoff to be admitted to college (Zimmerman (2014))
+  - **Instrumental variables**: Take a variable that moves the explanatory variable but is uncorrelated with the error term
+    - Proximity of univerisities -&gt; increased educational attainment -&gt; higher earnings (Card (1995))
+
+---
 # Causality of Neighborhoods vs. Sorting
 
 - Two very different explanations for variation in children's outcomes across areas
@@ -369,7 +414,7 @@ where `\(\text{Trt}_i\)` is a binary variable (=1 if plot `\(i\)` received the f
 
 - How can we approximate this same thing?
 
-&lt;br&gt;
+--
 
 - Chetty and Hendren (2018) use a .hi[quasi-experimental] design:
 
@@ -388,7 +433,7 @@ where `\(\text{Trt}_i\)` is a binary variable (=1 if plot `\(i\)` received the f
 &lt;/figure&gt;
 
 ---
-## Moving to a Higher Mobility Neighborhood and Income 
+## Moving to a Higher Mobility Area and Income 
 
 &lt;figure&gt;
     &lt;img src="./pics/blank_income_gain.png" height="50%"
@@ -397,7 +442,7 @@ where `\(\text{Trt}_i\)` is a binary variable (=1 if plot `\(i\)` received the f
 &lt;/figure&gt;
 
 ---
-## Moving to a Higher Mobility Neighborhood and Income
+## Moving to a Higher Mobility Area and Income
 
 &lt;figure&gt;
     &lt;img src="./pics/first_data_point_income_gain.png" height="50%"
@@ -406,7 +451,7 @@ where `\(\text{Trt}_i\)` is a binary variable (=1 if plot `\(i\)` received the f
 &lt;/figure&gt;
 
 ---
-## Moving to a Higher Mobility Neighborhood and Income
+## Moving to a Higher Mobility Area and Income
 
 &lt;figure&gt;
     &lt;img src="./pics/all_data_points_income_gain.png" height="50%"
@@ -415,13 +460,150 @@ where `\(\text{Trt}_i\)` is a binary variable (=1 if plot `\(i\)` received the f
 &lt;/figure&gt;
 
 ---
-## Moving to a Higher Mobility Neighborhood and Income
+## Moving to a Higher Mobility Area and Income
 
 &lt;figure&gt;
     &lt;img src="./pics/level_off_data_points_income_gain.png" height="50%"
          alt="All data points on graph with income gain on y-axis and age of move on x-axis for ages up to 28 with a downward slope from $38K to $23K at age 23, then levels off to 28."&gt;
     &lt;figcaption&gt;Chetty and Hendren (2018).&lt;/figcaption&gt;
 &lt;/figure&gt;
+
+---
+# One issue: families differ a ton
+
+- Each family is different
+
+1. Some families are rich, some are poor
+2. Some families are more educated, some are less educated
+3. Some families are religious, some are not
+
+- Each of these differences could affect:
+
+1. If they move
+2. When they move
+3. Where they move
+4. Children's income mobility
+5. Much more...
+
+- We can't possible control for all of this, let alone measures some of it
+
+---
+# Fixed effects! 
+
+- Fixed effects are a way to control for .pink[unobserved] variables that are .pink[constant] along some dimension
+  - This dimension could be time, space, individual, etc.
+
+- Fixed effects remove the variation between units, leaving only the variation within units
+
+- Chetty and Hendren (2018) employ fixed effects to isolate .pink[within]-family variation
+   - They do many other things too, but this is the simplest to folow
+
+- Every family has its own unique characteristics that affect children's outcomes
+- Fixed effects control for these characteristics by effectively removing the within-family mean from each observation
+
+---
+# Simplified dataset of mobility
+
+- Let's look at a hypothetical dataframe for 5 families with 5 children each that move from the same low mobility neighborhood to a high mobility neighborhood
+
+
+```
+## # A tibble: 25 × 4
+## # Groups:   family_id [5]
+##    family_id child_id age_moved income
+##        &lt;int&gt;    &lt;int&gt;     &lt;dbl&gt;  &lt;dbl&gt;
+##  1         1        1         5   114.
+##  2         2        1        16   122.
+##  3         3        1         8   114.
+##  4         4        1        20   123.
+##  5         5        1        21   123.
+##  6         1        2         9   111.
+##  7         2        2        11   124.
+##  8         3        2        14   111.
+##  9         4        2        16   126.
+## 10         5        2        18   126.
+## # ℹ 15 more rows
+```
+
+---
+# Between and Within variation
+
+- Below I plot the fake data
+
+&lt;img src="10a-causal-neighborhoods_files/figure-html/between-within-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Between and Within
+
+- If I just regress (pooled OLS), I get an increasing relationship with age moved! 
+
+&lt;img src="10a-causal-neighborhoods_files/figure-html/with-ols-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Between and Within
+
+- BETWEEN variation is the variation between means of each family
+
+&lt;img src="10a-causal-neighborhoods_files/figure-html/with-between-ols-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Between and Within
+
+-Seriously, Only look at those means! The individual child variation within families does not matter
+
+&lt;img src="10a-causal-neighborhoods_files/figure-html/between-only-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Between and Within
+
+- Within variation treats the orange crosses as their own axes and looks at variation within family
+- We basically slide the axes on top of each other and analyze *that* data
+
+&lt;img src="10a-causal-neighborhoods_files/figure-html/anim-1.gif" style="display: block; margin: auto;" /&gt;
+
+---
+# Removing between variation
+
+- Chetty and Hendren (2018) use fixed effects to remove between-family variation
+- But what does that mean?
+- How do we actually do this?
+  - Let's look at a stylized model
+
+---
+# Stylized model of Chetty and Hendren (2018)
+
+$$
+`\begin{aligned}
+  \text{Income}_{i} = \sum_{m=0}^{m=30} \beta_{m} I(\text{Age at move}_{i,m}) + \epsilon_{i}
+\end{aligned}`
+$$
+
+but `\(\epsilon_i\)` includes all that family variation, which is an omitted variable! That will create bias.
+
+- We really have something like this:
+
+$$
+`\begin{aligned}
+  \text{Income}_{i} = \sum_{m=0}^{m=30} \beta_{m} I(\text{Age at move}_{i,m}) + (\alpha_f + \nu_{i})
+\end{aligned}`
+$$
+
+---
+# De-meaning
+
+- Just like we de-meaned our plots, we can de-mean our data
+
+- What happens if we subtract the mean of each variable for each family from each observation?
+  - Well `\(\bar{\alpha}_f=\alpha_f\)`, so it is just gone! 
+
+$$
+`\begin{aligned}
+  \text{Income}_{i} - \bar{\text{Income}}_{i} = \sum_{m=0}^{m=30} \beta_{m} I(\text{Age at move}_{i,m})-\bar{I(\text{Age at move}_{i,m})} + \nu_{i}
+\end{aligned}`
+$$
+
+- This is called a .hi[fixed effect] model
+- By construction, our error term is no longer correlated with family characteristics
 
 ---
 # We have to make some assumptions
@@ -454,6 +636,29 @@ where `\(\text{Trt}_i\)` is a binary variable (=1 if plot `\(i\)` received the f
   - Move to place where boys have higher earnings --&gt; son improves in proportion to exposure, but not daughter
 
 - Conclude that ~2/3 of variation in upward mobility across areas is due to causal effects of neighborhoods
+
+---
+# Fixed effects elsewhere
+
+- Fixed effects are extremely popular in applied economics
+
+- Any time you have panel data, you can bet a fixed effects model is attempted
+
+- Plus, they form the backbone of difference-in-difference analysis
+
+- One challenge with fixed effects:
+   - Each fixed effect reduces the degrees of freedom in your model
+   - As you add more fixed effects, you need more data to keep statistical power
+
+The actual model in Chetty and Hendren (2018):
+
+  $$
+`\begin{aligned}
+  \text{Income}_{i} = \alpha_{qosm} + \sum_{m=1}^{m=30} b_m I(m_i=m) \Delta_{odps} + \sum_{s=1980}^{1987} \kappa_s I(s_i=s) \Delta_{odps} + \epsilon_{2i}
+\end{aligned}`
+$$
+
+has over 200,000 fixed effects! 
 
 ---
 class: inverse, center, middle
