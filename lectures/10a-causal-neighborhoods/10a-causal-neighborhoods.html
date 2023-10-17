@@ -574,7 +574,7 @@ Common Examples:
 
 $$
 `\begin{aligned}
-  \text{Income}_{i} = \sum_{m=0}^{m=30} \beta_{m} I(\text{Age at move}_{i,m}) + \epsilon_{i}
+  \text{Income}_{i} = \sum_{m=0}^{m=30} \beta_{m} I(\text{Move age}_{i}=m) + \epsilon_{i}
 \end{aligned}`
 $$
 
@@ -584,9 +584,11 @@ but `\(\epsilon_i\)` includes all that family variation, which is an omitted var
 
 $$
 `\begin{aligned}
-  \text{Income}_{i} = \sum_{m=0}^{m=30} \beta_{m} I(\text{Age at move}_{i,m}) + (\alpha_f + \nu_{i})
+  \text{Income}_{i} = \sum_{m=0}^{m=30} \beta_{m} I(\text{Move age}_{i}=m) + (\alpha_f + \nu_{i})
 \end{aligned}`
 $$
+
+`\(I()\)` means "indicator function", which equals one when the Move age was `\(m\)`
 
 ---
 # De-meaning
@@ -598,15 +600,24 @@ $$
 
 $$
 `\begin{aligned}
-  \text{Income}_{i} - \bar{\text{Income}}_{i} = \sum_{m=0}^{m=30} \beta_{m} I(\text{Age at move}_{i,m})-\bar{I(\text{Age at move}_{i,m})} + \nu_{i}
+  \text{Income}_{i} - \bar{\text{Income}}_{i} = \sum_{m=0}^{m=30} \beta_{m} (I(\text{Move age}_{i}=m)-\bar{I(\text{Move age}_{i}=m)}) + \nu_{i}
 \end{aligned}`
 $$
 
 - This is called a .hi[fixed effect] model
-- By construction, our error term is no longer correlated with family characteristics
+- By construction, `\(\nu_i\)` is no longer correlated with family characteristics
+
+- Yes, I know that the average of `\(I(\text{Move age}_i=m)\)` is a strange concept
+  - Think of it as the probability of moving at age `\(m\)` for each family
+  - We benchmark the observed moving indicator on this family probability
+
+- This works because of the Frisch-Waugh-Lovell Theorem (not derived in this class)
 
 ---
-# We have to make some assumptions
+# # Fixed effects don't make Causality
+
+- Fixed effects don't just make a regression causal
+  - There may be other omitted variables that are correlated with the explanatory variable, not "absorbed" by your fixed effects
 
 - All causal work requires assumptions
 
@@ -643,11 +654,16 @@ $$
 - Fixed effects are extremely popular in applied economics
 
 - Any time you have panel data, you can bet a fixed effects model is attempted
+  - Panel data is (usually) a dataset where you track a unit (individual, county, etc.) over time
 
 - Plus, they form the backbone of difference-in-difference analysis
 
+---
+# Too many fixed effects?
+
 - One challenge with fixed effects:
-   - Each fixed effect reduces the degrees of freedom in your model
+   - Each fixed effect is like adding a variable for each level of the fixed effect (each individual, each year, etc.)
+   - This reduces the degrees of freedom in your model
    - As you add more fixed effects, you need more data to keep statistical power
 
 The actual model in Chetty and Hendren (2018):
@@ -658,7 +674,29 @@ The actual model in Chetty and Hendren (2018):
 \end{aligned}`
 $$
 
-has over 200,000 fixed effects! 
+has over 200,000 fixed effects!
+
+---
+
+# Limits to Fixed Effects
+
+- Okay! At this point we have the concept behind fixed effects, can execute them, and know what they're good for
+- What aren't they good for?
+
+1. They don't control for anything that has within variation
+2. They control away *everything* that's between-only, so we can't see the effect of anything that's between-only ("effect of a family on mobility?" Nope!)
+3. Anything with only a *little* within variation will have most of its variation washed out too ("effect of population density on mobility?" probably not)
+4. The estimate pays the most attention to individuals with *lots of variation in treatment*
+
+- 2 and 3 can be addressed by using "random effects" instead but we aren't covering that in this class (see the The Effect chapter on Fixed Effects for more)
+
+---
+
+# Concept Checks
+
+- Why can't we use individual-person fixed effects to study the impact of race on traffic stops?
+- The within `\(R^2\)` from is .3, and the overall `\(R^2\)` is .5. Interpret these two numbers in sentences
+- In a sentence, interpret the slope coefficient in the estimated model `\((Y_{it} - \bar{Y}_i) = 1 + .5(X_{it} - \bar{X}_i)\)` where `\(Y\)` is "school funding per child" and `\(X\)` is "population growth", and `\(i\)` is city
 
 ---
 class: inverse, center, middle
