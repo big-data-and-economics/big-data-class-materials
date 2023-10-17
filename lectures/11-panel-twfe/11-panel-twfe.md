@@ -4,7 +4,7 @@ subtitle: "Lecture 8: Regression analysis in R"
 author:
   name: Grant R. McDermott
   affiliation: University of Oregon | [EC 607](https://github.com/uo-ec607/lectures)
-# date: Lecture 6  #"10 October 2023"
+# date: Lecture 6  #"17 October 2023"
 output: 
   html_document:
     theme: journal
@@ -41,16 +41,16 @@ knit: (function(inputFile, encoding) {
 
 
 
-Today's lecture is about the bread-and-butter tool of applied econometrics and data science: regression analysis. My goal is to give you a whirlwind tour of the key functions and packages. I'm going to assume that you already know all of the necessary theoretical background on causal inference, asymptotics, etc. This lecture will *not* cover any of theoretical concepts or seek to justify a particular statistical model. Indeed, most of the models that we're going to run today are pretty silly. We also won't be able to cover some important topics. For example, I'll only provide the briefest example of a Bayesian regression model and I won't touch times series analysis at all. (Although, I will provide links for further reading at the bottom of this document.) These disclaimers aside, let's proceed...
+Today's lecture explores 
 
 ## Software requirements
 
 ### R packages 
 
-It's important to note that "base" R already provides all of the tools we need for basic regression analysis. However, we'll be using several additional packages today, because they will make our lives easier and offer increased power for some more sophisticated analyses.
+It's important to note that "base" R already provides all of the tools to implement a fixed effects regression, **but** you'll quickly hit walls due to memory caps. Instead, I want to introduce **fixest**, short for Fixed-Effects Estimation, which provides lightning fast fixed effects estimation and make your life much easier. 
 
-- New: **fixest**, **estimatr**, **ivreg**, **sandwich**, **lmtest**,  **mfx**, **margins**, **broom**, **modelsummary**, **vtable**, **rstanarm**
-- Already used: **tidyverse**, **hrbrthemes**, **listviewer**
+- New: **fixest**, **wooldridge**
+- Already used: **tidyverse**, **hrbrthemes**, **listviewer**, **estimatr**, **ivreg**, **sandwich**, **lmtest**,  **mfx**, **margins**, **broom**, **modelsummary**, **vtable**, **rstanarm**
 
 A convenient way to install (if necessary) and load everything is by running the below code chunk.
 
@@ -58,8 +58,8 @@ A convenient way to install (if necessary) and load everything is by running the
 ```r
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, 
-               lmtest, margins, vtable, broom, modelsummary,rstanarm)
+pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, wooldridge,
+               lmtest, margins, vtable, broom, modelsummary)
 ## Make sure we have at least version 0.6.0 of ivreg
 if (numeric_version(packageVersion("ivreg")) < numeric_version("0.6.0")) install.packages("ivreg")
 
@@ -68,13 +68,20 @@ theme_set(theme_minimal())
 ```
 
 
-## Panel models
+## Panel models 
+
+### Dataset
+
+Let me introduce the dataset we'll be using, `crime4`. It comes from Jeffrey Wooldridge's R package -- Dr. Wooldridge is one of the most accomplished professors of econometrics on the planet. I was tipped off about his package by Nick Huntington-Klein's own [lecture notes.](https://github.com/NickCH-K/EconometricsSlides). 
+
+
 
 ### Fixed effects with the **fixest** package
 
 The simplest (and least efficient) way to include fixed effects in a regression model is, of course, to use dummy variables. However, it isn't very efficient or scalable. What's the point learning all that stuff about the [Frisch-Waugh-Lovell](https://en.wikipedia.org/wiki/Frisch%E2%80%93Waugh%E2%80%93Lovell_theorem), within-group transformations, etc. etc. if we can't use them in our software routines? Again, there are several options to choose from here. For example, many of you are probably familiar with the excellent **lfe** package ([link](https://cran.r-project.org/web/packages/lfe/index.html)), which offers near-identical functionality to the popular Stata library, **reghdfe** ([link](http://scorreia.com/software/reghdfe/)). However, for fixed effects models in R, I am going to advocate that you look no further than the **fixest** package ([link](https://lrberge.github.io/fixest)).
 
-**fixest** is relatively new on the scene and has quickly become one of my absolute favourite packages. It has an *boatload* of functionality built in to it: support for nonlinear models, high-dimensional fixed effects, multiway clustering, multi-model estimation, LaTeX tables, etc, etc. It is also insanely fast... as in, up to [orders of magnitude](https://lrberge.github.io/fixest/#benchmarking) faster than **lfe** or **reghdfe**. I won't be able to cover all of **fixest**'s features in depth here --- see the [introductory vignette](https://lrberge.github.io/fixest/articles/fixest_walkthrough.html) for a thorough walkthrough --- but I hope to least give you a sense of why I am so enthusiastic about it. Let's start off with a simple example before moving on to something slightly more demanding.
+**fixest** is relatively new on the scene and has quickly become one of my absolute favourite packages. It has an *boatload* of functionality built in to it: support for nonlinear models, high-dimensional fixed effects, multiway clustering, multi-model estimation, LaTeX tables, etc, etc. It is also insanely fast... as in, up to [orders of magnitude](https://lrberge.github.io/fixest/#benchmarking) faster than **lfe** (in R) or **reghdfe** (in Stata). I won't be able to cover all of **fixest**'s features in depth here --- see the [introductory vignette](https://lrberge.github.io/fixest/articles/fixest_walkthrough.html) for a thorough walkthrough --- but I hope to least give you a sense of why I am so enthusiastic about it. Let's start off with a simple example before moving on to something slightly more demanding.
+
 
 #### Simple FE model
 
@@ -224,7 +231,7 @@ ols_hdfe
 
 #### Comparing our model coefficients
 
-We'll get to [model presentation](https://raw.githack.com/uo-ec607/lectures/master/08-regression/08-regression.html#Presentation) at the very end of the lecture. For now, I want to quickly flag that **fixest** provides some really nice, built-in functions for comparing models. For example, you can get regression tables with [`fixest::etable()`](https://lrberge.github.io/fixest/articles/exporting_tables.html).
+I want to quickly flag that **fixest** provides some really nice, built-in functions for comparing models. For example, you can get regression tables with [`fixest::etable()`](https://lrberge.github.io/fixest/articles/exporting_tables.html).
 
 
 ```r
@@ -298,9 +305,65 @@ First, if you're coming from another statistical language, adjusting the standar
 
 Second, reconciling standard errors across different software is a much more complicated process than you may realise. There are a number of unresolved theoretical issues to consider --- especially when it comes to multiway clustering --- and package maintainers have to make a number of arbitrary decisions about the best way to account for these. See [here](https://github.com/sgaure/lfe/issues/1#issuecomment-530643808) for a detailed discussion. Luckily, Laurent (the **fixest** package author) has taken the time to write out a [detailed vignette](https://lrberge.github.io/fixest/articles/standard_errors.html) about how to replicate standard errors from other methods and software packages.^[If you want a deep dive into the theory with even more simulations, then [this paper](http://sandwich.r-forge.r-project.org/articles/jss_2020.html) by the authors of the **sandwich** paper is another excellent resource.]
 
-### Random and mixed effects
 
-Fixed effects models are more common than random or mixed effects models in economics (in my experience, anyway). I'd also advocate for [Bayesian hierachical models](http://www.stat.columbia.edu/~gelman/arm/) if we're going down the whole random effects path. However, it's still good to know that R has you covered for random effects models through the **plm** ([link](https://cran.r-project.org/web/packages/plm/)) and **nlme** ([link](https://cran.r-project.org/web/packages/nlme/index.html)) packages.^[As I mentioned above, **plm** also handles fixed effects (and pooling) models. However, I prefer **fixest** and **lfe** for the reasons already discussed.] I won't go into detail , but click on those links if you would like to see some examples.
+## Presentation
+
+### Figures
+
+#### Coefficient plots
+
+We've already worked through an example of how to extract and compare model coefficients [here](#comparing-our-model-coefficients). I use this "manual" approach to visualizing coefficient estimates all the time. However, our focus on **modelsummary** in the preceding section provides a nice segue to another one of the package's features: [`modelplot()`](https://vincentarelbundock.github.io/modelsummary/articles/modelplot.html). Consider the following, which shows both the degree to which `modelplot()` automates everything and the fact that it readily accepts regular **ggplot2** syntax.
+
+
+```r
+# library(modelsummary) ## Already loaded
+mods = list('FE, no clustering' = summary(ols_fe, se = 'standard'))
+
+modelplot(mods) +
+  ## You can further modify with normal ggplot2 commands...
+  coord_flip() + 
+  labs(
+    title = "'Effect' of height on mass",
+    subtitle = "Comparing fixed effect models"
+    )
+```
+
+![](11-panel-twfe_files/figure-html/modplot-1.png)<!-- -->
+
+
+## Difference-in-differences
+
+One of the most popular uses of fixed effects is to implement difference-in-difference designs. I vusalize how that works for you below.
+
+![](11-panel-twfe_files/figure-html/did-1.png)<!-- -->
+
+### Diff-in-diff with data
+
+
+```
+## 
+## Attaching package: 'scales'
+```
+
+```
+## The following object is masked from 'package:fixest':
+## 
+##     pvalue
+```
+
+```
+## The following object is masked from 'package:purrr':
+## 
+##     discard
+```
+
+```
+## The following object is masked from 'package:readr':
+## 
+##     col_factor
+```
+
+![](11-panel-twfe_files/figure-html/did-data-1.png)<!-- -->
 
 ## Instrumental variables
 
@@ -336,7 +399,7 @@ Now, assume that we are interested in regressing the number of cigarettes packs 
 $$Price_i = \pi_0 + \pi_1 SalesTax_i + v_i  \hspace{1cm} \text{(First stage)}$$
 $$Packs_i = \beta_0 + \beta_2\widehat{Price_i} + \beta_1 RealIncome_i + u_i \hspace{1cm} \text{(Second stage)}$$
 
-### Option 3: `fixest::feols()`
+### IV with `fixest::feols()`
 
 Finally, we get back to the `fixest::feols()` function that we've already seen above. Truth be told, this is the IV option that I use most often in my own work. In part, this statement reflects the fact that I work mostly with panel data and will invariably be using **fixest** anyway. But I also happen to like its IV syntax a lot. The key thing is to specify the IV first-stage as a separate formula in the _final_ slot of the model call.^[This closely resembles [Stata's approach](https://www.stata.com/manuals13/rivregress.pdf) to writing out the IV first-stage, where you specify the endogenous variable(s) and the instruments together in a slot.] For example, if we had `fe` fixed effects, then the model call would be `y ~ ex | fe | en ~ in`. Since we don't have any fixed effects in our current cigarette demand example, the first-stage will come directly after the exogenous variables:
 
@@ -435,30 +498,6 @@ iv_feols_panel
 ```
 
 Good news, our coefficients are around the same magnitude. But the increased precision of the panel model has yielded gains in statistical significance.
-
-## Presentation
-
-### Figures
-
-#### Coefficient plots
-
-We've already worked through an example of how to extract and compare model coefficients [here](#comparing-our-model-coefficients). I use this "manual" approach to visualizing coefficient estimates all the time. However, our focus on **modelsummary** in the preceding section provides a nice segue to another one of the package's features: [`modelplot()`](https://vincentarelbundock.github.io/modelsummary/articles/modelplot.html). Consider the following, which shows both the degree to which `modelplot()` automates everything and the fact that it readily accepts regular **ggplot2** syntax.
-
-
-```r
-# library(modelsummary) ## Already loaded
-mods = list('FE, no clustering' = summary(ols_fe, se = 'standard'))
-
-modelplot(mods) +
-  ## You can further modify with normal ggplot2 commands...
-  coord_flip() + 
-  labs(
-    title = "'Effect' of height on mass",
-    subtitle = "Comparing fixed effect models"
-    )
-```
-
-![](11-panel-twfe_files/figure-html/modplot-1.png)<!-- -->
 
 ## Further resources
 
