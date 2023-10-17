@@ -61,8 +61,6 @@ A convenient way to install (if necessary) and load everything is by running the
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, wooldridge,
                lmtest, margins, vtable, broom, modelsummary)
-## Make sure we have at least version 0.6.0 of ivreg
-if (numeric_version(packageVersion("ivreg")) < numeric_version("0.6.0")) install.packages("ivreg")
 
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
@@ -70,19 +68,156 @@ theme_set(theme_minimal())
 ```{r libs, cache=FALSE, message=FALSE, echo=FALSE}
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, wooldridge,
+pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, fixest, sandwich, wooldridge,
                lmtest, margins, vtable, broom, modelsummary, kableExtra)
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
 ```
 
-## Panel models 
+#### Note on fixest and feols
 
-### Dataset
+I'll be using fixest and feols throughout these notes. The fixest package is a new package that is very fast and has a lot of functionality. It has several bits of funtionality like `feols()` and `etable()`, which are powerful functions for making regressions and putting the output into tables that work well together. `feols()` works very much like `lm()` in base R, but with a few added bonuses. 
 
-Let me introduce the dataset we'll be using, `crime4`. It comes from Jeffrey Wooldridge's R package -- Dr. Wooldridge is one of the most accomplished professors of econometrics on the planet. I was tipped off about his package by Nick Huntington-Klein's own [lecture notes.](https://github.com/NickCH-K/EconometricsSlides). 
+### Panel models 
+
+A panel dataset is one in which we view a single unit over multiple periods of time, so a balanced panel has the same number of observations for each unit. For example, we might have data on 100 countries over 10 years, or 50 US states over 20 years. We can then take unit fixed effects, which lets us compare between years within a single unit. Similarly, we can take time fixed effects to compare between units within a given point in time. If our dataset has other dimensions that vary in a way that is not collinear with unit or time, we can also take a fixed effect for that -- though again, you want to be careful about throwing in fixed effects. 
 
 
+## Dataset
+
+Let me introduce the dataset we'll be using, `crime4`. It comes from Jeffrey Wooldridge's R package -- Dr. Wooldridge is one of the most accomplished professors of econometrics on the planet. I was tipped off about his package by Nick Huntington-Klein's own [lecture notes.](https://github.com/NickCH-K/EconometricsSlides). The dataset shows county probability of arrest and county crime rate by year. 
+
+```{r crime4,message=FALSE}
+data(crime4)
+crime4 %>%
+  select(county, year, crmrte, prbarr) %>%
+  rename(County = county,
+         Year = year,
+         CrimeRate = crmrte,
+         ProbofArrest = prbarr) %>%
+  slice(1:9) %>%
+  knitr::kable(note = '...') %>%
+  kableExtra::add_footnote('9 rows out of 630. "Prob. of Arrest" is estimated probability of being arrested when you commit a crime', notation = 'none')
+
+```
+
+### Let's visualize it
+
+Below I visualize the data for just a few counties. Note the positive slope when pooling! Is that surprising? 
+
+```{r visualize-crime,warning=FALSE,messge=FALSE}
+crime4 %>% 
+  filter(county %in% c(1,3,7, 23),
+         prbarr < .5) %>%
+  group_by(county) %>%
+  mutate(label = case_when(
+    crmrte == max(crmrte) ~ paste('County',county),
+    TRUE ~ NA_character_
+  )) %>%
+  ggplot(aes(x =  prbarr, y = crmrte, color = factor(county), label = label)) + 
+  geom_point() + 
+  geom_text(hjust = -.1, size = 14/.pt) + 
+  labs(x = 'Probability of Arrest', 
+       y = 'Crime Rate',
+       caption = 'One outlier eliminated in County 7.') + 
+  #scale_x_continuous(limits = c(.15, 2.5)) + 
+  guides(color = FALSE, label = FALSE) + 
+  scale_color_manual(values = c('black','blue','red','purple')) + 
+  geom_smooth(method = 'lm', aes(color = NULL, label = NULL), se = FALSE)
+```
+
+### Let's try the de-meaning approach
+
+We can use `group_by` to get means-within-groups and subtract them out.
+
+```{r demeaning}
+crime4 <- crime4 %>%
+  # Filter to the data points from our graph
+  filter(county %in% c(1,3,7, 23),
+         prbarr < .5) %>%
+  group_by(county) %>%
+  mutate(mean_crime = mean(crmrte),
+         mean_prob = mean(prbarr)) %>%
+  mutate(demeaned_crime = crmrte - mean_crime,
+         demeaned_prob = prbarr - mean_prob)
+```
+
+### And Regress!
+
+```{r demean_ols, echo = TRUE}
+orig_data <- feols(crmrte ~ prbarr, data = crime4)
+de_mean <- feols(demeaned_crime ~ demeaned_prob, data = crime4)
+etable(orig_data, de_mean)
+```
+
+### Interpreting a Within Relationship
+How can we interpret that slope of `-0.03`? This is all *within variation* so our interpretation must be *within-county*. So, "comparing a county in year A where its arrest probability is 1 (100 percentage points) higher than it is in year B, we expect the number of crimes per person to drop by .03." Or if we think we've causally identified it (and want to work on a more realistic scale), "raising the arrest probability by 1 percentage point in a county reduces the number of crimes per person in that county by .0003". We're basically "controlling for county" (and will do that explicitly in a moment). So your interpretation should think of it in that way - *holding county constant* i.e. *comparing two observations with the same value of county* i.e. *comparing a county to itself at a different point in time*.
+
+### Concept Checks
+
+- Why does subtracting the within-individual mean of each variable "control for individual"?
+- In a sentence, interpret the slope coefficient in the estimated model $(Y_{it} - \bar{Y}_i) = 2 + 3(X_{it} - \bar{X}_i)$ where $Y$ is "blood pressure", $X$ is "stress at work", and $i$ is an individual person
+- Is this relationship causal? If not, what assumptions are required for it to be causal? 
+
+### Can we do that all at once? Yes, with the Least Squares Dummy Variable Approach
+
+De-meaning takes some steps which could get tedious to write out. Another way is to include a dummy or category variable for each county. This is called the Least Squares Dummy Variable approach.
+
+You end up with the same results as if we de-meaned. 
+
+```{r lsdv, echo = TRUE}
+lsdv <- feols(crmrte ~ prbarr + factor(county), data = crime4)
+etable(orig_data, de_mean, lsdv, keep = c('prbarr', 'demeaned_prob'))
+```
+
+### Why LSDV?
+
+- A benefit of the LSDV approach is that it calculates the fixed effects $\alpha_i$ for you
+- We left those out of the table with the `coefs` argument of `export_summs` (we rarely want them) but here they are:
+
+```{r lsdv-print}
+lsdv
+```
+
+THe interpretation is exactly the same as with a categorical variable - we have an omitted county, and these show the difference relative to that omitted county
+
+### Why LSDV?
+
+This also makes clear another element of what's happening! Just like with a categorical var, the line is moving *up and down* to meet the counties. Graphically, de-meaning moves all the points together in the middle to draw a line, while LSDV moves the line up and down to meet the points
+
+```{r slopes, dev = 'svg'}
+crime4 %>%
+  ungroup() %>%
+  mutate(pred = predict(lsdv)) %>%
+  group_by(county) %>%
+  mutate(label = case_when(
+    crmrte == max(crmrte) ~ paste('County',county),
+    TRUE ~ NA_character_
+  )) %>%
+  ggplot(aes(x =  prbarr, y = crmrte, color = factor(county), label = label)) + 
+  geom_point() + 
+  geom_text(hjust = -.1, size = 14/.pt) + 
+  geom_line(aes(y = pred, group = county), color = 'blue') +
+  labs(x = 'Probability of Arrest', 
+       y = 'Crime Rate',
+       caption = 'One outlier eliminated in County 7.') + 
+  #scale_x_continuous(limits = c(.15, 2.5)) + 
+  guides(color = FALSE, label = FALSE) + 
+  scale_color_manual(values = c('black','blue','red','purple'))
+```
+
+### The "Pros" don't use LSDV
+
+Most people do not use LSDB -- it is computationally expensive. If you get too many fixed effects or too big of data, it just will not wrong. The professionally-written commands use de-meaning, like **fixest**, which is less computationally expensive. See for yourself! 
+
+```{r fixest}
+pro <- feols(crmrte ~ prbarr | county, data = crime4)
+etable(de_mean, pro)
+```
+
+To explain the **fixest** package, I am borrowing more from Grant McDermott.
+
+**_Note_: Grant switches to the starwars dataframe to present regressions.**
 
 ### Fixed effects with the **fixest** package
 
