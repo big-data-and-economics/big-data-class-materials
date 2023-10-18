@@ -185,7 +185,7 @@ THe interpretation is exactly the same as with a categorical variable - we have 
 
 This also makes clear another element of what's happening! Just like with a categorical var, the line is moving *up and down* to meet the counties. Graphically, de-meaning moves all the points together in the middle to draw a line, while LSDV moves the line up and down to meet the points
 
-```{r slopes, dev = 'svg'}
+```{r slopes}
 crime4 %>%
   ungroup() %>%
   mutate(pred = predict(lsdv)) %>%

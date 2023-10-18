@@ -340,7 +340,7 @@ crime4 %>%
 ## Warning: Removed 23 rows containing missing values (`geom_text()`).
 ```
 
-![](11-panel-twfe_files/figure-html/slopes-1.svg)<!-- -->
+![](11-panel-twfe_files/figure-html/slopes-1.png)<!-- -->
 
 ### The "Pros" don't use LSDV
 
