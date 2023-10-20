@@ -17,9 +17,9 @@ for fork in $forks; do
     echo "Owner: $owner"
 
     # Step 1 clone the fork
-    git clone $fork $repo-$owner
+    git clone $fork $owner-$repo
 
-    cd $repo-$owner
+    cd $owner-$repo
 
     # Step 2: Check out the main branch
     git checkout main
