@@ -157,9 +157,18 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 - Thursday | 12-4pm, 6-7:30pm
 - Friday | 11am-12pm
 
+#### Course-Attached Tutor
+
+Chrissy Aman is our Course-Attached tutor. She will host office hours in the SASC and will be available for individual appointments. Her hours are:
+
+- Fridays at 6:45pm
+- Sundays at 10am-12pm in PGill 227
+
+Chrissy can help you troubleshoot *R*. She does not know have solution to the problem sets, but she can help you figure them out. 
+
 ## Other details
 
-This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/). Here is the course description, right out of the [syllabus](https://github.comECON368-fall2023-big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf):
+This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/). Here is the course description, right out of the [syllabus](https://github.com/big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf):
 
 Economics is at the forefront of developing statistical methods for analyzing data collected from uncontrolled sources. Since econometrics addresses challenges in estimation such as sample selection bias and treatment effects identification, the discipline is well-suited for the analysis of large and unsystematically collected datasets. This course introduces statistical (machine) learning methods, which have been developed for analyzing such datasets but which have only recently been implemented in economic research. We will cover a variety of topics including data collection, data management, data description, causal inference, and data visualization.  The course also explores how econometrics and statistical learning methods cross-fertilize and can be used to advance knowledge in the numerous domains where large volumes of data are rapidly accumulating. We will also cover the ethics of data collection and analysis. The course will be taught in *R*. 
 
