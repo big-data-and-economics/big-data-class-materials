@@ -1,0 +1,124 @@
+---
+title: Big Data and Economics
+subtitle: Text as Data: Regular Expressions and Wordclouds
+author:
+  name: Kyle Coombs
+  affiliation: Bates College | [DCS/ECON 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)  
+output:
+  html_document:
+    theme: journal
+    highlight: haddock
+    # code_folding: show
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+    keep_md: true
+    keep_tex: false ## Change to true if want keep intermediate .tex file
+    css: css/preamble.css ## For multi-col environments
+  pdf_document:
+    latex_engine: xelatex
+    toc: true
+    dev: cairo_pdf
+    # fig_width: 7 ## Optional: Set default PDF figure width
+    # fig_height: 6 ## Optional: Set default PDF figure height
+    includes:
+      in_header: tex/preamble.tex ## For multi-col environments
+    extra_dependencies: [float, booktabs, longtable]
+    pandoc_args:
+        --template=tex/mytemplate.tex ## For affiliation field. See: https://bit.ly/2T191uZ
+always_allow_html: true
+urlcolor: blue
+mainfont: cochineal
+sansfont: Fira Sans
+#monofont: Fira Code ## Although, see: https://tex.stackexchange.com/q/294362
+## Automatically knit to both formats:
+knit: (function(inputFile, encoding) {
+ rmarkdown::render(inputFile, encoding = encoding, 
+ output_format = 'all') 
+ })
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk(echo = TRUE, cache = TRUE, dpi=300)
+```
+
+
+### Fixed effects using a familiar dataset 
+
+Let's review fixed effects very quickly using the Ask A Manager Survey 2023, which you used on problem set 2. Like on your problem set, we'll load it in using the **gsheet** package. Several of you said that you thought you could use fixed effects to residualize other differences between groups out of the data. Let's see if that's true using the package **fixest**. _As a disclaimer: these data are not systematically collected._
+
+```{r manager}
+column_names <- c('timestamp','age','industry','area','jobtitle','jobtitle2',
+        'annual_salary','additional_pay','currency','currency_other',
+        'income_additional','country','state','city','remote','experience_overall',
+        'experience_field','education','gender','race')
+
+US_strings<-c("United States of America","United States", 
+  "United states" ,"USA","Usa","usa" ,"US","U.S." ,"us")
+
+managers = gsheet::gsheet2tbl(
+    'https://docs.google.com/spreadsheets/d/1ioUjhnz6ywSpEbARI-G3RoPyO0NRBqrJnWf-7C_eirs/edit?resourcekey#gid=1854892322') 
+names(managers) <- column_names
+
+# Focus on the US and cismen and women to simplify the analysis
+managers <- managers %>%
+  filter(country %in% US_strings,
+    gender %in% c('Man','Woman'))
+```
+
+First, let's measure the gender pay gap as the average difference in pay. 
+
+```{r gender-pay-gap}
+pay_gap <- managers %>% 
+  group_by(gender) %>%
+  summarize(mean_salary = mean(annual_salary, na.rm = TRUE)) %>%
+  ungroup() %>%
+  summarize(gender_pay_gap = diff(mean_salary))
+
+print(paste('The average difference in pay is', pay_gap$gender_pay_gap))
+```
+
+What would the coefficient on gender be in this regression? 
+
+$$ 
+\begin{align}
+\text{Salary}_{i} ~ \beta_0 + \beta_1 \text{Gender}_i + \varepsilon_{i}
+\end{align}
+$$
+
+where Gender takes a value of 1 if the person is a woman. Make a guess before you estimate below. 
+
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+```{r gender-dummy}
+lm(annual_salary ~ gender, data=managers)
+```
+
+That's right, it is the average difference in pay. Why is that? Well what is the intercept from the regression? 
+
+The average salary for men. So when $Gender_i=0$, the regression returns the average salary for men because this is the "Best Linear Unbiased Estimate" of salary, which is the goal of OLS. When $Gender_i=1$, OLS returns the average salary for women, again for the same reason! 
+
+That dummy variable is actually a fixed effect for gender. We could add in many, this is called the Least Squares Dummy Variable approach.^[This name comes from Nick Huntington-Klein.] Lets add a dummy for remote work.
+
+```{r other-dummies}
+lm(annual_salary ~ gender + remote, data=managers)
+```
+
+Do you see how each level of remote got its own bracket? That's because each level of remote is a fixed effect. Do you also see how the 

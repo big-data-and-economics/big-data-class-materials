@@ -20,14 +20,14 @@ mkdir -p "$1/css"
 
 # Create .Rmd file with preamble
 
-if [ "$3" == "lecture" ]; then
+if [ "$3" = "lecture" ]; then
 
 cp 10-regression/css/*.css "$1/css"
 cp 10-regression/tex/*.tex "$1/tex"
 
 echo "---
 title: "Big Data and Economics"
-subtitle: "Regression analysis in R"
+subtitle: "$2"
 author:
   name: Kyle Coombs
   affiliation: Bates College | [DCS/ECON 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)  
@@ -71,7 +71,7 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300)
 
 
 " > "$1/$1.Rmd"
-elif [ "$3" == "slides" ]; then
+elif [ "$3" = "slides" ]; then
 echo "---
 ---
 title: "Big Data and Economics"
