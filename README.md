@@ -317,5 +317,3 @@ This is the easiest option, but it does mean you will have to clone multiple for
 ## License
 
 The material in this repository is made available under the [MIT license](http://opensource.org/licenses/mit-license.php). 
-
-Test
