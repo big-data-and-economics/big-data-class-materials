@@ -1,6 +1,6 @@
 # Class Materials for Bates ECON/DCS 368: Big Data and Economics
 
-[Full syllabus](https://github.com/big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf)
+[Full syllabus](https://github.comECON368-fall2023-big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf)
 
 [`Lectures`](#lectures) | [`Details`](#details) |
 [`FAQ`](#faq) | [`License`](#license)
@@ -68,6 +68,41 @@ This class is about helping you build good habits for doing organized and reprod
 - Use Big Data to generate key insights about economic opportunity, inequality, and other social problems
 - Understand the differences between prediction, causality, and description, and when to apply each
 - Explain what data science is, and how Big Data differs from other types of data 
+
+## Navigating the course
+
+- All problem sets and lectures are linked above in the [calendar](#lectures)
+- The repository for each problem set, these course materials, and your class presentations are all linked in the [organization page](https://github.com/orgs/ECON368-fall2023-big-data-and-economics/repositories)
+
+## Expectations
+
+This is an extremely challenging course. To help you succeed, I have outlined expectations for both you and me.
+
+### For your professor
+
+- Link to lecture slides and problem sets in the [calendar](#lectures)
+- Post any software you need to download or other materials you need to prep for class in the [calendar](#lectures) with 24 hours notice
+- Outline learning goals at the top of each lecture
+- Clearly explain the expectations for each problem set
+- Grade your problem sets within two weeks (i.e. before the next problem set is due)
+    - Post all problem set solutions to the repository within a week of the problem set being due
+- Check the GitHub Issues tab (for all repositories) at least once per day to answer questions
+
+### For students
+
+- Check the [calendar](#lectures) within 24 hours of each lecture to see any materials you need to download
+- Open problem set data and code within 24 hours of the problem set being posted
+- Work on problem sets in groups, but turn in your own code
+- Post questions about material or problem sets to [GitHub Issues](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/issues) unless it is of a private matter (e.g. grades, extensions)
+    - There is a GitHub Issues tab within every problem set that I create, please post questions about problem sets directly to the tab for each problem set
+    - If I receive an email with a question that will benefit everyone, I will ask you to post it to GitHub Issues
+    - This is so that everyone can benefit from the answer
+    - Also, it will encourage collaboration
+- Use computers in class for class-related activities only
+
+### How I will run class
+
+Most classes will be divided into a "lecture" and an "interactive" component. During the lecture, computers will be closed. During the interactive component, computers will be open for you to work through it. 
 
 ## Resources to use for class
 
@@ -143,6 +178,7 @@ Economics is at the forefront of developing statistical methods for analyzing da
 | 7 × problem sets (10% each)               | 50%    | Top 5  |
 | 1 × short presentation                    | 10%    | Top 1  |
 | 1 × final project                         | 40%    | [In parts](https://github.com/ECON368-fall2023-big-data-and-economics/final-project) |
+| Participation                             | Bonus up to 10%    | End of course  |
 
 - Short presentations summarize either a key lecture reading, or an (approved) software package/platform.
 - Extensions: Each of you gets three ''grace period'' days to extend deadlines. 
@@ -168,6 +204,16 @@ Throughout the course you will engage in problem sets that deal with actual data
 - You are encouraged to work together on problem sets, but you must write up your own answers (unless it is a group assignment)
 - All problem sets will be completed and turned in as GitHub repositories
 
+#### What you will turn in:
+
+- Each problem set will be posted as a GitHub repository, which you will fork, set to private, and then clone to your computer (instructions provided in each problem set)
+- You will then work on the problem set on your computer, and push your code to GitHub (push often!)
+- For each problem set, you will turn in modular code (i.e. separate files do separate things) that accomplishes the tasks outlined in the problem set
+- You will also turn in a `.Rmd` file that contains your answers to the questions in the problem set along with a knitted `.html` or `.pdf` of your `.Rmd`
+    - This `.Rmd` will "source" the code you wrote, so I can easily run your code from start to finish by `knitting`
+- Your problem sets will have a sensible folder structure that is easy to navigate (name folders `code`, `data`, `output`, etc.)
+- You will turn in your problem sets by pushing your code to GitHub. 
+
 **Grading**
 
 Your problem sets are graded on three dimensions: 
@@ -177,11 +223,11 @@ Your problem sets are graded on three dimensions:
 3. Quality of presentation of graphs and tables (30%): Are they well-labeled? Do they have titles? Do they have legends? Are they formatted well?
 4. Quality of answers (30%): Are they clear? Do they answer the question?
 
-### Solutions 
+#### Solutions 
 
-The solutions are made public once everyone has turned in the assignment (or the grace period has expired). 
+The solutions are made public within a week of the problem set being posted.
 
-### Improving your grade
+#### Improving your grade
 
 In an effort to incentivize you to see coding as an ongoing process of learning and improvement, I will allow you to improve the coding and presentation quality portions of your grade on any problem set. However, you cannot just copy and paste the solutions. 
 
@@ -199,6 +245,19 @@ suppressWarnings({
     dir.create(writing)
 })
 ```
+
+### Participation
+
+Participation on GitHub is a bonus worth up to 10% of your grade. I will rate participation based on the following criteria:
+
+- Are you posting thoughtful questions to GitHub Issues? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-ask) for posting a good question. 
+- Are you replying to questions on GitHub Issues? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-answer#:~:text=Read%20the%20question%20carefully&text=Make%20sure%20your%20answer%20provides,going%20in%20the%20right%20direction.) to write a good answer.
+
+The goal is to encourage you to work together to solve problems. This is one of the most important skills you can take away from this, and really any, course. I also want to incentivize you to think carefully about how you post. Be kind and respectful, as much as you endeavor to be clear, concise, and helpful.
+
+For each problem set, use the Issues tab for that specific problem set. For course materials, you can use that tab. 
+
+I will be monitoring the GitHub Issues tab for each repository and will award participation points to those who are actively engaging per the guidelines from stackoverflow. 
 
 ## FAQ
 
