@@ -1,6 +1,6 @@
 # Class Materials for Bates ECON/DCS 368: Big Data and Economics
 
-[Full syllabus](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf)
+[Full syllabus](https://github.com/big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf)
 
 [`Lectures`](#lectures) | [`Details`](#details) |
 [`FAQ`](#faq) | [`License`](#license)
