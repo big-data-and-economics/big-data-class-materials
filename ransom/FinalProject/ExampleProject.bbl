@@ -1,0 +1,25 @@
+\begin{thebibliography}{3}
+\newcommand{\enquote}[1]{``#1''}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+
+\bibitem[{Altonji(1993)}]{altonji1993}
+Altonji, Joseph~G. 1993.
+\newblock \enquote{The Demand for and Return to Education When Education
+  Outcomes are Uncertain.}
+\newblock \emph{Journal of Labor Economics} 11~(1, Part 1):48--83.
+
+\bibitem[{Altonji, Arcidiacono, and Maurel(2016)}]{altonji_al2016}
+Altonji, Joseph~G., Peter Arcidiacono, and Arnaud Maurel. 2016.
+\newblock \enquote{The Analysis of Field Choice in College and Graduate School:
+  Determinants and Wage Effects.}
+\newblock Amsterdam: Elsevier, 305--396.
+
+\bibitem[{Altonji, Blom, and Meghir(2012)}]{altonji_al2012}
+Altonji, Joseph~G., Erica Blom, and Costas Meghir. 2012.
+\newblock \enquote{Heterogeneity in Human Capital Investments: High School
+  Curriculum, College Majors, and Careers.}
+\newblock \emph{Annual Review of Economics} 4:185--223.
+
+\end{thebibliography}
