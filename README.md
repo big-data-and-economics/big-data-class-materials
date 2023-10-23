@@ -178,6 +178,7 @@ Economics is at the forefront of developing statistical methods for analyzing da
 | 7 × problem sets (10% each)               | 50%    | Top 5  |
 | 1 × short presentation                    | 10%    | Top 1  |
 | 1 × final project                         | 40%    | [In parts](https://github.com/ECON368-fall2023-big-data-and-economics/final-project) |
+| Participation                             | Bonus up to 10%    | End of course  |
 
 - Short presentations summarize either a key lecture reading, or an (approved) software package/platform.
 - Extensions: Each of you gets three ''grace period'' days to extend deadlines. 
@@ -222,11 +223,11 @@ Your problem sets are graded on three dimensions:
 3. Quality of presentation of graphs and tables (30%): Are they well-labeled? Do they have titles? Do they have legends? Are they formatted well?
 4. Quality of answers (30%): Are they clear? Do they answer the question?
 
-### Solutions 
+#### Solutions 
 
-The solutions are made public once everyone has turned in the assignment (or the grace period has expired). 
+The solutions are made public within a week of the problem set being posted.
 
-### Improving your grade
+#### Improving your grade
 
 In an effort to incentivize you to see coding as an ongoing process of learning and improvement, I will allow you to improve the coding and presentation quality portions of your grade on any problem set. However, you cannot just copy and paste the solutions. 
 
@@ -244,6 +245,19 @@ suppressWarnings({
     dir.create(writing)
 })
 ```
+
+### Participation
+
+Participation on GitHub is a bonus worth up to 10% of your grade. I will rate participation based on the following criteria:
+
+- Are you posting thoughtful questions to GitHub Issues? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-ask) for posting a good question. 
+- Are you replying to questions on GitHub Issues? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-answer#:~:text=Read%20the%20question%20carefully&text=Make%20sure%20your%20answer%20provides,going%20in%20the%20right%20direction.) to write a good answer.
+
+The goal is to encourage you to work together to solve problems. This is one of the most important skills you can take away from this, and really any, course. I also want to incentivize you to think carefully about how you post. Be kind and respectful, as much as you endeavor to be clear, concise, and helpful.
+
+For each problem set, use the Issues tab for that specific problem set. For course materials, you can use that tab. 
+
+I will be monitoring the GitHub Issues tab for each repository and will award participation points to those who are actively engaging per the guidelines from stackoverflow. 
 
 ## FAQ
 
