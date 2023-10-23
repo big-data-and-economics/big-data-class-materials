@@ -1,0 +1,64 @@
+---
+title: "Further Examination of an Important Research Question"
+author: "Student Name"
+date: "May 9, 2020"
+output: 
+    pdf_document:
+        latex_engine: xelatex
+    html_document:
+        df_print: paged
+bibliography: References.bib
+---
+
+```{r setup, include=FALSE}
+#install.packages("lorem")
+library(knitr)
+#library(kableExtra)
+library(lorem)
+library(fixest)
+```
+
+# Introduction
+
+`r lorem::ipsum(paragraphs = 4)`
+
+# Literature Review
+
+`r lorem::ipsum(paragraphs = 4)`
+
+# Data 
+
+`r lorem::ipsum(paragraphs = 5)`
+
+# Empirical Methods
+
+`r lorem::ipsum(paragraphs = 7)`
+
+# Research Findings
+
+`r lorem::ipsum(paragraphs = 7)`
+
+# Conclusion
+
+`r lorem::ipsum(paragraphs = 3)`
+
+# References
+
+<div id="refs"></div>
+
+# Tables 
+
+```{r, echo=FALSE, results='asis'}
+data(trade)
+data(base_did)
+ols = feols(y ~ x1, base_did)
+ols_fe = feols(y ~ x1 | id+period, base_did)
+iv = feols(y ~ 1 | x1~treat, base_did)
+iv_fe = feols(y ~ 1| period | x1 ~ treat, base_did)
+etable(
+  ols, ols_fe, summary(iv, stage = 1:2), summary(iv_fe, stage = 1:2),
+  headers=c('OLS','OLS','First-stage','IV','First-stage','IV'),
+  #style.tex = style.tex(tpt = TRUE, notes.tpt.intro = "\\footnotesize"),
+    notes = c("note1", "source")
+)
+```
