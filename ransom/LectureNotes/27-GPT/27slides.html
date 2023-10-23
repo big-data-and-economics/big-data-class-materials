@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Lecture 27</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Tyler Ransom" />
+    <script src="27slides_files/header-attrs-2.14/header-attrs.js"></script>
+    <link href="27slides_files/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="27slides_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="27slides_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            TeX: { equationNumbers: { autoNumber: "AMS" } },
+        });
+    </script>
+        <style>
+        .mjx-mrow a {
+            color: black;
+            pointer-events: none;
+            cursor: default;
+        }
+    </style>
+    <link rel="stylesheet" href="byu-colors.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Lecture 27
+]
+.subtitle[
+## How to use LLMs to turbo-charge your research productivity
+]
+.author[
+### Tyler Ransom
+]
+.date[
+### ECON 5253, University of Oklahoma
+]
+
+---
+
+
+
+
+# Today's plan
+
+1. Describe Large Language Models (LLMs, e.g. GPT-4)
+
+2. Practical tips for getting the most out of LLMs
+
+3. Walk through the workflow for producing a research paper
+
+4. Go through an example step by step
+
+
+
+
+---
+# What are Large Language Models (LLMs)?
+
+- LLMs are statistical models that can manipulate text (hence "language models")
+
+- "Large" in the sense that they have billions (trillions?) of parameters
+
+- Built on 5 steps (source: Cal Newport's podcast, [here](https://youtu.be/OVm2IoUUxdo?t=731)):
+
+1. .hi[Word Guessing] - recursive text completion
+    
+2. .hi[Relevant Word Matching] - find similar words in training data ("relevant" is secret)
+    
+3. .hi[Voting] - probabilistic selection of next word
+    
+4. .hi[Feature Detection] - strengthen vote based on context of next word
+    
+5. .hi[Self-training] - iterative refinement of feature detection process
+
+
+
+---
+# Practical tips for using LLMs: saving your work
+
+- By default, ChatGPT saves your conversations, but access can be spotty
+
+- Bing AI does not by default save conversations, but browser extensions exist
+
+- Make sure you can always access your conversation in case you "strike gold"
+
+- I use the following Chrome extensions:
+
+    - ChatGPT Prompt Genius
+    
+    - Bing Chat History
+    
+- Probably there are better ones out there
+
+
+---
+# Practical tips for using LLMs: prompts
+
+- Prompt quality matters, e.g. "show me how to run a regression in R" versus 
+
+&gt; can you give me code to run a regression of `mpg` on `weight`, `cylinders`, and `carburetor` using the `mtcars` sample dataset in R? please use tidyverse packages where possible
+
+- .hi[Metaprompting] can be the easiest rule of thumb, e.g.
+
+   - "give me a prompt for an LLM to get it to do the following task:"
+   
+     followed by
+   
+   - "what extra information do I need to include to best aid completion of the task?"
+
+
+---
+# Practical tips for using LLMs: variables in prompts
+
+- It's also possible to put variables in your prompt, like so:
+
+&gt; Write a personalized thank you letter for [customer] for buying [product]. The thank you letter is intended to be given with the product. Write the letter around how the product can help [customer] in a polite, glad, extremely authentic tone, and the reader should feel comfortable and connected to reach out to the company for feedback.
+
+&gt; Product = "a graphic design software called Hue with integrated AI tools
+
+&gt; Customer = "name: Steve, a graphic designer"
+
+
+---
+# Steps for completing a research paper
+
+- Choose a topic
+
+- Conduct a literature review
+
+- Develop a research design
+
+    - Experimental, quasi-experimental, observational, ...
+    
+- Collect and analyze data 
+
+    - Data cleaning, statistical modeling, hypothesis testing, ...
+    
+- Communicate your results
+
+    - Interpreting, writing, editing, visualizing, presenting, ...
+
+
+---
+
+# Step 1: Choose a research question
+
+- Find a topic that is interesting, relevant, and feasible
+
+- Get some ideas from the literature, professors, peers, news, blogs, etc.
+
+- Make sure your question is specific, clear, and answerable with data and analysis
+
+- The key here is to .hi[be curious]
+
+- .hi[LLM-based tools:]
+
+    - Prompt iteration with GPT-4 (start with metaprompt)
+
+
+---
+
+# Step 2: Conduct a literature review
+
+- Find out what has been done before on your topic
+
+- Summarize and synthesize the main findings and arguments of the literature
+
+- Identify the gaps and controversies and how your research can contribute
+
+- .hi[LLM-based tools:]
+
+    - [Elicit.org](https://elicit.org/)
+    
+    - [Consensus.app](https://consensus.app/)
+    
+    - [ChatPDF.com](https://www.chatpdf.com/)   or   [Bing AI PDF Reader](https://twitter.com/emollick/status/1648079617956118530?s=20)
+
+
+---
+
+# Step 3: Develop a research design
+
+- Specify your data sources, variables, hypotheses, models, estimation methods, and tests
+
+- Is this a causal or predictive model? Is there missing data? Measurement error?
+
+- Explain how your data and methods can address your research question and test your hypotheses
+
+- Discuss the strengths and limitations of your data and methods
+
+- Consider data quality, sample size, measurement error, endogeneity, identification, robustness, etc.
+
+- .hi[LLM-based tools:] Prompt iteration with GPT-4 (start with metaprompt)
+
+
+---
+
+# Step 4: Collect and analyze your data
+
+- Use appropriate software tools, such as R, Python, Stata, etc. to collect and analyze your data
+
+- Follow the steps of your research design and report your results in tables and graphs
+
+- Interpret your results in light of your hypotheses and the literature
+
+- Check for any errors or inconsistencies in your data and analysis
+
+- Perform any sensitivity analyses or robustness checks as needed
+
+- .hi[LLM-based tools:] Prompt iteration with GPT-4 (start with metaprompt); ask for code
+
+
+---
+
+# Step 5: Write your research paper
+
+- Follow the structure and style of economics papers
+
+- Include an abstract, an introduction, a literature review, a data and methods section, a results section, a discussion section, a conclusion section, and a reference list
+
+- Follow the formatting and citation guidelines of your instructor or journal
+
+- Write clearly, concisely, logically, and persuasively
+
+- Use economic terminology and notation correctly and consistently
+
+- Support your claims with evidence and references
+
+- .hi[LLM-based tools:] See the slide after next
+
+---
+
+# Step 6: Revise and edit your research paper
+
+- Improve your paper's content, organization, clarity, accuracy, and presentation
+
+- Proofread your paper for any spelling, grammar, punctuation, or formatting errors
+
+- Check for any logical flaws, factual errors, or missing information in your paper
+
+- Seek feedback from your instructor or peers on your paper
+
+- Incorporate their suggestions as appropriate, but don't be too deferential
+
+- .hi[LLM-based tools:] See next slide
+
+---
+
+# LLM-based tools for writing and editing
+
+- Prompt iteration with GPT-4 (start with metaprompt); asking for the following:
+    
+    - help outlining (from scratch)
+    
+    - help distilling scattered ideas into cogent paragraphs
+    
+    - help simplifying existing paragraphs
+    
+    - help reducing word count
+    
+- [lex.page](https://lex.page)
+
+- Probably very soon Microsoft Word will come with LLM support
+
+---
+
+# A step-by-step example with prompts
+
+For all the following content, I used Bing AI Chat (which uses GPT-4), except where explicitly stated
+
+1. Use a metaprompt to begin
+
+&gt; can you give me a prompt for how to ask for an outline of an empirical research paper on the topic of "what americans believe to be healthy diet and exercise habits". what sorts of details should i provide to get the most out of the answer?
+
+---
+
+# Metaprompt result
+
+.smaller[
+
+&gt; Sure, I can help you with that. A possible prompt for your question is:
+&gt; 
+&gt; I need an outline of an empirical research paper on the topic of “what Americans believe to be healthy diet and exercise habits”. The paper should have the following sections: introduction, literature review, methods, results, discussion, and conclusion. Some details that I would like to know are:
+&gt; 
+&gt; - What is the main research question and hypothesis of the paper?
+&gt; - What are some relevant previous studies on this topic and how do they relate to the paper?
+&gt; - What are the data sources and sampling methods used in the paper?
+&gt; - What are the main findings and implications of the paper?
+&gt; - What are some limitations and directions for future research?
+&gt; 
+&gt; Please provide a brief summary of each section and use bullet points to organize the main points.
+&gt; Thank you.
+
+]
+
+
+---
+
+# Tips for handling output
+
+- Interestingly, the results vary quite a bit on multiple repetitions of the same prompt
+
+    - One one run, I got suggested to collect data myself via an online survey
+    
+    - Another run suggested using the National Health Interview Survey
+    
+    - A third run suggested using the ORUDIET study (a small-sample clinical trial)
+
+- Often the result will get cut off; in this case, nudge the AI with, "it looks like your answer got truncated; can you please continue?"
+
+- Using Bing, it pointed me to good statistics to motivate the paper (e.g. Pew survey)
+
+---
+
+# Outline of paper
+
+.center[
+&lt;img src="bing-outline-1.png" width="53%" /&gt;
+]
+
+---
+
+# Literature review: Elicit
+
+.center[
+&lt;img src="elicit-output.png" width="92%" /&gt;
+]
+
+---
+
+# Literature review: Consensus
+
+.center[
+&lt;img src="consensus-output.png" width="75%" /&gt;
+]
+
+---
+
+# Help with data: metaprompt
+
+&gt; can you give me a prompt? i'm interested in using NHANES to analyze perceptions and behaviors related to diet and exercise and how they correlate with body weight. i'd like to use the r package "NHANES" and use r to do some preliminary analysis. what sorts of details should I provide in my prompt?
+
+- Note: I switched to NHANES from NHIS because NHIS turned out to not be a great data source for this quick example. NHANES doesn't have exactly the right questions.
+
+---
+
+# Help with data: suggested prompt
+
+
+.center[
+&lt;img src="bing-data-metaprompt-nhanes.png" width="60%" /&gt;
+]
+
+
+---
+
+# Help with data: output of suggested prompt
+
+
+.center[
+&lt;img src="bing-nhanes-data-1.png" width="55%" /&gt;
+]
+
+
+---
+
+# Help with finding key variables: prompt
+
+.smallest[
+
+&gt; the list of variables in NHANES is below. Which ones do you think have to do with body weight, physical activity, and diet? [1] "ID" "SurveyYr" "Gender" "Age" "AgeDecade" [6] "AgeMonths" "Race1" "Race3" "Education" "MaritalStatus" [11] "HHIncome" "HHIncomeMid" "Poverty" "HomeRooms" "HomeOwn" [16] "Work" "Weight" "Length" "HeadCirc" "Height" [21] "BMI" "BMICatUnder20yrs" "BMI_WHO" "Pulse" "BPSysAve" [26] "BPDiaAve" "BPSys1" "BPDia1" "BPSys2" "BPDia2" [31] "BPSys3" "BPDia3" "Testosterone" "DirectChol" "TotChol" [36] "UrineVol1" "UrineFlow1" "UrineVol2" "UrineFlow2" "Diabetes" [41] "DiabetesAge" "HealthGen" "DaysPhysHlthBad" "DaysMentHlthBad" "LittleInterest" [46] "Depressed" "nPregnancies" "nBabies" "Age1stBaby" "SleepHrsNight" [51] "SleepTrouble" "PhysActive" "PhysActiveDays" "TVHrsDay" "CompHrsDay" [56] "TVHrsDayChild" "CompHrsDayChild" "Alcohol12PlusYr" "AlcoholDay" "AlcoholYear" [61] "SmokeNow" "Smoke100" "Smoke100n" "SmokeAge" "Marijuana" [66] "AgeFirstMarij" "RegularMarij" "AgeRegMarij" "HardDrugs" "SexEver" [71] "SexAge" "SexNumPartnLife" "SexNumPartYear" "SameSex" "SexOrientation" [76] "PregnantNow"
+
+]
+
+- Note: I gave it the output of the following R code:
+
+```r
+data(NHANES)
+df &lt;- NHANES
+names(df)
+```
+
+---
+
+# Help with finding key variables: output
+
+.center[
+&lt;img src="bing-nhanes-data-2.png" width="63%" /&gt;
+]
+
+
+---
+
+# Descriptive statistics: prompt
+
+&gt; i've got some R code so far (at the very bottom of this prompt). can you please give me more code to do the following: 
+
+&gt; 1. subset the data to remove anyone under age 18 or above age 75; 
+
+&gt; 2. produce two separate summary statistics tables (one for numeric variables and one for categorical variables) of the following list of variables: weight, height, bmi, physactive, tvhrsday, comphrsday, alcoholyear, smokenow, smokeage, gender, age, race3, hhincome, education 
+
+&gt; R code so far: # Load packages library(tidyverse) library(magrittr) library(NHANES) library(modelsummary) # load data data(NHANES) df &lt;- NHANES names(df) %&gt;% print
+
+
+---
+
+# Descriptive statistics: output (after some finagling)
+
+.center[
+&lt;img src="bing-descriptives-nhanes-1.png" width="75%" /&gt;
+]
+
+
+---
+
+# Cleaning data
+
+- You will probably need to iterate on the descriptive statistics
+
+- You might find some issues with them, ask about how to clean the data, and then repeat the process
+
+- I'm going to assume the data is clean and move on to regression analysis
+
+
+---
+
+# Regression analysis: prompt
+
+&gt; can you write me code (not rendered in markdown) for how to regress BMI on PhysActive, Age, Race3, HHIncome, and Education? Please use the modelsummary() function to print the output to the console in markdown
+
+
+
+---
+
+# Regression analysis: output
+
+
+.center[
+&lt;img src="bing-analysis-nhanes-1.png" width="85%" /&gt;
+]
+
+
+---
+
+# Interpreting regression output: prompt
+
+&gt; can you help me interpret the coefficient on PhysActiveYes in the following regression output? 
+
+.scroll-box-12[
+
+```r
+Coefficients:
+                         Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)             25.579999   1.135622  22.525  &lt; 2e-16 ***
+PhysActiveYes           -1.200173   0.246766  -4.864 1.21e-06 ***
+Age                      0.039872   0.007983   4.995 6.23e-07 ***
+Race3Black               4.763254   0.608907   7.823 7.08e-15 ***
+Race3Hispanic            3.144666   0.670377   4.691 2.84e-06 ***
+Race3Mexican             3.718929   0.662087   5.617 2.12e-08 ***
+Race3White               2.836051   0.511532   5.544 3.21e-08 ***
+Race3Other               3.894542   0.869472   4.479 7.77e-06 ***
+HHIncome 5000-9999      -0.087116   1.078976  -0.081   0.9357    
+HHIncome10000-14999     -0.857914   0.920440  -0.932   0.3514    
+HHIncome15000-19999     -1.206566   0.919299  -1.312   0.1895    
+HHIncome20000-24999      0.324596   0.924769   0.351   0.7256    
+HHIncome25000-34999     -0.037917   0.872972  -0.043   0.9654    
+HHIncome35000-44999     -0.534508   0.874774  -0.611   0.5412    
+HHIncome45000-54999     -1.669672   0.893261  -1.869   0.0617 .  
+HHIncome55000-64999     -2.234146   0.925256  -2.415   0.0158 *  
+HHIncome65000-74999     -1.061909   0.916478  -1.159   0.2467    
+HHIncome75000-99999     -1.240629   0.870508  -1.425   0.1542    
+HHIncomemore 99999      -1.776248   0.838871  -2.117   0.0343 *  
+Education9 - 11th Grade -0.401476   0.651210  -0.617   0.5376    
+EducationHigh School     1.043322   0.622898   1.675   0.0940 .  
+EducationSome College    0.568005   0.613063   0.927   0.3543    
+EducationCollege Grad   -0.143375   0.634814  -0.226   0.8213    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 6.288 on 3040 degrees of freedom
+  (3901 observations deleted due to missingness)
+Multiple R-squared:  0.07063,	Adjusted R-squared:  0.0639 
+F-statistic:  10.5 on 22 and 3040 DF,  p-value: &lt; 2.2e-16
+```
+]
+
+
+---
+
+# Interpreting regression output: response
+
+.small[
+
+&gt; Sure, I can help you with that. The coefficient on PhysActiveYes means that, holding all other variables constant, being physically active in the past 30 days is associated with a 1.2 unit lower BMI on average, compared to not being physically active. This effect is statistically significant at the 0.001 level, meaning that it is very unlikely to be due to chance. The standard error of this coefficient is 0.2468, which measures the uncertainty around the estimate. The t value of -4.864 is the ratio of the coefficient to the standard error, and the p value of 1.21e-06 is the probability of obtaining a coefficient as extreme or more extreme than this one if the true effect was zero. The confidence interval for this coefficient can be computed by multiplying the standard error by 1.96 (for a 95% confidence level) and adding and subtracting that value from the coefficient. This gives a range of [-1.6856, -0.7148], which means that we are 95% confident that the true effect of being physically active on BMI lies somewhere between -1.6856 and -0.7148 units.
+
+]
+
+
+
+
+---
+
+# Formatting equation in LaTeX
+
+
+.center[
+&lt;img src="bing-eqn-1.png" width="75%" /&gt;
+]
+
+
+
+---
+
+# Writeup: prompt
+
+&gt; can you write up a three-paragraph analysis based on these regression results? I'd like you to consider the following questions: 
+&gt; 
+&gt; 1) is exercise negatively correlated with BMI? 
+&gt; 
+&gt; 2) is the effect practically significant (as opposed to statistically significant)? 
+&gt; 
+&gt; 3) does this model show that the relationship between physical activity and BMI is causal? 
+&gt; 
+&gt; 4) are there any other interesting correlations in the regression output that would be worth discusing?
+
+
+---
+
+# Writeup: output (1/3)
+
+
+.smallest[
+
+&gt; Sure, I can try to write a three-paragraph analysis based on these regression results. Here is a possible text:
+&gt; 
+&gt; In this analysis, we use data from the National Health and Nutrition Examination Survey (NHANES) to examine the relationship between body mass index (BMI) and various factors, such as physical activity, age, race, income, and education. We fit a linear regression model of BMI on these variables using a subset of 3063 observations from adults aged 18 to 75.
+&gt; 
+&gt; The results show that physical activity is negatively correlated with BMI, meaning that people who reported being physically active in the past 30 days had lower BMI values on average than those who did not. The coefficient of -1.2 indicates that being physically active is associated with a 1.2 unit lower BMI, holding all other variables constant. This effect is statistically significant at the 0.001 level, meaning that it is very unlikely to be due to chance. However, the effect may not be practically significant, as it represents a relatively small difference in BMI for most people. For example, a person who is 170 cm tall and weighs 70 kg would have a BMI of 24.2, which is considered normal. If they became physically active, their BMI would decrease by 1.2 units to 23.0, which is still within the normal range.
+
+]
+
+---
+
+# Writeup: output (2/3)
+
+&gt; The regression model does not imply that the relationship between physical activity and BMI is causal, as there may be other factors that affect both variables and confound the association. For instance, people who have health problems or disabilities may be less likely to exercise and more likely to have higher BMI values. To establish causality, we would need to conduct a randomized controlled experiment or use an instrumental variable approach. Moreover, the model only explains about 7% of the variation in BMI, as indicated by the R-squared value, which means that there are many other factors that influence BMI that are not included in the model.
+
+---
+
+# Writeup: output (3/3)
+
+.smallest[
+
+&gt; Some other interesting correlations in the regression output are:
+&gt; 
+&gt; - Age is positively correlated with BMI, meaning that older people tend to have higher BMI values than younger people. The coefficient of 0.04 indicates that each additional year of age is associated with a 0.04 unit increase in BMI, holding all other variables constant. This effect is statistically significant at the 0.001 level.
+&gt; - Race is also correlated with BMI, meaning that different racial groups have different average BMI values. The coefficients of Race3 indicate that Black, Hispanic, Mexican, White, and Other racial groups have higher BMI values than Asian (the reference group), holding all other variables constant. These effects are all statistically significant at the 0.001 level.
+&gt; - Income is negatively correlated with BMI, meaning that people with higher income tend to have lower BMI values than people with lower income. The coefficients of HHIncome indicate that most income categories have lower BMI values than the lowest income category (less than $5000), holding all other variables constant. These effects are statistically significant at the 0.05 level for some income categories (55000-64999 and more than 99999).
+&gt; - Education is not significantly correlated with BMI, meaning that there is no evidence of a systematic difference in BMI values across different levels of education. The coefficients of Education are not statistically significant at the 0.05 level for any education category.
+
+]
+
+---
+
+# Asking for help finding motivational facts
+
+.center[
+&lt;img src="bing-motivation.png" width="85%" /&gt;
+]
+
+
+
+---
+
+# Asking for help discussing policy conclusions
+
+
+.center[
+&lt;img src="bing-conclusion.png" width="65%" /&gt;
+]
+
+
+
+
+---
+
+# Suggestions for title and abstract
+
+
+.center[
+&lt;img src="bing-title-abstract.png" width="65%" /&gt;
+]
+
+
+---
+
+# Entire conversation
+
+[Here](https://sharegpt.com/c/oBHDItE) is a link to the entire conversation
+
+And [here](https://github.com/tyleransom/DScourseS23/blob/master/LectureNotes/27-GPT/BingConversation.md) is the conversation in a Markdown file
+
+---
+
+# So far, I've used LLMs to ...
+
+.small[
+- Fill out bureaucratic forms
+- Write code that automates grading
+- Write code that systematizes data analysis
+- Write code to create data visualizations
+- Write unit tests of code
+- Prepare discussion slides for a conference
+- Prepare peer review reports
+- Prepare this slide deck
+- Reduce word count of an abstract
+- Improve sentence clarity in a paper
+- Write survey questions that a survey methodologist would approve of
+- Explain poorly written abstracts / papers in simpler terms
+- Invert mathematical functions
+- ... not to mention a bunch of stuff in my personal life
+]
+
+
+---
+
+# Staying on top of new developments
+
+The following sources are helpful for keeping on top of new developments:
+
+- [One Useful Thing](https://www.oneusefulthing.org/) Substack by Ethan Mollick
+
+- [Marginal Revolution](https://marginalrevolution.com/) blog by Tyler Cowen &amp; Alex Tabarrok
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
