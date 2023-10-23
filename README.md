@@ -1,6 +1,6 @@
 # Class Materials for Bates ECON/DCS 368: Big Data and Economics
 
-[Full syllabus](https://github.com/big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf)
+[Full syllabus](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf)
 
 [`Lectures`](#lectures) | [`Details`](#details) |
 [`FAQ`](#faq) | [`License`](#license)
@@ -91,7 +91,6 @@ This is an extremely challenging course. To help you succeed, I have outlined ex
 ### For students
 
 - Check the [calendar](#lectures) within 24 hours of each lecture to see any materials you need to download
-- Fork the main problem set repository within 24 hours of the problem set being posted
 - Open problem set data and code within 24 hours of the problem set being posted
 - Work on problem sets in groups, but turn in your own code
 - Post questions about material or problem sets to [GitHub Issues](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/issues) unless it is of a private matter (e.g. grades, extensions)
