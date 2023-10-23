@@ -1,10 +1,10 @@
 ---
-title: "Data Science for Economists"
-subtitle: "Lecture 8: Regression analysis in R"
+title: "Big Data and Economics"
+subtitle: "Fixed Effects and Difference-in-differences"
 author:
-  name: Grant R. McDermott
-  affiliation: University of Oregon | [EC 607](https://github.com/uo-ec607/lectures)
-# date: Lecture 6  #"21 October 2023"
+  name: Kyle Coombs
+  affiliation: Bates College | [ECON/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials#lectures)
+# date: Lecture 6  #"22 October 2023"
 output: 
   html_document:
     theme: journal
@@ -60,8 +60,7 @@ A convenient way to install (if necessary) and load everything is by running the
 ```r
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, wooldridge,
-               lmtest, margins, vtable, broom, modelsummary,gsheet)
+pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, wooldridge)
 
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
@@ -204,7 +203,7 @@ crime4 %>%
 ## `geom_smooth()` using formula = 'y ~ x'
 ```
 
-![](11-panel-twfe_files/figure-html/visualize-crime-1.png)<!-- -->
+![](11a-panel-twfe_files/figure-html/visualize-crime-1.png)<!-- -->
 
 ### Let's try the de-meaning approach
 
@@ -213,9 +212,6 @@ We can use `group_by` to get means-within-groups and subtract them out.
 
 ```r
 crime4 <- crime4 %>%
-  # Filter to the data points from our graph
-  filter(county %in% c(1,3,7, 23),
-         prbarr < .5) %>%
   group_by(county) %>%
   mutate(mean_crime = mean(crmrte),
          mean_prob = mean(prbarr)) %>%
@@ -243,73 +239,73 @@ msummary(list(orig_data, de_mean))
 <tbody>
   <tr>
    <td style="text-align:left;"> (Intercept) </td>
-   <td style="text-align:center;"> 0.012 </td>
+   <td style="text-align:center;"> 0.043 </td>
    <td style="text-align:center;"> 0.000 </td>
   </tr>
   <tr>
    <td style="text-align:left;">  </td>
-   <td style="text-align:center;"> (0.005) </td>
+   <td style="text-align:center;"> (0.001) </td>
    <td style="text-align:center;"> (0.000) </td>
   </tr>
   <tr>
    <td style="text-align:left;"> prbarr </td>
-   <td style="text-align:center;"> 0.049 </td>
+   <td style="text-align:center;"> −0.038 </td>
    <td style="text-align:center;">  </td>
   </tr>
   <tr>
    <td style="text-align:left;">  </td>
-   <td style="text-align:center;"> (0.017) </td>
+   <td style="text-align:center;"> (0.004) </td>
    <td style="text-align:center;">  </td>
   </tr>
   <tr>
    <td style="text-align:left;"> demeaned_prbarr </td>
    <td style="text-align:center;">  </td>
-   <td style="text-align:center;"> −0.030 </td>
+   <td style="text-align:center;"> −0.002 </td>
   </tr>
   <tr>
    <td style="text-align:left;box-shadow: 0px 1.5px">  </td>
    <td style="text-align:center;box-shadow: 0px 1.5px">  </td>
-   <td style="text-align:center;box-shadow: 0px 1.5px"> (0.012) </td>
+   <td style="text-align:center;box-shadow: 0px 1.5px"> (0.002) </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Num.Obs. </td>
-   <td style="text-align:center;"> 27 </td>
-   <td style="text-align:center;"> 27 </td>
+   <td style="text-align:center;"> 630 </td>
+   <td style="text-align:center;"> 630 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> R2 </td>
-   <td style="text-align:center;"> 0.253 </td>
-   <td style="text-align:center;"> 0.214 </td>
+   <td style="text-align:center;"> 0.129 </td>
+   <td style="text-align:center;"> 0.001 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> R2 Adj. </td>
-   <td style="text-align:center;"> 0.223 </td>
-   <td style="text-align:center;"> 0.183 </td>
+   <td style="text-align:center;"> 0.127 </td>
+   <td style="text-align:center;"> −0.001 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> AIC </td>
-   <td style="text-align:center;"> −186.2 </td>
-   <td style="text-align:center;"> −254.8 </td>
+   <td style="text-align:center;"> −3347.3 </td>
+   <td style="text-align:center;"> −4549.6 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> BIC </td>
-   <td style="text-align:center;"> −182.3 </td>
-   <td style="text-align:center;"> −250.9 </td>
+   <td style="text-align:center;"> −3334.0 </td>
+   <td style="text-align:center;"> −4536.3 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Log.Lik. </td>
-   <td style="text-align:center;"> 96.098 </td>
-   <td style="text-align:center;"> 130.399 </td>
+   <td style="text-align:center;"> 1676.651 </td>
+   <td style="text-align:center;"> 2277.823 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> F </td>
-   <td style="text-align:center;"> 8.471 </td>
+   <td style="text-align:center;"> 92.646 </td>
    <td style="text-align:center;">  </td>
   </tr>
   <tr>
    <td style="text-align:left;"> RMSE </td>
+   <td style="text-align:center;"> 0.02 </td>
    <td style="text-align:center;"> 0.01 </td>
-   <td style="text-align:center;"> 0.00 </td>
   </tr>
 </tbody>
 </table>
@@ -317,7 +313,7 @@ msummary(list(orig_data, de_mean))
 Note the coefficient has flipped! 
 
 ### Interpreting a Within Relationship
-How can we interpret that slope of `-0.03`? This is all *within variation* so our interpretation must be *within-county*. So, "comparing a county in year A where its arrest probability is 1 (100 percentage points) higher than it is in year B, we expect the number of crimes per person to drop by .03." Or if we think we've causally identified it (and want to work on a more realistic scale), "raising the arrest probability by 1 percentage point in a county reduces the number of crimes per person in that county by .0003". We're basically "controlling for county" (and will do that explicitly in a moment). So your interpretation should think of it in that way - *holding county constant* i.e. *comparing two observations with the same value of county* i.e. *comparing a county to itself at a different point in time*.
+How can we interpret that slope of `-0.02`? This is all *within variation* so our interpretation must be *within-county*. So, "comparing a county in year A where its arrest probability is 1 (100 percentage points) higher than it is in year B, we expect the number of crimes per person to drop by .02." Or if we think we've causally identified it (and want to work on a more realistic scale), "raising the arrest probability by 1 percentage point in a county reduces the number of crimes per person in that county by .0002". We're basically "controlling for county" (and will do that explicitly in a moment). So your interpretation should think of it in that way - *holding county constant* i.e. *comparing two observations with the same value of county* i.e. *comparing a county to itself at a different point in time*.
 
 #### Concept checks
 
@@ -352,75 +348,75 @@ msummary(list(orig_data, de_mean, lsdv), keep = c('prbarr', 'demeaned_prob'))
 <tbody>
   <tr>
    <td style="text-align:left;"> prbarr </td>
-   <td style="text-align:center;"> 0.049 </td>
+   <td style="text-align:center;"> −0.038 </td>
    <td style="text-align:center;">  </td>
-   <td style="text-align:center;"> −0.030 </td>
+   <td style="text-align:center;"> −0.002 </td>
   </tr>
   <tr>
    <td style="text-align:left;">  </td>
-   <td style="text-align:center;"> (0.017) </td>
+   <td style="text-align:center;"> (0.004) </td>
    <td style="text-align:center;">  </td>
-   <td style="text-align:center;"> (0.012) </td>
+   <td style="text-align:center;"> (0.003) </td>
   </tr>
   <tr>
    <td style="text-align:left;"> demeaned_prbarr </td>
    <td style="text-align:center;">  </td>
-   <td style="text-align:center;"> −0.030 </td>
+   <td style="text-align:center;"> −0.002 </td>
    <td style="text-align:center;">  </td>
   </tr>
   <tr>
    <td style="text-align:left;box-shadow: 0px 1.5px">  </td>
    <td style="text-align:center;box-shadow: 0px 1.5px">  </td>
-   <td style="text-align:center;box-shadow: 0px 1.5px"> (0.012) </td>
+   <td style="text-align:center;box-shadow: 0px 1.5px"> (0.002) </td>
    <td style="text-align:center;box-shadow: 0px 1.5px">  </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Num.Obs. </td>
-   <td style="text-align:center;"> 27 </td>
-   <td style="text-align:center;"> 27 </td>
-   <td style="text-align:center;"> 27 </td>
+   <td style="text-align:center;"> 630 </td>
+   <td style="text-align:center;"> 630 </td>
+   <td style="text-align:center;"> 630 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> R2 </td>
-   <td style="text-align:center;"> 0.253 </td>
-   <td style="text-align:center;"> 0.214 </td>
-   <td style="text-align:center;"> 0.941 </td>
+   <td style="text-align:center;"> 0.129 </td>
+   <td style="text-align:center;"> 0.001 </td>
+   <td style="text-align:center;"> 0.871 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> R2 Adj. </td>
-   <td style="text-align:center;"> 0.223 </td>
-   <td style="text-align:center;"> 0.183 </td>
-   <td style="text-align:center;"> 0.930 </td>
+   <td style="text-align:center;"> 0.127 </td>
+   <td style="text-align:center;"> −0.001 </td>
+   <td style="text-align:center;"> 0.849 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> AIC </td>
-   <td style="text-align:center;"> −186.2 </td>
-   <td style="text-align:center;"> −254.8 </td>
-   <td style="text-align:center;"> −248.8 </td>
+   <td style="text-align:center;"> −3347.3 </td>
+   <td style="text-align:center;"> −4549.6 </td>
+   <td style="text-align:center;"> −4371.6 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> BIC </td>
-   <td style="text-align:center;"> −182.3 </td>
-   <td style="text-align:center;"> −250.9 </td>
-   <td style="text-align:center;"> −241.0 </td>
+   <td style="text-align:center;"> −3334.0 </td>
+   <td style="text-align:center;"> −4536.3 </td>
+   <td style="text-align:center;"> −3962.6 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> Log.Lik. </td>
-   <td style="text-align:center;"> 96.098 </td>
-   <td style="text-align:center;"> 130.399 </td>
-   <td style="text-align:center;"> 130.399 </td>
+   <td style="text-align:center;"> 1676.651 </td>
+   <td style="text-align:center;"> 2277.823 </td>
+   <td style="text-align:center;"> 2277.823 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> F </td>
-   <td style="text-align:center;"> 8.471 </td>
+   <td style="text-align:center;"> 92.646 </td>
    <td style="text-align:center;">  </td>
-   <td style="text-align:center;"> 87.946 </td>
+   <td style="text-align:center;"> 40.351 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> RMSE </td>
+   <td style="text-align:center;"> 0.02 </td>
    <td style="text-align:center;"> 0.01 </td>
-   <td style="text-align:center;"> 0.00 </td>
-   <td style="text-align:center;"> 0.00 </td>
+   <td style="text-align:center;"> 0.01 </td>
   </tr>
 </tbody>
 </table>
@@ -438,18 +434,57 @@ lsdv
 ```
 
 ```
-## OLS estimation, Dep. Var.: crmrte
-## Observations: 27 
-## Standard-errors: IID 
-##                   Estimate Std. Error   t value   Pr(>|t|)    
-## (Intercept)       0.045631   0.004116  11.08640 1.7906e-10 ***
-## prbarr           -0.030491   0.012442  -2.45068 2.2674e-02 *  
-## factor(county)3  -0.025308   0.002165 -11.68996 6.5614e-11 ***
-## factor(county)7  -0.009870   0.001418  -6.96313 5.4542e-07 ***
-## factor(county)23 -0.008587   0.001258  -6.82651 7.3887e-07 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## RMSE: 0.001933   Adj. R2: 0.930441
+## 
+## Call:
+## lm(formula = crmrte ~ prbarr + factor(county), data = crime4)
+## 
+## Coefficients:
+##       (Intercept)             prbarr    factor(county)3    factor(county)5  
+##         0.0363976         -0.0020232         -0.0211038         -0.0227439  
+##   factor(county)7    factor(county)9   factor(county)11   factor(county)13  
+##        -0.0125058         -0.0240486         -0.0183143         -0.0032912  
+##  factor(county)15   factor(county)17   factor(county)19   factor(county)21  
+##        -0.0179836         -0.0146255         -0.0185499          0.0035485  
+##  factor(county)23   factor(county)25   factor(county)27   factor(county)33  
+##        -0.0073943         -0.0034639         -0.0012558         -0.0198379  
+##  factor(county)35   factor(county)37   factor(county)39   factor(county)41  
+##         0.0070240         -0.0143802         -0.0212591         -0.0115589  
+##  factor(county)45   factor(county)47   factor(county)49   factor(county)51  
+##        -0.0008915         -0.0053747         -0.0015888          0.0318754  
+##  factor(county)53   factor(county)55   factor(county)57   factor(county)59  
+##        -0.0186603          0.0221664         -0.0063204         -0.0178825  
+##  factor(county)61   factor(county)63   factor(county)65   factor(county)67  
+##        -0.0149666          0.0381621          0.0198140          0.0214212  
+##  factor(county)69   factor(county)71   factor(county)77   factor(county)79  
+##        -0.0211463          0.0228639          0.0022599         -0.0215523  
+##  factor(county)81   factor(county)83   factor(county)85   factor(county)87  
+##         0.0205261         -0.0064776          0.0051594         -0.0078661  
+##  factor(county)89   factor(county)91   factor(county)93   factor(county)97  
+##        -0.0088413         -0.0040777         -0.0018436          0.0021169  
+##  factor(county)99  factor(county)101  factor(county)105  factor(county)107  
+##        -0.0192747         -0.0027612          0.0143055          0.0108018  
+## factor(county)109  factor(county)111  factor(county)113  factor(county)115  
+##        -0.0170930         -0.0187163         -0.0239391         -0.0301032  
+## factor(county)117  factor(county)119  factor(county)123  factor(county)125  
+##        -0.0169581          0.0526182         -0.0023063         -0.0091250  
+## factor(county)127  factor(county)129  factor(county)131  factor(county)133  
+##         0.0028419          0.0386488         -0.0179728          0.0098405  
+## factor(county)135  factor(county)137  factor(county)139  factor(county)141  
+##         0.0188796         -0.0220273         -0.0066127          0.0337109  
+## factor(county)143  factor(county)145  factor(county)147  factor(county)149  
+##        -0.0139798         -0.0071850          0.0166929         -0.0200991  
+## factor(county)151  factor(county)153  factor(county)155  factor(county)157  
+##        -0.0114062         -0.0047028         -0.0026681         -0.0058717  
+## factor(county)159  factor(county)161  factor(county)163  factor(county)165  
+##        -0.0043145         -0.0154759         -0.0147833          0.0082355  
+## factor(county)167  factor(county)169  factor(county)171  factor(county)173  
+##        -0.0128534         -0.0232628         -0.0141934         -0.0242636  
+## factor(county)175  factor(county)179  factor(county)181  factor(county)183  
+##        -0.0175234         -0.0077435          0.0232585          0.0175664  
+## factor(county)185  factor(county)187  factor(county)189  factor(county)191  
+##        -0.0243118         -0.0078490         -0.0071590          0.0015451  
+## factor(county)193  factor(county)195  factor(county)197  
+##        -0.0152095          0.0097064         -0.0209701
 ```
 
 THe interpretation is exactly the same as with a categorical variable - we have an omitted county, and these show the difference relative to that omitted county
@@ -468,7 +503,7 @@ lm(crmrte ~ prbarr + county, data = crime4)
 ## 
 ## Coefficients:
 ## (Intercept)       prbarr       county  
-##   1.134e-02    4.829e-02    6.444e-05
+##   4.213e-02   -3.788e-02    1.094e-05
 ```
 
 This is saying that as FIPS code increases by one, the crime rate increases by 0.000011... that's nonsense. There's an urban legend of an economist who took the log of the NAICS industry classification code for quite some time before realizing they meant to use a categorical variable. Correcting that mistake completely changed their results.
@@ -479,9 +514,16 @@ This also makes clear another element of what's happening! Just like with a cate
 
 
 ```r
-crime4 %>%
-  ungroup() %>%
-  mutate(pred = predict(lsdv)) %>%
+crime4_small <- crime4 %>% 
+  filter(county %in% c(1,3,7, 23), # filter down data points
+         prbarr < .5) %>%
+  ungroup() 
+# Make lsdv for this small dataframe
+lsdv_small <- lm(crmrte ~ prbarr + factor(county), 
+  data = crime4_small)
+
+crime4_small %>%
+  mutate(pred = predict(lsdv_small)) %>%
   group_by(county) %>%
   mutate(label = case_when(
     crmrte == max(crmrte) ~ paste('County',county),
@@ -511,7 +553,7 @@ crime4 %>%
 ## Warning: Removed 23 rows containing missing values (`geom_text()`).
 ```
 
-![](11-panel-twfe_files/figure-html/slopes-1.png)<!-- -->
+![](11a-panel-twfe_files/figure-html/slopes-1.png)<!-- -->
 
 ### The "Pros" don't use LSDV
 
@@ -525,236 +567,192 @@ etable(de_mean, pro)
 ```
 
 ```
-##                           de_mean               pro
-## Dependent Var.:    demeaned_crime            crmrte
+##                            de_mean              pro
+## Dependent Var.:     demeaned_crime           crmrte
 ##                                                    
-## Constant        1.41e-18 (0.0004)                  
-## demeaned_prbarr -0.0305* (0.0117)                  
-## prbarr                            -0.0305* (0.0064)
-## Fixed-Effects:  ----------------- -----------------
-## county                         No               Yes
-## _______________ _________________ _________________
-## S.E. type                     IID        by: county
-## Observations                   27                27
-## R2                        0.21445           0.94114
-## Within R2                      --           0.21445
+## Constant        -1.01e-20 (0.0003)                 
+## demeaned_prbarr   -0.0020 (0.0025)                 
+## prbarr                             -0.0020 (0.0026)
+## Fixed-Effects:  ------------------ ----------------
+## county                          No              Yes
+## _______________ __________________ ________________
+## S.E. type                      IID       by: county
+## Observations                   630              630
+## R2                         0.00106          0.87076
+## Within R2                       --          0.00106
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
-To explain the **fixest** package, let's use a familiar dataset. 
-
-### Fixed effects using a familiar dataset 
-
-Let's review fixed effects very quickly using the Ask A Manager Survey 2023, which you used on problem set 2. Like on your problem set, we'll load it in using the **gsheet** package. Several of you said that you thought you could use fixed effects to residualize other differences between groups out of the data. Let's see if that's true using the package **fixest**. _As a disclaimer: these data are not systematically collected._
+To explain the **fixest** package, let's dive a bit deeper into the crime data. It has tons of variables we could use. We could account for variation by year for example. 
 
 
 ```r
-column_names <- c('timestamp','age','industry','area','jobtitle','jobtitle2',
-        'annual_salary','additional_pay','currency','currency_other',
-        'income_additional','country','state','city','remote','experience_overall',
-        'experience_field','education','gender','race')
+crime_county_fe <- feols(crmrte ~ prbarr | county, data = crime4)
+crime_year_fe  <-  feols(crmrte ~ prbarr | year, data = crime4)
+crime_county_year_fe <- feols(crmrte ~ prbarr | county+year, data = crime4)
 
-US_strings<-c("United States of America","United States", 
-  "United states" ,"USA","Usa","usa" ,"US","U.S." ,"us")
-
-# gsheet2text is a function that takes a google sheet and turns it into a text file that read_csv can use
-managers2023 = read_csv(gsheet::gsheet2text('https://docs.google.com/spreadsheets/d/  1ioUjhnz6ywSpEbARI-G3RoPyO0NRBqrJnWf-7C_eirs/edit?resourcekey#gid=1854892322'),
-  col_names = column_names) %>%
-    mutate(year = 2023,
-    across(c(additional_pay, annual_salary),as.numeric)) %>%
-  filter(country %in% US_strings,
-    gender %in% c('Man','Woman'),
-    !is.na(state)) %>%
-  separate(race,into=c('race1','race2','race3','race4'), # Separates the race variable into 4 columns
-    sep=',') 
+etable(list('County FE'=crime_county_fe, 
+            'Year FE'=crime_year_fe, 
+            'County and Year FE'=crime_county_year_fe))
 ```
 
 ```
-## No encoding supplied: defaulting to UTF-8.
-```
-
-```
-## Rows: 17036 Columns: 20
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (20): timestamp, age, industry, area, jobtitle, jobtitle2, annual_salary...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
-```r
-managers2022 = read_csv(gsheet::gsheet2text('https://docs.google.com/spreadsheets/d/1ioUjhnz6ywSpEbARI-G3RoPyO0NRBqrJnWf-7C_eirs/edit?resourcekey#gid=1854892322'),
-  col_names = column_names) %>%
-    mutate(year = 2022,
-    across(c(additional_pay, annual_salary),as.numeric)) %>%
-  filter(country %in% US_strings,
-    gender %in% c('Man','Woman'),
-    !is.na(state)) %>%
-  separate(race,into=c('race1','race2','race3','race4'), # Separates the race variable into 4 columns
-    sep=',') 
-```
-
-```
-## No encoding supplied: defaulting to UTF-8.
-## Rows: 17036 Columns: 20── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr (20): timestamp, age, industry, area, jobtitle, jobtitle2, annual_salary...
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
-```r
-# Focus on the US and cismen and women to simplify the analysis
-managers <- bind_rows(managers2023,managers2022) 
-```
-
-We won't go into everything you can possibly do with this dataset until later in the course, but a few of you suggested it may be helpful to residualize of the fixed effects for race or age when looking at the gender pay gap in these data.
-
-
-```r
-gender_pay_gap <- feols(annual_salary ~ gender,data=managers2023)
-gender_pay_gap_race_fe <- feols(annual_salary ~ gender | race1,data=managers)
-```
-
-```
-## NOTE: 48 observations removed because of NA values (Fixed-effects: 48).
-```
-
-```r
-gender_pay_gap_age_fe <- feols(annual_salary ~ gender | age,data=managers)
-gender_pay_gap_age_race_fe <- feols(annual_salary ~ gender | age+race1,data=managers)
-```
-
-```
-## NOTE: 48 observations removed because of NA values (Fixed-effects: 48).
-```
-
-```r
-etable(list('Base'=gender_pay_gap, 
-  'Age FE'=gender_pay_gap_age_fe, 
-  'Race FE'=gender_pay_gap_race_fe, 
-  'Age and Race FE'=gender_pay_gap_age_race_fe))
-```
-
-```
-##                                   Base                 Age FE
-## Dependent Var.:          annual_salary          annual_salary
-##                                                              
-## Constant        121,813.5*** (1,532.4)                       
-## genderWoman     -23,259.8*** (1,693.9) -23,430.9*** (3,319.7)
-## Fixed-Effects:  ---------------------- ----------------------
-## age                                 No                    Yes
-## race1                               No                     No
-## _______________ ______________________ ______________________
-## S.E. type                          IID                by: age
-## Observations                    13,212                 26,424
-## R2                             0.01407                0.03466
-## Within R2                           --                0.01457
-## 
-##                                Race FE        Age and Race FE
-## Dependent Var.:          annual_salary          annual_salary
-##                                                              
-## Constant                                                     
-## genderWoman     -23,328.4*** (1,368.7) -23,521.3*** (3,275.9)
-## Fixed-Effects:  ---------------------- ----------------------
-## age                                 No                    Yes
-## race1                              Yes                    Yes
-## _______________ ______________________ ______________________
-## S.E. type                    by: race1                by: age
-## Observations                    26,376                 26,376
-## R2                             0.01859                0.04104
-## Within R2                      0.01419                0.01475
+##                        County FE            Year FE County and Yea..
+## Dependent Var.:           crmrte             crmrte           crmrte
+##                                                                     
+## prbarr          -0.0020 (0.0026) -0.0378** (0.0090) -0.0011 (0.0026)
+## Fixed-Effects:  ---------------- ------------------ ----------------
+## county                       Yes                 No              Yes
+## year                          No                Yes              Yes
+## _______________ ________________ __________________ ________________
+## S.E.: Clustered       by: county           by: year       by: county
+## Observations                 630                630              630
+## R2                       0.87076            0.13347          0.87735
+## Within R2                0.00106            0.12764          0.00034
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
-Pretty neat right? Just sticking something after the `|` allows you to residualize its fixed effect! But won't it get tedious writing out all these variations of fixed effects? Sure will. That's where the **fixest** package comes in handy. 
+Pretty neat right? Just sticking something after the `|` allows you to residualize its fixed effect! 
+
+
+
+```r
+dict = c('prbarr'='Prob. Arrest',
+  'avgsen'='Avg. Sentence',
+  'county'='County',
+  'year'= 'Year',
+  'crmrte'='Crime Rate',
+  'prbconv'='Prob. Conviction')
+
+etable(list('County FE'=crime_county_fe, 
+            'Year FE'=crime_year_fe, 
+            'County and Year FE'=crime_county_year_fe),
+       notes='Note: Estimates from various fixed effects regressions on the Crime Data',
+       dict=dict  
+       )
+```
+
+```
+##                        County FE            Year FE County and Yea..
+## Dependent Var.:       Crime Rate         Crime Rate       Crime Rate
+##                                                                     
+## Prob. Arrest    -0.0020 (0.0026) -0.0378** (0.0090) -0.0011 (0.0026)
+## Fixed-Effects:  ---------------- ------------------ ----------------
+## County                       Yes                 No              Yes
+## Year                          No                Yes              Yes
+## _______________ ________________ __________________ ________________
+## S.E.: Clustered       by: County           by: Year       by: County
+## Observations                 630                630              630
+## R2                       0.87076            0.13347          0.87735
+## Within R2                0.00106            0.12764          0.00034
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+```r
+# I don't want to keep writing in ,dict=dct. So I'll use setFixestDict
+# This applies to every etable in the session
+setFixest_dict(dict)
+```
+
+##### Visualization
+
+Similarly, the [`fixest::coefplot()`](https://lrberge.github.io/fixest/reference/coefplot.html) function for plotting estimation results:
+
+
+```r
+coefplot(list(crime_county_fe, crime_year_fe, crime_county_year_fe))
+
+## Add legend (optional)
+legend("bottomleft", col = 1:2, lwd = 1, pch = c(20, 17),
+       legend = c("County Fixed Effects", 'Year Fixed Effects', "County and Year Fixed Effects"))
+```
+
+![](11a-panel-twfe_files/figure-html/coefplot-1.png)<!-- -->
+
+`coefplot()` is especially useful for tracing the evolution of treatment effects over time, as in a difference-in-differences setup (see [Examples](https://lrberge.github.io/fixest/reference/coefplot.html#examples)). However, I realise some people may find it a bit off-putting that it produces base R plots, rather than a **ggplot2** object. We'll get to an automated **ggplot2** coefficient plot solution further below with `modelsummary::modelplot()`. Nevertheless, let me close this out this section by demonstrating the relative ease with which you can do this "manually". Consider the below example, which leverages the fact that we have saved (or can save) regression models as data frames with `broom::tidy()`. As I suggested earlier, this makes it simple to construct our own bespoke coefficient plots.
+
+
+```r
+# library(ggplot2) ## Already loaded
+
+## First get tidied output of the ols_hdfe object
+coefs_crime_county_fe = tidy(crime_county_fe, conf.int = TRUE)
+coefs_crime_year_fe = tidy(crime_year_fe, conf.int = TRUE)
+coefs_crime_county_year_fe = tidy(crime_county_year_fe, conf.int = TRUE)
+
+bind_rows(
+  coefs_crime_county_fe %>% mutate(reg = "Model 1\nCounty FE"),
+  coefs_crime_year_fe %>% mutate(reg = "Model 2\nYear FE"),
+  coefs_crime_county_year_fe %>% mutate(reg="Model 3\nCounty and Year FE")
+  ) %>%
+  ggplot(aes(x=reg, y=estimate, ymin=conf.low, ymax=conf.high)) +
+  geom_pointrange() +
+  labs(Title = "Marginal effect of probability of arrest on crime rate") +
+  geom_hline(yintercept = 0, col = "orange") +
+  labs(
+    title = "'Effect' probability of arrest on crime rate",
+    caption = "Data: Crime dataset from Wooldridge R package"
+    ) +
+  theme(axis.title.x = element_blank())
+```
+
+![](11a-panel-twfe_files/figure-html/fe_mods_compared-1.png)<!-- -->
 
 ##### What if we wanted to change the clustering of the standard errors? 
 
-Did you notice the S.E. type above? It auto-clustered by the fixed effects -- specifically the fixed effect with the most levels (so age when choosing between age and race).
+Did you notice the S.E. type above? It auto-clustered by the fixed effects -- specifically the fixed effect with the most levels. **fixest** does that by default, but maybe you disagree! 
 
 Sometimes you want to cluster standard errors a new way. Well that is something you can do with **fixest** and its delightfully well-designed `etable()` function. You can specify the cluster variable with `cluster()` or the type of standard errors you want with `se()` and get different types of standard errors. Below I specify standard errors clustered by state and then an assumption of independent and identically distributed errors. (The most vanilla standard errors you can assume and rarely the ones we believe explain real world phenomena.)
 
 
 ```r
-etable(list('Base'=gender_pay_gap, 
-  'Age FE'=gender_pay_gap_age_fe, 
-  'Race FE'=gender_pay_gap_race_fe, 
-  'Age and Race FE'=gender_pay_gap_age_race_fe),
-  se='IID')
+# IID standard errors
+etable(list('County FE'=crime_county_fe, 
+            'Year FE'=crime_year_fe, 
+            'County and Year FE'=crime_county_year_fe),
+        se='IID')
 ```
 
 ```
-##                                   Base                 Age FE
-## Dependent Var.:          annual_salary          annual_salary
-##                                                              
-## Constant        121,813.5*** (1,532.4)                       
-## genderWoman     -23,259.8*** (1,693.9) -23,430.9*** (1,185.5)
-## Fixed-Effects:  ---------------------- ----------------------
-## age                                 No                    Yes
-## race1                               No                     No
-## _______________ ______________________ ______________________
-## S.E. type                          IID                    IID
-## Observations                    13,212                 26,424
-## R2                             0.01407                0.03466
-## Within R2                           --                0.01457
-## 
-##                                Race FE        Age and Race FE
-## Dependent Var.:          annual_salary          annual_salary
-##                                                              
-## Constant                                                     
-## genderWoman     -23,328.4*** (1,197.5) -23,521.3*** (1,184.1)
-## Fixed-Effects:  ---------------------- ----------------------
-## age                                 No                    Yes
-## race1                              Yes                    Yes
-## _______________ ______________________ ______________________
-## S.E. type                          IID                    IID
-## Observations                    26,376                 26,376
-## R2                             0.01859                0.04104
-## Within R2                      0.01419                0.01475
+##                        County FE             Year FE County and Yea..
+## Dependent Var.:       Crime Rate          Crime Rate       Crime Rate
+##                                                                      
+## Prob. Arrest    -0.0020 (0.0027) -0.0378*** (0.0040) -0.0011 (0.0026)
+## Fixed-Effects:  ---------------- ------------------- ----------------
+## County                       Yes                  No              Yes
+## Year                          No                 Yes              Yes
+## _______________ ________________ ___________________ ________________
+## S.E. type                    IID                 IID              IID
+## Observations                 630                 630              630
+## R2                       0.87076             0.13347          0.87735
+## Within R2                0.00106             0.12764          0.00034
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
 ```r
-etable(list('Base'=gender_pay_gap, 
-  'Age FE'=gender_pay_gap_age_fe, 
-  'Race FE'=gender_pay_gap_race_fe, 
-  'Age and Race FE'=gender_pay_gap_age_race_fe),
-  cluster='state')
+etable(list('County FE'=crime_county_fe, 
+            'Year FE'=crime_year_fe, 
+            'County and Year FE'=crime_county_year_fe),
+        cluster='county')
 ```
 
 ```
-##                                   Base                 Age FE
-## Dependent Var.:          annual_salary          annual_salary
-##                                                              
-## Constant        121,813.5*** (5,479.3)                       
-## genderWoman     -23,259.8*** (3,183.0) -23,430.9*** (3,134.0)
-## Fixed-Effects:  ---------------------- ----------------------
-## age                                 No                    Yes
-## race1                               No                     No
-## _______________ ______________________ ______________________
-## S.E.: Clustered              by: state              by: state
-## Observations                    13,212                 26,424
-## R2                             0.01407                0.03466
-## Within R2                           --                0.01457
-## 
-##                                Race FE        Age and Race FE
-## Dependent Var.:          annual_salary          annual_salary
-##                                                              
-## Constant                                                     
-## genderWoman     -23,328.4*** (3,227.7) -23,521.3*** (3,179.4)
-## Fixed-Effects:  ---------------------- ----------------------
-## age                                 No                    Yes
-## race1                              Yes                    Yes
-## _______________ ______________________ ______________________
-## S.E.: Clustered              by: state              by: state
-## Observations                    26,376                 26,376
-## R2                             0.01859                0.04104
-## Within R2                      0.01419                0.01475
+##                        County FE             Year FE County and Yea..
+## Dependent Var.:       Crime Rate          Crime Rate       Crime Rate
+##                                                                      
+## Prob. Arrest    -0.0020 (0.0026) -0.0378*** (0.0103) -0.0011 (0.0026)
+## Fixed-Effects:  ---------------- ------------------- ----------------
+## County                       Yes                  No              Yes
+## Year                          No                 Yes              Yes
+## _______________ ________________ ___________________ ________________
+## S.E.: Clustered       by: County          by: County       by: County
+## Observations                 630                 630              630
+## R2                       0.87076             0.13347          0.87735
+## Within R2                0.00106             0.12764          0.00034
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -773,6 +771,8 @@ Second, reconciling standard errors across different software is a much more com
 
 #### Multiple estimations
 
+But won't it get tedious writing out all these variations of fixed effects over and over with the `feols()` repeated? Sure will. That's where the **fixest** package comes in handy. 
+
 **fixest** allows you to do multiple estimations in one command and it does is it fast! Why is it so fast? It leverages the de-meaning trick mentioned above. If a fixed effect is used in multiple estimations, it saves the outcome variable de-meaned of that fixed effect to use in all the other estimations. That saves a bunch of time! 
 
 This is also a really smart big data technique we'll get into more later in the course. It does a task once instead of multiple times to save time and processing power. 
@@ -781,45 +781,47 @@ Here's a demo using the stepwise `sw0()` function, which adds fixed effects -- s
 
 
 ```r
-gender_pay_gap_many_fes <- feols(annual_salary ~ gender | 
-  sw0(age,race1,age+race1),
-  data=managers2023)
-etable(gender_pay_gap_many_fes)
+crime_many_fes <- feols(crmrte ~ prbarr | 
+  sw0(county,year,county+year),
+  data=crime4)
+etable(crime_many_fes)
 ```
 
 ```
-##                 gender_pay_gap_many..1 gender_pay_gap_many..2
-## Dependent Var.:          annual_salary          annual_salary
-##                                                              
-## Constant        121,813.5*** (1,532.4)                       
-## genderWoman     -23,259.8*** (1,693.9) -23,430.9*** (3,319.9)
-## Fixed-Effects:  ---------------------- ----------------------
-## age                                 No                    Yes
-## race1                               No                     No
-## _______________ ______________________ ______________________
-## S.E. type                          IID                by: age
-## Observations                    13,212                 13,212
-## R2                             0.01407                0.03466
-## Within R2                           --                0.01457
+##                    crime_many_fes.1 crime_many_fes.2   crime_many_fes.3
+## Dependent Var.:          Crime Rate       Crime Rate         Crime Rate
+##                                                                        
+## Constant         0.0432*** (0.0014)                                    
+## Prob. Arrest    -0.0379*** (0.0039) -0.0020 (0.0026) -0.0378** (0.0090)
+## Fixed-Effects:  ------------------- ---------------- ------------------
+## County                           No              Yes                 No
+## Year                             No               No                Yes
+## _______________ ___________________ ________________ __________________
+## S.E. type                       IID       by: County           by: Year
+## Observations                    630              630                630
+## R2                          0.12856          0.87076            0.13347
+## Within R2                        --          0.00106            0.12764
 ## 
-##                 gender_pay_gap_many..3 gender_pay_gap_many..4
-## Dependent Var.:          annual_salary          annual_salary
-##                                                              
-## Constant                                                     
-## genderWoman     -23,328.4*** (1,368.8) -23,521.3*** (3,276.5)
-## Fixed-Effects:  ---------------------- ----------------------
-## age                                 No                    Yes
-## race1                              Yes                    Yes
-## _______________ ______________________ ______________________
-## S.E. type                    by: race1                by: age
-## Observations                    13,188                 13,188
-## R2                             0.01859                0.04104
-## Within R2                      0.01419                0.01475
+##                 crime_many_fes.4
+## Dependent Var.:       Crime Rate
+##                                 
+## Constant                        
+## Prob. Arrest    -0.0011 (0.0026)
+## Fixed-Effects:  ----------------
+## County                       Yes
+## Year                         Yes
+## _______________ ________________
+## S.E. type             by: County
+## Observations                 630
+## R2                       0.87735
+## Within R2                0.00034
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
 These results are the same as above. Oh and guess what? You can get a lot more complicated than that! 
+
+Wouldnt it be nice to have better names of our variables? We can do that uing a dict, which is just a fancy vector with names.
 
 Here's the basics of how it works.^[You can find a more in-depth explanation at the [Multiple Estimation vignette.](https://cran.r-project.org/web/packages/fixest/vignettes/multiple_estimations.html)] You can specify:
 
@@ -832,488 +834,437 @@ And here's multiple estimations used to their "fuller" potential:
 
 
 ```r
-gender_pay_gap_many_fes <- feols(c(annual_salary,additional_pay) ~ csw(gender,remote) | 
-  sw0(age,race1,state,age+race1+state),
-  fsplit=~year,
-  data=managers)
-# Just the annual salary both years pooled
-etable(gender_pay_gap_many_fes[lhs='annual_salary',sample=1],title='Annual Salary Gender Pay Gap for 2022 and 2023', notes='Note: Estimates from various fixed effects regressions on the Ask a Manager Survey from 2022 and 2023')
+crime_many_estimations <- feols(c(crmrte,prbconv) ~ csw(prbarr, avgsen, polpc) | 
+  sw0(county,year,county+year),
+  data=crime4,
+  fsplit=~urban)
+
+etable(crime_many_estimations[lhs='crmrte',sample=1],title='Crime Rate',notes='Note: Estimates from various fixed effects regressions on the Crime Data')
 ```
 
 ```
-##                             gender_pay_gap_many..1 gender_pay_gap_many..2
-## Sample (year)                          Full sample            Full sample
-## Dependent Var.:                      annual_salary          annual_salary
-##                                                                          
-## Constant                    121,813.5*** (1,083.5) 134,370.5*** (1,274.0)
-## genderWoman                 -23,259.8*** (1,197.7) -21,643.3*** (1,181.7)
-## remoteHybrid                                        -7,751.3*** (1,132.4)
-## remoteOn-site                                      -34,454.2*** (1,196.3)
-## remoteOther/it'scomplicated                           -6,585.7* (3,260.2)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                             No                     No
-## race1                                           No                     No
-## state                                           No                     No
-## ___________________________ ______________________ ______________________
-## S.E. type                                      IID                    IID
-## Observations                                26,424                 26,342
-## R2                                         0.01407                0.04876
-## Within R2                                       --                     --
+##                 crime_many_estim..1 crime_many_estim..2 crime_many_estim..3
+## Sample (urban)          Full sample         Full sample         Full sample
+## Dependent Var.:          Crime Rate          Crime Rate          Crime Rate
+##                                                                            
+## Constant         0.0432*** (0.0014)  0.0406*** (0.0026)  0.0397*** (0.0025)
+## Prob. Arrest    -0.0379*** (0.0039) -0.0381*** (0.0039) -0.0478*** (0.0039)
+## Avg. Sentence                           0.0003 (0.0003)     0.0003 (0.0002)
+## polpc                                                     2.089*** (0.2442)
+## Fixed-Effects:  ------------------- ------------------- -------------------
+## County                           No                  No                  No
+## Year                             No                  No                  No
+## _______________ ___________________ ___________________ ___________________
+## S.E. type                       IID                 IID                 IID
+## Observations                    630                 630                 630
+## R2                          0.12856             0.13055             0.22159
+## Within R2                        --                  --                  --
 ## 
-##                             gender_pay_gap_many..3 gender_pay_gap_many..4
-## Sample (year)                          Full sample            Full sample
-## Dependent Var.:                      annual_salary          annual_salary
-##                                                                          
-## Constant                                                                 
-## genderWoman                 -23,430.9*** (3,319.7) -21,872.7*** (2,991.7)
-## remoteHybrid                                         -6,664.3** (1,623.6)
-## remoteOn-site                                      -33,535.5*** (1,860.7)
-## remoteOther/it'scomplicated                            -7,480.3 (7,112.9)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                            Yes                    Yes
-## race1                                           No                     No
-## state                                           No                     No
-## ___________________________ ______________________ ______________________
-## S.E. type                                  by: age                by: age
-## Observations                                26,424                 26,342
-## R2                                         0.03466                0.06807
-## Within R2                                  0.01457                0.04876
+##                 crime_many_es..4 crime_many_es..5 crime_many_est..6
+## Sample (urban)       Full sample      Full sample       Full sample
+## Dependent Var.:       Crime Rate       Crime Rate        Crime Rate
+##                                                                    
+## Constant                                                           
+## Prob. Arrest    -0.0020 (0.0026) -0.0019 (0.0027)  -0.0043 (0.0028)
+## Avg. Sentence                    7.12e-5 (0.0001)  0.0002* (0.0001)
+## polpc                                             1.735*** (0.3191)
+## Fixed-Effects:  ---------------- ---------------- -----------------
+## County                       Yes              Yes               Yes
+## Year                          No               No                No
+## _______________ ________________ ________________ _________________
+## S.E. type             by: County       by: County        by: County
+## Observations                 630              630               630
+## R2                       0.87076          0.87084           0.89669
+## Within R2                0.00106          0.00164           0.20150
 ## 
-##                             gender_pay_gap_many..5 gender_pay_gap_many..6
-## Sample (year)                          Full sample            Full sample
-## Dependent Var.:                      annual_salary          annual_salary
-##                                                                          
-## Constant                                                                 
-## genderWoman                 -23,328.4*** (1,368.7) -21,721.3*** (1,479.5)
-## remoteHybrid                                          -7,854.5*** (359.1)
-## remoteOn-site                                        -34,013.7*** (719.7)
-## remoteOther/it'scomplicated                           -6,471.4 (11,071.0)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                             No                     No
-## race1                                          Yes                    Yes
-## state                                           No                     No
-## ___________________________ ______________________ ______________________
-## S.E. type                                by: race1              by: race1
-## Observations                                26,376                 26,294
-## R2                                         0.01859                0.05212
-## Within R2                                  0.01419                0.04785
+##                 crime_many_esti..7 crime_many_esti..8 crime_many_esti..9
+## Sample (urban)         Full sample        Full sample        Full sample
+## Dependent Var.:         Crime Rate         Crime Rate         Crime Rate
+##                                                                         
+## Constant                                                                
+## Prob. Arrest    -0.0378** (0.0090) -0.0379** (0.0088) -0.0478** (0.0086)
+## Avg. Sentence                         0.0002 (0.0002)    0.0002 (0.0002)
+## polpc                                                    2.134* (0.7683)
+## Fixed-Effects:  ------------------ ------------------ ------------------
+## County                          No                 No                 No
+## Year                           Yes                Yes                Yes
+## _______________ __________________ __________________ __________________
+## S.E. type                 by: Year           by: Year           by: Year
+## Observations                   630                630                630
+## R2                         0.13347            0.13463            0.22896
+## Within R2                  0.12764            0.12881            0.22377
 ## 
-##                             gender_pay_gap_many..7 gender_pay_gap_many..8
-## Sample (year)                          Full sample            Full sample
-## Dependent Var.:                      annual_salary          annual_salary
-##                                                                          
-## Constant                                                                 
-## genderWoman                 -23,019.8*** (3,009.4) -21,641.7*** (3,119.4)
-## remoteHybrid                                         -9,130.8** (2,878.2)
-## remoteOn-site                                      -31,238.2*** (1,787.7)
-## remoteOther/it'scomplicated                           -6,356.7 (10,009.3)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                             No                     No
-## race1                                           No                     No
-## state                                          Yes                    Yes
-## ___________________________ ______________________ ______________________
-## S.E. type                                by: state              by: state
-## Observations                                26,424                 26,342
-## R2                                         0.05365                0.07978
-## Within R2                                  0.01425                0.04159
-## 
-##                             gender_pay_gap_many..9 gender_pay_gap_man..10
-## Sample (year)                          Full sample            Full sample
-## Dependent Var.:                      annual_salary          annual_salary
-##                                                                          
-## Constant                                                                 
-## genderWoman                 -23,324.7*** (2,939.8) -22,017.8*** (2,726.4)
-## remoteHybrid                                         -8,218.2** (1,780.9)
-## remoteOn-site                                      -29,799.2*** (1,717.4)
-## remoteOther/it'scomplicated                            -7,326.8 (7,059.9)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                            Yes                    Yes
-## race1                                          Yes                    Yes
-## state                                          Yes                    Yes
-## ___________________________ ______________________ ______________________
-## S.E. type                                  by: age                by: age
-## Observations                                26,376                 26,294
-## R2                                         0.08040                0.10419
-## Within R2                                  0.01501                0.04069
+##                 crime_many_e..10 crime_many_e..11 crime_many_es..12
+## Sample (urban)       Full sample      Full sample       Full sample
+## Dependent Var.:       Crime Rate       Crime Rate        Crime Rate
+##                                                                    
+## Constant                                                           
+## Prob. Arrest    -0.0011 (0.0026) -0.0012 (0.0026)  -0.0038 (0.0027)
+## Avg. Sentence                    -9.4e-5 (0.0001)  5.05e-5 (0.0001)
+## polpc                                             1.821*** (0.3223)
+## Fixed-Effects:  ---------------- ---------------- -----------------
+## County                       Yes              Yes               Yes
+## Year                         Yes              Yes               Yes
+## _______________ ________________ ________________ _________________
+## S.E. type             by: County       by: County        by: County
+## Observations                 630              630               630
+## R2                       0.87735          0.87746           0.90563
+## Within R2                0.00034          0.00125           0.23086
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
 ```r
-# Now additional pay
-etable(gender_pay_gap_many_fes[lhs='additional_pay',sample=1],title='Additional Compensation Gender Pay Gap for 2022 and 2023', notes='Note: Estimates from various fixed effects regressions on the Ask a Manager Survey from 2022 and 2023')
+etable(crime_many_estimations[lhs='prbconv',sample=1],title='Probability of Conviction',notes='Note: Estimates from various fixed effects regressions on the Crime Data.')
 ```
 
 ```
-##                             gender_pay_gap_ma..1 gender_pay_gap_ma..2
-## Sample (year)                        Full sample          Full sample
-## Dependent Var.:                   additional_pay       additional_pay
+##                 crime_many_esti..1 crime_many_es..2 crime_many_est..3
+## Sample (urban)         Full sample      Full sample       Full sample
+## Dependent Var.:   Prob. Conviction Prob. Conviction  Prob. Conviction
 ##                                                                      
-## Constant                     21,507.4*** (589.1)  23,168.0*** (703.5)
-## genderWoman                 -11,948.2*** (654.4) -11,615.6*** (654.0)
-## remoteHybrid                                           -235.0 (631.7)
-## remoteOn-site                                     -6,298.4*** (671.5)
-## remoteOther/it'scomplicated                         1,672.2 (1,827.9)
-## Fixed-Effects:              -------------------- --------------------
-## age                                           No                   No
-## race1                                         No                   No
-## state                                         No                   No
-## ___________________________ ____________________ ____________________
-## S.E. type                                    IID                  IID
-## Observations                              20,658               20,600
-## R2                                       0.01588              0.02158
-## Within R2                                     --                   --
+## Constant        0.5807*** (0.1385) 0.5018. (0.2628)   0.3759 (0.2338)
+## Prob. Arrest       0.3512 (0.3937)  0.3464 (0.3942) -1.029** (0.3662)
+## Avg. Sentence                       0.0090 (0.0254)   0.0068 (0.0226)
+## polpc                                                296.5*** (22.92)
+## Fixed-Effects:  ------------------ ---------------- -----------------
+## County                          No               No                No
+## Year                            No               No                No
+## _______________ __________________ ________________ _________________
+## S.E. type                      IID              IID               IID
+## Observations                   630              630               630
+## R2                         0.00127          0.00146           0.21216
+## Within R2                       --               --                --
 ## 
-##                             gender_pay_gap_many..3 gender_pay_gap_many..4
-## Sample (year)                          Full sample            Full sample
-## Dependent Var.:                     additional_pay         additional_pay
-##                                                                          
-## Constant                                                                 
-## genderWoman                 -11,966.8*** (1,624.1) -11,649.6*** (1,560.1)
-## remoteHybrid                                             -78.43 (1,071.0)
-## remoteOn-site                                         -6,055.8*** (789.5)
-## remoteOther/it'scomplicated                             1,596.2 (1,864.2)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                            Yes                    Yes
-## race1                                           No                     No
-## state                                           No                     No
-## ___________________________ ______________________ ______________________
-## S.E. type                                  by: age                by: age
-## Observations                                20,658                 20,600
-## R2                                         0.01896                0.02425
-## Within R2                                  0.01597                0.02138
+##                 crime_many_es..4 crime_many_es..5 crime_many_es..6
+## Sample (urban)       Full sample      Full sample      Full sample
+## Dependent Var.: Prob. Conviction Prob. Conviction Prob. Conviction
+##                                                                   
+## Constant                                                          
+## Prob. Arrest      -2.941 (2.064)   -2.940 (2.074)   -3.394 (2.559)
+## Avg. Sentence                     0.0008 (0.0342)  0.0301 (0.0299)
+## polpc                                               328.8* (142.5)
+## Fixed-Effects:  ---------------- ---------------- ----------------
+## County                       Yes              Yes              Yes
+## Year                          No               No               No
+## _______________ ________________ ________________ ________________
+## S.E. type             by: County       by: County       by: County
+## Observations                 630              630              630
+## R2                       0.33114          0.33114          0.43784
+## Within R2                0.04762          0.04762          0.19955
 ## 
-##                             gender_pay_gap_ma..5 gender_pay_gap_ma..6
-## Sample (year)                        Full sample          Full sample
-## Dependent Var.:                   additional_pay       additional_pay
-##                                                                      
-## Constant                                                             
-## genderWoman                 -11,918.9*** (611.3) -11,590.1*** (608.8)
-## remoteHybrid                                           -248.7 (434.6)
-## remoteOn-site                                     -6,188.0*** (254.9)
-## remoteOther/it'scomplicated                          1,805.3. (926.7)
-## Fixed-Effects:              -------------------- --------------------
-## age                                           No                   No
-## race1                                        Yes                  Yes
-## state                                         No                   No
-## ___________________________ ____________________ ____________________
-## S.E. type                              by: race1            by: race1
-## Observations                              20,620               20,562
-## R2                                       0.01766              0.02319
-## Within R2                                0.01580              0.02130
+##                 crime_many_es..7 crime_many_es..8 crime_many_es..9
+## Sample (urban)       Full sample      Full sample      Full sample
+## Dependent Var.: Prob. Conviction Prob. Conviction Prob. Conviction
+##                                                                   
+## Constant                                                          
+## Prob. Arrest     0.3665 (0.3999)  0.3571 (0.4001)  -1.008 (0.7845)
+## Avg. Sentence                     0.0138 (0.0358)  0.0074 (0.0274)
+## polpc                                               294.5. (125.8)
+## Fixed-Effects:  ---------------- ---------------- ----------------
+## County                        No               No               No
+## Year                         Yes              Yes              Yes
+## _______________ ________________ ________________ ________________
+## S.E. type               by: Year         by: Year         by: Year
+## Observations                 630              630              630
+## R2                       0.01355          0.01398          0.22043
+## Within R2                0.00139          0.00182          0.21082
 ## 
-##                             gender_pay_gap_many..7 gender_pay_gap_many..8
-## Sample (year)                          Full sample            Full sample
-## Dependent Var.:                     additional_pay         additional_pay
-##                                                                          
-## Constant                                                                 
-## genderWoman                 -11,640.3*** (1,851.9) -11,368.5*** (1,880.5)
-## remoteHybrid                                             -312.0 (1,588.7)
-## remoteOn-site                                       -5,496.2*** (1,037.8)
-## remoteOther/it'scomplicated                             1,839.9 (3,364.9)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                             No                     No
-## race1                                           No                     No
-## state                                          Yes                    Yes
-## ___________________________ ______________________ ______________________
-## S.E. type                                by: state              by: state
-## Observations                                20,658                 20,600
-## R2                                         0.03308                0.03706
-## Within R2                                  0.01524                0.01940
-## 
-##                             gender_pay_gap_many..9 gender_pay_gap_man..10
-## Sample (year)                          Full sample            Full sample
-## Dependent Var.:                     additional_pay         additional_pay
-##                                                                          
-## Constant                                                                 
-## genderWoman                 -11,653.4*** (1,413.4) -11,397.5*** (1,386.1)
-## remoteHybrid                                             -187.6 (1,183.3)
-## remoteOn-site                                         -5,155.3*** (837.0)
-## remoteOther/it'scomplicated                             1,804.4 (1,762.3)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                            Yes                    Yes
-## race1                                          Yes                    Yes
-## state                                          Yes                    Yes
-## ___________________________ ______________________ ______________________
-## S.E. type                                  by: age                by: age
-## Observations                                20,620                 20,562
-## R2                                         0.03824                0.04172
-## Within R2                                  0.01531                0.01905
+##                 crime_many_e..10 crime_many_e..11 crime_many_e..12
+## Sample (urban)       Full sample      Full sample      Full sample
+## Dependent Var.: Prob. Conviction Prob. Conviction Prob. Conviction
+##                                                                   
+## Constant                                                          
+## Prob. Arrest      -2.939 (2.077)   -2.931 (2.079)   -3.388 (2.552)
+## Avg. Sentence                     0.0104 (0.0277)  0.0361 (0.0269)
+## polpc                                               324.6* (139.9)
+## Fixed-Effects:  ---------------- ---------------- ----------------
+## County                       Yes              Yes              Yes
+## Year                         Yes              Yes              Yes
+## _______________ ________________ ________________ ________________
+## S.E. type             by: County       by: County       by: County
+## Observations                 630              630              630
+## R2                       0.34289          0.34305          0.44589
+## Within R2                0.04784          0.04807          0.19709
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
 ```r
-# Now additional pay
-etable(gender_pay_gap_many_fes[lhs='additional_pay',sample=3],title='Annual Salary Gender Pay Gap for 2023', notes='Note: Estimates from various fixed effects regressions on the Ask a Manager Survey from 2023')
+etable(crime_many_estimations[lhs='crmrte',sample=2],title='Crime Rate in Urban Areas',notes='Note: Estimates from various fixed effects regressions on the Crime Data')
 ```
 
 ```
-##                             gender_pay_gap_ma..1 gender_pay_gap_ma..2
-## Sample (year)                               2023                 2023
-## Dependent Var.:                   additional_pay       additional_pay
-##                                                                      
-## Constant                     21,507.4*** (833.2)  23,168.0*** (995.0)
-## genderWoman                 -11,948.2*** (925.5) -11,615.6*** (925.0)
-## remoteHybrid                                           -235.0 (893.4)
-## remoteOn-site                                     -6,298.4*** (949.8)
-## remoteOther/it'scomplicated                         1,672.2 (2,585.3)
-## Fixed-Effects:              -------------------- --------------------
-## age                                           No                   No
-## race1                                         No                   No
-## state                                         No                   No
-## ___________________________ ____________________ ____________________
-## S.E. type                                    IID                  IID
-## Observations                              10,329               10,300
-## R2                                       0.01588              0.02158
-## Within R2                                     --                   --
+##                 crime_many_estim..1 crime_many_estim..2 crime_many_estim..3
+## Sample (urban)                    0                   0                   0
+## Dependent Var.:          Crime Rate          Crime Rate          Crime Rate
+##                                                                            
+## Constant         0.0370*** (0.0012)  0.0392*** (0.0023)  0.0385*** (0.0021)
+## Prob. Arrest    -0.0270*** (0.0034) -0.0267*** (0.0034) -0.0356*** (0.0033)
+## Avg. Sentence                          -0.0003 (0.0002)    -0.0003 (0.0002)
+## polpc                                                     1.819*** (0.2036)
+## Fixed-Effects:  ------------------- ------------------- -------------------
+## County                           No                  No                  No
+## Year                             No                  No                  No
+## _______________ ___________________ ___________________ ___________________
+## S.E. type                       IID                 IID                 IID
+## Observations                    574                 574                 574
+## R2                          0.10023             0.10240             0.21267
+## Within R2                        --                  --                  --
 ## 
-##                             gender_pay_gap_many..3 gender_pay_gap_many..4
-## Sample (year)                                 2023                   2023
-## Dependent Var.:                     additional_pay         additional_pay
-##                                                                          
-## Constant                                                                 
-## genderWoman                 -11,966.8*** (1,624.2) -11,649.6*** (1,560.3)
-## remoteHybrid                                             -78.43 (1,071.1)
-## remoteOn-site                                         -6,055.8*** (789.5)
-## remoteOther/it'scomplicated                             1,596.2 (1,864.3)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                            Yes                    Yes
-## race1                                           No                     No
-## state                                           No                     No
-## ___________________________ ______________________ ______________________
-## S.E. type                                  by: age                by: age
-## Observations                                10,329                 10,300
-## R2                                         0.01896                0.02425
-## Within R2                                  0.01597                0.02138
+##                 crime_many_es..4 crime_many_es..5 crime_many_est..6
+## Sample (urban)                 0                0                 0
+## Dependent Var.:       Crime Rate       Crime Rate        Crime Rate
+##                                                                    
+## Constant                                                           
+## Prob. Arrest    -0.0017 (0.0026) -0.0017 (0.0026)  -0.0041 (0.0027)
+## Avg. Sentence                    1.95e-5 (0.0001)  0.0002. (0.0001)
+## polpc                                             1.722*** (0.3264)
+## Fixed-Effects:  ---------------- ---------------- -----------------
+## County                       Yes              Yes               Yes
+## Year                          No               No                No
+## _______________ ________________ ________________ _________________
+## S.E. type             by: County       by: County        by: County
+## Observations                 574              574               574
+## R2                       0.80689          0.80690           0.84780
+## Within R2                0.00084          0.00088           0.21251
 ## 
-##                             gender_pay_gap_ma..5 gender_pay_gap_ma..6
-## Sample (year)                               2023                 2023
-## Dependent Var.:                   additional_pay       additional_pay
-##                                                                      
-## Constant                                                             
-## genderWoman                 -11,918.9*** (611.3) -11,590.1*** (608.9)
-## remoteHybrid                                           -248.7 (434.6)
-## remoteOn-site                                     -6,188.0*** (255.0)
-## remoteOther/it'scomplicated                          1,805.3. (926.8)
-## Fixed-Effects:              -------------------- --------------------
-## age                                           No                   No
-## race1                                        Yes                  Yes
-## state                                         No                   No
-## ___________________________ ____________________ ____________________
-## S.E. type                              by: race1            by: race1
-## Observations                              10,310               10,281
-## R2                                       0.01766              0.02319
-## Within R2                                0.01580              0.02130
+##                 crime_many_esti..7 crime_many_esti..8 crime_many_esti..9
+## Sample (urban)                   0                  0                  0
+## Dependent Var.:         Crime Rate         Crime Rate         Crime Rate
+##                                                                         
+## Constant                                                                
+## Prob. Arrest    -0.0268** (0.0058) -0.0264** (0.0059) -0.0355** (0.0064)
+## Avg. Sentence                       -0.0004* (0.0001)  -0.0004. (0.0002)
+## polpc                                                    1.865* (0.7238)
+## Fixed-Effects:  ------------------ ------------------ ------------------
+## County                          No                 No                 No
+## Year                           Yes                Yes                Yes
+## _______________ __________________ __________________ __________________
+## S.E. type                 by: Year           by: Year           by: Year
+## Observations                   574                574                574
+## R2                         0.10602            0.10988            0.22501
+## Within R2                  0.09934            0.10323            0.21922
 ## 
-##                             gender_pay_gap_many..7 gender_pay_gap_many..8
-## Sample (year)                                 2023                   2023
-## Dependent Var.:                     additional_pay         additional_pay
-##                                                                          
-## Constant                                                                 
-## genderWoman                 -11,640.3*** (1,851.9) -11,368.5*** (1,880.7)
-## remoteHybrid                                             -312.0 (1,588.9)
-## remoteOn-site                                       -5,496.2*** (1,037.9)
-## remoteOther/it'scomplicated                             1,839.9 (3,365.2)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                             No                     No
-## race1                                           No                     No
-## state                                          Yes                    Yes
-## ___________________________ ______________________ ______________________
-## S.E. type                                by: state              by: state
-## Observations                                10,329                 10,300
-## R2                                         0.03308                0.03706
-## Within R2                                  0.01524                0.01940
-## 
-##                             gender_pay_gap_many..9 gender_pay_gap_man..10
-## Sample (year)                                 2023                   2023
-## Dependent Var.:                     additional_pay         additional_pay
-##                                                                          
-## Constant                                                                 
-## genderWoman                 -11,653.4*** (1,415.8) -11,397.5*** (1,388.5)
-## remoteHybrid                                             -187.6 (1,185.3)
-## remoteOn-site                                         -5,155.3*** (838.4)
-## remoteOther/it'scomplicated                             1,804.4 (1,765.4)
-## Fixed-Effects:              ---------------------- ----------------------
-## age                                            Yes                    Yes
-## race1                                          Yes                    Yes
-## state                                          Yes                    Yes
-## ___________________________ ______________________ ______________________
-## S.E. type                                  by: age                by: age
-## Observations                                10,310                 10,281
-## R2                                         0.03824                0.04172
-## Within R2                                  0.01531                0.01905
+##                 crime_many_e..10 crime_many_e..11 crime_many_es..12
+## Sample (urban)                 0                0                 0
+## Dependent Var.:       Crime Rate       Crime Rate        Crime Rate
+##                                                                    
+## Constant                                                           
+## Prob. Arrest    -0.0010 (0.0026) -0.0011 (0.0026)  -0.0036 (0.0026)
+## Avg. Sentence                    -0.0001 (0.0001)  3.91e-5 (0.0001)
+## polpc                                             1.805*** (0.3295)
+## Fixed-Effects:  ---------------- ---------------- -----------------
+## County                       Yes              Yes               Yes
+## Year                         Yes              Yes               Yes
+## _______________ ________________ ________________ _________________
+## S.E. type             by: County       by: County        by: County
+## Observations                 574              574               574
+## R2                       0.81420          0.81446           0.85886
+## Within R2                0.00030          0.00168           0.24061
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
+
+```r
+etable(crime_many_estimations[lhs='crmrte',sample=3],title='Crime Rate in Rural Areas',notes='Note: Estimates from various fixed effects regressions on the Crime Data')
+```
+
+```
+##                 crime_many_estim..1 crime_many_estim..2 crime_many_estim..3
+## Sample (urban)                    1                   1                   1
+## Dependent Var.:          Crime Rate          Crime Rate          Crime Rate
+##                                                                            
+## Constant         0.1055*** (0.0078)  0.0990*** (0.0100)  0.0775*** (0.0138)
+## Prob. Arrest    -0.1995*** (0.0368) -0.2033*** (0.0369) -0.2014*** (0.0357)
+## Avg. Sentence                           0.0007 (0.0007)     0.0004 (0.0007)
+## polpc                                                        11.94* (5.472)
+## Fixed-Effects:  ------------------- ------------------- -------------------
+## County                           No                  No                  No
+## Year                             No                  No                  No
+## _______________ ___________________ ___________________ ___________________
+## S.E. type                       IID                 IID                 IID
+## Observations                     56                  56                  56
+## R2                          0.35269             0.36588             0.41909
+## Within R2                        --                  --                  --
+## 
+##                 crime_many_est..4 crime_many_est..5 crime_many_est..6
+## Sample (urban)                  1                 1                 1
+## Dependent Var.:        Crime Rate        Crime Rate        Crime Rate
+##                                                                      
+## Constant                                                             
+## Prob. Arrest    -0.1903. (0.0823) -0.1871. (0.0801) -0.1811* (0.0741)
+## Avg. Sentence                       0.0008 (0.0005)   0.0007 (0.0005)
+## polpc                                                   8.647 (6.132)
+## Fixed-Effects:  ----------------- ----------------- -----------------
+## County                        Yes               Yes               Yes
+## Year                           No                No                No
+## _______________ _________________ _________________ _________________
+## S.E. type              by: County        by: County        by: County
+## Observations                   56                56                56
+## R2                        0.88722           0.89616           0.90231
+## Within R2                 0.20282           0.26602           0.30946
+## 
+##                 crime_many_estim..7 crime_many_estim..8 crime_many_estim..9
+## Sample (urban)                    1                   1                   1
+## Dependent Var.:          Crime Rate          Crime Rate          Crime Rate
+##                                                                            
+## Constant                                                                   
+## Prob. Arrest    -0.1979*** (0.0149) -0.2011*** (0.0175) -0.1982*** (0.0137)
+## Avg. Sentence                           0.0005 (0.0007)   -4.93e-5 (0.0007)
+## polpc                                                       13.42** (3.493)
+## Fixed-Effects:  ------------------- ------------------- -------------------
+## County                           No                  No                  No
+## Year                            Yes                 Yes                 Yes
+## _______________ ___________________ ___________________ ___________________
+## S.E. type                  by: Year            by: Year            by: Year
+## Observations                     56                  56                  56
+## R2                          0.39994             0.40426             0.46292
+## Within R2                   0.36403             0.36861             0.43078
+## 
+##                 crime_many_es..10 crime_many_es..11 crime_many_es..12
+## Sample (urban)                  1                 1                 1
+## Dependent Var.:        Crime Rate        Crime Rate        Crime Rate
+##                                                                      
+## Constant                                                             
+## Prob. Arrest    -0.1694. (0.0771) -0.1723. (0.0733) -0.1709* (0.0703)
+## Avg. Sentence                       0.0002 (0.0005)  3.84e-5 (0.0006)
+## polpc                                                   11.27 (6.369)
+## Fixed-Effects:  ----------------- ----------------- -----------------
+## County                        Yes               Yes               Yes
+## Year                          Yes               Yes               Yes
+## _______________ _________________ _________________ _________________
+## S.E. type              by: County        by: County        by: County
+## Observations                   56                56                56
+## R2                        0.93501           0.93554           0.94120
+## Within R2                 0.23564           0.24188           0.30840
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+##### Concept check
+
+In our second table, the probability of conviction regressed on probability of arrest is almost certainly not causal. It is a pretty bogus regresion since both that are heavily affected by government decisions. 
+
+Can we say any of the above are causal? What would we need to assume? 
 
 ## Difference-in-differences
 
-One of the most popular uses of fixed effects is to implement difference-in-difference designs. I vusalize how that works for you below.
+One of the most popular uses of fixed effects is to implement difference-in-difference designs we've discussed. Here's a quick visualization. Let's walk through an example that uses the National Supported Work Demonstration dataset that [Lalonde (1986)](https://business.baylor.edu/scott_cunningham/teaching/lalonde-1986.pdf) published on.^[I take this example from an activity devised by Scott Cunningham and Kyle Butts.]
 
-![](11-panel-twfe_files/figure-html/did-1.png)<!-- -->
+### Lalonde (1986)
+
+The neat thing about these data is Lalonde (and a follow-up by [Dehejia and Wahba (2022)](https://business.baylor.edu/scott_cunningham/teaching/dehejia-and-wahba-2002.pdf)) compare experimental to non-experimental data. The experimental data is from a randomized control trial (RCT) of a job training program. The non-experimental data is a random sample of US households. 
+
+### Earned Income Tax Credit
+
+The Earned Income Tax Credit (EITC) was increased for parents in 1993. The EITC is a tax credit for low-income workers. It is a refundable tax credit, meaning that if the credit exceeds the amount of taxes owed, the excess is returned to the taxpayer. The EITC is designed to supplement wages for low-to-moderate income workers. The amount of the credit depends on income and number of children.
+
+The EITC is also designed to incentivize work. It initially increases as earnings increase, before leveling off and falling once earnings reach a threshold level and the worker transitions out of "low-income." 
+
+Effectively at low-income levels, the EITC increases the dollars earned from working -- either on the intensive margin (one more hour) or extensive margin (working vs. not working). But does it effect labor supply?
+
+Let's focus on how this affects labor supply of single mothers who are the primary beneficiaries of  . This example is borrowed from Nick Huntington-Klein and pulled from work by [Bruce Meyer (2002)](https://www.jstor.org/stable/pdf/3083435.pdf).
+
+We walked through this example in the lecture, but let's do it again.
 
 ### Diff-in-diff with data
 
+Let's load in the data.
+
+
+
+We do not have an individual identifier in these data, so we can't add an individual fixed effect. We can add other fixed effects if we believe there is endogenous variation in the treatment between the groups of the fixed effect. 
+
+Still, let's work through how to visualize the data to check for no pre-trends and treatment effects change over time. We checked averages for our two groups before -- not bad! 
+
 
 ```
-## 
-## Attaching package: 'scales'
-```
-
-```
-## The following object is masked from 'package:fixest':
-## 
-##     pvalue
-```
-
-```
-## The following object is masked from 'package:purrr':
-## 
-##     discard
+## `summarise()` has grouped output by 'year', 'treated'. You can override using
+## the `.groups` argument.
 ```
 
 ```
-## The following object is masked from 'package:readr':
-## 
-##     col_factor
-```
-
-![](11-panel-twfe_files/figure-html/did-data-1.png)<!-- -->
-
-## Instrumental variables
-
-As you would have guessed by now, there are a number of ways to run instrumental variable (IV) regressions in R. I'll walk through three different options using the `ivreg::ivreg()`, `estimatr::iv_robust()`, and `fixest::feols()` functions, respectively. These are all going to follow a similar syntax, where the IV first-stage regression is specified in a multi-part formula (i.e. where formula parts are separated by one or more pipes, **`|`**). However, there are also some subtle and important differences, which is why I want to go through each of them. After that, I'll let you decide which of the three options is your favourite.
-
-The dataset that we'll be using for this section describes cigarette demand for the 48 continental US states in 1995, and is taken from the **ivreg** package. Here's a quick a peek:
-
-
-```r
-data("CigaretteDemand", package = "ivreg")
-head(CigaretteDemand)
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
 ```
 
 ```
-##        packs   rprice  rincome  salestax   cigtax  packsdiff  pricediff
-## AL 101.08543 103.9182 12.91535 0.9216975 26.57481 -0.1418075 0.09010222
-## AR 111.04297 115.1854 12.16907 5.4850193 36.41732 -0.1462808 0.19998082
-## AZ  71.95417 130.3199 13.53964 6.2057067 42.86964 -0.3733741 0.25576681
-## CA  56.85931 138.1264 16.07359 9.0363074 40.02625 -0.5682141 0.32079587
-## CO  82.58292 109.8097 16.31556 0.0000000 28.87139 -0.3132622 0.22587189
-## CT  79.47219 143.2287 20.96236 8.1072834 48.55643 -0.3184911 0.18546746
-##    incomediff salestaxdiff  cigtaxdiff
-## AL 0.18222144    0.1332853 -3.62965832
-## AR 0.15055894    5.4850193  2.03070663
-## AZ 0.05379983    1.4004856 14.05923036
-## CA 0.02266877    3.3634447 15.86267924
-## CO 0.13002974    0.0000000  0.06098283
-## CT 0.18404197   -0.7062239  9.52297455
+## Warning: The `<scale>` argument of `guides()` cannot be `FALSE`. Use "none" instead as
+## of ggplot2 3.3.4.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
 ```
 
-Now, assume that we are interested in regressing the number of cigarettes packs consumed per capita on their average price and people's real incomes. The problem is that the price is endogenous, because it is simultaneously determined by demand and supply. So we need to instrument for it using cigarette sales tax. That is, we want to run the following two-stage IV regression. 
+![](11a-panel-twfe_files/figure-html/did-visualize-1.png)<!-- -->
 
-$$Price_i = \pi_0 + \pi_1 SalesTax_i + v_i  \hspace{1cm} \text{(First stage)}$$
-$$Packs_i = \beta_0 + \beta_2\widehat{Price_i} + \beta_1 RealIncome_i + u_i \hspace{1cm} \text{(Second stage)}$$
+But the lines are a little far apart, so it makes it tricky to visualize the difference. And we don't know the confident interval on the difference between these. Let's try to get that! 
 
-### IV with `fixest::feols()`
+**Introducing** the `i()` function. This handy little guy is a function that creates an interaction term. It's a little tricky to use, but it's worth it. Basically, what you do is you feed it a factor variable, an interacted variable, then a reference value of the factor variable -- all coefficients will relative to the level when the factor variable equals the reference value. 
 
-Finally, we get back to the `fixest::feols()` function that we've already seen above. Truth be told, this is the IV option that I use most often in my own work. In part, this statement reflects the fact that I work mostly with panel data and will invariably be using **fixest** anyway. But I also happen to like its IV syntax a lot. The key thing is to specify the IV first-stage as a separate formula in the _final_ slot of the model call.^[This closely resembles [Stata's approach](https://www.stata.com/manuals13/rivregress.pdf) to writing out the IV first-stage, where you specify the endogenous variable(s) and the instruments together in a slot.] For example, if we had `fe` fixed effects, then the model call would be `y ~ ex | fe | en ~ in`. Since we don't have any fixed effects in our current cigarette demand example, the first-stage will come directly after the exogenous variables:
-
-
-```r
-# library(fixest) ## Already loaded
-
-iv_feols = 
-  feols(
-    log(packs) ~ log(rincome) | ## y ~ ex
-      log(rprice) ~ salestax,   ## en ~ in (IV first-stage; must be the final slot)
-    data = CigaretteDemand
-    )
-# summary(iv_feols, stage = 1) ## Show the 1st stage in detail
-iv_feols
-```
 
 ```
-## TSLS estimation, Dep. Var.: log(packs), Endo.: log(rprice), Instr.: salestax
-## Second stage: Dep. Var.: log(packs)
-## Observations: 48 
-## Standard-errors: IID 
-##                  Estimate Std. Error   t value   Pr(>|t|)    
-## (Intercept)      9.430658   1.358366  6.942648 1.2395e-08 ***
-## fit_log(rprice) -1.143375   0.359486 -3.180583 2.6617e-03 ** 
-## log(rincome)     0.214515   0.268585  0.798687 4.2867e-01    
+## OLS estimation, Dep. Var.: work
+## Observations: 13,746 
+## Fixed-effects: year: 6,  treated: 2
+## Standard-errors: Heteroskedasticity-robust 
+##                    Estimate Std. Error  t value  Pr(>|t|)    
+## year::1991:treated 0.010618   0.028518 0.372334 0.7096501    
+## year::1992:treated 0.000952   0.028960 0.032880 0.9737710    
+## year::1994:treated 0.006720   0.029484 0.227919 0.8197125    
+## year::1995:treated 0.067488   0.030154 2.238086 0.0252314 *  
+## year::1996:treated 0.083754   0.030552 2.741312 0.0061274 ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## RMSE: 0.183555   Adj. R2: 0.393109
-## F-test (1st stage), log(rprice): stat = 45.2  , p = 2.655e-8, on 1 and 45 DoF.
-##                      Wu-Hausman: stat =  1.102, p = 0.299559, on 1 and 44 DoF.
+## RMSE: 0.496477     Adj. R2: 0.012584
+##                  Within R2: 0.001075
 ```
 
-Again, I emphasise that the IV first-stage must always come last in the `feols()` model call. Just to be pedantic --- but also to demonstrate how easy **fixest**'s IV functionality extends to panel settings --- here's a final `feols()` example. This time, I'll use a panel version of the same US cigarette demand data that includes entries from both 1985 and 1995. The dataset originally comes from the **AER** package, but we can download it from the web as follows. Note that I'm going to modify some variables to make it better comparable to our previous examples.
+So what does this output mean? Well it tells us the difference between the treated and untreated groups over time! But relative to when? It is all relative to the reference value, when year=1993. That is often called the "omitted" year. I chose the period just before the EITC expansion.
+
+**Challenge**: What regression did we just run? Write it out. We have a year fixed effect and a treated fixed effect. Note the treated fixed effect is defined across individuals because we do not have an individual identifier! 
+
+But how do we visualize this? We have a few options. They both work the same way as the examples with `coefplot()` and `ggplot()` above though. Note, I introduce a `dict` to improve the labels. 
+
+The plots show that prior to 1994, the labor supply decisions of women with and without children were on a similar trend (though it is a fairly short trend).
 
 
 ```r
-## Get the data
-url = 'https://vincentarelbundock.github.io/Rdatasets/csv/AER/CigarettesSW.csv' 
-cigs_panel =
-  read.csv(url, row.names = 1) %>%
-  mutate(
-    rprice = price/cpi,
-    rincome = income/population/cpi
-    )
-head(cigs_panel)
+coefplot(eitc_did,dict=c('treated'='EITC Treatment','year'='Year'))
 ```
 
-```
-##   state year   cpi population    packs    income  tax     price     taxs
-## 1    AL 1985 1.076    3973000 116.4863  46014968 32.5 102.18167 33.34834
-## 2    AR 1985 1.076    2327000 128.5346  26210736 37.0 101.47500 37.00000
-## 3    AZ 1985 1.076    3184000 104.5226  43956936 31.0 108.57875 36.17042
-## 4    CA 1985 1.076   26444000 100.3630 447102816 26.0 107.83734 32.10400
-## 5    CO 1985 1.076    3209000 112.9635  49466672 31.0  94.26666 31.00000
-## 6    CT 1985 1.076    3201000 109.2784  60063368 42.0 128.02499 51.48333
-##      rprice  rincome
-## 1  94.96438 10.76387
-## 2  94.30762 10.46817
-## 3 100.90962 12.83046
-## 4 100.22058 15.71332
-## 5  87.60842 14.32619
-## 6 118.98234 17.43861
-```
-
-Let's run a panel IV now, where we'll explicitly account for year and state fixed effects.
+![](11a-panel-twfe_files/figure-html/coefplot-did-1.png)<!-- -->
 
 
 ```r
-iv_feols_panel = 
-  feols(
-    log(packs) ~ log(rincome) | 
-      year + state |            ## Now include FEs slot
-      log(rprice) ~ taxs,       ## IV first-stage still comes last
-    data = cigs_panel
-  )
-# summary(iv_feols_panel, stage = 1) ## Show the 1st stage in detail
-iv_feols_panel
+coef_eitc_did <- tidy(eitc_did, conf.int = TRUE) %>%
+  mutate(year=str_extract(term,'\\d{4}')) # Regular expressions to extract year
+
+ggplot(coef_eitc_did, aes(x=year, y=estimate, ymin=conf.low, ymax=conf.high)) +
+  geom_pointrange() +
+  geom_hline(yintercept = 0, col = "black") +
+  labs(
+    title = "Effect of EITC on labor supply",
+    caption = "Data: EITC dataset from Nick Huntington-Klein"
+    ) +
+  theme(axis.title.x = element_blank()) 
 ```
 
-```
-## TSLS estimation, Dep. Var.: log(packs), Endo.: log(rprice), Instr.: taxs
-## Second stage: Dep. Var.: log(packs)
-## Observations: 96 
-## Fixed-effects: year: 2,  state: 48
-## Standard-errors: Clustered (year) 
-##                  Estimate Std. Error       t value   Pr(>|t|)    
-## fit_log(rprice) -1.279349   2.11e-15 -6.071802e+14 1.0485e-15 ***
-## log(rincome)     0.443422   1.41e-15  3.138717e+14 2.0283e-15 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## RMSE: 0.044789     Adj. R2: 0.92791 
-##                  Within R2: 0.533965
-## F-test (1st stage), log(rprice): stat = 111.0    , p = 7.535e-14, on 1 and 46 DoF.
-##                      Wu-Hausman: stat =   6.02154, p = 0.018161 , on 1 and 44 DoF.
+![](11a-panel-twfe_files/figure-html/ggplot-did-1.png)<!-- -->
+
+And then we also have `iplot()`, which works directly with `i()`. It works well for quick visualization, but it can be a little clunky to make as beautiful plots as you can with ggplot. 
+
+
+```r
+iplot(eitc_did,dict=c('treated'='EITC Treatment','year'='Year'))
 ```
 
-Good news, our coefficients are around the same magnitude. But the increased precision of the panel model has yielded gains in statistical significance.
+![](11a-panel-twfe_files/figure-html/iplot-did-1.png)<!-- -->
+```
 
 ## Further resources
 
