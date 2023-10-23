@@ -69,6 +69,41 @@ This class is about helping you build good habits for doing organized and reprod
 - Understand the differences between prediction, causality, and description, and when to apply each
 - Explain what data science is, and how Big Data differs from other types of data 
 
+## Navigating the course
+
+- All problem sets and lectures are linked above in the [calendar](#lectures)
+- The repository for each problem set, these course materials, and your class presentations are all linked in the [organization page](https://github.com/orgs/ECON368-fall2023-big-data-and-economics/repositories)
+
+## Expectations
+
+This is an extremely challenging course. To help you succeed, I have outlined expectations for both you and me.
+
+### For your professor
+
+- Link to lecture slides and problem sets in the [calendar](#lectures)
+- Post any software you need to download or other materials you need to prep for class in the [calendar](#lectures) with 24 hours notice
+- Outline learning goals at the top of each lecture
+- Clearly explain the expectations for each problem set
+- Grade your problem sets within two weeks (i.e. before the next problem set is due)
+    - Post all problem set solutions to the repository within a week of the problem set being due
+- Check the GitHub Issues tab (for all repositories) at least once per day to answer questions
+
+### For students
+
+- Check the [calendar](#lectures) within 24 hours of each lecture to see any materials you need to download
+- Open problem set data and code within 24 hours of the problem set being posted
+- Work on problem sets in groups, but turn in your own code
+- Post questions about material or problem sets to [GitHub Issues](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/issues) unless it is of a private matter (e.g. grades, extensions)
+    - There is a GitHub Issues tab within every problem set that I create, please post questions about problem sets directly to the tab for each problem set
+    - If I receive an email with a question that will benefit everyone, I will ask you to post it to GitHub Issues
+    - This is so that everyone can benefit from the answer
+    - Also, it will encourage collaboration
+- Use computers in class for class-related activities only
+
+### How I will run class
+
+Most classes will be divided into a "lecture" and an "interactive" component. During the lecture, computers will be closed. During the interactive component, computers will be open for you to work through it. 
+
 ## Resources to use for class
 
 This course is taught in R, but the goal is not for students to learn individual R functions and packages. That is something a person could do using generative AI, existing R vignettes and demos, and other online resources. With that in mind, I expect students in this course to make ample use of the countless free resources on the internet to learn R. Here are a few that I recommend:
@@ -127,11 +162,11 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 Chrissy Aman is our Course-Attached tutor. She will host office hours in the SASC and will be available for individual appointments. Her hours are:
 
 - Fridays at 6:45pm
-- Sundays at TBD
+- Sundays at 10am-12pm in PGill 227
 
 Chrissy can help you troubleshoot *R*. She does not know have solution to the problem sets, but she can help you figure them out. 
 
-## Details
+## Other details
 
 This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/). Here is the course description, right out of the [syllabus](https://github.com/big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf):
 
@@ -167,6 +202,16 @@ Throughout the course you will engage in problem sets that deal with actual data
 - With rare exceptions: You will not be given clear-cut code to copy and paste to accomplish these data cleaning tasks, but instead given a set of instructions and asked to figure out how to write code yourself
 - You are encouraged to work together on problem sets, but you must write up your own answers (unless it is a group assignment)
 - All problem sets will be completed and turned in as GitHub repositories
+
+#### What you will turn in:
+
+- Each problem set will be posted as a GitHub repository, which you will fork, set to private, and then clone to your computer (instructions provided in each problem set)
+- You will then work on the problem set on your computer, and push your code to GitHub (push often!)
+- For each problem set, you will turn in modular code (i.e. separate files do separate things) that accomplishes the tasks outlined in the problem set
+- You will also turn in a `.Rmd` file that contains your answers to the questions in the problem set along with a knitted `.html` or `.pdf` of your `.Rmd`
+    - This `.Rmd` will "source" the code you wrote, so I can easily run your code from start to finish by `knitting`
+- Your problem sets will have a sensible folder structure that is easy to navigate (name folders `code`, `data`, `output`, etc.)
+- You will turn in your problem sets by pushing your code to GitHub. 
 
 **Grading**
 
