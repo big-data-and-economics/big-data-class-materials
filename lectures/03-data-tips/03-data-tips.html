@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Big Data and Economics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kyle Coombs" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/ou-colors.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Big Data and Economics
+]
+.subtitle[
+## Tips for Managing Data
+]
+.author[
+### Kyle Coombs
+]
+.date[
+### Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics">ECON/DCS 368</a>
+]
+
+---
+
+name: toc
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+
+# Table of contents
+
+- [Prologue](#prologue)
+- [File formats](#file-formats)
+- [Archiving &amp; file compression](#archiving)
+- [Dictionaries](#dictionaries)
+- [Big Data file types](#big-data)
+
+---
+class: inverse, center, middle
+name: prologue
+
+# Prologue
+
+---
+# Prologue
+
+Today we'll focus on grappling with data
+
+- File formats and extensions
+
+- Archiving &amp; file compression
+
+- Dictionaries (hash tables)
+
+- Big Data file types
+
+You're gonna need to know how to do a lot of this! 
+
+---
+class: inverse, center, middle
+name: file-formats
+# File formats
+
+---
+# A note on file extensions
+
+- Often, if you download a file, you will immediately understand what type of a file it is by its extension 
+
+- File extensions in and of themselves don't serve any particular purpose other than convenience
+
+- File extensions were created so that humans could keep track of which files on their workspace are scripts, which are binaries, etc.
+
+---
+# Why is the file format important?
+
+- File formats matter because they may need to match the environment you're working in 
+
+- If you use the wrong file format, it may cause your computations to run slower than otherwise 
+
+- To the extent that the environment you're working in requires a specific file format, then using the correct format is essential
+
+---
+# Common file extensions when working with data
+
+- In the following table, I list some of the most common file extensions
+
+- For a more complete list of almost every file extension imaginable (note: they missed Stata's `.do` and `.dta` formats), see [here](https://en.wikipedia.org/wiki/List_of_file_formats).
+
+- Another great discussion about file formats is [here](https://opendata.stackexchange.com/questions/1208/a-python-guide-for-open-data-file-formats) on stackexchange
+
+---
+# Open-format file extensions
+
+The following file extensions are not tied to a specific software program 
+
+- In this sense they are "raw" and can be viewed in any sort of text editor
+
+.scroll-box-12[
+| File extension                     | Description |
+|------------------------------------|-------------|
+| CSV                                | Comma separated values; data is in tabular form with column breaks marked by commas |
+| TSV                                | Tab separated values; data is in tabular form with column breaks marked by tabs |
+| DAT                                | Tab-delimited tabular data (ASCII file) |
+| TXT                                | Plain text; not organized in any specific manner (though usually columns are delimited with tabs or commas) |
+| TEX                                | LaTeX; markup-style typesetting system used in scientific writing |
+| XML                                | eXtensible Markup Language; data is in text form with tags marking different fields |
+| HTML                               | HyperText Markup Language; similar to XML; used for almost every webpage you view |
+| [YAML](https://en.wikipedia.org/wiki/YAML) | YAML Ain't Markup Language; human readable version of XML |
+| JSON                               | JavaScript Object Notation; similar to YAML in that it has a human readable element. YAML is technically a superset of JSON. |
+| HDF                                | Hierarchical Data Format; bills itself as a "scientific data format" that can handle all types of data (tabular, text, images, etc.) |
+| PDF                                | Portable Document Format; not a great way to store data, but there exists much data in PDF format. Good luck unpacking it! |
+| TIFF, JPEG                         | These common image formats are used to store data in the form of images, or sometimes pictures of text data. There exist image processing libraries in almost every scientific programming language that can convert data in this format into more usable formats. |
+| MP3, WAV                           | These common audio formats may be used to store data. For example, voice-to-text applications have some way of converting income audio (in some format) into data that the machine can comprehend. The same holds for MP4 and other video file formats (e.g. for video input to self-driving cars, etc.) |
+]
+
+---
+# Examples of CSV, TSV, XML, YAML, and JSON files
+
+A possible JSON representation describing a person ([source](https://en.wikipedia.org/wiki/JSON#Example))
+.scroll-box-16[
+```JSON
+{
+  "firstName": "John",
+  "lastName": "Smith",
+  "isAlive": true,
+  "age": 27,
+  "address": {
+    "streetAddress": "21 2nd Street",
+    "city": "New York",
+    "state": "NY",
+    "postalCode": "10021-3100"
+  },
+  "phoneNumbers": [
+    {
+      "type": "home",
+      "number": "212 555-1234"
+    },
+    {
+      "type": "office",
+      "number": "646 555-4567"
+    },
+    {
+      "type": "mobile",
+      "number": "123 456-7890"
+    }
+  ],
+  "children": [],
+  "spouse": null
+}
+```
+]
+
+---
+# Examples of CSV, TSV, XML, YAML, and JSON files
+
+The same example as previously, but in XML: ([source](https://en.wikipedia.org/wiki/JSON#Example))
+.scroll-box-16[
+```xml
+&lt;person&gt;
+  &lt;firstName&gt;John&lt;/firstName&gt;
+  &lt;lastName&gt;Smith&lt;/lastName&gt;
+  &lt;age&gt;25&lt;/age&gt;
+  &lt;address&gt;
+    &lt;streetAddress&gt;21 2nd Street&lt;/streetAddress&gt;
+    &lt;city&gt;New York&lt;/city&gt;
+    &lt;state&gt;NY&lt;/state&gt;
+    &lt;postalCode&gt;10021&lt;/postalCode&gt;
+  &lt;/address&gt;
+  &lt;phoneNumber&gt;
+    &lt;type&gt;home&lt;/type&gt;
+    &lt;number&gt;212 555-1234&lt;/number&gt;
+  &lt;/phoneNumber&gt;
+  &lt;phoneNumber&gt;
+    &lt;type&gt;fax&lt;/type&gt;
+    &lt;number&gt;646 555-4567&lt;/number&gt;
+  &lt;/phoneNumber&gt;
+  &lt;gender&gt;
+    &lt;type&gt;male&lt;/type&gt;
+  &lt;/gender&gt;
+&lt;/person&gt;
+```
+]
+
+---
+# Examples of CSV, TSV, XML, YAML, and JSON files
+
+The same example, but in YAML: ([source](https://en.wikipedia.org/wiki/JSON#Example))
+.scroll-box-12[
+```YAML
+firstName: John
+lastName: Smith
+age: 25
+address: 
+  streetAddress: 21 2nd Street
+  city: New York
+  state: NY
+  postalCode: '10021'
+phoneNumber: 
+- type: home
+  number: 212 555-1234
+- type: fax
+  number: 646 555-4567
+gender: 
+  type: male
+```
+]
+
+Note that the JSON code above is also valid YAML; YAML simply has an alternative syntax that makes it more human-readable
+
+---
+# Proprietary file extensions
+
+The following file extensions typically require additional software to read, edit, or convert to another format
+
+| File extension                     | Description |
+|------------------------------------|-------------|
+| DB                                 | A common file extension for tabular data for SQLite |
+| SQLITE                             | Another common file extension for tabular data for SQLite |
+| XLS, XLSX                          | Tab-delimited tabular data for Microsoft Excel |
+| RDA, RDATA                         | Tabular file format for R |
+| MAT                                | ... for Matlab |
+| SAS7BDAT                           | ... for SAS |
+| SAV                                | ... for SPSS |
+| DTA                                | ... for Stata |
+
+---
+# Tips for opening files with r
+
+- If you're working with tabular data, you can use the `read_csv()` function from the **readr** (tidyverse) package or `fread` from **data.table**
+- If you're working with a proprietary file format, you can use the `read_*()` functions from the **haven** package
+- If you're reading in any table format, `read_table()` might work!
+- If you're working with a JSON file, you can use the **jsonlite** package
+- When in doubt, Google/ChatGPT "How do I open file .XXX in R?"
+  - I bet you someone has already needed to solve this problem
+
+
+```r
+df_csv   &lt;- read_csv('https://www2.census.gov/ces/opportunity/national_percentile_outcomes.csv')
+df_fread   &lt;- data.table::fread('https://www2.census.gov/ces/opportunity/national_percentile_outcomes.csv')
+df_stata &lt;- haven::read_dta('https://www2.census.gov/ces/opportunity/national_percentile_outcomes.dta')
+
+head(df_csv)
+```
+
+```
+## # A tibble: 6 × 3,914
+##   par_pctile kfr_pooled_pooled kir_pooled_pooled jail_pooled_pooled
+##        &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt;
+## 1          1             0.305             0.34              0.0559
+## 2          2             0.317             0.352             0.0503
+## 3          3             0.326             0.360             0.0463
+## 4          4             0.333             0.367             0.0445
+## 5          5             0.338             0.371             0.0417
+## 6          6             0.342             0.375             0.0405
+## # ℹ 3,910 more variables: married_asian_female_n &lt;dbl&gt;,
+## #   married_asian_female &lt;dbl&gt;, s_married_asian_female &lt;dbl&gt;,
+## #   imp_married_asian_female &lt;dbl&gt;, working_asian_female_n &lt;dbl&gt;,
+## #   working_asian_female &lt;dbl&gt;, s_working_asian_female &lt;dbl&gt;,
+## #   imp_working_asian_female &lt;dbl&gt;, has_dad_asian_female_n &lt;dbl&gt;,
+## #   has_dad_asian_female &lt;dbl&gt;, s_has_dad_asian_female &lt;dbl&gt;,
+## #   imp_has_dad_asian_female &lt;dbl&gt;, kir_top20_asian_female_n &lt;dbl&gt;, …
+```
+
+---
+# Help! This file froze my computer!
+
+- Sometimes we'll be reading quite large files
+  - These can be too big to fit in memory
+
+Just read in a single row to see the column names:
+
+
+```r
+# I need to sete an environment variable to increase the size of the connection
+# R will complain if you try to read in a file that's too big
+# This will reset when I close this session.
+Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) 
+df &lt;- read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',n_max=1)
+```
+
+```
+## Rows: 1 Columns: 10825
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## chr    (1): czname
+## dbl (9658): cz, kir_natam_female_p1, kir_natam_female_p25, kir_natam_female_...
+## lgl (1166): proginc_natam_female_p1, proginc_natam_female_p25, proginc_natam...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+- You can and should also consult the codebook (remember those?)
+
+---
+
+# Help! This file froze my computer!
+
+Once you know your columns, read those in:
+
+
+```r
+Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) 
+read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',
+  col_select=c('cz', 'kfr_pooled_pooled_p1', 'kfr_pooled_pooled_p25',
+  'kfr_pooled_pooled_p50','kfr_pooled_pooled_p75','kfr_pooled_pooled_p100'))
+```
+
+```
+## # A tibble: 741 × 6
+##       cz kfr_pooled_pooled_p1 kfr_pooled_pooled_p25 kfr_pooled_pooled_p50
+##    &lt;dbl&gt;                &lt;dbl&gt;                 &lt;dbl&gt;                 &lt;dbl&gt;
+##  1   100                0.260                 0.364                 0.461
+##  2   200                0.264                 0.363                 0.456
+##  3   301                0.286                 0.380                 0.467
+##  4   302                0.262                 0.366                 0.462
+##  5   401                0.251                 0.359                 0.459
+##  6   402                0.249                 0.362                 0.466
+##  7   500                0.241                 0.352                 0.454
+##  8   601                0.283                 0.384                 0.478
+##  9   602                0.267                 0.382                 0.489
+## 10   700                0.240                 0.351                 0.454
+## # ℹ 731 more rows
+## # ℹ 2 more variables: kfr_pooled_pooled_p75 &lt;dbl&gt;, kfr_pooled_pooled_p100 &lt;dbl&gt;
+```
+
+---
+
+# Anticipating large files
+
+- How can you guess if file will be too big to read in?
+- 
+
+---
+class: inverse, center, middle
+name: archiving
+# Archiving &amp; file compression
+
+---
+# Archiving &amp; file compression
+
+Because data can be big and bulky, it is often easier to store and share the data in compressed form
+
+.scroll-box-4[
+| File extension                     | Description |
+|------------------------------------|-------------|
+| ZIP                                | The most common format for file compression |
+| Z                                  | Alternative to ZIP; uses a slightly different format for compression |
+| 7Z                                 | Alternative to ZIP; uses [7-Zip](http://www.7-zip.org/) software for compression |
+| GZ                                 | Another alternative to ZIP (primarily used in Linux systems), using what's called `gzip` |
+| TAR                                | So-called "tarball" which is a way to collect many files into one archive file. TAR stands for "Tape ARchive" |
+| TAR.GZ; TGZ                        | A compressed version of a tarball (compression via `gzip`) |
+| TAR.BZ2; .TB2; .TBZ; .TBZ2         | Compressed tarball (via `bzip2`) |
+]
+
+![Tarball vs. TGZ](Targzip.svg)
+
+
+---
+# Other file types that aren't data
+
+- There are many file types that don't correspond to readable data. For example, script files (e.g. `.R`, `.py`, `.jl`, `.sql`, `.do`, `.cpp`, `.f90`, ...) are text files with convenient extensions to help the user remember which programming language the code is in
+
+- As a rule of thumb, if you don't recognize the extension of a file, it's best to inspect the file in a text editor (though pay attention to the size of the file as this can also help you discern whether it's code or data)
+
+---
+# General Types of Data
+
+- When you think of data, you probably think of rows and columns, like a matrix or a spreadsheet 
+
+- But it turns out there are other ways to store data, and you should know their similarities and differences to tabular data
+
+---
+# Can I just read a zip directly in?
+
+- Yes, but it's a little more complicated
+- And you can may still want to read in a few rows or columns like before
+
+
+```r
+download.file('https://www2.census.gov/ces/opportunity/county_outcomes.zip','county_outcomes.zip')
+read_csv(unz('county_outcomes.zip','county_outcomes.csv'),
+  col_select=c('county','kfr_pooled_pooled_p1','kfr_pooled_pooled_p25',
+  'kfr_pooled_pooled_p50','kfr_pooled_pooled_p75','kfr_pooled_pooled_p100'))
+```
+
+```
+## # A tibble: 3,219 × 6
+##    county kfr_pooled_pooled_p1 kfr_pooled_pooled_p25 kfr_pooled_pooled_p50
+##     &lt;dbl&gt;                &lt;dbl&gt;                 &lt;dbl&gt;                 &lt;dbl&gt;
+##  1      1                0.245                 0.362                 0.471
+##  2      3                0.292                 0.389                 0.479
+##  3      5                0.233                 0.349                 0.457
+##  4      7                0.249                 0.363                 0.469
+##  5      9                0.293                 0.392                 0.483
+##  6     11                0.244                 0.346                 0.440
+##  7     13                0.231                 0.357                 0.474
+##  8     15                0.256                 0.362                 0.461
+##  9     17                0.236                 0.341                 0.437
+## 10     19                0.265                 0.365                 0.459
+## # ℹ 3,209 more rows
+## # ℹ 2 more variables: kfr_pooled_pooled_p75 &lt;dbl&gt;, kfr_pooled_pooled_p100 &lt;dbl&gt;
+```
+
+```r
+# Delete the file
+file.remove('county_outcomes.zip')
+```
+
+```
+## [1] TRUE
+```
+
+---
+class: inverse, center, middle
+name: dictionaries
+# Dictionaries
+
+---
+# Dictionaries (a.k.a. Hash tables)
+
+- A dictionary is a list that contains `keys` and `values` 
+
+- Each key points to one value 
+
+- While this may seem like an odd way to store data, it turns out that there are many, many applications in which this is the most efficient way to store things
+
+- We won't get into the nitty gritty details of dictionaries, but they are the workhorse of computer science, and you should at least know what they are and how they differ from tabular data 
+
+- In fact, dictionaries are often used to store multiple arrays in one file (e.g. Matlab `.mat` files, R `.RData` files, etc.)
+
+---
+# Dictionaries (a.k.a Hash tables) in R
+
+- Dictionraies are a little clunky in R
+
+- You'll mainly use them as lists or vectors
+
+
+```r
+phone_numbers_list &lt;- list('Jenny'='1 (623) 867-5309',
+  'Rejection Hotline'='1 (518) 935-4012',
+  'Santa'='1 (951) 262-3062')
+
+print(phone_numbers_list)
+```
+
+```
+## $Jenny
+## [1] "1 (623) 867-5309"
+## 
+## $`Rejection Hotline`
+## [1] "1 (518) 935-4012"
+## 
+## $Santa
+## [1] "1 (951) 262-3062"
+```
+
+---
+# Why are dictionaries useful?
+
+- You might look at the previous example and think a vector would be a better way to store phone numbers
+
+- The power of dictionaries is in their .hi[lookup speed]
+
+- Looking up an index in a dictionary takes the same amount of time no matter how long the dictionary is!
+
+    - Computer scientists call this `\(O(1)\)` access time
+
+- Moreover, dictionaries can index .hi[objects], not just scalars
+
+- So I could have a dictionary of data frames, a dictionary of arrays, ...
+
+---
+class: inverse, center, middle
+name: big-data
+# Big Data File Types
+
+---
+# Big Data file types
+
+- Big Data file systems like Hadoop and Spark often use the same file types as R, SQL, Python, and Julia
+
+- That is, `CSV` and `TSV` files are the workhorse
+
+- Because of the nature of distributed file systems (which we will discuss in much greater detail next time), it is often the case that JSON and XML are not good choices because they can't be broken up across machines 
+
+- Note: there is a distinction between JSON files and JSON records; see the second link at the end of this document for further details
+
+---
+# Big Data File Types
+
+## Sequence
+
+- Sequence files are dictionaries that have been optimized for Hadoop and friends
+
+- The advantage to taking the dictionary approach is that the files can easily be coupled and decoupled
+
+## Avro
+
+- Avro is an evolved version of Sequence---it contains more capability to store complex objects natively
+
+## Parquet
+
+- Parquet is a format that allows Hadoop and friends to partition the data column-wise (rather than row-wise)
+
+- Other formats in this vein are RC (Record Columnar) and ORC (Optimized Record Columnar)
+
+---
+# Useful Links
+
+- [A beginner's guide to Hadoop storage formats](https://blog.matthewrathbone.com/2016/09/01/a-beginners-guide-to-hadoop-storage-formats.html)
+
+- [Hadoop File Formats: It's not just CSV anymore](https://community.hds.com/community/products-and-solutions/pentaho/blog/2017/11/07/hadoop-file-formats-its-not-just-csv-anymore)
+
+---
+# Your challenge
+
+- With time left, try to download each of the following files to a folder and read in a five columns of your choosing:
+  - https://www2.census.gov/ces/opportunity/tract_covariates.csv
+  - https://www2.census.gov/ces/opportunity/county_outcomes.zip
+  - https://www2.census.gov/ces/opportunity/tract_outcomes.zip (challenge)
+
+THese are all found on the webpage: https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html
+
+---
+class: inverse, center, middle
+
+# Next lecture: Coding in R
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

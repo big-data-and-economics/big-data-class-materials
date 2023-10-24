@@ -72,6 +72,11 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300)
 
 " > "$1/$1.Rmd"
 elif [ "$3" = "slides" ]; then
+
+cp 01-intro/ou-colors.css "$1/css"
+
+
+
 echo "---
 ---
 title: "Big Data and Economics"
@@ -80,7 +85,7 @@ author: "Kyle Coombs"
 date: \"Bates College | [ECON/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)\"
 output:
   xaringan::moon_reader:
-    css: [default, metropolis, metropolis-fonts] 
+    css: [default, metropolis, metropolis-fonts,css/ou-colors.css] 
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -102,8 +107,8 @@ name: toc
 options(htmltools.dir.version = FALSE)
 library(knitr)
 opts_chunk$set(
-  fig.align="center", fig.width=6, fig.height=4, 
-  # out.width="748px", #out.length="520.75px",
+  fig.align=\"center\", fig.width=6, fig.height=4, 
+  # out.width=\"748px\", #out.length=\"520.75px\",
   dpi=300, #fig.path='Figs/',
   cache=T#, echo=F, warning=F, message=F
   )
@@ -120,7 +125,7 @@ class: inverse, center, middle
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 \`\`\`{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
-infile=knitr::current_input() %>% str_replace(".Rmd", ".html")
+infile=knitr::current_input() %>% str_replace(\".Rmd\", \".html\")
 #infile = list.files(pattern = '.html')
 pagedown::chrome_print(input = infile, timeout = 100)
 \`\`\`
