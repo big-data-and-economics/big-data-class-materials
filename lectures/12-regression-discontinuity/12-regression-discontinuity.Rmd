@@ -1,9 +1,6 @@
 ---
 title: "Big Data and Economics"
 subtitle: "Regression Discontinuity by Kyle Coombs"
-author:
-  name: Kyle Coombs
-  affiliation: Bates College | [DCS/ECON 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)  
 author: Kyle Coombs
 date: "Bates College | [ECON/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)"
 output:
@@ -36,19 +33,9 @@ pre[class] {
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE) 
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, cache=TRUE, fig.width = 8, fig.height = 6)
-library(tidyverse)
-library(gganimate)
-library(estimatr)
-library(magick)
-library(dagitty)
-library(directlabels)
-library(ggdag)
-library(ggthemes)
-library(fixest)
-library(jtools)
-library(rdrobust)
-library(scales)
-library(Cairo)
+if (!require("pacman")) install.packages("pacman")
+
+pacman::p_load(tidyverse,gganimate,estimatr,magick,directlabels,ggthemes,fixest,jtools,rdrobust,scales,Cairo)
 theme_metro <- function(x) {
   theme_classic() + 
   theme(panel.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
@@ -108,37 +95,12 @@ We call these continuous variables "Running variables" because we *run along the
 - But wait, hold on, if treatment is driven by running variables, won't we have a back door going through those very same running variables?? Yes! 
 - And we can't just control for RunningVar because that's where all the variation in treatment comes from. Uh oh!
 
-```{r, dev = 'CairoPNG'}
-dag <- dagify(Treatment ~ RunningVar,
-              Outcome ~ Treatment + RunningVar,
-              coords=list(
-                x=c(Treatment = 1, RunningVar = 2, Outcome = 3),
-                y=c(Treatment = 1, RunningVar = 2, Outcome = 1)
-              )) %>% tidy_dagitty()
-ggdag_classic(dag,node_size=10) + 
-  theme_void_metro() + 
-  expand_limits(x=c(.5,3.5))
-```
-
 ---
 
 # Regression Discontinuity
 
 - The key here is realizing that the running variable affects treatment *only when you go across the cutoff*
 - So really the diagram looks like this!
-
-```{r, dev = 'CairoPNG'}
-dag <- dagify(Treatment ~ Cutoff,
-              Cutoff ~ RunningVar,
-              Outcome ~ Treatment + RunningVar,
-              coords=list(
-                x=c(Treatment = 1, Cutoff = 1, RunningVar = 2, Outcome = 3),
-                y=c(Treatment = 1, Cutoff = 2, RunningVar = 2, Outcome = 1)
-              )) %>% tidy_dagitty()
-ggdag_classic(dag,node_size=10) + 
-  theme_void_metro() + 
-  expand_limits(x=c(.5,3.5))
-```
 
 ---
 
@@ -175,7 +137,7 @@ ggdag_classic(dag,node_size=10) +
 
 # Regression Discontinuity
 
-```{r, echo=FALSE, fig.width=5, fig.height=4.5}
+```{r rdd-gif, echo=FALSE, fig.width=5, fig.height=4.5}
 df <- data.frame(xaxisTime=runif(300)*20) %>%
   mutate(Y = .2*xaxisTime+3*(xaxisTime>10)-.1*xaxisTime*(xaxisTime>10)+rnorm(300),
          state="1",
@@ -248,7 +210,7 @@ animate(p,nframes=175)
 - To be clear, producing the line(s) below is our goal. How can we do it?
 - The true model I've made is an RDD effect of .7, with a slope of 1 to the left of the cutoff and a slope of 1.5 to the right
 
-```{r, echo = FALSE}
+```{r fitting, echo = FALSE}
 set.seed(2000)
 df <- tibble(X = runif(1000)) %>%
   mutate(treated = X > .5) %>%
@@ -274,7 +236,7 @@ ggplot(df, aes(x = X, y = Y, group = treated)) +
 - We need a "Treated" variable that's `TRUE` when treatment is applied - above or below the cutoff
 - Then, we are going to want a bunch of things to change at the cutoff. This will be easier if the running variable is *centered around the cutoff*. So we'll turn our running variable $X$ into $X - cutoff$ and call that $XCentered$
 
-```{r, eval = FALSE}
+```{r cutoff, eval = FALSE}
 cutoff = .5
 
 df <- df %>%
@@ -293,7 +255,7 @@ df <- df %>%
 
 $$Y = \beta_0 + \beta_1Treated + \beta_2XCentered + \beta_3Treated\times XCentered + \varepsilon$$
 
-```{r}
+```{r fixest}
 feols(Y ~ treated*X_centered, data = df)
 ```
 
@@ -326,9 +288,49 @@ $$Y = \beta_0 + \beta_1XC + \beta_2XC^2 + \beta_3Treated + \beta_4Treated\times 
 
 - The coefficient on $Treated$ remains our "jump at the cutoff" - our RDD estimate!
 
-```{r}
+```{r polynomail}
 etable(feols(Y ~ X_centered*treated + I(X_centered^2)*treated, data = df))
 ```
+
+
+---
+
+# Fitting Quadratic Lines in RDD
+
+- Sometimes it can be hard to tell if a quadratic (or higher-order) term is really necessary
+- Visualizations can help!
+
+```{r quad-fitting, echo = FALSE}
+set.seed(2000)
+df_quad <- tibble(X = runif(1000)) %>%
+  mutate(treated = X > .5) %>%
+  mutate(X_centered = X - .5) %>%
+  mutate(Y = .25*X_centered - 4*X_centered^2 + .7*treated + .5*.25*X_centered*treated - .5*4*X_centered^2*treated + rnorm(1000,0,.3))
+  
+
+ggplot(df_quad, aes(x = X, y = Y, group = treated)) + 
+  geom_point() + 
+  geom_smooth(method = 'lm', formula= 'y ~ x + I(x^2)', color = 'red', se = FALSE, size = 1.5) + 
+  geom_vline(aes(xintercept = .5), linetype = 'dashed') + 
+  theme_metro() + 
+  geom_segment(aes(x = .5, xend = .5, y = 0, yend = .73), color = 'blue', size = 2) + 
+  annotate(geom = 'label', x = .5, y = .73, label = 'RDD Effect',color = 'blue', size = 16/.pt, hjust = 1.05)
+
+```
+
+---
+# Careful with higher order polynomials
+
+- Sometimes higher order polynoials can be a little too flexible
+- They make it look like there is an effect where none exist
+- "Overfitting" where your model too flexibly follows the data points can lie to you! 
+- Read [Andrew Gelman's](https://statmodeling.stat.columbia.edu/2020/12/27/rd-gullible/) blog for more info
+
+---
+# Does voting make you sick?
+Or did the researchers just overfit their model?
+
+![Chang & Meyerhoefer (2020) via Andrew Gelman. Running variable is age with cutoff at age 20 (voting eligibility).](img/p_value_distribution.png)
 
 ---
 
@@ -355,7 +357,7 @@ etable(feols(Y ~ X_centered*treated + I(X_centered^2)*treated, data = df))
 
 # Graphically
 
-```{r,  echo=FALSE, fig.width=5, fig.height=4.5}
+```{r rdd-graph,  echo=FALSE, fig.width=5, fig.height=4.5}
 df <- data.frame(X = runif(1000)+1,Treatment=as.factor("Untreated"),time="1") %>%
   mutate(Y = X + rnorm(1000)/6) 
 
@@ -413,7 +415,7 @@ More assumptions, limitations, and diagnostics!
 
 - Pay attention to the sample sizes, accuracy (true value .7) and standard errors!
 
-```{r, echo=FALSE}
+```{r windows, echo=FALSE}
 set.seed(2000)
 df <- tibble(X = runif(1000)) %>%
   mutate(treated = X > .5) %>%
@@ -421,7 +423,7 @@ df <- tibble(X = runif(1000)) %>%
   mutate(Y = X_centered + .7*treated + .5*X_centered*treated + rnorm(1000,0,.3))
 ```
 
-```{r, echo = TRUE}
+```{r windows2, echo = TRUE}
 m1 <- feols(Y~treated*X_centered, data = df)
 m2 <- feols(Y~treated*X_centered, data = df %>% filter(abs(X_centered) < .25))
 m3 <- feols(Y~treated*X_centered, data = df %>% filter(abs(X_centered) < .1))
@@ -483,7 +485,7 @@ etable(m1,m2,m3,m4,m5, keep = 'treatedTRUE')
 - How can we look for this stuff?
 - We can look graphically by just checking for a jump at the cutoff in *number of observations* after binning
 
-```{r, echo = TRUE}
+```{r lump, echo = TRUE}
 df_bin_count <- df %>%
   # Select breaks so that one of hte breakpoints is the cutoff
   mutate(X_bins = cut(X, breaks = 0:10/10)) %>%
@@ -497,7 +499,7 @@ df_bin_count <- df %>%
 
 - The first one looks pretty good. We have one that looks not-so-good on the right
 
-```{r, echo = FALSE}
+```{r lump_bad, echo = FALSE}
 bad_bins <- df_bin_count 
 bad_bins$n <- sample(df_bin_count$n, 10)
 bad_bins$n[5] <- 20
@@ -558,7 +560,7 @@ df_bin_count %>%
 
 - Notice that the y-axis here isn't the outcome, it's "percentage treated"
 
-```{r, echo = FALSE}
+```{r fuzzy-rdd, echo = FALSE}
 set.seed(1000)
 df <- tibble(X = runif(1000)) %>%
   mutate(treatassign = .05 + .3*(X > .5)) %>%
@@ -594,7 +596,7 @@ df %>%
 
 - (the true effect of treatment is .4 - okay, it's not perfect)
 
-```{r, echo = TRUE}
+```{r fuzzy-rdd-pred, echo = TRUE}
 predict_treatment <- feols(treatment ~ X_center*above_cut, data = df)
 without_fuzzy <-feols(Y ~ X_center*treatment, data = df)
 fuzzy_rdd <- feols(Y ~ 1 | X_center*treatment ~ X_center*above_cut, data = df)
@@ -633,7 +635,7 @@ etable(predict_treatment, without_fuzzy, fuzzy_rdd)
 
 # rdrobust
 
-```{r, echo = TRUE}
+```{r rdrobust, echo = TRUE}
 summary(rdrobust(df$Y, df$X, c = .5))
 ```
 
@@ -641,7 +643,7 @@ summary(rdrobust(df$Y, df$X, c = .5))
 
 # rdrobust
 
-```{r, echo = TRUE}
+```{r rdrobust-fuzzy, echo = TRUE}
 summary(rdrobust(df$Y, df$X, c = .5, fuzzy = df$treatment))
 ```
 
@@ -651,7 +653,7 @@ summary(rdrobust(df$Y, df$X, c = .5, fuzzy = df$treatment))
 
 - We can even have it automatically make plots of our RDD! Same syntax
 
-```{r, echo = TRUE}
+```{r rdrobust-plots, echo = TRUE}
 rdplot(df$Y, df$X, c = .5)
 ```
 
@@ -660,9 +662,7 @@ rdplot(df$Y, df$X, c = .5)
 # That's it!
 
 - That's what we have for RDD
-- Go explore the regression discontinuity Swirl
-- And the homework
-- And the paper to read!
+- Go explore the regression discontinuity activity
 
 ---
 class: inverse, center, middle
