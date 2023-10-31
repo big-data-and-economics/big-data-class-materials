@@ -4,7 +4,7 @@ subtitle: "Fixed Effects and Difference-in-differences"
 author:
   name: Kyle Coombs
   affiliation: Bates College | [ECON/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials#lectures)
-# date: Lecture 6  #"22 October 2023"
+# date: Lecture 6  #"30 October 2023"
 output: 
   html_document:
     theme: journal
@@ -52,7 +52,7 @@ Today's lecture explores
 It's important to note that "base" R already provides all of the tools to implement a fixed effects regression, **but** you'll quickly hit walls due to memory caps. Instead, I want to introduce **fixest**, short for Fixed-Effects Estimation, which provides lightning fast fixed effects estimation and make your life much easier. 
 
 - New: **fixest**, **wooldridge**
-- Already used: **tidyverse**, **hrbrthemes**, **listviewer**, **estimatr**, **ivreg**, **sandwich**, **lmtest**,  **mfx**, **margins**, **broom**, **modelsummary**, **vtable**, **rstanarm**
+- Already used: **modelsummary**, **broom**, **tidyverse**
 
 A convenient way to install (if necessary) and load everything is by running the below code chunk.
 
@@ -60,7 +60,7 @@ A convenient way to install (if necessary) and load everything is by running the
 ```r
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, wooldridge)
+pacman::p_load(modelsummary, broom, fixest, wooldridge, tidyverse)
 
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
@@ -91,87 +91,26 @@ Let me introduce the dataset we'll be using, `crime4`. It comes from Jeffrey Woo
 ```r
 data(crime4)
 crime4 %>%
-  select(county, year, crmrte, prbarr) %>%
+  dplyr::select(county, year, crmrte, prbarr) %>%
   rename(County = county,
          Year = year,
          CrimeRate = crmrte,
          ProbofArrest = prbarr) %>%
-  slice(1:9) %>%
-  knitr::kable(note = '...') %>%
-  kableExtra::add_footnote('9 rows out of 630. "Prob. of Arrest" is estimated probability of being arrested when you commit a crime', notation = 'none')
+  slice(1:9) 
 ```
 
-<table>
- <thead>
-  <tr>
-   <th style="text-align:right;"> County </th>
-   <th style="text-align:right;"> Year </th>
-   <th style="text-align:right;"> CrimeRate </th>
-   <th style="text-align:right;"> ProbofArrest </th>
-  </tr>
- </thead>
-<tbody>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 81 </td>
-   <td style="text-align:right;"> 0.0398849 </td>
-   <td style="text-align:right;"> 0.289696 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 82 </td>
-   <td style="text-align:right;"> 0.0383449 </td>
-   <td style="text-align:right;"> 0.338111 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 83 </td>
-   <td style="text-align:right;"> 0.0303048 </td>
-   <td style="text-align:right;"> 0.330449 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 84 </td>
-   <td style="text-align:right;"> 0.0347259 </td>
-   <td style="text-align:right;"> 0.362525 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 85 </td>
-   <td style="text-align:right;"> 0.0365730 </td>
-   <td style="text-align:right;"> 0.325395 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 86 </td>
-   <td style="text-align:right;"> 0.0347524 </td>
-   <td style="text-align:right;"> 0.326062 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 1 </td>
-   <td style="text-align:right;"> 87 </td>
-   <td style="text-align:right;"> 0.0356036 </td>
-   <td style="text-align:right;"> 0.298270 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 81 </td>
-   <td style="text-align:right;"> 0.0163921 </td>
-   <td style="text-align:right;"> 0.202899 </td>
-  </tr>
-  <tr>
-   <td style="text-align:right;"> 3 </td>
-   <td style="text-align:right;"> 82 </td>
-   <td style="text-align:right;"> 0.0190651 </td>
-   <td style="text-align:right;"> 0.162218 </td>
-  </tr>
-</tbody>
-<tfoot>
-<tr>
-<td style = 'padding: 0; border:0;' colspan='100%'><sup></sup> 9 rows out of 630. &quot;Prob. of Arrest&quot; is estimated probability of being arrested when you commit a crime</td>
-</tr>
-</tfoot>
-</table>
+```
+##   County Year CrimeRate ProbofArrest
+## 1      1   81 0.0398849     0.289696
+## 2      1   82 0.0383449     0.338111
+## 3      1   83 0.0303048     0.330449
+## 4      1   84 0.0347259     0.362525
+## 5      1   85 0.0365730     0.325395
+## 6      1   86 0.0347524     0.326062
+## 7      1   87 0.0356036     0.298270
+## 8      3   81 0.0163921     0.202899
+## 9      3   82 0.0190651     0.162218
+```
 
 ### Let's visualize it
 
@@ -426,7 +365,7 @@ Hey look, the coefficient is the same!
 ### Why LSDV?
 
 - A benefit of the LSDV approach is that it calculates the fixed effects $\alpha_i$ for you
-- We left those out of the table with the `coefs` argument of `export_summs` (we rarely want them) but here they are:
+- We left those out of the table with the `coefs` argument of `msummary` (we rarely want them) but here they are:
 
 
 ```r
@@ -718,12 +657,12 @@ etable(list('County FE'=crime_county_fe,
 
 ```
 ##                        County FE             Year FE County and Yea..
-## Dependent Var.:       Crime Rate          Crime Rate       Crime Rate
+## Dependent Var.:           crmrte              crmrte           crmrte
 ##                                                                      
-## Prob. Arrest    -0.0020 (0.0027) -0.0378*** (0.0040) -0.0011 (0.0026)
+## prbarr          -0.0020 (0.0027) -0.0378*** (0.0040) -0.0011 (0.0026)
 ## Fixed-Effects:  ---------------- ------------------- ----------------
-## County                       Yes                  No              Yes
-## Year                          No                 Yes              Yes
+## county                       Yes                  No              Yes
+## year                          No                 Yes              Yes
 ## _______________ ________________ ___________________ ________________
 ## S.E. type                    IID                 IID              IID
 ## Observations                 630                 630              630
@@ -742,14 +681,14 @@ etable(list('County FE'=crime_county_fe,
 
 ```
 ##                        County FE             Year FE County and Yea..
-## Dependent Var.:       Crime Rate          Crime Rate       Crime Rate
+## Dependent Var.:           crmrte              crmrte           crmrte
 ##                                                                      
-## Prob. Arrest    -0.0020 (0.0026) -0.0378*** (0.0103) -0.0011 (0.0026)
+## prbarr          -0.0020 (0.0026) -0.0378*** (0.0103) -0.0011 (0.0026)
 ## Fixed-Effects:  ---------------- ------------------- ----------------
-## County                       Yes                  No              Yes
-## Year                          No                 Yes              Yes
+## county                       Yes                  No              Yes
+## year                          No                 Yes              Yes
 ## _______________ ________________ ___________________ ________________
-## S.E.: Clustered       by: County          by: County       by: County
+## S.E.: Clustered       by: county          by: county       by: county
 ## Observations                 630                 630              630
 ## R2                       0.87076             0.13347          0.87735
 ## Within R2                0.00106             0.12764          0.00034
@@ -789,29 +728,29 @@ etable(crime_many_fes)
 
 ```
 ##                    crime_many_fes.1 crime_many_fes.2   crime_many_fes.3
-## Dependent Var.:          Crime Rate       Crime Rate         Crime Rate
+## Dependent Var.:              crmrte           crmrte             crmrte
 ##                                                                        
 ## Constant         0.0432*** (0.0014)                                    
-## Prob. Arrest    -0.0379*** (0.0039) -0.0020 (0.0026) -0.0378** (0.0090)
+## prbarr          -0.0379*** (0.0039) -0.0020 (0.0026) -0.0378** (0.0090)
 ## Fixed-Effects:  ------------------- ---------------- ------------------
-## County                           No              Yes                 No
-## Year                             No               No                Yes
+## county                           No              Yes                 No
+## year                             No               No                Yes
 ## _______________ ___________________ ________________ __________________
-## S.E. type                       IID       by: County           by: Year
+## S.E. type                       IID       by: county           by: year
 ## Observations                    630              630                630
 ## R2                          0.12856          0.87076            0.13347
 ## Within R2                        --          0.00106            0.12764
 ## 
 ##                 crime_many_fes.4
-## Dependent Var.:       Crime Rate
+## Dependent Var.:           crmrte
 ##                                 
 ## Constant                        
-## Prob. Arrest    -0.0011 (0.0026)
+## prbarr          -0.0011 (0.0026)
 ## Fixed-Effects:  ----------------
-## County                       Yes
-## Year                         Yes
+## county                       Yes
+## year                         Yes
 ## _______________ ________________
-## S.E. type             by: County
+## S.E. type             by: county
 ## Observations                 630
 ## R2                       0.87735
 ## Within R2                0.00034
@@ -845,15 +784,15 @@ etable(crime_many_estimations[lhs='crmrte',sample=1],title='Crime Rate',notes='N
 ```
 ##                 crime_many_estim..1 crime_many_estim..2 crime_many_estim..3
 ## Sample (urban)          Full sample         Full sample         Full sample
-## Dependent Var.:          Crime Rate          Crime Rate          Crime Rate
+## Dependent Var.:              crmrte              crmrte              crmrte
 ##                                                                            
 ## Constant         0.0432*** (0.0014)  0.0406*** (0.0026)  0.0397*** (0.0025)
-## Prob. Arrest    -0.0379*** (0.0039) -0.0381*** (0.0039) -0.0478*** (0.0039)
-## Avg. Sentence                           0.0003 (0.0003)     0.0003 (0.0002)
+## prbarr          -0.0379*** (0.0039) -0.0381*** (0.0039) -0.0478*** (0.0039)
+## avgsen                                  0.0003 (0.0003)     0.0003 (0.0002)
 ## polpc                                                     2.089*** (0.2442)
 ## Fixed-Effects:  ------------------- ------------------- -------------------
-## County                           No                  No                  No
-## Year                             No                  No                  No
+## county                           No                  No                  No
+## year                             No                  No                  No
 ## _______________ ___________________ ___________________ ___________________
 ## S.E. type                       IID                 IID                 IID
 ## Observations                    630                 630                 630
@@ -862,51 +801,51 @@ etable(crime_many_estimations[lhs='crmrte',sample=1],title='Crime Rate',notes='N
 ## 
 ##                 crime_many_es..4 crime_many_es..5 crime_many_est..6
 ## Sample (urban)       Full sample      Full sample       Full sample
-## Dependent Var.:       Crime Rate       Crime Rate        Crime Rate
+## Dependent Var.:           crmrte           crmrte            crmrte
 ##                                                                    
 ## Constant                                                           
-## Prob. Arrest    -0.0020 (0.0026) -0.0019 (0.0027)  -0.0043 (0.0028)
-## Avg. Sentence                    7.12e-5 (0.0001)  0.0002* (0.0001)
+## prbarr          -0.0020 (0.0026) -0.0019 (0.0027)  -0.0043 (0.0028)
+## avgsen                           7.12e-5 (0.0001)  0.0002* (0.0001)
 ## polpc                                             1.735*** (0.3191)
 ## Fixed-Effects:  ---------------- ---------------- -----------------
-## County                       Yes              Yes               Yes
-## Year                          No               No                No
+## county                       Yes              Yes               Yes
+## year                          No               No                No
 ## _______________ ________________ ________________ _________________
-## S.E. type             by: County       by: County        by: County
+## S.E. type             by: county       by: county        by: county
 ## Observations                 630              630               630
 ## R2                       0.87076          0.87084           0.89669
 ## Within R2                0.00106          0.00164           0.20150
 ## 
 ##                 crime_many_esti..7 crime_many_esti..8 crime_many_esti..9
 ## Sample (urban)         Full sample        Full sample        Full sample
-## Dependent Var.:         Crime Rate         Crime Rate         Crime Rate
+## Dependent Var.:             crmrte             crmrte             crmrte
 ##                                                                         
 ## Constant                                                                
-## Prob. Arrest    -0.0378** (0.0090) -0.0379** (0.0088) -0.0478** (0.0086)
-## Avg. Sentence                         0.0002 (0.0002)    0.0002 (0.0002)
+## prbarr          -0.0378** (0.0090) -0.0379** (0.0088) -0.0478** (0.0086)
+## avgsen                                0.0002 (0.0002)    0.0002 (0.0002)
 ## polpc                                                    2.134* (0.7683)
 ## Fixed-Effects:  ------------------ ------------------ ------------------
-## County                          No                 No                 No
-## Year                           Yes                Yes                Yes
+## county                          No                 No                 No
+## year                           Yes                Yes                Yes
 ## _______________ __________________ __________________ __________________
-## S.E. type                 by: Year           by: Year           by: Year
+## S.E. type                 by: year           by: year           by: year
 ## Observations                   630                630                630
 ## R2                         0.13347            0.13463            0.22896
 ## Within R2                  0.12764            0.12881            0.22377
 ## 
 ##                 crime_many_e..10 crime_many_e..11 crime_many_es..12
 ## Sample (urban)       Full sample      Full sample       Full sample
-## Dependent Var.:       Crime Rate       Crime Rate        Crime Rate
+## Dependent Var.:           crmrte           crmrte            crmrte
 ##                                                                    
 ## Constant                                                           
-## Prob. Arrest    -0.0011 (0.0026) -0.0012 (0.0026)  -0.0038 (0.0027)
-## Avg. Sentence                    -9.4e-5 (0.0001)  5.05e-5 (0.0001)
+## prbarr          -0.0011 (0.0026) -0.0012 (0.0026)  -0.0038 (0.0027)
+## avgsen                           -9.4e-5 (0.0001)  5.05e-5 (0.0001)
 ## polpc                                             1.821*** (0.3223)
 ## Fixed-Effects:  ---------------- ---------------- -----------------
-## County                       Yes              Yes               Yes
-## Year                         Yes              Yes               Yes
+## county                       Yes              Yes               Yes
+## year                         Yes              Yes               Yes
 ## _______________ ________________ ________________ _________________
-## S.E. type             by: County       by: County        by: County
+## S.E. type             by: county       by: county        by: county
 ## Observations                 630              630               630
 ## R2                       0.87735          0.87746           0.90563
 ## Within R2                0.00034          0.00125           0.23086
@@ -921,71 +860,71 @@ etable(crime_many_estimations[lhs='prbconv',sample=1],title='Probability of Conv
 ```
 ##                 crime_many_esti..1 crime_many_es..2 crime_many_est..3
 ## Sample (urban)         Full sample      Full sample       Full sample
-## Dependent Var.:   Prob. Conviction Prob. Conviction  Prob. Conviction
+## Dependent Var.:            prbconv          prbconv           prbconv
 ##                                                                      
 ## Constant        0.5807*** (0.1385) 0.5018. (0.2628)   0.3759 (0.2338)
-## Prob. Arrest       0.3512 (0.3937)  0.3464 (0.3942) -1.029** (0.3662)
-## Avg. Sentence                       0.0090 (0.0254)   0.0068 (0.0226)
+## prbarr             0.3512 (0.3937)  0.3464 (0.3942) -1.029** (0.3662)
+## avgsen                              0.0090 (0.0254)   0.0068 (0.0226)
 ## polpc                                                296.5*** (22.92)
 ## Fixed-Effects:  ------------------ ---------------- -----------------
-## County                          No               No                No
-## Year                            No               No                No
+## county                          No               No                No
+## year                            No               No                No
 ## _______________ __________________ ________________ _________________
 ## S.E. type                      IID              IID               IID
 ## Observations                   630              630               630
 ## R2                         0.00127          0.00146           0.21216
 ## Within R2                       --               --                --
 ## 
-##                 crime_many_es..4 crime_many_es..5 crime_many_es..6
-## Sample (urban)       Full sample      Full sample      Full sample
-## Dependent Var.: Prob. Conviction Prob. Conviction Prob. Conviction
-##                                                                   
-## Constant                                                          
-## Prob. Arrest      -2.941 (2.064)   -2.940 (2.074)   -3.394 (2.559)
-## Avg. Sentence                     0.0008 (0.0342)  0.0301 (0.0299)
-## polpc                                               328.8* (142.5)
-## Fixed-Effects:  ---------------- ---------------- ----------------
-## County                       Yes              Yes              Yes
-## Year                          No               No               No
-## _______________ ________________ ________________ ________________
-## S.E. type             by: County       by: County       by: County
-## Observations                 630              630              630
-## R2                       0.33114          0.33114          0.43784
-## Within R2                0.04762          0.04762          0.19955
+##                 crime_many_..4 crime_many_e..5 crime_many_e..6 crime_many_e..7
+## Sample (urban)     Full sample     Full sample     Full sample     Full sample
+## Dependent Var.:        prbconv         prbconv         prbconv         prbconv
+##                                                                               
+## Constant                                                                      
+## prbarr          -2.941 (2.064)  -2.940 (2.074)  -3.394 (2.559) 0.3665 (0.3999)
+## avgsen                         0.0008 (0.0342) 0.0301 (0.0299)                
+## polpc                                           328.8* (142.5)                
+## Fixed-Effects:  -------------- --------------- --------------- ---------------
+## county                     Yes             Yes             Yes              No
+## year                        No              No              No             Yes
+## _______________ ______________ _______________ _______________ _______________
+## S.E. type           by: county      by: county      by: county        by: year
+## Observations               630             630             630             630
+## R2                     0.33114         0.33114         0.43784         0.01355
+## Within R2              0.04762         0.04762         0.19955         0.00139
 ## 
-##                 crime_many_es..7 crime_many_es..8 crime_many_es..9
-## Sample (urban)       Full sample      Full sample      Full sample
-## Dependent Var.: Prob. Conviction Prob. Conviction Prob. Conviction
-##                                                                   
-## Constant                                                          
-## Prob. Arrest     0.3665 (0.3999)  0.3571 (0.4001)  -1.008 (0.7845)
-## Avg. Sentence                     0.0138 (0.0358)  0.0074 (0.0274)
-## polpc                                               294.5. (125.8)
-## Fixed-Effects:  ---------------- ---------------- ----------------
-## County                        No               No               No
-## Year                         Yes              Yes              Yes
-## _______________ ________________ ________________ ________________
-## S.E. type               by: Year         by: Year         by: Year
-## Observations                 630              630              630
-## R2                       0.01355          0.01398          0.22043
-## Within R2                0.00139          0.00182          0.21082
+##                 crime_many_e..8 crime_many_e..9 crime_many..10 crime_many_..11
+## Sample (urban)      Full sample     Full sample    Full sample     Full sample
+## Dependent Var.:         prbconv         prbconv        prbconv         prbconv
+##                                                                               
+## Constant                                                                      
+## prbarr          0.3571 (0.4001) -1.008 (0.7845) -2.939 (2.077)  -2.931 (2.079)
+## avgsen          0.0138 (0.0358) 0.0074 (0.0274)                0.0104 (0.0277)
+## polpc                            294.5. (125.8)                               
+## Fixed-Effects:  --------------- --------------- -------------- ---------------
+## county                       No              No            Yes             Yes
+## year                        Yes             Yes            Yes             Yes
+## _______________ _______________ _______________ ______________ _______________
+## S.E. type              by: year        by: year     by: county      by: county
+## Observations                630             630            630             630
+## R2                      0.01398         0.22043        0.34289         0.34305
+## Within R2               0.00182         0.21082        0.04784         0.04807
 ## 
-##                 crime_many_e..10 crime_many_e..11 crime_many_e..12
-## Sample (urban)       Full sample      Full sample      Full sample
-## Dependent Var.: Prob. Conviction Prob. Conviction Prob. Conviction
-##                                                                   
-## Constant                                                          
-## Prob. Arrest      -2.939 (2.077)   -2.931 (2.079)   -3.388 (2.552)
-## Avg. Sentence                     0.0104 (0.0277)  0.0361 (0.0269)
-## polpc                                               324.6* (139.9)
-## Fixed-Effects:  ---------------- ---------------- ----------------
-## County                       Yes              Yes              Yes
-## Year                         Yes              Yes              Yes
-## _______________ ________________ ________________ ________________
-## S.E. type             by: County       by: County       by: County
-## Observations                 630              630              630
-## R2                       0.34289          0.34305          0.44589
-## Within R2                0.04784          0.04807          0.19709
+##                 crime_many_..12
+## Sample (urban)      Full sample
+## Dependent Var.:         prbconv
+##                                
+## Constant                       
+## prbarr           -3.388 (2.552)
+## avgsen          0.0361 (0.0269)
+## polpc            324.6* (139.9)
+## Fixed-Effects:  ---------------
+## county                      Yes
+## year                        Yes
+## _______________ _______________
+## S.E. type            by: county
+## Observations                630
+## R2                      0.44589
+## Within R2               0.19709
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -997,15 +936,15 @@ etable(crime_many_estimations[lhs='crmrte',sample=2],title='Crime Rate in Urban 
 ```
 ##                 crime_many_estim..1 crime_many_estim..2 crime_many_estim..3
 ## Sample (urban)                    0                   0                   0
-## Dependent Var.:          Crime Rate          Crime Rate          Crime Rate
+## Dependent Var.:              crmrte              crmrte              crmrte
 ##                                                                            
 ## Constant         0.0370*** (0.0012)  0.0392*** (0.0023)  0.0385*** (0.0021)
-## Prob. Arrest    -0.0270*** (0.0034) -0.0267*** (0.0034) -0.0356*** (0.0033)
-## Avg. Sentence                          -0.0003 (0.0002)    -0.0003 (0.0002)
+## prbarr          -0.0270*** (0.0034) -0.0267*** (0.0034) -0.0356*** (0.0033)
+## avgsen                                 -0.0003 (0.0002)    -0.0003 (0.0002)
 ## polpc                                                     1.819*** (0.2036)
 ## Fixed-Effects:  ------------------- ------------------- -------------------
-## County                           No                  No                  No
-## Year                             No                  No                  No
+## county                           No                  No                  No
+## year                             No                  No                  No
 ## _______________ ___________________ ___________________ ___________________
 ## S.E. type                       IID                 IID                 IID
 ## Observations                    574                 574                 574
@@ -1014,51 +953,51 @@ etable(crime_many_estimations[lhs='crmrte',sample=2],title='Crime Rate in Urban 
 ## 
 ##                 crime_many_es..4 crime_many_es..5 crime_many_est..6
 ## Sample (urban)                 0                0                 0
-## Dependent Var.:       Crime Rate       Crime Rate        Crime Rate
+## Dependent Var.:           crmrte           crmrte            crmrte
 ##                                                                    
 ## Constant                                                           
-## Prob. Arrest    -0.0017 (0.0026) -0.0017 (0.0026)  -0.0041 (0.0027)
-## Avg. Sentence                    1.95e-5 (0.0001)  0.0002. (0.0001)
+## prbarr          -0.0017 (0.0026) -0.0017 (0.0026)  -0.0041 (0.0027)
+## avgsen                           1.95e-5 (0.0001)  0.0002. (0.0001)
 ## polpc                                             1.722*** (0.3264)
 ## Fixed-Effects:  ---------------- ---------------- -----------------
-## County                       Yes              Yes               Yes
-## Year                          No               No                No
+## county                       Yes              Yes               Yes
+## year                          No               No                No
 ## _______________ ________________ ________________ _________________
-## S.E. type             by: County       by: County        by: County
+## S.E. type             by: county       by: county        by: county
 ## Observations                 574              574               574
 ## R2                       0.80689          0.80690           0.84780
 ## Within R2                0.00084          0.00088           0.21251
 ## 
 ##                 crime_many_esti..7 crime_many_esti..8 crime_many_esti..9
 ## Sample (urban)                   0                  0                  0
-## Dependent Var.:         Crime Rate         Crime Rate         Crime Rate
+## Dependent Var.:             crmrte             crmrte             crmrte
 ##                                                                         
 ## Constant                                                                
-## Prob. Arrest    -0.0268** (0.0058) -0.0264** (0.0059) -0.0355** (0.0064)
-## Avg. Sentence                       -0.0004* (0.0001)  -0.0004. (0.0002)
+## prbarr          -0.0268** (0.0058) -0.0264** (0.0059) -0.0355** (0.0064)
+## avgsen                              -0.0004* (0.0001)  -0.0004. (0.0002)
 ## polpc                                                    1.865* (0.7238)
 ## Fixed-Effects:  ------------------ ------------------ ------------------
-## County                          No                 No                 No
-## Year                           Yes                Yes                Yes
+## county                          No                 No                 No
+## year                           Yes                Yes                Yes
 ## _______________ __________________ __________________ __________________
-## S.E. type                 by: Year           by: Year           by: Year
+## S.E. type                 by: year           by: year           by: year
 ## Observations                   574                574                574
 ## R2                         0.10602            0.10988            0.22501
 ## Within R2                  0.09934            0.10323            0.21922
 ## 
 ##                 crime_many_e..10 crime_many_e..11 crime_many_es..12
 ## Sample (urban)                 0                0                 0
-## Dependent Var.:       Crime Rate       Crime Rate        Crime Rate
+## Dependent Var.:           crmrte           crmrte            crmrte
 ##                                                                    
 ## Constant                                                           
-## Prob. Arrest    -0.0010 (0.0026) -0.0011 (0.0026)  -0.0036 (0.0026)
-## Avg. Sentence                    -0.0001 (0.0001)  3.91e-5 (0.0001)
+## prbarr          -0.0010 (0.0026) -0.0011 (0.0026)  -0.0036 (0.0026)
+## avgsen                           -0.0001 (0.0001)  3.91e-5 (0.0001)
 ## polpc                                             1.805*** (0.3295)
 ## Fixed-Effects:  ---------------- ---------------- -----------------
-## County                       Yes              Yes               Yes
-## Year                         Yes              Yes               Yes
+## county                       Yes              Yes               Yes
+## year                         Yes              Yes               Yes
 ## _______________ ________________ ________________ _________________
-## S.E. type             by: County       by: County        by: County
+## S.E. type             by: county       by: county        by: county
 ## Observations                 574              574               574
 ## R2                       0.81420          0.81446           0.85886
 ## Within R2                0.00030          0.00168           0.24061
@@ -1073,15 +1012,15 @@ etable(crime_many_estimations[lhs='crmrte',sample=3],title='Crime Rate in Rural 
 ```
 ##                 crime_many_estim..1 crime_many_estim..2 crime_many_estim..3
 ## Sample (urban)                    1                   1                   1
-## Dependent Var.:          Crime Rate          Crime Rate          Crime Rate
+## Dependent Var.:              crmrte              crmrte              crmrte
 ##                                                                            
 ## Constant         0.1055*** (0.0078)  0.0990*** (0.0100)  0.0775*** (0.0138)
-## Prob. Arrest    -0.1995*** (0.0368) -0.2033*** (0.0369) -0.2014*** (0.0357)
-## Avg. Sentence                           0.0007 (0.0007)     0.0004 (0.0007)
+## prbarr          -0.1995*** (0.0368) -0.2033*** (0.0369) -0.2014*** (0.0357)
+## avgsen                                  0.0007 (0.0007)     0.0004 (0.0007)
 ## polpc                                                        11.94* (5.472)
 ## Fixed-Effects:  ------------------- ------------------- -------------------
-## County                           No                  No                  No
-## Year                             No                  No                  No
+## county                           No                  No                  No
+## year                             No                  No                  No
 ## _______________ ___________________ ___________________ ___________________
 ## S.E. type                       IID                 IID                 IID
 ## Observations                     56                  56                  56
@@ -1090,51 +1029,51 @@ etable(crime_many_estimations[lhs='crmrte',sample=3],title='Crime Rate in Rural 
 ## 
 ##                 crime_many_est..4 crime_many_est..5 crime_many_est..6
 ## Sample (urban)                  1                 1                 1
-## Dependent Var.:        Crime Rate        Crime Rate        Crime Rate
+## Dependent Var.:            crmrte            crmrte            crmrte
 ##                                                                      
 ## Constant                                                             
-## Prob. Arrest    -0.1903. (0.0823) -0.1871. (0.0801) -0.1811* (0.0741)
-## Avg. Sentence                       0.0008 (0.0005)   0.0007 (0.0005)
+## prbarr          -0.1903. (0.0823) -0.1871. (0.0801) -0.1811* (0.0741)
+## avgsen                              0.0008 (0.0005)   0.0007 (0.0005)
 ## polpc                                                   8.647 (6.132)
 ## Fixed-Effects:  ----------------- ----------------- -----------------
-## County                        Yes               Yes               Yes
-## Year                           No                No                No
+## county                        Yes               Yes               Yes
+## year                           No                No                No
 ## _______________ _________________ _________________ _________________
-## S.E. type              by: County        by: County        by: County
+## S.E. type              by: county        by: county        by: county
 ## Observations                   56                56                56
 ## R2                        0.88722           0.89616           0.90231
 ## Within R2                 0.20282           0.26602           0.30946
 ## 
 ##                 crime_many_estim..7 crime_many_estim..8 crime_many_estim..9
 ## Sample (urban)                    1                   1                   1
-## Dependent Var.:          Crime Rate          Crime Rate          Crime Rate
+## Dependent Var.:              crmrte              crmrte              crmrte
 ##                                                                            
 ## Constant                                                                   
-## Prob. Arrest    -0.1979*** (0.0149) -0.2011*** (0.0175) -0.1982*** (0.0137)
-## Avg. Sentence                           0.0005 (0.0007)   -4.93e-5 (0.0007)
+## prbarr          -0.1979*** (0.0149) -0.2011*** (0.0175) -0.1982*** (0.0137)
+## avgsen                                  0.0005 (0.0007)   -4.93e-5 (0.0007)
 ## polpc                                                       13.42** (3.493)
 ## Fixed-Effects:  ------------------- ------------------- -------------------
-## County                           No                  No                  No
-## Year                            Yes                 Yes                 Yes
+## county                           No                  No                  No
+## year                            Yes                 Yes                 Yes
 ## _______________ ___________________ ___________________ ___________________
-## S.E. type                  by: Year            by: Year            by: Year
+## S.E. type                  by: year            by: year            by: year
 ## Observations                     56                  56                  56
 ## R2                          0.39994             0.40426             0.46292
 ## Within R2                   0.36403             0.36861             0.43078
 ## 
 ##                 crime_many_es..10 crime_many_es..11 crime_many_es..12
 ## Sample (urban)                  1                 1                 1
-## Dependent Var.:        Crime Rate        Crime Rate        Crime Rate
+## Dependent Var.:            crmrte            crmrte            crmrte
 ##                                                                      
 ## Constant                                                             
-## Prob. Arrest    -0.1694. (0.0771) -0.1723. (0.0733) -0.1709* (0.0703)
-## Avg. Sentence                       0.0002 (0.0005)  3.84e-5 (0.0006)
+## prbarr          -0.1694. (0.0771) -0.1723. (0.0733) -0.1709* (0.0703)
+## avgsen                              0.0002 (0.0005)  3.84e-5 (0.0006)
 ## polpc                                                   11.27 (6.369)
 ## Fixed-Effects:  ----------------- ----------------- -----------------
-## County                        Yes               Yes               Yes
-## Year                          Yes               Yes               Yes
+## county                        Yes               Yes               Yes
+## year                          Yes               Yes               Yes
 ## _______________ _________________ _________________ _________________
-## S.E. type              by: County        by: County        by: County
+## S.E. type              by: county        by: county        by: county
 ## Observations                   56                56                56
 ## R2                        0.93501           0.93554           0.94120
 ## Within R2                 0.23564           0.24188           0.30840

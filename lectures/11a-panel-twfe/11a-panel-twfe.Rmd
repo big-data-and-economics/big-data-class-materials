@@ -54,14 +54,14 @@ Today's lecture explores
 It's important to note that "base" R already provides all of the tools to implement a fixed effects regression, **but** you'll quickly hit walls due to memory caps. Instead, I want to introduce **fixest**, short for Fixed-Effects Estimation, which provides lightning fast fixed effects estimation and make your life much easier. 
 
 - New: **fixest**, **wooldridge**
-- Already used: **tidyverse**, **hrbrthemes**, **listviewer**, **estimatr**, **ivreg**, **sandwich**, **lmtest**,  **mfx**, **margins**, **broom**, **modelsummary**, **vtable**, **rstanarm**
+- Already used: **modelsummary**, **broom**, **tidyverse**
 
 A convenient way to install (if necessary) and load everything is by running the below code chunk.
 
 ```{r libs_print, cache=FALSE, eval=FALSE}
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, wooldridge)
+pacman::p_load(modelsummary, broom, fixest, wooldridge, tidyverse)
 
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
@@ -69,7 +69,7 @@ theme_set(theme_minimal())
 ```{r libs, cache=FALSE, message=FALSE, echo=FALSE}
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, fixest, sandwich, wooldridge,kableExtra)
+pacman::p_load(modelsummary, broom, fixest, wooldridge, tidyverse)
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
 ```
@@ -97,15 +97,12 @@ Let me introduce the dataset we'll be using, `crime4`. It comes from Jeffrey Woo
 ```{r crime4,message=FALSE}
 data(crime4)
 crime4 %>%
-  select(county, year, crmrte, prbarr) %>%
+  dplyr::select(county, year, crmrte, prbarr) %>%
   rename(County = county,
          Year = year,
          CrimeRate = crmrte,
          ProbofArrest = prbarr) %>%
-  slice(1:9) %>%
-  knitr::kable(note = '...') %>%
-  kableExtra::add_footnote('9 rows out of 630. "Prob. of Arrest" is estimated probability of being arrested when you commit a crime', notation = 'none')
-
+  slice(1:9) 
 ```
 
 ### Let's visualize it
@@ -184,7 +181,7 @@ Hey look, the coefficient is the same!
 ### Why LSDV?
 
 - A benefit of the LSDV approach is that it calculates the fixed effects $\alpha_i$ for you
-- We left those out of the table with the `coefs` argument of `export_summs` (we rarely want them) but here they are:
+- We left those out of the table with the `coefs` argument of `msummary` (we rarely want them) but here they are:
 
 ```{r lsdv-print}
 lsdv
