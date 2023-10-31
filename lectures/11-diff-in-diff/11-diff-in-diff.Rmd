@@ -85,7 +85,9 @@ class: inverse, center, middle
 
 - We've been talking about causality for a bit now
 - Popcorn style: what do we need for cauality?
+
 --
+
 - We need to account for everything that is correlated with treatment
 - There are two extreme startegies:
 1. Control variables for everything! 
@@ -180,6 +182,7 @@ name: effect-of-time
 - Why not just control for Time? 
   - We can certainly measure that and we can just add a fixed effect
 - What happens if we add a fixed effect for Time?
+
 --
 
 - It would wash out all the variation!
@@ -290,7 +293,7 @@ DiD = (.blue[**TA**] - .red[**TB**]) - (.blue[UA] - .red[UB]) = .hi-purple[Treat
 
 # Difference-in-Difference
 
-- Of course, this example only uses four data points
+- What if there are more than four data points?
 - Usually these four points would be four means from lots of observations, not just two people in two time periods
 - How can we do this and get things like standard errors, and perhaps include controls?
 - Why, use OLS regression of course!
@@ -318,12 +321,12 @@ data.frame(Person = c('Adelaide','Adelaide','Bella','Bella'),
 
 - How can we interpret this using what we know?
 
-$$Y_{it} = \beta_0 + \beta_1After_t + \beta_2Treated_i + \beta_3After_tTreated_i + \varepsilon_{it}$$
+$$Y_{it} = \beta_0 + \beta_1After_t + \beta_2Treated_i + \beta_3After_t \times Treated_i + \varepsilon_{it}$$
 
-- $\beta_0$ is the prediction when $Treated_i = 0$ and $After_t = 0$ $\rightarrow$ the Untreated Before mean!
-- $\beta_1$ is the *difference between* Before and After for $Treated_i = 0$ $\rightarrow$ Untreated (After - Before)
-- $\beta_2$ is the *difference between* Treated and Untreated for $After_t = 0$ $\rightarrow$ Before (Treated - Untreated)
-- $\beta_3$ is *how much bigger the Before-After difference* is for $Treated_i = 1$ than for $Treated_i = 0$ $\rightarrow$ (Treated After - Before) - (Untreated After - Before) = DID!
+- $\beta_0$ is the prediction when $Treated_i = 0$ and $After_t = 0$ $\rightarrow$ the .red[Untreated Before] mean!
+- $\beta_1$ is the *difference between* Before and After for $Treated_i = 0$ $\rightarrow$ Untreated (.blue[After] - .red[Before])
+- $\beta_2$ is the *difference between* Treated and Untreated for $After_t = 0$ $\rightarrow$ .red[Before (**Treated** - Untreated)]
+- $\beta_3$ is *how much bigger the Before-After difference* is for $Treated_i = 1$ than for $Treated_i = 0$ $\rightarrow$ (.blue[**TA**] - .red[**TB**]) - (.blue[UA] - .red[UB]) = DID!
 
 ---
 
@@ -441,7 +444,7 @@ class: inverse, center, middle
   - Phaseout differs by filing status (single vs. married)
 - It was introduced in 1975 and expanded in 1986, 1990, and 1993 (we'll focus on 1993)
 - Policy details vary, so we're gonna focus on single mothers vs. single women without kids to keep it simple
-  - Very common to Zoom in on groups where we expect the effect to exist when we're starting out
+  - Very common to zoom in on groups where we expect the effect to exist
   - Helps you get a sense of what's going on before you try to explain everything
 
 ---
@@ -569,8 +572,9 @@ $$
 # Does it Work?
 
 - This gives us a causal effect as long as *the only reason the gap changed* was the treatment
-- If Adelaide would have grown six inches *anyway*, then the gap would have grown by 2, pill or not. The pill did nothing in that case! But we don't know that and mistakenly say it helped her grow by 2
-- In fixed effects, we need to assume that there's no uncontrolled endogenous variation across time
+- If Adelaide would have grown six inches *anyway*, then the gap would have grown by 2, pill or not. 
+  - But we don't know that and mistakenly say it helped her grow by 2
+- For fixed effects to have a causal effect with panel data, we assume no uncontrolled endogenous variation across time
 - In DID, we need to assume that there's no uncontrolled endogenous variation *across this particular before/after time change*
 - An easier assumption to justify but still an assumption!
 
@@ -581,7 +585,7 @@ $$
 - This assumption - that nothing else changes at the same time, is the poorly-named "parallel trends"
 - Again, this assumes that, *if the Treatment hadn't happened to anyone*, the gap between the two would have stayed the same
 - Sometimes people check whether this assumption is plausible by seeing if *prior trends* are the same for Treated and Untreated - if we have multiple pre-treatment periods, was the gap changing a lot during that period?
-- Sometimes people also "adjust for prior trends" to fix parallel trends violations, or use related methods like Synthetic Control (these are outside the scope of this class)
+- Sometimes people also "adjust for prior trends" to fix parallel trends violations, or use related methods like Synthetic Control
 
 ---
 
@@ -619,7 +623,7 @@ df %>%
 ```{r prior-trends-df}
 df <- data.frame(Person = c('Adelaide','Adelaide','Adelaide','Me','Me','Me'),
                  Time = factor(c('Before 1','Before 2','After','Before 1','Before 2','After'), levels = c('Before 1','Before 2','After')),
-                 Height = c(43, 48, 54, 67, 67, 67))
+                 Height = c(43, 48, 54, 70, 70, 70))
 ggplot(df, aes(x = Time, y = Height, group = Person, label = Person)) +
   geom_line(color = 'black', size = 1) + 
   geom_point(color = 'red', size = 3) + 
@@ -636,7 +640,9 @@ ggplot(df, aes(x = Time, y = Height, group = Person, label = Person)) +
 
 - Just because *prior trends* are equal doesn't mean that *parallel trends* holds. 
 - *Parallel trends* is about what the before-after change *would have been* - we can't see that!
-<br>
+
+--
+
 - For example, let's say we want to see the effect of online teaching on student test scores, using COVID school shutdowns to get a Before/After
 - As of March/April 2020, some schools had gone online (Treated) and others hadn't (Untreated)
 - Test score trends were probably pretty similar in the Before periods (Jan/Feb 2020), so prior trends are likely the same
@@ -647,7 +653,7 @@ ggplot(df, aes(x = Time, y = Height, group = Person, label = Person)) +
 # Concept Checks
 
 - Go back to the Seattle minimum wage effect example from the first Concept Check slide. Clearly state what the parallel trends assumption means in this context.
-<br>
+
 - It's possible (although perhaps unlikely) that parallel trends can hold even if it looks like the treatment and control groups were trending apart before treatment went into effect. How is this possible?
 
 ---
