@@ -626,7 +626,7 @@ etable(predict_treatment, without_fuzzy, fuzzy_rdd)
 
 - We can specify an RDD model by just telling it the dependent variable $Y$, the running variable $X$, and the cutoff $c$.
 - We can also specify how many polynomials to us with `p`
-- (it applies the polynomials more locally than our linear OLS models do - a bit more flexible without weird corner preditions)
+- (it applies the polynomials more locally than our linear OLS models do - a bit more flexible without weird corner predictions)
 - It will also pick a window for us with `h`
 - Plenty of other options
 - Including a `fuzzy` option to specify actual treatment outside of the running variable/cutoff combo
