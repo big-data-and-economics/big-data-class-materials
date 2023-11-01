@@ -150,7 +150,7 @@ This course is taught in R, but the goal is not for students to learn individual
 You are actively encouraged to use generative AI assistants in this class. These can be used to improve your code, refine your writing, iterate on your ideas, and more.
 
 - [Sign-up for ChatGPT](https://chat.openai.com/auth/login)
-- [Sign-up for GitHub CoPilot](https://github.com/features/copilot)
+- [Sign-up for GitHub CoPilot](https://docs.github.com/en/copilot/quickstart#signing-up-for-github-copilot-for-your-personal-account) (Note: you do not signup through this organization, you signup through your own personal GitHub account as a student.)
 - [Tips to get better with ChatGPT](https://raw.githack.com/tyleransom/DScourseS23/master/LectureNotes/27-GPT/27slides.html#1)
 - [Integration of AI with R](https://intro2r.library.duke.edu/ai.html)
 
