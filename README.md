@@ -173,6 +173,34 @@ Chrissy Aman is our Course-Attached tutor. She will host office hours in the SAS
 
 Chrissy can help you troubleshoot *R*. She does not know have solution to the problem sets, but she can help you figure them out. 
 
+## GitHub Codespaces
+
+Having trouble with R on your computer?
+
+To get you up and running and writing R code in no time, I have containerized this workshop such that you have a ready out of the box R coding environment.
+
+#### Dev Containers in GitHub CodeSpaces
+
+Click the green "<> Code" button at the top right on this repository page, and then select "Create codespace on main". (GitHub CodeSpaces is available with [GitHub Enterprise](https://github.com/enterprise) and [GitHub Education](https://education.github.com/).)
+
+To open RStudio Server, click the Forwarded Ports "Radio" icon at the bottom of the VS Code Online window.
+
+![Forwarded Ports](img/forwarded_ports.png)
+
+In the Ports tab, click the Open in Browser "World" icon that appears when you hover in the "Local Address" column for the Rstudio row.
+
+![Ports](img/ports.png)
+
+This will launch RStudio Server in a new window. Log in with the username and password `rstudio/rstudio`. 
+
+* NOTE: Sometimes, the RStudio window may fail to open with a timeout error. If this happens, try again, or restart the Codepace.
+
+In RStudio, use the File menu to open the file `test.Rmd`. Use the "Knit" submenu to "Knit as HTML" and view the rendered "R Notebook" Markdown document.
+
+* Note: You may be prompted to install an updated version of the `markdown` package. Select "Yes".
+
+* Note: Pushing/pulling will work a bit differently. In practice, you will use the <picture> <source media="(prefers-color-scheme: light)" srcset="/img/298785_git_branch_icon.png"> <source media="(prefers-color-scheme: dark)" srcset="/img/298785_git_branch_icon_white.png"> <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="/img/298785_git_branch_icon_white.png"></picture> icon for "Source Control" on the RHS bar where you can stage things, commit, and push them. You will need to do this to turn in your problem set. See documentation from GitHub on [Source Control and Codespaces](https://docs.github.com/en/codespaces/developing-in-codespaces/using-source-control-in-your-codespace)
+
 ## Other details
 
 This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/). Here is the course description, right out of the [syllabus](syllabus/syllabus.pdf):
