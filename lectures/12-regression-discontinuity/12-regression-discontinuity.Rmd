@@ -122,13 +122,8 @@ We call these continuous variables "Running variables" because we *run along the
 
 - But wait, hold on, if treatment is driven by running variables, won't we have endogeneity going through the running variables?? Yes! 
 - And we can't just control for RunningVar because that's where all the variation in treatment comes from. Uh oh!
-
----
-
-# Regression Discontinuity
-
+--
 - The key here is realizing that the running variable affects treatment *only when you go across the cutoff*
-- So really the diagram looks like this!
 
 ---
 
