@@ -1,7 +1,7 @@
 ---
 title: "Big Data and Economics"
 subtitle: "Regression Discontinuity by Kyle Coombs"
-author: Kyle Coombs
+author: Kyle Coombs, adapted from Nick Huntington-Klein
 date: "Bates College | [ECON/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)"
 output:
   xaringan::moon_reader:
@@ -32,7 +32,7 @@ pre[class] {
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE) 
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, cache=TRUE, fig.width = 8, fig.height = 6)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, cache=TRUE, fig.width = 8, fig.height = 6)
 if (!require("pacman")) install.packages("pacman")
 
 pacman::p_load(tidyverse,gganimate,estimatr,magick,directlabels,ggthemes,fixest,jtools,rdrobust,scales,Cairo)
@@ -56,15 +56,43 @@ theme_metro_regtitle <- function(x) {
         plot.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
         text = element_text(size = 16))
 }
+
+setFixest_dict(c('above_cutTRUE'='Above Cut','treatmentTRUE'='Treatment','treatedTRUE'='Treated','X_center:treatmentTRUE'='X_center x Treatment','treatedTRUE:I(X_centered^2)'='Treated x X_centered squared'))
+
 ```
 
+# Table of contents
 
-# Check-in
+- [Prologue](#prologue)
+
+- [Regression Discontinuity](#rdd)
+  - [Fitting Lines in RDD](#fitlines)
+  - [Overfitting](#careful)
+  - [Assumptions](#assumptions)
+
+- [RDD Challenges](#rdd-challenges)
+
+- [Fuzzy RDD](#fuzzy-rdd)
+
+---
+name: prologue
+class: inverse, center, middle
+
+# Prologue
+
+---
+
+# Prologue
 
 - We've just finished covering difference-in-differences, which is one way of estimating a causal effect even if you can't measure and control for everything you need to control for
-- DID is *very* widely applicable, but it relies on some pretty strong assumptions. Parallel trends?
+- DID is *very* widely applicable, but it relies on some pretty strong assumptions like parallel trends
 - We want to have some other designs in mind for how we can estimate effects in these settings that might be a little easier to swallow!
 
+---
+name: rdd
+class: inverse, center, middle
+
+# Regression Discontinuity
 
 ---
 
@@ -92,7 +120,7 @@ We call these continuous variables "Running variables" because we *run along the
 
 # Regression Discontinuity
 
-- But wait, hold on, if treatment is driven by running variables, won't we have a back door going through those very same running variables?? Yes! 
+- But wait, hold on, if treatment is driven by running variables, won't we have endogeneity going through the running variables?? Yes! 
 - And we can't just control for RunningVar because that's where all the variation in treatment comes from. Uh oh!
 
 ---
@@ -108,7 +136,7 @@ We call these continuous variables "Running variables" because we *run along the
 
 - So what does this mean?
 - If we can control for the running variable *everywhere except the cutoff*, then...
-- We will be controlling for the running variable, closing that back door
+- We will be controlling for the running variable, removing endogeneity
 - But leaving variation at the cutoff open, allowing for variation in treatment
 - We focus on just the variation around the treatment, narrowing the range of the running variable we use so sharply that it's basically controlled for. Then the effect of cutoff on treatment is like an experiment!
 
@@ -118,7 +146,7 @@ We call these continuous variables "Running variables" because we *run along the
 
 - Basically, the idea is that *right around the cutoff*, treatment is randomly assigned
 - If you have a test score of 89.9 (not high enough for gifted-and-talented), you're basically the same as someone who has a test score of 90.0 (just barely high enough)
-- So if we just focus around the cutoff, we close any back doors because it's basically random which side of the line you're on
+- So if we just focus around the cutoff, we remove endogeneity because it's basically random which side of the line you're on
 - But we get variation in treatment!
 - This specifically gives us the effect of treatment *for people who are right around the cutoff* a.k.a. a "local average treatment effect" (we still won't know the effect of being put in gifted-and-talented for someone who gets a 30)
 
@@ -195,7 +223,7 @@ animate(p,nframes=175)
 - Why can't we just control for the running variable as we normally would to solve the endogeneity problem?
 
 ---
-
+name: fitlines
 # Fitting Lines in RDD
 
 - Looking purely just at the cutoff and making no use of the space *away* from the cutoff throws out a lot of useful information
@@ -256,7 +284,7 @@ df <- df %>%
 $$Y = \beta_0 + \beta_1Treated + \beta_2XCentered + \beta_3Treated\times XCentered + \varepsilon$$
 
 ```{r fixest}
-feols(Y ~ treated*X_centered, data = df)
+etable(feols(Y ~ treated*X_centered, data = df))
 ```
 
 ---
@@ -282,7 +310,7 @@ feols(Y ~ treated*X_centered, data = df)
 
 $$Y = \beta_0 + \beta_1X + \beta_2X^2 + \varepsilon$$
 
-- And just center the $X$ (let's call it $XC$, add on a set of the same terms multiplied by $Treated$ (don't forget $Treated$ by itself - that's $Treated$ times the interaction!)
+- And just center the $X$ (let's call it $XC$, add on a set of the same terms multiplied by $Treated$ (don't forget $Treated$ by itself - that's $Treated$ times the interaction!))
 
 $$Y = \beta_0 + \beta_1XC + \beta_2XC^2 + \beta_3Treated + \beta_4Treated\times XC + \beta_5Treated\times XC^2 + \varepsilon$$
 
@@ -300,25 +328,20 @@ etable(feols(Y ~ X_centered*treated + I(X_centered^2)*treated, data = df))
 - Sometimes it can be hard to tell if a quadratic (or higher-order) term is really necessary
 - Visualizations can help!
 
-```{r quad-fitting, echo = FALSE}
-set.seed(2000)
-df_quad <- tibble(X = runif(1000)) %>%
-  mutate(treated = X > .5) %>%
-  mutate(X_centered = X - .5) %>%
-  mutate(Y = .25*X_centered - 4*X_centered^2 + .7*treated + .5*.25*X_centered*treated - .5*4*X_centered^2*treated + rnorm(1000,0,.3))
-  
-
-ggplot(df_quad, aes(x = X, y = Y, group = treated)) + 
-  geom_point() + 
-  geom_smooth(method = 'lm', formula= 'y ~ x + I(x^2)', color = 'red', se = FALSE, size = 1.5) + 
-  geom_vline(aes(xintercept = .5), linetype = 'dashed') + 
-  theme_metro() + 
-  geom_segment(aes(x = .5, xend = .5, y = 0, yend = .73), color = 'blue', size = 2) + 
-  annotate(geom = 'label', x = .5, y = .73, label = 'RDD Effect',color = 'blue', size = 16/.pt, hjust = 1.05)
-
+```{r rd-linear-quad, echo=FALSE, out.width="65%", fig.cap="A linear slope makes the jump much bigger than it really is! (From the Effect Chapter 20)", fig.align="center"}
+knitr::include_graphics("img/regressiondiscontinuity-linearrdd-1.png")
 ```
 
 ---
+
+# Concept Checks
+
+- Would the coefficient on $Treated$ still be the regression discontinuity effect estimate if we hadn't centered $X$? Why or why not?
+- Why might we want to use a polynomial term in our RDD model?
+- What relationship are we assuming between the outcome variable and the running variable if we choose not to include $XCentered$ in our model at all (i.e. a "zero-order polynomial")
+
+---
+name: careful
 # Careful with higher order polynomials
 
 - Sometimes higher order polynoials can be a little too flexible
@@ -330,27 +353,32 @@ ggplot(df_quad, aes(x = X, y = Y, group = treated)) +
 # Does voting make you sick?
 Or did the researchers just overfit their model?
 
-![Chang & Meyerhoefer (2020) via Andrew Gelman. Running variable is age with cutoff at age 20 (voting eligibility).](img/p_value_distribution.png)
+.pull-left[
+```{r gullible_top, echo=FALSE, out.width="100%", fig.cap="Health care use (0/1)", fig.align="center"}
+knitr::include_graphics("img/healthcare_exp_rdd_gullible_top.png")
+```
+]
+.pull-right[
+```{r gullible_bot, echo=FALSE, out.width="100%", fig.cap="Log of total health care expenditure among users", fig.align="center"}
+knitr::include_graphics("img/healthcare_exp_rdd_gullible_bottom.png")
+```
+]
+
+Running variable is age with cutoff at age 20 (voting eligibility). Chang & Meyerhoefer (2020) via Andrew Gelman.
 
 ---
-
-# Concept Checks
-
-- Would the coefficient on $Treated$ still be the regression discontinuity effect estimate if we hadn't centered $X$? Why or why not?
-- Why might we want to use a polynomial term in our RDD model?
-- What relationship are we assuming between the outcome variable and the running variable if we choose not to include $XCentered$ in our model at all (i.e. a "zero-order polynomial")
-
----
-
+name: assumptions
 # Assumptions
 
 - We knew there must be some assumptions lurking around here
 - Some are more obvious (we should be using the correct functional form)
+<br>
 - Others are trickier. What are we assuming about the error term and endogeneity here?
 - Specifically, we are assuming that *the only thing jumping at the cutoff is treatment*
 - Sort of like parallel trends, but maybe more believable since we've narrowed in so far
-- For example, if having an income below 150% of the poverty line gets you access to food stamps AND to job training, then we can't really use that cutoff to get the effect of just food stamps
-- Or if the proportion of people who are self-employed jumps up just below 150% (based on *reported* income), that's a back door too!
+<br>
+- For example, if having an income below 150% of the poverty line gets you access to food stamps AND to job training, then we can't use that cutoff to get the effect of just food stamps
+  - Or if the proportion of people who are self-employed jumps up just below 150% (based on *reported* income), that's endogeneity!
 - The only thing different about just above/just below should be treatment
 
 ---
@@ -389,6 +417,12 @@ animate(p,nframes=160)
 ```
 
 ---
+name: rdd-challenges
+class: inverse, center, middle
+
+# RDD Challenges
+
+---
 
 # Other Difficulties
 
@@ -404,7 +438,7 @@ More assumptions, limitations, and diagnostics!
 # Windows
 
 - The basic idea of RDD is that we're interested in *the cutoff*
-- The points away from the cutoff are only useful in helping us predict values at the cutoff
+- The points away from the cutoff are only useful to help predict values at the cutoff
 - Do we really want that full range? Is someone's test score of 30 really going to help us much in predicting $Y$ at a test score of 89?
 - So we might limit our analysis within just a narrow window around the cutoff, just like that initial animation we saw!
 - This makes the exogenous-at-the-jump assumption more plausible, and lets us worry less about functional form (over a narrow range, not too much difference between a linear term and a square), but on the flip side reduces our sample size considerably
@@ -436,10 +470,10 @@ etable(m1,m2,m3,m4,m5, keep = 'treatedTRUE')
 
 # Granular Running Variable
 
-- One assumption we're making is that the running variable varies more or less *continuously*
+- We assume that the running variable varies more or less *continuously*
 - That makes it possible to have, say, a test score of 89 compared to a test score of 90 it's almost certainly the same as except for random chance
 - But what if our data only had test score in big chunks? I don't know you're 89 or 90, I just know you're "80-89" or "90-100"
-- A lot less believable that the only difference between these groups is random chance and we've closed the back doors by focusing on the cutoff
+- A lot less believable that the only difference between these groups is random chance
 - Plenty of other things change between 80 and 100! That's not "smooth at the cutoff"
 
 ---
@@ -530,8 +564,21 @@ df_bin_count %>%
 
 - Another thing we can do is do a "placebo test"
 - Check if variables *other than treatment or outcome* vary at the cutoff
-- We can do this by re-running our RDD but just swapping out some other variable for our outcome
+- We can do this by re-running our RDD but switching our outcome with another variable
 - If we get a significant jump, that's bad! That tells us that *other things are changing at the cutoff* which implies some sort of manipulation (or just super lousy luck)
+
+---
+
+# Concept Checks
+
+- Why does using a narrow window make the effect estimate noisier?
+- Intuitively, why would we be skeptical that a regression discontinuity run on a very granular running variable is valid?
+
+---
+name: fuzzy-rdd
+class: inverse, center, middle
+
+# Fuzzy Regression Discontinuity
 
 ---
 
@@ -541,7 +588,7 @@ df_bin_count %>%
 - What if it isn't so simple? What if the cutoff just *increases* your chances of treatment?
 - For example, maybe about 10% of kids with too-low test scores get into gifted-and-talented, and 80% of kids with high-enough scores do
 - For whatever reason!
-- This is a "fuzzy regression discontinuity"
+- This is a "fuzzy regression discontinuity" (yes, that does sound like a bizarre Sesame Street episode)
 - Now, our RDD will understate the true effect, since it's being calculated on the assumption that we added treatment to 100% of people at the cutoff, when really it's 70%. So we'll get roughly only about 70% of the effect
 
 ---
@@ -549,10 +596,25 @@ df_bin_count %>%
 # Fuzzy Regression Discontinuity
 
 - We can account for this with a model designed to take this into account
-- Specifically, we can use something called two-stage least squares (instrumental variables) to handle these sorts of situations
-- (you can go see the instrumental variables module if you like for more detail)
+- Specifically, we can use something called two-stage least squares (or Wald instrumental variable estimator) to handle these sorts of situations
 - Basically, two-stage least squares estimates how much the chances of treatment go up at the cutoff, and scales the estimate by that change
 - So it would take whatever result we got on the previous slide and divide it by .7 to get the true effect
+
+---
+# Fuzzy Regression Discontinuity
+
+First let's make some fake data:
+
+```{r fuzzy-fake-data}
+set.seed(1000)
+df <- tibble(X = runif(1000)) %>%
+  mutate(treatassign = .05 + .3*(X > .5)) %>%
+  mutate(rand = runif(1000)) %>%
+  mutate(treatment = treatassign > rand) %>%
+  mutate(Y = .2 + .4*X + .5*treatment + rnorm(1000,0,0.3)) %>% # True effect .5
+  mutate(X_center = X - .5) %>%
+  mutate(above_cut = X > .5)
+```
 
 ---
 
@@ -561,14 +623,6 @@ df_bin_count %>%
 - Notice that the y-axis here isn't the outcome, it's "percentage treated"
 
 ```{r fuzzy-rdd, echo = FALSE}
-set.seed(1000)
-df <- tibble(X = runif(1000)) %>%
-  mutate(treatassign = .05 + .3*(X > .5)) %>%
-  mutate(rand = runif(1000)) %>%
-  mutate(treatment = treatassign > rand) %>%
-  mutate(Y = .2 + .4*X + .5*treatment + rnorm(1000)) %>%
-  mutate(X_center = X - .5) %>%
-  mutate(above_cut = X > .5)
 df %>%
   mutate(X_bins = cut(X, breaks = 0:10/10)) %>%
   group_by(X_bins) %>%
@@ -585,30 +639,27 @@ df %>%
 
 # Fuzzy Regression Discontinuity
 
-- We can perform this using the instrumental-variables features of `feols`, giving it two treatment-response functions
-- The first is an RDD specification where we use "treatment" - i.e. whether you were actually treated
-- The second uses the same RDD specification, but replaces "treatment" with "above the cutoff"
-- `feols(outcome ~ controls  | XC*treated ~ XC*assigned_to_treatment)`
+- We can perform this using the instrumental-variables features of `feols`
+- The first stage is the interaction between the running variable and whether treated regressed on the interaction of the running variable and the "sharp" cutoff
+- `feols(outcome ~ controls  | XC*treated ~ XC*above_the_cutoff)`
 
 ---
 
 # Fuzzy Regression Discontinuity
 
-- (the true effect of treatment is .4 - okay, it's not perfect)
+- (the true effect of treatment is .5 - okay, it's not perfect)
 
 ```{r fuzzy-rdd-pred, echo = TRUE}
 predict_treatment <- feols(treatment ~ X_center*above_cut, data = df)
 without_fuzzy <-feols(Y ~ X_center*treatment, data = df)
 fuzzy_rdd <- feols(Y ~ 1 | X_center*treatment ~ X_center*above_cut, data = df)
-etable(predict_treatment, without_fuzzy, fuzzy_rdd)
+etable(predict_treatment, without_fuzzy, fuzzy_rdd, dict=c('above_cutTRUE'='Above Cut','treatmentTRUE'='Treatment'))
 ```
 ---
 
 # Concept Checks
 
-- Why does using a narrow window make the effect estimate noisier?
 - How do we know that, if our treatment variable is fuzzily assigned, we will *underestimate* the effect if we just run a regular RDD, rather than overestimate it?
-- Inuitively, why would we be skeptical that a regression discontinuity run on a very granular running variable is valid?
 
 ---
 
@@ -662,12 +713,12 @@ rdplot(df$Y, df$X, c = .5)
 # That's it!
 
 - That's what we have for RDD
-- Go explore the regression discontinuity activity
+- Go explore the regression discontinuity activity on class sizes
 
 ---
 class: inverse, center, middle
 
-# Next lecture: SQL
+# Next lecture: Functions & Parallel Programming
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
