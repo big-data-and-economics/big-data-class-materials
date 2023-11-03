@@ -52,7 +52,7 @@ This is in progress and subject to change.
 | **Machine Learning** | | |
 | 2023-11-07 | T | Functions & Parallel Programming | [Refer to Chapters 2-4 of DS4E](https://grantmcdermott.com/ds4e/funcs-intro.html) | |
 | 2023-11-09 | Th | SQL | |  |
-| 2023-11-14 | T | Machine Learning: Decision trees | [Read ISLR 8.1](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf) | [Problem Set 4 due 11/13 at 11:59:59](https://github.com/ECON368-fall2023-big-data-and-economics/ps4-class-sizes) |
+| 2023-11-14 | T | Machine Learning: Decision trees | [Read ISLR 8.1](https://drive.google.com/file/d/106d-rN7cXpyAkgrUqjcPONNCyO-rX7MQ/view) | [Problem Set 4 due 11/13 at 11:59:59](https://github.com/ECON368-fall2023-big-data-and-economics/ps4-class-sizes) |
 | 2023-11-16 | Th | Machine Learning: Bias and Judicial Decisions | [Watch Improving Judicial Decisions](https://youtu.be/AuNzoCk_uxM?si=dFpn0aQel4amdH-_) | |
 | 2023-11-28 | T | Machine Learning: Regressional penalization | [Read ISLR Ch 6.1, 6.2](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf)  | Problem Set 5 due 11/27 at 11:59:59 |
 | 2023-11-30 | Th | Machine Learning: Causal Forests, at-risk youth application | [Read ISLR 8.2](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf) | |
