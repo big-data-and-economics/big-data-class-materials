@@ -78,7 +78,6 @@ cp 01-intro/ou-colors.css "$1/css"
 
 
 echo "---
----
 title: "Big Data and Economics"
 subtitle: "$2"
 author: "Kyle Coombs"
