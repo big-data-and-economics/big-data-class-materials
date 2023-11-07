@@ -93,10 +93,11 @@ cleaned_resumes
 
 Functions are a great way to make your code more readable and reusable. They are also a great way to make sure you don't make mistakes when you're running the same code over and over again.
 
+
+
 ### Basic function to sample data
 
 Let's start with a basic function. Here is a function that creates a random sample of the data with the same number of observations. This is the first step in bootstrapping. 
-
 
 ```{r basic-function}
 set.seed(1000) # replication
@@ -112,6 +113,7 @@ random_sample(data=cleaned_resumes)
 Can you think of some way to improve on this sampling procedure? What is true in the experiment that we will lose through a random sample? Try to write up a better version that accounts for this. 
 
 Now test yourself by amending the function to run a regression of callback on ethnicity. Test it out!
+
 .
 .
 .
@@ -148,6 +150,7 @@ Now test yourself by amending the function to run a regression of callback on et
 .
 .
 .
+
 ```{r basic-function-2}
 set.seed(1000) # replication
 random_sample_lm <- function(data) {
@@ -360,3 +363,9 @@ statFun <- function(funData, indices, addPars, centerMean)
 
 boot(testData, statFun, R = 100, extraPar = TRUE, numCenter = mean(testData)) 
 ```
+
+## Other resources
+
+- For more info on functions, check out Grant McDermott and Ed Rubin's [introductory](https://grantmcdermott.com/ds4e/) and [advanced](https://grantmcdermott.com/ds4e/funcs-adv.html) material.
+- For more info on paralell programming, check out Grant McDermott and Ed Rubin's [chapter](https://grantmcdermott.com/ds4e/parallel.html) on all the nitty gritty details.
+- For more explanations on bootstrapping in sections, see [13.3.2](https://theeffectbook.net/ch-StatisticalAdjustment.html#fixing-your-standard-errors) and [15.5](https://theeffectbook.net/ch-Simulation.html#simulation-with-existing-data-the-bootstrap) of _The Effect_ by Nick Huntington-Klein or The [Library of Statistical Techniques](https://lost-stats.github.io/Model_Estimation/Statistical_Inference/Nonstandard_Errors/bootstrap_se.html) also provides a concise summary. A much longer explanation is available in [Data Science for R](https://bookdown.org/jgscott/DSGI/the-bootstrap.html).

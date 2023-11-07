@@ -124,11 +124,30 @@ knitr::include_graphics("imgs/samplingdistribution_schematic.png")
 
 1. Draw a random sample **with replacement** of size _N_ from your sample.
 2. Perform the same analysis on the new sample.
-3. Repeat steps 1 and 2 many times saving each
+
+- Repeat steps 1 and 2 a bunch of times saving each, the 2.5th and 97.th percentiles show the 95% confidence interval
 
 Then plot the distribution of the estimates from each sample
 
 .footnote[<sup>2</sup> Not a great one.]
+
+---
+# What is a bunch of times? 
+
+How many bootstraps is enough? 
+
+--
+
+It depends. Intuively:
+
+- The more bootstraps, the better
+- But the more bootstraps, the longer it takes to run 
+- Many econometricians and statisticians have purported to solve for "optimal" bootstrapping, but it is still an open question
+- Arguably, you should do 1000s, if not more times! 
+  - In this lecture, I did not do that because it would take too long to generate my slides
+
+- See parallel processing before for speed ups! 
+
 
 ---
 # Visualizing Bootstrapping vs. population
@@ -261,6 +280,11 @@ There are two main requirements:
 
 2. Always sample **with replacement**
   - That means you may sample the same observation twice
+
+---
+# How many samples?
+
+- The more samples you take, the 
 
 ---
 # Limitations of bootstrapping

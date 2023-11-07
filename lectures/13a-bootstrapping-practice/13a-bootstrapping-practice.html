@@ -1669,8 +1669,9 @@ the first step in bootstrapping.</p>
 is true in the experiment that we will lose through a random sample? Try
 to write up a better version that accounts for this.</p>
 <p>Now test yourself by amending the function to run a regression of
-callback on ethnicity. Test it out! . . . . . . . . . . . . . . . . . .
-. . . . . . . . . . . . . . . . . .</p>
+callback on ethnicity. Test it out!</p>
+<p>. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1000</span>) <span class="co"># replication</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>random_sample_lm <span class="ot">&lt;-</span> <span class="cf">function</span>(data) {</span>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="co"># Get the number of observations</span></span>
@@ -1976,6 +1977,23 @@ confusing and easy to screw up.</p>
 <span id="cb41-15"><a href="#cb41-15" tabindex="-1"></a></span>
 <span id="cb41-16"><a href="#cb41-16" tabindex="-1"></a><span class="fu">boot</span>(testData, statFun, <span class="at">R =</span> <span class="dv">100</span>, <span class="at">extraPar =</span> <span class="cn">TRUE</span>, <span class="at">numCenter =</span> <span class="fu">mean</span>(testData)) </span></code></pre></div>
 </div>
+</div>
+<div id="other-resources" class="section level2">
+<h2>Other resources</h2>
+<ul>
+<li>For more info on functions, check out Grant McDermott and Ed Rubin’s
+<a href="https://grantmcdermott.com/ds4e/">introductory</a> and <a href="https://grantmcdermott.com/ds4e/funcs-adv.html">advanced</a>
+material.</li>
+<li>For more info on paralell programming, check out Grant McDermott and
+Ed Rubin’s <a href="https://grantmcdermott.com/ds4e/parallel.html">chapter</a> on all
+the nitty gritty details.</li>
+<li>For more explanations on bootstrapping in sections, see <a href="https://theeffectbook.net/ch-StatisticalAdjustment.html#fixing-your-standard-errors">13.3.2</a>
+and <a href="https://theeffectbook.net/ch-Simulation.html#simulation-with-existing-data-the-bootstrap">15.5</a>
+of <em>The Effect</em> by Nick Huntington-Klein or The <a href="https://lost-stats.github.io/Model_Estimation/Statistical_Inference/Nonstandard_Errors/bootstrap_se.html">Library
+of Statistical Techniques</a> also provides a concise summary. A much
+longer explanation is available in <a href="https://bookdown.org/jgscott/DSGI/the-bootstrap.html">Data Science
+for R</a>.</li>
+</ul>
 </div>
 
 
