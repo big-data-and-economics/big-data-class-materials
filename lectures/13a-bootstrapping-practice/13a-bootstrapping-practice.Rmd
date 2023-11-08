@@ -56,7 +56,8 @@ A convenient way to install (if necessary) and load everything is by running the
 ```{r libs_print, cache=FALSE, eval=FALSE}
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(boot,doParallel,fixest,sandwich,haven,tidyverse,broom,stargazer,lmtest,tictoc,parallel,pbapply,future,future.apply,furrr,AER)
+pacman::p_load(boot,doParallel,fixest,sandwich,haven,tidyverse,broom,stargazer,
+  lmtest,tictoc,parallel,pbapply,future,future.apply,furrr,AER)
 
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
@@ -64,7 +65,8 @@ theme_set(theme_minimal())
 ```{r libs, cache=FALSE, message=FALSE, echo=FALSE}
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(boot,doParallel,fixest,sandwich,haven,tidyverse,broom,stargazer,lmtest,tictoc,parallel,pbapply,future,future.apply,furrr,AER,kableExtra)
+pacman::p_load(boot,doParallel,fixest,sandwich,haven,tidyverse,broom,stargazer,
+  lmtest,tictoc,parallel,pbapply,future,future.apply,furrr,AER,kableExtra)
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
 
@@ -166,6 +168,27 @@ random_sample_lm(cleaned_resumes)
 
 ```
 
+### Wrapper functions
+
+You can include other functions that you wrote in the functions you create just like including pre-defined functions from packages in your functions. This is incredibly useful for any iteration work you're doing that automatically feeds the value it iterates over to the function you include. Here's the basic syntax:
+
+```{r wrapper-function,eval=FALSE}
+function_that_uses_x <- functiion(x) {
+  # Do something with x
+  return(something_with_x)
+}
+
+wrapper_function <- function(i,x){
+  # Do something with i if you want
+  something <- function_that_uses_x(x)
+  # or do something with i and x together, for example:
+  something <- function_that_uses_x(x)*i
+  # Return something
+  return(something)
+}
+```
+
+Can you write a wrapper for the `random_sample_lm()` function above?
 
 ## Iteration
 
@@ -191,6 +214,8 @@ You can do the same thing using the `*apply` family. Here it is with `lapply()`:
 set.seed(1000) # replication
 results <- lapply(1:100, function(x) random_sample_lm(cleaned_resumes))
 ```
+
+Note that the `lapply` takes each element of the vector as an input, which is the first thing passed to the function, `function(x)`. Can you think of a way to make the syntax less confusing?
 
 Also, the `pbapply` package has a progress bar, which is nice for long simulations.
 

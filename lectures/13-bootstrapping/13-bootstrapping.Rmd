@@ -407,6 +407,22 @@ bootstrap_sample(df)
 ```
 
 ---
+# Wrapping up a function
+
+- You can wrap functions inside of other functions
+- This is a great way to make your code more readable and modular
+- Also useful for various iteration tasks that need to take an iterated input
+
+```{r function-within-function}
+wrapper_bootstrap <- function(i,df) {
+  # print(i) # if you want to visualize the i.
+  bootstrap_sample(df)
+}
+wrapper_bootstrap(1,df)
+```
+
+
+---
 # More on functions
 
 - There is a lot more to functions than we can cover today
@@ -439,11 +455,11 @@ for(i in 1:10) {
 ---
 # Bootstrapping for loop
 
-To save output, you have to predefine a list where you deposit the output
+To save output, you have to pre-define a list where you deposit the output
 
 ```{r bootstrapping-forloop}
 deposit <- vector("list",10) # preallocate list of 10 values
-
+set.seed(1)
 for (i in 1:10) {
   # perform bootstrap
   deposit[[i]] <- bootstrap_sample(df)
@@ -509,8 +525,24 @@ lapply(1:10, square)
 ---
 # Bootstrapping lapply
 
+- One trick: `*apply` insists on iterating over some sequence indexed `i` like a for-loop
+- But you can ignore it by using `function(i)` and then not using `i` in the function
+
 ```{r bootstrapping-lapply}
-lapply(1:10, function(i) bootstrap_sample(df)) %>%
+set.seed(1)
+lapply(1:10, function(i) bootstrap_sample(df=df)) %>%
+  bind_rows()
+```
+
+---
+# Wrapper functions to get around `*apply`
+
+- Maybe you don't like the ugly syntax of `function(i)` and then not using `i` in the function
+- Well you can write a wrapper function to get around that
+
+```{r wrapper-function-iteration}
+set.seed(1)
+lapply(1:10, wrapper_bootstrap, df=df) %>%
   bind_rows()
 ```
 
@@ -520,9 +552,11 @@ lapply(1:10, function(i) bootstrap_sample(df)) %>%
 - Sometimes the `*apply` syntax is a little confusing
 - The **purrr** package in the tidyverse has more intuitive syntax for iteration: `map`
 - The variant `map_df` is especially useful beause it automatically binds the output into a data frame
+  - The same iteration syntax applies here too. 
 
 ```{r map_df}
-map_df(1:10, function(i) bootstrap_sample(df))
+set.seed(1)
+map_df(1:10, function(i) bootstrap_sample(df=df))
 ```
 
 ---
@@ -655,17 +689,17 @@ all.equal(serial_ex, future_ex)
 
 - The future_lapply works the same, but now I have to set the seed inside the function
 
-```{r parallel-bootstrap}
-set.seed(123L)
+```{r parallel-bootstrap, cache=FALSE}
+set.seed(1)
 tic()
-serial_boot <- lapply(1:1e3, function(i) bootstrap_sample(df)) %>%
+serial_boot <- lapply(1:1e4, function(i) bootstrap_sample(df)) %>%
   bind_rows()
 toc(log = TRUE)
 
 tic()
-parallel_boot <- future_lapply(1:1e3, 
+parallel_boot <- future_lapply(1:1e4, 
   function(i) bootstrap_sample(df), 
-  future.seed=123L) %>%
+  future.seed=1) %>%
   bind_rows()
 toc(log = TRUE)
 
@@ -678,11 +712,11 @@ The **furrr** package, i.e. future **purrrr** is a parallel processing version o
 
 - Again, the syntax is the same, but you have to set the seed inside the function with `.options`.
 
-```{r furrr}
+```{r furrr, cache=FALSE}
 tic()
-furrr_boot = future_map_dfr(1:1e3, 
+furrr_boot = future_map_dfr(1:1e4, 
   function(i) bootstrap_sample(df), 
-  .options = furrr_options(seed=123L))
+  .options = furrr_options(seed=1))
 toc(log = TRUE)
 ```
 

@@ -400,6 +400,28 @@ bootstrap_sample(df)
 ```
 
 ---
+# Wrapping up a function
+
+- You can wrap functions inside of other functions
+- This is a great way to make your code more readable and modular
+- Also useful for various iteration tasks that need to take an iterated input
+
+
+```r
+wrapper_bootstrap &lt;- function(i,df) {
+  # print(i) # if you want to visualize the i.
+  bootstrap_sample(df)
+}
+wrapper_bootstrap(1,df)
+```
+
+```
+##         x 
+## 0.9824952
+```
+
+
+---
 # More on functions
 
 - There is a lot more to functions than we can cover today
@@ -433,12 +455,12 @@ for(i in 1:10) {
 ---
 # Bootstrapping for loop
 
-To save output, you have to predefine a list where you deposit the output
+To save output, you have to pre-define a list where you deposit the output
 
 
 ```r
 deposit &lt;- vector("list",10) # preallocate list of 10 values
-
+set.seed(1)
 for (i in 1:10) {
   # perform bootstrap
   deposit[[i]] &lt;- bootstrap_sample(df)
@@ -452,12 +474,12 @@ head(bootstrapped_median)
 ## # A tibble: 6 × 1
 ##       x
 ##   &lt;dbl&gt;
-## 1 0.982
-## 2 0.968
-## 3 0.977
-## 4 1.01 
+## 1 1.02 
+## 2 0.987
+## 3 0.997
+## 4 0.987
 ## 5 0.947
-## 6 1.04
+## 6 0.999
 ```
 
 ---
@@ -560,9 +582,13 @@ lapply(1:10, square)
 ---
 # Bootstrapping lapply
 
+- One trick: `*apply` insists on iterating over some sequence indexed `i` like a for-loop
+- But you can ignore it by using `function(i)` and then not using `i` in the function
+
 
 ```r
-lapply(1:10, function(i) bootstrap_sample(df)) %&gt;%
+set.seed(1)
+lapply(1:10, function(i) bootstrap_sample(df=df)) %&gt;%
   bind_rows()
 ```
 
@@ -570,16 +596,45 @@ lapply(1:10, function(i) bootstrap_sample(df)) %&gt;%
 ## # A tibble: 10 × 1
 ##        x
 ##    &lt;dbl&gt;
-##  1 0.994
-##  2 0.953
-##  3 0.976
-##  4 1.02 
-##  5 0.989
-##  6 0.997
-##  7 0.987
-##  8 1.02 
-##  9 0.968
-## 10 0.981
+##  1 1.02 
+##  2 0.987
+##  3 0.997
+##  4 0.987
+##  5 0.947
+##  6 0.999
+##  7 0.966
+##  8 0.983
+##  9 0.987
+## 10 0.987
+```
+
+---
+# Wrapper functions to get around `*apply`
+
+- Maybe you don't like the ugly syntax of `function(i)` and then not using `i` in the function
+- Well you can write a wrapper function to get around that
+
+
+```r
+set.seed(1)
+lapply(1:10, wrapper_bootstrap, df=df) %&gt;%
+  bind_rows()
+```
+
+```
+## # A tibble: 10 × 1
+##        x
+##    &lt;dbl&gt;
+##  1 1.02 
+##  2 0.987
+##  3 0.997
+##  4 0.987
+##  5 0.947
+##  6 0.999
+##  7 0.966
+##  8 0.983
+##  9 0.987
+## 10 0.987
 ```
 
 ---
@@ -588,26 +643,28 @@ lapply(1:10, function(i) bootstrap_sample(df)) %&gt;%
 - Sometimes the `*apply` syntax is a little confusing
 - The **purrr** package in the tidyverse has more intuitive syntax for iteration: `map`
 - The variant `map_df` is especially useful beause it automatically binds the output into a data frame
+  - The same iteration syntax applies here too. 
 
 
 ```r
-map_df(1:10, function(i) bootstrap_sample(df))
+set.seed(1)
+map_df(1:10, function(i) bootstrap_sample(df=df))
 ```
 
 ```
 ## # A tibble: 10 × 1
 ##        x
 ##    &lt;dbl&gt;
-##  1 0.998
-##  2 0.913
-##  3 1.02 
-##  4 1.06 
-##  5 1.01 
-##  6 1.04 
-##  7 1.00 
-##  8 1.06 
-##  9 1.02 
-## 10 1.02
+##  1 1.02 
+##  2 0.987
+##  3 0.997
+##  4 0.987
+##  5 0.947
+##  6 0.999
+##  7 0.966
+##  8 0.983
+##  9 0.987
+## 10 0.987
 ```
 
 ---
@@ -758,28 +815,28 @@ all.equal(serial_ex, future_ex)
 
 
 ```r
-set.seed(123L)
+set.seed(1)
 tic()
-serial_boot &lt;- lapply(1:1e3, function(i) bootstrap_sample(df)) %&gt;%
+serial_boot &lt;- lapply(1:1e4, function(i) bootstrap_sample(df)) %&gt;%
   bind_rows()
 toc(log = TRUE)
 ```
 
 ```
-## 6.21 sec elapsed
+## 29.22 sec elapsed
 ```
 
 ```r
 tic()
-parallel_boot &lt;- future_lapply(1:1e3, 
+parallel_boot &lt;- future_lapply(1:1e4, 
   function(i) bootstrap_sample(df), 
-  future.seed=123L) %&gt;%
+  future.seed=1) %&gt;%
   bind_rows()
 toc(log = TRUE)
 ```
 
 ```
-## 2.98 sec elapsed
+## 16.92 sec elapsed
 ```
 
 ---
@@ -792,14 +849,14 @@ The **furrr** package, i.e. future **purrrr** is a parallel processing version o
 
 ```r
 tic()
-furrr_boot = future_map_dfr(1:1e3, 
+furrr_boot = future_map_dfr(1:1e4, 
   function(i) bootstrap_sample(df), 
-  .options = furrr_options(seed=123L))
+  .options = furrr_options(seed=1))
 toc(log = TRUE)
 ```
 
 ```
-## 1.67 sec elapsed
+## 11.52 sec elapsed
 ```
 
 ---
