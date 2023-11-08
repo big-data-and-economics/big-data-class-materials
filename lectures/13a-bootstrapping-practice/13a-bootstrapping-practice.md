@@ -75,34 +75,32 @@ cleaned_resumes <- ResumeNames %>%
   mutate(female=gender=='female',
     afam=ethnicity=='afam',
     call=call=='yes') %>%
-    select(female, afam,call) %>%
+    select(name,female, afam,call) %>%
   as_tibble()
 
 cleaned_resumes
 ```
 
 ```
-## # A tibble: 4,870 × 3
-##    female afam  call 
-##    <lgl>  <lgl> <lgl>
-##  1 TRUE   FALSE FALSE
-##  2 TRUE   FALSE FALSE
-##  3 TRUE   TRUE  FALSE
-##  4 TRUE   TRUE  FALSE
-##  5 TRUE   FALSE FALSE
-##  6 FALSE  FALSE FALSE
-##  7 TRUE   FALSE FALSE
-##  8 TRUE   TRUE  FALSE
-##  9 TRUE   TRUE  FALSE
-## 10 FALSE  TRUE  FALSE
+## # A tibble: 4,870 × 4
+##    name    female afam  call 
+##    <fct>   <lgl>  <lgl> <lgl>
+##  1 Allison TRUE   FALSE FALSE
+##  2 Kristen TRUE   FALSE FALSE
+##  3 Lakisha TRUE   TRUE  FALSE
+##  4 Latonya TRUE   TRUE  FALSE
+##  5 Carrie  TRUE   FALSE FALSE
+##  6 Jay     FALSE  FALSE FALSE
+##  7 Jill    TRUE   FALSE FALSE
+##  8 Kenya   TRUE   TRUE  FALSE
+##  9 Latonya TRUE   TRUE  FALSE
+## 10 Tyrone  FALSE  TRUE  FALSE
 ## # ℹ 4,860 more rows
 ```
 
 ## Functions 
 
 Functions are a great way to make your code more readable and reusable. They are also a great way to make sure you don't make mistakes when you're running the same code over and over again.
-
-
 
 ### Basic function to sample data
 
@@ -227,13 +225,109 @@ Iteration is a great way to run the same code over and over again. It's especial
 
 ### For loop
 
-The most basic way to iterate is with a for loop. This is a great way to start because it's easy to understand and you can see what's going on. Let's write a for loop that iterates through the `random_sample_lm()` function 100 times. Make sure to create a list to store the results in.
+The most basic way to iterate is with a for loop. This is a great way to start because it's easy to understand and you can see what's going on. The syntax is really simple too:
 
 
 ```r
-results <- vector("list",100)
+for (i in 1:10) { # index from i to 100.
+  print(i)
+}
+```
+
+```
+## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5
+## [1] 6
+## [1] 7
+## [1] 8
+## [1] 9
+## [1] 10
+```
+
+Note that you can also iterate by skipping numbers or even just feed it 
+
+
+```r
+# This example iterates through the odd numbers from 1 to 100
+# because it skips every too.
+for (i in seq(1,10,2)) { # index from i to 100.
+  print(i)
+}
+```
+
+```
+## [1] 1
+## [1] 3
+## [1] 5
+## [1] 7
+## [1] 9
+```
+
+
+```r
+# This example iterates through the odd numbers from 1 to 100
+# because it skips every too.
+for (i in c("words","too")) { # index from i to 100.
+  print(i)
+}
+```
+
+```
+## [1] "words"
+## [1] "too"
+```
+
+Look at your global environment, do you see a variable for `i`? That's cause R creates a variable for `i` and iterates through the values of `i` from 1 to 100. You can use `i` in your code to do something different each time. But if you have too many it get cluttered too.
+
+Note, to record the results of each iteration, you need to create a list to store the results in. The length of this vector is the number of iterations, which you can define with `length()`. This can be inserted in your for loop to track how far you have gone through. Here's an example:
+
+
+```r
+deposit <- vector("list",10)
+iterations <- length(deposit)
+for (i in 1:iterations) {
+  print(paste0(i, "/", iterations))
+  deposit[[i]] <- i
+}
+
+deposit
+```
+
+Let's write a for loop that iterates through the `random_sample_lm()` function 10 times. Make sure to create a list to store the results in. Before you commit to running it 10 times, check that it runs through one iteration. 
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+
+```r
+results <- vector("list",10)
 set.seed(1000) # replication
-for (i in 1:100) {
+for (i in 1:10) {
   results[[i]] <- random_sample_lm(cleaned_resumes)
 }
 ```
@@ -245,17 +339,21 @@ You can do the same thing using the `*apply` family. Here it is with `lapply()`:
 
 ```r
 set.seed(1000) # replication
-results <- lapply(1:100, function(x) random_sample_lm(cleaned_resumes))
+results <- lapply(1:10, function(x) random_sample_lm(cleaned_resumes))
 ```
 
+**Challenge**: Try writing a lapply that iterates over the odd numbers from 1 to 10 or a vector of strings like we did for the loop above.
+
 Note that the `lapply` takes each element of the vector as an input, which is the first thing passed to the function, `function(x)`. Can you think of a way to make the syntax less confusing?
+
+#### Progress Bar: `pbapply`
 
 Also, the `pbapply` package has a progress bar, which is nice for long simulations.
 
 
 ```r
 set.seed(1000) # replication
-results <- pbapply::pblapply(1:100, function(x) random_sample_lm(cleaned_resumes))
+results <- pbapply::pblapply(1:10, function(x) random_sample_lm(cleaned_resumes))
 ```
 
 ### Map
@@ -265,7 +363,7 @@ The `map()` function from the **purrr** package is a great way to iterate over a
 
 ```r
 set.seed(1000)
-results <- map_df(1:100, function(x) random_sample_lm(cleaned_resumes))
+results <- map_df(1:10, function(x) random_sample_lm(cleaned_resumes))
 ```
 
 ## Parallel Processing 
@@ -514,7 +612,7 @@ One challenge is **sandwich** only works for standard error calculations and doe
 
 ### **boot** package
 
-The boot package is one of the most flexible packages for bootstrapping in R. It allows you to bootstrap any function that you can write in R. It also allows you to parallelize your bootstrap simulations, which can be very useful for computationally intensive simulations. 
+The boot package is one of the most flexible packages for bootstrapping in R. It allows you to bootstrap any function that you can write in R and to implement bootstrapping random indices, random frequencies, and random weights -- which are more complicated approaches to bootstrapping. It also allows you to parallelize your bootstrap simulations directly. 
 
 
 ```r
@@ -536,7 +634,24 @@ boot_results <- boot(data=cleaned_resumes, # data
                 statistic=est_model, # Estimation function,
 
                 R=1000) # Number of bootstrap simulations
+
+boot_results
 ```
+
+```
+## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = cleaned_resumes, statistic = est_model, R = 1000)
+## 
+## 
+## Bootstrap Statistics :
+## WARNING: All values of t1* are NA
+```
+
+The results tell you the original value(s) without sampling, the bias (the difference between the mean of the bootstraps and your estimate), and the bootstrapped standard errors.
 
 Here's that again, but now in parallel:
 
@@ -548,6 +663,8 @@ boot_results <- boot(data=cleaned_resumes, # data
                 parallel = "multicore", # parallelization method
                 ncpus = parallel::detectCores()) # number of cores to use
 ```
+
+Sadly, if you are on a windows machine "multicore" will not work due to technical glitches. You can use "snow", but the documentation explains that more work is needed to make that work. 
 
 There are a number of handy visualization tools and table shortcuts to use with the **boot** package too:
 
@@ -578,6 +695,88 @@ stargazer(m1, se = list(tidy_results$std.error), type = 'text')
 ```
 
 That said, it can be a bit cumbersome to use. For example, if you want to bootstrap a function that takes more than two arguments, you need to use the `...` argument and define `extraPar` and `numCenter`. This can be a bit confusing and easy to screw up.
+
+#### Frequency bootstrapping
+
+The **boot** package also allows you to bootstrap using random frequencies. Frequencies are useful if you have survey data and want to account for the survey design. Essentially, each row is an observation that occurs multiple times in real life, but is recorded only once in the data. The frequency is the number of times that observation occurs in real life.
+
+I'll create a frequency table below and just calculate the weighted mean of resume callbacks.^[Why am I doing the weighted mean? Cause I am writing these up quickly and don't want to write a new function to do the regression. You could figure this out for yourself if you wanted!]
+
+
+```r
+# Create a resume dataframe with frequencies by name
+# The call variable is now the average
+set.seed(1)
+cleaned_resume_freq <- cleaned_resumes %>%
+  group_by(name,female,afam) %>%
+  summarise(frequency=n(),
+    call=mean(call))
+```
+
+```
+## `summarise()` has grouped output by 'name', 'female'. You can override using
+## the `.groups` argument.
+```
+
+```r
+# The weighted mean of calls:
+weighted.mean(x=cleaned_resume_freq$call, # variable to average
+  w=cleaned_resume_freq$frequency # the weight
+  )
+```
+
+```
+## [1] 0.08049281
+```
+
+
+```r
+set.seed(1)
+boot(cleaned_resume_freq$call, 
+  weighted.mean, 
+  R = 1000, stype = "f")
+```
+
+```
+## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = cleaned_resume_freq$call, statistic = weighted.mean, 
+##     R = 1000, stype = "f")
+## 
+## 
+## Bootstrap Statistics :
+##       original       bias    std. error
+## t1* 0.07822643 2.130659e-05 0.004906084
+```
+
+#### Weight bootstrapping
+
+Weights operate similar to frequencies, but can be applied to a dataset without a frequency column. The weights just up or down weight the observations. 
+
+
+```r
+boot(cleaned_resumes$call, 
+  weighted.mean, 
+  R = 1000, stype = "w")
+```
+
+```
+## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = cleaned_resumes$call, statistic = weighted.mean, 
+##     R = 1000, stype = "w")
+## 
+## 
+## Bootstrap Statistics :
+##       original       bias    std. error
+## t1* 0.08049281 0.0001722793 0.004021416
+```
 
 The code below does not work. Can you figure out why?
 

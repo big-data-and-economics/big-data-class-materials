@@ -265,10 +265,11 @@ future_map_dfr(1:100,function(i) boot_mean(df=het_df_big),.options=furrr_options
 
 1. Calculate the standard error of your estimates 
   - Especially when you can't use analytical formulas (e.g. the median)
-2. Do power simulations on pilot data
-3. Generate "training data sets" for machine learning models
-4. Explore variation in model predictions as the sample changes
-5. Other robustness checks and more
+2. Look for bias in your estimate: is the average of your bootstraps far off from your actual estimate? 
+3. Do power simulations on pilot data
+4. Generate "training data sets" for machine learning models
+5. Explore variation in model predictions as the sample changes
+6. Other robustness checks and more
 
 ---
 # How do I bootstrap?
@@ -282,9 +283,22 @@ There are two main requirements:
   - That means you may sample the same observation twice
 
 ---
-# How many samples?
+# Variations on sampling
 
-- The more samples you take, the 
+I'm showing you index bootstrapping, where you just grab random observations from your sample with replcaement
+
+There are two main variations on bootstrapping:
+
+1. **Frequency bootstrap**: If your data is a frequency table, you can just randomly assign new frequencies
+  - If an observation has frequency 7, that means it occurred 7 times
+  - You randomly assign it new frequencies, representing a new sample where frequency still sums to the same amount
+
+2. **Weight bootstrapping**: You can assign weights to each observation and sample with replacement
+  - In your original sample, each observation got a weight of 1
+  - You assign new weights, so a weight of 1.5 means the observation is 1.5 times more likely to be sampled, .5 means .5 times as likely to be sampled, etc.
+  - The non-intger weights just needs to sum to $N$ the observations in your data
+
+Both are powerful ways to do bootstrapping when your data are in a format that makes index bootstrapping hard
 
 ---
 # Limitations of bootstrapping
@@ -503,6 +517,20 @@ for (i in 1:5) {
 }
 ```
 
+---
+# Tips on iterating
+
+- Start small! Set your iteration to 1 or 2 and make sure it works
+- Why?
+  - You'll know faster if it broke
+- Print where it is in the iteration (or use a progress bar with something like `pbapply`)
+
+```{r print-iteration}
+for (i in 1:2) {
+  print(i)
+  # complex function
+}
+```
 ---
 # Iteration: apply family
 
