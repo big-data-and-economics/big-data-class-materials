@@ -1561,7 +1561,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Big Data and Economics</h1>
 <h3 class="subtitle">Bootstrapping, Functions, and Parallel
-Processing</h3>
+Programming</h3>
 <h4 class="author">Kyle Coombs</h4>
 <address class="author_afil">
 Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials">DCS/ECON
@@ -1686,6 +1686,11 @@ callback on ethnicity. Test it out!</p>
 <span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a><span class="fu">random_sample_lm</span>(cleaned_resumes)</span></code></pre></div>
 <pre><code>##    afamTRUE 
 ## -0.03381552</code></pre>
+<div id="challenge" class="section level4">
+<h4>Challenge:</h4>
+<p>Can you repeat the above process, but now with a function that
+calculates the difference in means? Or runs a t-test?</p>
+</div>
 </div>
 <div id="wrapper-functions" class="section level3">
 <h3>Wrapper functions</h3>
@@ -1813,9 +1818,9 @@ it’s very powerful. Here’s an example with <code>map_df()</code>.</p>
 <span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">map_df</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="cf">function</span>(x) <span class="fu">random_sample_lm</span>(cleaned_resumes))</span></code></pre></div>
 </div>
 </div>
-<div id="parallel-processing" class="section level2">
-<h2>Parallel Processing</h2>
-<p>Parallel processing is a pretty handy trick to speed up your code.
+<div id="parallel-programming" class="section level2">
+<h2>Parallel Programming</h2>
+<p>Parallel Programming is a pretty handy trick to speed up your code.
 It’s especially useful for computationally intensive simulations that
 can be broken up into smaller chunks. As a warning, parallel programming
 can get quite complex, so we’re sticking with the basics today. For more
@@ -2001,6 +2006,10 @@ write in R and to implement bootstrapping random indices, random
 frequencies, and random weights – which are more complicated approaches
 to bootstrapping. It also allows you to parallelize your bootstrap
 simulations directly.</p>
+<p>The way it works, is it will automatically create R samples of the
+data and feed that to your function. then you will need to pass an index
+to your function to make sure it knows how to iterate through these
+samples. Here’s an example:</p>
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a><span class="co">#library(tidyverse); library(boot)</span></span>
 <span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1000</span>) <span class="co"># replication</span></span>
 <span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a></span>
@@ -2011,16 +2020,15 @@ simulations directly.</p>
 <span id="cb44-8"><a href="#cb44-8" tabindex="-1"></a>    <span class="co"># Use index to pick the bootstrap sample</span></span>
 <span id="cb44-9"><a href="#cb44-9" tabindex="-1"></a>    m <span class="ot">&lt;-</span> <span class="fu">lm</span>(call <span class="sc">~</span> afam, <span class="at">data =</span> d[index,])</span>
 <span id="cb44-10"><a href="#cb44-10" tabindex="-1"></a>    <span class="co"># Return the estimate(s) we want to bootstrap</span></span>
-<span id="cb44-11"><a href="#cb44-11" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">c</span>(<span class="fu">coef</span>(m)[<span class="st">&#39;afam&#39;</span>]))</span>
+<span id="cb44-11"><a href="#cb44-11" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">c</span>(<span class="fu">coef</span>(m)[<span class="dv">2</span>]))</span>
 <span id="cb44-12"><a href="#cb44-12" tabindex="-1"></a>}</span>
 <span id="cb44-13"><a href="#cb44-13" tabindex="-1"></a></span>
 <span id="cb44-14"><a href="#cb44-14" tabindex="-1"></a><span class="co"># Now the bootstrap call!</span></span>
 <span id="cb44-15"><a href="#cb44-15" tabindex="-1"></a>boot_results <span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data=</span>cleaned_resumes, <span class="co"># data</span></span>
 <span id="cb44-16"><a href="#cb44-16" tabindex="-1"></a>                <span class="at">statistic=</span>est_model, <span class="co"># Estimation function,</span></span>
-<span id="cb44-17"><a href="#cb44-17" tabindex="-1"></a></span>
-<span id="cb44-18"><a href="#cb44-18" tabindex="-1"></a>                <span class="at">R=</span><span class="dv">1000</span>) <span class="co"># Number of bootstrap simulations</span></span>
-<span id="cb44-19"><a href="#cb44-19" tabindex="-1"></a></span>
-<span id="cb44-20"><a href="#cb44-20" tabindex="-1"></a>boot_results</span></code></pre></div>
+<span id="cb44-17"><a href="#cb44-17" tabindex="-1"></a>                <span class="at">R=</span><span class="dv">1000</span>) <span class="co"># Number of bootstrap simulations</span></span>
+<span id="cb44-18"><a href="#cb44-18" tabindex="-1"></a></span>
+<span id="cb44-19"><a href="#cb44-19" tabindex="-1"></a><span class="fu">print</span>(boot_results)</span></code></pre></div>
 <pre><code>## 
 ## ORDINARY NONPARAMETRIC BOOTSTRAP
 ## 
@@ -2030,34 +2038,83 @@ simulations directly.</p>
 ## 
 ## 
 ## Bootstrap Statistics :
-## WARNING: All values of t1* are NA</code></pre>
+##        original       bias    std. error
+## t1* -0.03203285 0.0001385447 0.007766129</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="co"># confidence intervals</span></span>
+<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">boot.ci</span>(boot_results,</span>
+<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a>  <span class="at">type=</span><span class="fu">c</span>(<span class="st">&#39;norm&#39;</span>, <span class="co"># assumes a normal distribution</span></span>
+<span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a>    <span class="st">&#39;basic&#39;</span>, <span class="co"># the basic bootstrap uses a Reverse Percentile Interval formula</span></span>
+<span id="cb46-5"><a href="#cb46-5" tabindex="-1"></a>    <span class="st">&#39;perc&#39;</span>))) <span class="co"># the actual 2.5th and 97.5th percentile</span></span></code></pre></div>
+<pre><code>## BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+## Based on 1000 bootstrap replicates
+## 
+## CALL : 
+## boot.ci(boot.out = boot_results, type = c(&quot;norm&quot;, &quot;basic&quot;, &quot;perc&quot;))
+## 
+## Intervals : 
+## Level      Normal              Basic              Percentile     
+## 95%   (-0.0474, -0.0170 )   (-0.0481, -0.0176 )   (-0.0464, -0.0160 )  
+## Calculations and Intervals on Original Scale</code></pre>
+<p>The different types of confidence intervals are explained in the help
+file for <code>boot.ci</code> or on <a href="https://en.wikipedia.org/wiki/Bootstrapping_(statistics)#:~:text=The%20basic%20idea%20of%20bootstrapping,data%20(resampled%20%E2%86%92%20sample)">Wikipedia</a>.
+The “norm” is the default and assumes a normal distribution. The “basic”
+uses a Reverse Percentile Interval formula, which is easier to justify
+mathematically, though it is a little confusing to follow. The “perc”
+uses the actual 2.5th and 97.5th percentiles from your data.</p>
+<div id="stratifying" class="section level4">
+<h4>Stratifying</h4>
+<p>Maybe you noticed that you should be sampling equally for each group.
+Well that would be stratified sampling, which <code>boot()</code>
+handles incredibly well with the <code>strata</code> argument. Go to the
+help file for <code>boot</code> and try to figure out how to stratify
+the sampling.</p>
+<p>. . . . . . . . . . . . . . . . . . . . . . . . . . . .</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="fu">boot</span>(<span class="at">data=</span>cleaned_resumes, <span class="co"># data</span></span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>                <span class="at">statistic=</span>est_model, <span class="co"># Estimation function,</span></span>
+<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a>                <span class="at">R=</span><span class="dv">1000</span>, <span class="co"># Number of bootstrap simulations</span></span>
+<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a>                <span class="at">strata =</span> cleaned_resumes<span class="sc">$</span>afam) <span class="co"># Stratify by afam</span></span></code></pre></div>
+<pre><code>## 
+## STRATIFIED BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = cleaned_resumes, statistic = est_model, R = 1000, 
+##     strata = cleaned_resumes$afam)
+## 
+## 
+## Bootstrap Statistics :
+##        original        bias    std. error
+## t1* -0.03203285 -0.0002632444 0.007709421</code></pre>
+</div>
+<div id="parallel" class="section level4">
+<h4>Parallel</h4>
 <p>The results tell you the original value(s) without sampling, the bias
 (the difference between the mean of the bootstraps and your estimate),
 and the bootstrapped standard errors.</p>
 <p>Here’s that again, but now in parallel:</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a>boot_results <span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data=</span>cleaned_resumes, <span class="co"># data</span></span>
-<span id="cb46-2"><a href="#cb46-2" tabindex="-1"></a>                <span class="at">statistic=</span>est_model, <span class="co"># Estimation function,</span></span>
-<span id="cb46-3"><a href="#cb46-3" tabindex="-1"></a>                <span class="at">R=</span><span class="dv">1000</span>, <span class="co"># simulations</span></span>
-<span id="cb46-4"><a href="#cb46-4" tabindex="-1"></a>                <span class="at">parallel =</span> <span class="st">&quot;multicore&quot;</span>, <span class="co"># parallelization method</span></span>
-<span id="cb46-5"><a href="#cb46-5" tabindex="-1"></a>                <span class="at">ncpus =</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>()) <span class="co"># number of cores to use</span></span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a>boot_results <span class="ot">&lt;-</span> <span class="fu">boot</span>(<span class="at">data=</span>cleaned_resumes, <span class="co"># data</span></span>
+<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a>                <span class="at">statistic=</span>est_model, <span class="co"># Estimation function,</span></span>
+<span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a>                <span class="at">R=</span><span class="dv">1000</span>, <span class="co"># simulations</span></span>
+<span id="cb50-4"><a href="#cb50-4" tabindex="-1"></a>                <span class="at">parallel =</span> <span class="st">&quot;multicore&quot;</span>, <span class="co"># parallelization method</span></span>
+<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a>                <span class="at">ncpus =</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>()) <span class="co"># number of cores to use</span></span></code></pre></div>
 <p>Sadly, if you are on a windows machine “multicore” will not work due
 to technical glitches. You can use “snow”, but the documentation
 explains that more work is needed to make that work.</p>
 <p>There are a number of handy visualization tools and table shortcuts
 to use with the <strong>boot</strong> package too:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a><span class="co"># See the coefficient estimates and their bootstrap standard errors</span></span>
-<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a><span class="fu">plot</span>(results)</span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" tabindex="-1"></a><span class="co"># See the coefficient estimates and their bootstrap standard errors</span></span>
+<span id="cb51-2"><a href="#cb51-2" tabindex="-1"></a><span class="fu">plot</span>(results)</span></code></pre></div>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAACDQAAAXcCAMAAADgSrzUAAAAolBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZrY6AAA6ADo6OgA6Ojo6OmY6ZmY6ZpA6ZrY6kNtmAABmOgBmOjpmZjpmZmZmkJBmkLZmtttmtv+QOgCQOjqQZgCQZjqQkGaQttuQ2/+2ZgC2Zjq2kGa2kJC2tpC227a229u22/+2///bkDrbtmbbtpDb27bb2//b////tmb/25D/27b/29v//7b//9v///+r0H5EAAAACXBIWXMAAC4jAAAuIwF4pT92AAAgAElEQVR4nO3dfZ9c6XHX4dlgbGKTdXCCHSAEsUDC2k7WNp73/9awZiRNTz/W1JzW7+xd1/VHPrHUPd13naP+lrR6eHgEACh4SL8BAODHwdIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFAycml4AIAfpXA/sy+fkb7kANCU7Wf01UPSVxwAmrL9jL56SHroANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2s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PMjS8Hg0MkuDpWF7loZ3Punm1yo+7w33fMHNF734GXf9a214559/2smn8cs7szQcvFVLw5kHWRoej0ZmabA0bM/S8IYnXbDJ85pfvfuilx9w9T0UD/Pud7knb7s2X/GNxY089F6sc8t1Pjre8APvfT9Gt3lzV1+086U2e1sdloY3PKl10YvP2/auvfmilx9w9T0UD/Pud7knloZLRh56L9a55TofHW/4gfe+H6PbvLmrL9r5Upu9rQ5Lw1ue1brmxedte9PefNHL9/DV91A8zDvf5dkXeMs73tBbr03/dbrPTHnjoX98B9zze97ilvv8lbZ5R/3X38YbvvzXf3NXXrT1lTZ8X43Xj756SHroANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6ppigc68AAB+mSURBVIcOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHqmhw4AHel+jaxneugA0JHu18h6pocOAB3pfo2sZ3roANCR7tfIeqaHDgAd6X6NrGd66ADQke7XyHo+AMCPU7af0VcPSV9xAGjK9jP66inpSw4ALeF8Zl+eO4jfVF/TpMM665qcdVGLHnbJQw236K163qTDOuuanHVRix52yUMNt+itet6kwzrrmpx1UYsedslDDbforXrepMM665qcdVGLHnbJQw236K163qTDOuuanHVRix52yUMNt+itet6kwzrrmpx1UYsedslDDbforXrepMM665qcdVGLHnbJQw236K163qTDOuuanHVRix52yUMNt+itet6kwzrrmpx1UYsedslDDbforXrepMM665qcdVGLHnbJQw236K163qTDOuuanHVRix52yUMNt+itet6kwzrrmpx1UYsedslDDbforXrepMM665qcdVGLHnbJQw236K163qTDOuuanHVRix52yUMNt+itet6kwzrrmpx1UYsedslDDbforXrepMM665qcdVGLHnbJQw236K163qTDOuuanHVRix52yUMNt+itet6kwzrrmpx1UYsedslDDbforXrepMM665qcdVGLHnbJQw236K163qTDOuuanHVRix52yUMNt+itet6kwzrrmpx1UYsedslDDbforXrepMM665qcdVGLHnbJQw236K163qTDOuuanHVRix52yUMNt+itet6kwzrrmpx1UYsedslDDbforXrepMM665qcdVGLHnbJQw236K163qTDOuuanHVRix52yUMNt+itet6kwzrrmpx1UYsedslDDbforXrepMM665qcdVGLHnbJQw236K163qTDOuuanHVRix52yUNNN+qiTjqss67JWRe15mHXPBUAsDlLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEksDAFBiaQAASiwNAECJpQEAKLE0AAAllgYAoMTSAACUWBoAgBJLAwBQYmkAAEosDQBAiaUBACixNAAAJZYGAKDE0gAAlFgaAIASSwMAUGJpAABKLA0AQImlAQAosTQAACWWBgCgxNIAAJRYGgCAEkvDj8Kfvvv5w1/8/Nf/usEj/9/fPjz8+387/JbvH4588z82eNNddz7sm17h3jY5659/96uf/eW7/t3f/PPx9+zqwt75rG96hXvb5qz/61d//fR9//lfjr5nwet68axveoW72/LD6YeHh58efdOuLuwlloYfgT//z5eb6NvjAL79kR8ejjv6YUe36t0P+4ZXuLdNzvrn73725bt+8k+vn7ajC3v3s652Xf/4jwfX7eiwq13Xa2fd0XXd9sPp489njpeGHV3YyywN+/fH/3R4F/3kzCb+pkc+LbOvOvrn/7KfW/Xuh33DK9zbJmc9unjf7vTC3v2sq13XH3728MovD75vtet67aw7uq7bfjg9XcSfnvm2fVzYKywNu/dxIT30V//3XY/8w9MP0Fcd/cPRj9ngrXr/w9Zf4d42OevJx8zhx9B+Luz9z7rYdf3h+Mo9fPvyvMWu69Wz7ue6bvvh9OcPH7/jaGnYz4W9xtKwe0831zcf/8vYn55/cfb4l7Te9MhPH7yvOvpD9sfiofsftv4K97bJWZ++6+Hpv/D//vnXeA9+mrafC3v/s651XT9V5+msf/ru6b/2P/zDl+etdV2vn3U/13XTD6fnneH42/dzYa+xNOzdD4fZe/5Vr394xyOf79XXHf3++Bti7n/Y+ivc2yZnffqpyTe/+fzAn73+0NnNhb3/WRe7rk937pdf1X7+D+Qvh13rul49636u66YfTp9/0exoadjNhb3K0rBzT3fXy8fF01Z+/rYqPfLzrwSe/OT7l487cP/D1l/h3rY564fXH0g/vP6fe7mw9z/rYtf16f8//Cnn67MvdV2vnnU/13XTD6ffff7PEEdLw14u7HWWhp17+unVwZr68aPy/H/nqjzy42O++buje/jppk6t76/c/7D1V7i3Tc56/Hn0+jdX7ebC3v+si13Xo+Xv0+F/evg/lrmuV8+6n+u64YfTwZ+seL007ObCXmdp2LkPR2v400fl2WW08Mjnbzr+NbCnuO7i99vc/7D1V7i3Tc769PH0y6PHfjnubi7s/c+62HU9/q7X37LWdb161v1c180+nD7/seFv/9vJ0rCbC3udpWHfTv9czqX/7FV55PdPDzn+9h8ufMWv7v6Hrb/CvW101j/977/7D4efMq+Whr1c2PufdbHr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" /><!-- --></p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a><span class="co"># Optional: print regression table with the bootstrap SEs</span></span>
-<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a><span class="co"># This uses stargazer, but the method is similar</span></span>
-<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a><span class="co"># with other table-making packages,</span></span>
-<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a><span class="co"># see /Presentation/export_a_formatted_regression_table.html</span></span>
-<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a><span class="co"># library(broom) # already loaded</span></span>
-<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a>tidy_results <span class="ot">&lt;-</span> <span class="fu">tidy</span>(boot_results)</span>
-<span id="cb48-7"><a href="#cb48-7" tabindex="-1"></a></span>
-<span id="cb48-8"><a href="#cb48-8" tabindex="-1"></a><span class="co">#library(stargazer) # already loaded</span></span>
-<span id="cb48-9"><a href="#cb48-9" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(call<span class="sc">~</span>afam, <span class="at">data =</span> cleaned_resumes)</span>
-<span id="cb48-10"><a href="#cb48-10" tabindex="-1"></a><span class="fu">stargazer</span>(m1, <span class="at">se =</span> <span class="fu">list</span>(tidy_results<span class="sc">$</span>std.error), <span class="at">type =</span> <span class="st">&#39;text&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="co"># Optional: print regression table with the bootstrap SEs</span></span>
+<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a><span class="co"># This uses stargazer, but the method is similar</span></span>
+<span id="cb52-3"><a href="#cb52-3" tabindex="-1"></a><span class="co"># with other table-making packages,</span></span>
+<span id="cb52-4"><a href="#cb52-4" tabindex="-1"></a><span class="co"># see /Presentation/export_a_formatted_regression_table.html</span></span>
+<span id="cb52-5"><a href="#cb52-5" tabindex="-1"></a><span class="co"># library(broom) # already loaded</span></span>
+<span id="cb52-6"><a href="#cb52-6" tabindex="-1"></a>tidy_results <span class="ot">&lt;-</span> <span class="fu">tidy</span>(boot_results)</span>
+<span id="cb52-7"><a href="#cb52-7" tabindex="-1"></a></span>
+<span id="cb52-8"><a href="#cb52-8" tabindex="-1"></a><span class="co">#library(stargazer) # already loaded</span></span>
+<span id="cb52-9"><a href="#cb52-9" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(call<span class="sc">~</span>afam, <span class="at">data =</span> cleaned_resumes)</span>
+<span id="cb52-10"><a href="#cb52-10" tabindex="-1"></a><span class="fu">stargazer</span>(m1, <span class="at">se =</span> <span class="fu">list</span>(tidy_results<span class="sc">$</span>std.error), <span class="at">type =</span> <span class="st">&#39;text&#39;</span>)</span></code></pre></div>
 <pre><code>## 
 ## % Error: Argument &#39;se&#39; must be NULL (default), or a list of numeric vectors.</code></pre>
 <p>That said, it can be a bit cumbersome to use. For example, if you
@@ -2065,6 +2122,7 @@ want to bootstrap a function that takes more than two arguments, you
 need to use the <code>...</code> argument and define
 <code>extraPar</code> and <code>numCenter</code>. This can be a bit
 confusing and easy to screw up.</p>
+</div>
 <div id="frequency-bootstrapping" class="section level4">
 <h4>Frequency bootstrapping</h4>
 <p>The <strong>boot</strong> package also allows you to bootstrap using
@@ -2075,24 +2133,24 @@ only once in the data. The frequency is the number of times that
 observation occurs in real life.</p>
 <p>I’ll create a frequency table below and just calculate the weighted
 mean of resume callbacks.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="co"># Create a resume dataframe with frequencies by name</span></span>
-<span id="cb50-2"><a href="#cb50-2" tabindex="-1"></a><span class="co"># The call variable is now the average</span></span>
-<span id="cb50-3"><a href="#cb50-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb50-4"><a href="#cb50-4" tabindex="-1"></a>cleaned_resume_freq <span class="ot">&lt;-</span> cleaned_resumes <span class="sc">%&gt;%</span></span>
-<span id="cb50-5"><a href="#cb50-5" tabindex="-1"></a>  <span class="fu">group_by</span>(name,female,afam) <span class="sc">%&gt;%</span></span>
-<span id="cb50-6"><a href="#cb50-6" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">frequency=</span><span class="fu">n</span>(),</span>
-<span id="cb50-7"><a href="#cb50-7" tabindex="-1"></a>    <span class="at">call=</span><span class="fu">mean</span>(call))</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a><span class="co"># Create a resume dataframe with frequencies by name</span></span>
+<span id="cb54-2"><a href="#cb54-2" tabindex="-1"></a><span class="co"># The call variable is now the average</span></span>
+<span id="cb54-3"><a href="#cb54-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb54-4"><a href="#cb54-4" tabindex="-1"></a>cleaned_resume_freq <span class="ot">&lt;-</span> cleaned_resumes <span class="sc">%&gt;%</span></span>
+<span id="cb54-5"><a href="#cb54-5" tabindex="-1"></a>  <span class="fu">group_by</span>(name,female,afam) <span class="sc">%&gt;%</span></span>
+<span id="cb54-6"><a href="#cb54-6" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">frequency=</span><span class="fu">n</span>(),</span>
+<span id="cb54-7"><a href="#cb54-7" tabindex="-1"></a>    <span class="at">call=</span><span class="fu">mean</span>(call))</span></code></pre></div>
 <pre><code>## `summarise()` has grouped output by &#39;name&#39;, &#39;female&#39;. You can override using
 ## the `.groups` argument.</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="co"># The weighted mean of calls:</span></span>
-<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a><span class="fu">weighted.mean</span>(<span class="at">x=</span>cleaned_resume_freq<span class="sc">$</span>call, <span class="co"># variable to average</span></span>
-<span id="cb52-3"><a href="#cb52-3" tabindex="-1"></a>  <span class="at">w=</span>cleaned_resume_freq<span class="sc">$</span>frequency <span class="co"># the weight</span></span>
-<span id="cb52-4"><a href="#cb52-4" tabindex="-1"></a>  )</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a><span class="co"># The weighted mean of calls:</span></span>
+<span id="cb56-2"><a href="#cb56-2" tabindex="-1"></a><span class="fu">weighted.mean</span>(<span class="at">x=</span>cleaned_resume_freq<span class="sc">$</span>call, <span class="co"># variable to average</span></span>
+<span id="cb56-3"><a href="#cb56-3" tabindex="-1"></a>  <span class="at">w=</span>cleaned_resume_freq<span class="sc">$</span>frequency <span class="co"># the weight</span></span>
+<span id="cb56-4"><a href="#cb56-4" tabindex="-1"></a>  )</span></code></pre></div>
 <pre><code>## [1] 0.08049281</code></pre>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb54-2"><a href="#cb54-2" tabindex="-1"></a><span class="fu">boot</span>(cleaned_resume_freq<span class="sc">$</span>call, </span>
-<span id="cb54-3"><a href="#cb54-3" tabindex="-1"></a>  weighted.mean, </span>
-<span id="cb54-4"><a href="#cb54-4" tabindex="-1"></a>  <span class="at">R =</span> <span class="dv">1000</span>, <span class="at">stype =</span> <span class="st">&quot;f&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a><span class="fu">boot</span>(cleaned_resume_freq<span class="sc">$</span>call, </span>
+<span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a>  weighted.mean, </span>
+<span id="cb58-4"><a href="#cb58-4" tabindex="-1"></a>  <span class="at">R =</span> <span class="dv">1000</span>, <span class="at">stype =</span> <span class="st">&quot;f&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## ORDINARY NONPARAMETRIC BOOTSTRAP
 ## 
@@ -2111,9 +2169,9 @@ mean of resume callbacks.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1<
 <p>Weights operate similar to frequencies, but can be applied to a
 dataset without a frequency column. The weights just up or down weight
 the observations.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a><span class="fu">boot</span>(cleaned_resumes<span class="sc">$</span>call, </span>
-<span id="cb56-2"><a href="#cb56-2" tabindex="-1"></a>  weighted.mean, </span>
-<span id="cb56-3"><a href="#cb56-3" tabindex="-1"></a>  <span class="at">R =</span> <span class="dv">1000</span>, <span class="at">stype =</span> <span class="st">&quot;w&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a><span class="fu">boot</span>(cleaned_resumes<span class="sc">$</span>call, </span>
+<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a>  weighted.mean, </span>
+<span id="cb60-3"><a href="#cb60-3" tabindex="-1"></a>  <span class="at">R =</span> <span class="dv">1000</span>, <span class="at">stype =</span> <span class="st">&quot;w&quot;</span>)</span></code></pre></div>
 <pre><code>## 
 ## ORDINARY NONPARAMETRIC BOOTSTRAP
 ## 
@@ -2127,22 +2185,22 @@ the observations.</p>
 ##       original       bias    std. error
 ## t1* 0.08049281 0.0001722793 0.004021416</code></pre>
 <p>The code below does not work. Can you figure out why?</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a>statFun <span class="ot">&lt;-</span> <span class="cf">function</span>(funData, indices, addPars, centerMean)</span>
-<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a>    {</span>
-<span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a>      <span class="co"># Check to see if extra parameters</span></span>
-<span id="cb58-4"><a href="#cb58-4" tabindex="-1"></a>      <span class="cf">if</span>(addPars)</span>
-<span id="cb58-5"><a href="#cb58-5" tabindex="-1"></a>      {</span>
-<span id="cb58-6"><a href="#cb58-6" tabindex="-1"></a>        result <span class="ot">&lt;-</span> <span class="fu">mean</span>(funData[indices] <span class="sc">-</span> centerMean)</span>
-<span id="cb58-7"><a href="#cb58-7" tabindex="-1"></a>      }<span class="cf">else</span></span>
-<span id="cb58-8"><a href="#cb58-8" tabindex="-1"></a>      {</span>
-<span id="cb58-9"><a href="#cb58-9" tabindex="-1"></a>        result <span class="ot">&lt;-</span> <span class="fu">mean</span>(funData[indices])</span>
-<span id="cb58-10"><a href="#cb58-10" tabindex="-1"></a>      }</span>
-<span id="cb58-11"><a href="#cb58-11" tabindex="-1"></a></span>
-<span id="cb58-12"><a href="#cb58-12" tabindex="-1"></a>      <span class="co"># Return the value</span></span>
-<span id="cb58-13"><a href="#cb58-13" tabindex="-1"></a>      <span class="fu">return</span>(result)</span>
-<span id="cb58-14"><a href="#cb58-14" tabindex="-1"></a>    }</span>
-<span id="cb58-15"><a href="#cb58-15" tabindex="-1"></a></span>
-<span id="cb58-16"><a href="#cb58-16" tabindex="-1"></a><span class="fu">boot</span>(testData, statFun, <span class="at">R =</span> <span class="dv">100</span>, <span class="at">extraPar =</span> <span class="cn">TRUE</span>, <span class="at">numCenter =</span> <span class="fu">mean</span>(testData)) </span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a>statFun <span class="ot">&lt;-</span> <span class="cf">function</span>(funData, indices, addPars, centerMean)</span>
+<span id="cb62-2"><a href="#cb62-2" tabindex="-1"></a>    {</span>
+<span id="cb62-3"><a href="#cb62-3" tabindex="-1"></a>      <span class="co"># Check to see if extra parameters</span></span>
+<span id="cb62-4"><a href="#cb62-4" tabindex="-1"></a>      <span class="cf">if</span>(addPars)</span>
+<span id="cb62-5"><a href="#cb62-5" tabindex="-1"></a>      {</span>
+<span id="cb62-6"><a href="#cb62-6" tabindex="-1"></a>        result <span class="ot">&lt;-</span> <span class="fu">mean</span>(funData[indices] <span class="sc">-</span> centerMean)</span>
+<span id="cb62-7"><a href="#cb62-7" tabindex="-1"></a>      }<span class="cf">else</span></span>
+<span id="cb62-8"><a href="#cb62-8" tabindex="-1"></a>      {</span>
+<span id="cb62-9"><a href="#cb62-9" tabindex="-1"></a>        result <span class="ot">&lt;-</span> <span class="fu">mean</span>(funData[indices])</span>
+<span id="cb62-10"><a href="#cb62-10" tabindex="-1"></a>      }</span>
+<span id="cb62-11"><a href="#cb62-11" tabindex="-1"></a></span>
+<span id="cb62-12"><a href="#cb62-12" tabindex="-1"></a>      <span class="co"># Return the value</span></span>
+<span id="cb62-13"><a href="#cb62-13" tabindex="-1"></a>      <span class="fu">return</span>(result)</span>
+<span id="cb62-14"><a href="#cb62-14" tabindex="-1"></a>    }</span>
+<span id="cb62-15"><a href="#cb62-15" tabindex="-1"></a></span>
+<span id="cb62-16"><a href="#cb62-16" tabindex="-1"></a><span class="fu">boot</span>(testData, statFun, <span class="at">R =</span> <span class="dv">100</span>, <span class="at">extraPar =</span> <span class="cn">TRUE</span>, <span class="at">numCenter =</span> <span class="fu">mean</span>(testData)) </span></code></pre></div>
 </div>
 </div>
 </div>

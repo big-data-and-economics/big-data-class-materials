@@ -1,6 +1,6 @@
 ---
 title: Big Data and Economics
-subtitle: Bootstrapping, Functions, and Parallel Processing
+subtitle: Bootstrapping, Functions, and Parallel Programming
 author:
   name: Kyle Coombs
   affiliation: Bates College | [DCS/ECON 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)  
@@ -166,6 +166,10 @@ random_sample_lm(cleaned_resumes)
 
 ```
 
+#### Challenge:
+
+Can you repeat the above process, but now with a function that calculates the difference in means? Or runs a t-test? 
+
 ### Wrapper functions
 
 You can include other functions that you wrote in the functions you create just like including pre-defined functions from packages in your functions. This is incredibly useful for any iteration work you're doing that automatically feeds the value it iterates over to the function you include. Here's the basic syntax:
@@ -301,9 +305,9 @@ set.seed(1000)
 results <- map_df(1:10, function(x) random_sample_lm(cleaned_resumes))
 ```
 
-## Parallel Processing 
+## Parallel Programming 
 
-Parallel processing is a pretty handy trick to speed up your code. It's especially useful for computationally intensive simulations that can be broken up into smaller chunks. As a warning, parallel programming can get quite complex, so we're sticking with the basics today. For more advanced coverage, check work by [Grant McDermott](https://grantmcdermott.com/ds4e/parallel.html#general-parallel-programming-topics).
+Parallel Programming is a pretty handy trick to speed up your code. It's especially useful for computationally intensive simulations that can be broken up into smaller chunks. As a warning, parallel programming can get quite complex, so we're sticking with the basics today. For more advanced coverage, check work by [Grant McDermott](https://grantmcdermott.com/ds4e/parallel.html#general-parallel-programming-topics).
 
 First, let's check how many cores you have on your machine. R runs things in parallel by splitting them up between cores! 
 
@@ -384,6 +388,8 @@ One challenge is **sandwich** only works for standard error calculations and doe
 
 The boot package is one of the most flexible packages for bootstrapping in R. It allows you to bootstrap any function that you can write in R and to implement bootstrapping random indices, random frequencies, and random weights -- which are more complicated approaches to bootstrapping. It also allows you to parallelize your bootstrap simulations directly. 
 
+The way it works, is it will automatically create R samples of the data and feed that to your function. then you will need to pass an index to your function to make sure it knows how to iterate through these samples. Here's an example:
+
 ```{r boot-package}
 #library(tidyverse); library(boot)
 set.seed(1000) # replication
@@ -395,18 +401,66 @@ est_model <- function(d, index) {
     # Use index to pick the bootstrap sample
     m <- lm(call ~ afam, data = d[index,])
     # Return the estimate(s) we want to bootstrap
-    return(c(coef(m)['afam']))
+    return(c(coef(m)[2]))
 }
 
 # Now the bootstrap call!
 boot_results <- boot(data=cleaned_resumes, # data
                 statistic=est_model, # Estimation function,
-
                 R=1000) # Number of bootstrap simulations
 
-boot_results
+print(boot_results)
+
+# confidence intervals
+print(boot.ci(boot_results,
+  type=c('norm', # assumes a normal distribution
+    'basic', # the basic bootstrap uses a Reverse Percentile Interval formula
+    'perc'))) # the actual 2.5th and 97.5th percentile
 
 ```
+
+The different types of confidence intervals are explained in the help file for `boot.ci` or on [Wikipedia](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)#:~:text=The%20basic%20idea%20of%20bootstrapping,data%20(resampled%20%E2%86%92%20sample)). The "norm" is the default and assumes a normal distribution. The "basic" uses a Reverse Percentile Interval formula, which is easier to justify mathematically, though it is a little confusing to follow. The "perc" uses the actual 2.5th and 97.5th percentiles from your data. 
+
+#### Stratifying
+
+Maybe you noticed that you should be sampling equally for each group. Well that would be stratified sampling, which `boot()` handles incredibly well with the `strata` argument. Go to the help file for `boot` and try to figure out how to stratify the sampling.
+
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.
+```{r}
+boot(data=cleaned_resumes, # data
+                statistic=est_model, # Estimation function,
+                R=1000, # Number of bootstrap simulations
+                strata = cleaned_resumes$afam) # Stratify by afam
+```
+
+#### Parallel
 
 The results tell you the original value(s) without sampling, the bias (the difference between the mean of the bootstraps and your estimate), and the bootstrapped standard errors.
 
