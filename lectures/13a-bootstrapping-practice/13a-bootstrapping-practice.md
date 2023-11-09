@@ -119,19 +119,19 @@ random_sample(data=cleaned_resumes)
 ```
 
 ```
-## # A tibble: 4,870 × 3
-##    female afam  call 
-##    <lgl>  <lgl> <lgl>
-##  1 TRUE   FALSE FALSE
-##  2 FALSE  TRUE  FALSE
-##  3 TRUE   TRUE  FALSE
-##  4 TRUE   FALSE FALSE
-##  5 FALSE  TRUE  FALSE
-##  6 FALSE  FALSE FALSE
-##  7 TRUE   TRUE  FALSE
-##  8 TRUE   TRUE  FALSE
-##  9 TRUE   FALSE FALSE
-## 10 TRUE   TRUE  FALSE
+## # A tibble: 4,870 × 4
+##    name     female afam  call 
+##    <fct>    <lgl>  <lgl> <lgl>
+##  1 Meredith TRUE   FALSE FALSE
+##  2 Tremayne FALSE  TRUE  FALSE
+##  3 Aisha    TRUE   TRUE  FALSE
+##  4 Meredith TRUE   FALSE FALSE
+##  5 Rasheed  FALSE  TRUE  FALSE
+##  6 Brad     FALSE  FALSE FALSE
+##  7 Ebony    TRUE   TRUE  FALSE
+##  8 Keisha   TRUE   TRUE  FALSE
+##  9 Sarah    TRUE   FALSE FALSE
+## 10 Tanisha  TRUE   TRUE  FALSE
 ## # ℹ 4,860 more rows
 ```
 
@@ -402,99 +402,19 @@ future_lapply(1:1e3,
 ```
 
 ```
-## Warning: UNRELIABLE VALUE: One of the 'future.apply' iterations
-## ('future_lapply-1') unexpectedly generated random numbers without declaring so.
-## There is a risk that those random numbers are not statistically sound and the
-## overall results might be invalid. To fix this, specify 'future.seed=TRUE'. This
-## ensures that proper, parallel-safe random numbers are produced via the
-## L'Ecuyer-CMRG method. To disable this check, use 'future.seed = NULL', or set
-## option 'future.rng.onMisuse' to "ignore".
-```
-
-```
-## Warning: UNRELIABLE VALUE: One of the 'future.apply' iterations
-## ('future_lapply-2') unexpectedly generated random numbers without declaring so.
-## There is a risk that those random numbers are not statistically sound and the
-## overall results might be invalid. To fix this, specify 'future.seed=TRUE'. This
-## ensures that proper, parallel-safe random numbers are produced via the
-## L'Ecuyer-CMRG method. To disable this check, use 'future.seed = NULL', or set
-## option 'future.rng.onMisuse' to "ignore".
-```
-
-```
-## Warning: UNRELIABLE VALUE: One of the 'future.apply' iterations
-## ('future_lapply-3') unexpectedly generated random numbers without declaring so.
-## There is a risk that those random numbers are not statistically sound and the
-## overall results might be invalid. To fix this, specify 'future.seed=TRUE'. This
-## ensures that proper, parallel-safe random numbers are produced via the
-## L'Ecuyer-CMRG method. To disable this check, use 'future.seed = NULL', or set
-## option 'future.rng.onMisuse' to "ignore".
-```
-
-```
-## Warning: UNRELIABLE VALUE: One of the 'future.apply' iterations
-## ('future_lapply-4') unexpectedly generated random numbers without declaring so.
-## There is a risk that those random numbers are not statistically sound and the
-## overall results might be invalid. To fix this, specify 'future.seed=TRUE'. This
-## ensures that proper, parallel-safe random numbers are produced via the
-## L'Ecuyer-CMRG method. To disable this check, use 'future.seed = NULL', or set
-## option 'future.rng.onMisuse' to "ignore".
-```
-
-```
-## Warning: UNRELIABLE VALUE: One of the 'future.apply' iterations
-## ('future_lapply-5') unexpectedly generated random numbers without declaring so.
-## There is a risk that those random numbers are not statistically sound and the
-## overall results might be invalid. To fix this, specify 'future.seed=TRUE'. This
-## ensures that proper, parallel-safe random numbers are produced via the
-## L'Ecuyer-CMRG method. To disable this check, use 'future.seed = NULL', or set
-## option 'future.rng.onMisuse' to "ignore".
-```
-
-```
-## Warning: UNRELIABLE VALUE: One of the 'future.apply' iterations
-## ('future_lapply-6') unexpectedly generated random numbers without declaring so.
-## There is a risk that those random numbers are not statistically sound and the
-## overall results might be invalid. To fix this, specify 'future.seed=TRUE'. This
-## ensures that proper, parallel-safe random numbers are produced via the
-## L'Ecuyer-CMRG method. To disable this check, use 'future.seed = NULL', or set
-## option 'future.rng.onMisuse' to "ignore".
-```
-
-```
-## Warning: UNRELIABLE VALUE: One of the 'future.apply' iterations
-## ('future_lapply-7') unexpectedly generated random numbers without declaring so.
-## There is a risk that those random numbers are not statistically sound and the
-## overall results might be invalid. To fix this, specify 'future.seed=TRUE'. This
-## ensures that proper, parallel-safe random numbers are produced via the
-## L'Ecuyer-CMRG method. To disable this check, use 'future.seed = NULL', or set
-## option 'future.rng.onMisuse' to "ignore".
-```
-
-```
-## Warning: UNRELIABLE VALUE: One of the 'future.apply' iterations
-## ('future_lapply-8') unexpectedly generated random numbers without declaring so.
-## There is a risk that those random numbers are not statistically sound and the
-## overall results might be invalid. To fix this, specify 'future.seed=TRUE'. This
-## ensures that proper, parallel-safe random numbers are produced via the
-## L'Ecuyer-CMRG method. To disable this check, use 'future.seed = NULL', or set
-## option 'future.rng.onMisuse' to "ignore".
-```
-
-```
 ## # A tibble: 1,000 × 1
 ##    afamTRUE
 ##       <dbl>
-##  1  -0.0365
-##  2  -0.0403
-##  3  -0.0298
-##  4  -0.0190
-##  5  -0.0309
-##  6  -0.0307
-##  7  -0.0267
-##  8  -0.0242
-##  9  -0.0237
-## 10  -0.0463
+##  1  -0.0339
+##  2  -0.0425
+##  3  -0.0380
+##  4  -0.0347
+##  5  -0.0318
+##  6  -0.0261
+##  7  -0.0316
+##  8  -0.0358
+##  9  -0.0329
+## 10  -0.0230
 ## # ℹ 990 more rows
 ```
 
@@ -503,7 +423,7 @@ toc(log=TRUE)
 ```
 
 ```
-## 3.61 sec elapsed
+## 7.3 sec elapsed
 ```
 
 #### pbapply
@@ -517,7 +437,7 @@ toc(log=TRUE)
 ```
 
 ```
-## 3.86 sec elapsed
+## 12.61 sec elapsed
 ```
 
 ### furrr
@@ -553,7 +473,7 @@ toc(log=TRUE)
 ```
 
 ```
-## 6.52 sec elapsed
+## 6.03 sec elapsed
 ```
 
 This is the best way to make sure you understand the bootstrapping process. 
@@ -604,10 +524,9 @@ coeftest(m, vcov = vcovBS(m,
 ## 
 ## t test of coefficients:
 ## 
-##             Estimate Std. Error t value  Pr(>|t|)    
-## (Intercept)  54.0666    51.3619  1.0527   0.30119    
-## mpg          -2.7748     1.3154 -2.1095   0.04365 *  
-## cyl          23.9786     5.1507  4.6554 6.603e-05 ***
+##               Estimate Std. Error t value  Pr(>|t|)    
+## (Intercept)  0.0965092  0.0056755 17.0045 < 2.2e-16 ***
+## afamTRUE    -0.0320329  0.0074471 -4.3014 1.731e-05 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -757,7 +676,7 @@ There are a number of handy visualization tools and table shortcuts to use with 
 
 ```r
 # See the coefficient estimates and their bootstrap standard errors
-plot(results)
+plot(boot_results)
 ```
 
 ![](13a-bootstrapping-practice_files/figure-html/plot-boot-1.png)<!-- -->
@@ -777,7 +696,25 @@ stargazer(m1, se = list(tidy_results$std.error), type = 'text')
 
 ```
 ## 
-## % Error: Argument 'se' must be NULL (default), or a list of numeric vectors.
+## ===============================================
+##                         Dependent variable:    
+##                     ---------------------------
+##                                call            
+## -----------------------------------------------
+## afam                          -0.032           
+##                                                
+##                                                
+## Constant                     0.097***          
+##                               (0.008)          
+##                                                
+## -----------------------------------------------
+## Observations                   4,870           
+## R2                             0.003           
+## Adjusted R2                    0.003           
+## Residual Std. Error      0.272 (df = 4868)     
+## F Statistic          16.931*** (df = 1; 4868)  
+## ===============================================
+## Note:               *p<0.1; **p<0.05; ***p<0.01
 ```
 
 That said, it can be a bit cumbersome to use. For example, if you want to bootstrap a function that takes more than two arguments, you need to use the `...` argument and define `extraPar` and `numCenter`. This can be a bit confusing and easy to screw up.

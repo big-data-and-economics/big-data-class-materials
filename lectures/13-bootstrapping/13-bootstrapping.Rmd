@@ -635,7 +635,7 @@ name: parallel
 ---
 # "One trip?" okay
 
-[One trip? Okay, sure](imgs/maxresdefault.jpg)
+![One trip? Okay, sure](imgs/maxresdefault.jpg)
 
 ---
 # Parallel Programming: What?

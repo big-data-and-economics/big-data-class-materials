@@ -39,7 +39,7 @@ knit: (function(inputFile, encoding) {
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300)
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300,warning=FALSE)
 ```
 
 ## Software requirements
@@ -480,7 +480,7 @@ There are a number of handy visualization tools and table shortcuts to use with 
 
 ```{r plot-boot}
 # See the coefficient estimates and their bootstrap standard errors
-plot(results)
+plot(boot_results)
 
 # Optional: print regression table with the bootstrap SEs
 # This uses stargazer, but the method is similar
