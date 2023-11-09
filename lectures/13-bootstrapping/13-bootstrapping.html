@@ -623,7 +623,8 @@ lapply(1:10, square)
 
 - The `*apply` family is a little confusing at first, but it's very powerful
 - The syntax is `*apply(list_or_vector, function, other_arguments)`
-- The `function` is a function that takes a single argument
+- The `function` is a function that takes arguments like any other
+  - The first argument will be the element of the list or vector
 - The `other_arguments` are arguments that are passed to the function
 
 ---
@@ -749,7 +750,10 @@ name: parallel
 ---
 # "One trip?" okay
 
-![One trip? Okay, sure](imgs/maxresdefault.jpg)
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="imgs/maxresdefault.jpg" alt="One trip? Okay ,sure" width="75%" /&gt;
+&lt;p class="caption"&gt;One trip? Okay ,sure&lt;/p&gt;
+&lt;/div&gt;
 
 ---
 # Parallel Programming: What?
@@ -859,7 +863,7 @@ toc(log = TRUE)
 ```
 
 ```
-## 16.27 sec elapsed
+## 34.5 sec elapsed
 ```
 
 ```r
@@ -872,7 +876,7 @@ toc(log = TRUE)
 ```
 
 ```
-## 18.83 sec elapsed
+## 19.06 sec elapsed
 ```
 
 ---
@@ -892,7 +896,7 @@ toc(log = TRUE)
 ```
 
 ```
-## 17.08 sec elapsed
+## 15.91 sec elapsed
 ```
 
 ---

@@ -560,7 +560,8 @@ lapply(1:10, square)
 
 - The `*apply` family is a little confusing at first, but it's very powerful
 - The syntax is `*apply(list_or_vector, function, other_arguments)`
-- The `function` is a function that takes a single argument
+- The `function` is a function that takes arguments like any other
+  - The first argument will be the element of the list or vector
 - The `other_arguments` are arguments that are passed to the function
 
 ---
@@ -635,7 +636,9 @@ name: parallel
 ---
 # "One trip?" okay
 
-![One trip? Okay, sure](imgs/maxresdefault.jpg)
+```{r one-trip, echo=FALSE, out.width="75%", fig.cap="One trip? Okay ,sure",cache=FALSE}
+knitr::include_graphics("imgs/maxresdefault.jpg")
+```
 
 ---
 # Parallel Programming: What?
