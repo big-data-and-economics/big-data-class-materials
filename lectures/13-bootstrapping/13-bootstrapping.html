@@ -18,7 +18,7 @@ class: center, middle, inverse, title-slide
 # Big Data and Economics
 ]
 .subtitle[
-## Bootstrapping, Functions, and Parallel Processing
+## Bootstrapping, Functions, and Parallel Programming
 ]
 .author[
 ### Kyle Coombs
@@ -51,7 +51,7 @@ name: toc
 
 - [Iteration](#iteration)
 
-- [Parallel Processing](#parallel-processing)
+- [Parallel Programming](#parallel-processing)
 
 ---
 class: inverse, center, middle
@@ -63,7 +63,7 @@ name: prologue
 ---
 # Plan for the week
 
-- Computers closed: Explanation of bootstrapping, basics of functions, iteration, and parallel processing
+- Computers closed: Explanation of bootstrapping, basics of functions, iteration, and Parallel Programming
 - Computers open: Work through practical examples
 
 - By the end of the week you will:
@@ -150,7 +150,7 @@ It depends. Intuively:
 - Arguably, you should do 1000s, if not more times! 
   - In this lecture, I did not do that because it would take too long to generate my slides
 
-- See parallel processing before for speed ups! 
+- See Parallel Programming before for speed ups! 
 
 
 ---
@@ -287,7 +287,7 @@ Both are powerful ways to do bootstrapping when your data are in a format that m
 
 - That handles many cases, but it can get a little slow for big data
 
-- And it has built-in parallel processing, but it may not work on different systems
+- And it has built-in Parallel Programming, but it may not work on different systems
 
 - Best to know how to do it yourself as well cause it is pretty easy once you get the hang of it!
 
@@ -480,8 +480,8 @@ for (i in 1:10) {
   deposit[[i]] &lt;- bootstrap_sample(df)
 }
 
-bootstrapped_median &lt;- bind_rows(deposit)
-head(bootstrapped_median)
+bootstrapped_for &lt;- bind_rows(deposit)
+head(bootstrapped_for)
 ```
 
 ```
@@ -551,6 +551,19 @@ for (i in 1:2) {
 ## [1] 1
 ## [1] 2
 ```
+
+
+---
+# While loops
+
+- I'm largely skipping while loops, but they're also important! 
+
+- While loops iterate until one or more conditions are met
+  - Typically one condition is a max number of iterations
+  - Another conditions is that the some value of the loop is within a small amount of a target value
+
+- These are critical for numerical solvers, which are common in computational economics and machine learning
+
 ---
 # Iteration: apply family
 
@@ -702,24 +715,13 @@ map_df(1:10, function(i) bootstrap_sample(df=df))
 ```
 
 ---
-# While loops
-
-- I'm largely skipping while loops, but they're also important! 
-
-- While loops iterate until one or more conditions are met
-  - Typically one condition is a max number of iterations
-  - Another conditions is that the some value of the loop is within a small amount of a target value
-
-- These are critical for numerical solvers, which are common in computational economics and machine learning
-
----
 class: inverse, center, middle
 name: parallel
 
-# Parallel Processing
+# Parallel Programming
 
 ---
-# Motivating example: Parallel Processing
+# Motivating example: Parallel Programming
 
 - Imagine you get home from the grocery store with 100 bags of groceries
 - You have to bring them all inside, but you can only carry 2 at a time
@@ -728,13 +730,13 @@ name: parallel
 
 --
 
-  - Ask friends to carry to at a time with you (parallel processing)
+  - Ask friends to carry to at a time with you (Parallel Programming)
   - Get a cart and carry 10 at a time (more RAM and a better processor)
 
 ---
 # A warning
 
-- Parallel processing is an incredibly powerful tool, but it is full of pitfalls
+- Parallel Programming is an incredibly powerful tool, but it is full of pitfalls
 
 - A friend of mine from the PhD said that he did not understand it until the 4th year of his PhD
 
@@ -750,11 +752,11 @@ name: parallel
 [One trip? Okay, sure](imgs/maxresdefault.jpg)
 
 ---
-# Parallel processing: What?
+# Parallel Programming: What?
 
 - Your computer has multiple cores, which are like multiple brains
 - Each of these is capable of doing the same tasks
-- Parallel processing is the act of using multiple cores to do the same task at the same time
+- Parallel Programming is the act of using multiple cores to do the same task at the same time
 
 --
 - Many coding tasks are "embarassingly parallel"
@@ -766,22 +768,22 @@ name: parallel
   - Parts of these tasks may be possible to do in parallel
 
 ---
-# Parallel processing vocab
+# Parallel Programming vocab
 
-The vocab for parallel processing can get a little confusing:
+The vocab for Parallel Programming can get a little confusing:
 
 - **Socket**: A socket is a physical connection between a processor and the motherboard
 - **Core**: A core is a physical processor that can do computations
 - **Process**: A process is a task that is being done by a core (Windows users may know this from Task Manager)
 - **Thread**: A thread is a subtask of a process that can be done in parallel and share memory with other threads
-- **Cluster**: A cluster is a group of computers that can be used to do parallel processing
+- **Cluster**: A cluster is a group of computers that can be used to do Parallel Programming
 - **Node**: One computer within a cluster
 
 ---
-# Parallel Processing in R
+# Parallel Programming in R
 
 - In R, there are many ways to parallel process, I'll introduce you to the **future.apply** package
-- There are many parallel processing packages in R, but **future.apply** follows the `*apply` family syntax
+- There are many Parallel Programming packages in R, but **future.apply** follows the `*apply` family syntax
 
 ---
 # Trivial example: square numbers
@@ -857,7 +859,7 @@ toc(log = TRUE)
 ```
 
 ```
-## 49.09 sec elapsed
+## 34.21 sec elapsed
 ```
 
 ```r
@@ -870,13 +872,13 @@ toc(log = TRUE)
 ```
 
 ```
-## 22.1 sec elapsed
+## 14.73 sec elapsed
 ```
 
 ---
 # Want to use `map`? Try **furrr**
 
-The **furrr** package, i.e. future **purrrr** is a parallel processing version of **purrr**
+The **furrr** package, i.e. future **purrrr** is a Parallel Programming version of **purrr**
 
 - Again, the syntax is the same, but you have to set the seed inside the function with `.options`.
 
@@ -890,7 +892,7 @@ toc(log = TRUE)
 ```
 
 ```
-## 20.1 sec elapsed
+## 17.05 sec elapsed
 ```
 
 ---
@@ -902,28 +904,28 @@ toc(log = TRUE)
 &lt;img src="13-bootstrapping_files/figure-html/bootstrapping-density-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-# R packages that use parallel processing
+# R packages that use Parallel Programming
 
-- Many R packages already use parallel processing
-- `feols()` from **fixest** uses parallel processing to speed up OLS estimation
+- Many R packages already use Parallel Programming
+- `feols()` from **fixest** uses Parallel Programming to speed up OLS estimation
   - You can control how using the `nthreads` argument
-- **data.table** uses parallel processing to speed up data wrangling
-- **boot** and **sandwich** can use parallel processing to speed up bootstrapping
+- **data.table** uses Parallel Programming to speed up data wrangling
+- **boot** and **sandwich** can use Parallel Programming to speed up bootstrapping
 - And many others do the same
 
 ---
-# Parallel processing: Why?
+# Parallel Programming: Why?
 
-- Parallel processing is a great way to speed up your code and often there are straight-forward ways to do it
+- Parallel Programming is a great way to speed up your code and often there are straight-forward ways to do it
 - It is not always worth doing:
   - Theoretically, the gain should be linear: each additional node should speed up your code by the same amount
-  - In practice, there are "overhead" costs to parallel processing that can slow things down
+  - In practice, there are "overhead" costs to Parallel Programming that can slow things down
   - **Overhead costs**: reading in and subsetting data, tracking each node 
 
 ---
 # Across computer clusters
 
-- Parallel processing is also a way to speed up your code across multiple computers
+- Parallel Programming is also a way to speed up your code across multiple computers
 - This is called "distributed computing"
 - It is a way to speed up your code when you have a lot of data and a lot of computers
 - Imagine you have 1000 computers, each with 1/1000th of your data

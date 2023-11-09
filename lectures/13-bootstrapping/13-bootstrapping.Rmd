@@ -479,8 +479,8 @@ for (i in 1:10) {
   deposit[[i]] <- bootstrap_sample(df)
 }
 
-bootstrapped_median <- bind_rows(deposit)
-head(bootstrapped_median)
+bootstrapped_for <- bind_rows(deposit)
+head(bootstrapped_for)
 ```
 
 ---
@@ -531,6 +531,19 @@ for (i in 1:2) {
   # complex function
 }
 ```
+
+
+---
+# While loops
+
+- I'm largely skipping while loops, but they're also important! 
+
+- While loops iterate until one or more conditions are met
+  - Typically one condition is a max number of iterations
+  - Another conditions is that the some value of the loop is within a small amount of a target value
+
+- These are critical for numerical solvers, which are common in computational economics and machine learning
+
 ---
 # Iteration: apply family
 
@@ -586,17 +599,6 @@ lapply(1:10, wrapper_bootstrap, df=df) %>%
 set.seed(1)
 map_df(1:10, function(i) bootstrap_sample(df=df))
 ```
-
----
-# While loops
-
-- I'm largely skipping while loops, but they're also important! 
-
-- While loops iterate until one or more conditions are met
-  - Typically one condition is a max number of iterations
-  - Another conditions is that the some value of the loop is within a small amount of a target value
-
-- These are critical for numerical solvers, which are common in computational economics and machine learning
 
 ---
 class: inverse, center, middle
