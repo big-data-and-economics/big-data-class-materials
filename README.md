@@ -45,17 +45,17 @@ This is in progress and subject to change.
 | 2023-10-10 | T | Opportunity Atlas ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/09-oppatlas/09-oppatlas.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/09-oppatlas/09-oppatlas.pdf), [.Rmd](lectures/09-oppatlas/09-oppatlas.Rmd)) and Spatial Analysis ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/08-spatial/08-spatial.html#1), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/08-spatial/08-spatial.pdf), [.Rmd](lectures/08-spatial/08-spatial.Rmd)) | [Watch Geography of Upward Mobility in America starting at 39min](https://www.youtube.com/watch?v=P0NvsWDKwvs&t=2340s) | [Problem Set 3 due 10/30 at 11:59:59 (optional)](https://github.com/ECON368-fall2023-big-data-and-economics/ps3-opportunity-atlas) |
 | 2023-10-12 | Th | Regression Review ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/10-regression/10-regression.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/10-regression/10-regression.pdf), [.Rmd](lectures/10-regression/10-regression.Rmd)) | Read [Effect Ch 13](https://theeffectbook.net/ch-StatisticalAdjustment.html) or [Mixtape Ch 2](https://mixtape.scunning.com/02-probability_and_regression), [Watch Causal Effects of Neighborhoods](https://youtu.be/_7epNon8wi8?si=VM_f24hrwhVzwE9K) | |
 | 2023-10-17 | T | Causal Inference ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/10a-causal-neighborhoods/10a-causal-neighborhoods.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/10a-causal-neighborhoods/10a-causal-neighborhoods.pdf), [.Rmd](lectures/10a-causal-neighborhoods/10a-causal-neighborhoods.Rmd)) | Read [Effect Ch 13](https://theeffectbook.net/ch-StatisticalAdjustment.html) or [Mixtape Ch 2](https://mixtape.scunning.com/02-probability_and_regression), [Watch Causal Effects of Neighborhoods](https://youtu.be/_7epNon8wi8?si=VM_f24hrwhVzwE9K) | |
-| 2023-10-24 | T | Data Tips ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.pdf), [.Rmd][lectures/03-data-tips/03-data-tips.Rmd] | | | 
+| 2023-10-24 | T | Data Tips ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.pdf), [.Rmd](lectures/03-data-tips/03-data-tips.Rmd) | | | 
 | 2023-10-26 | Th |  |  | | 
 | 2023-10-31 | T | Difference-in-differences ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/11-diff-in-diff/11-diff-in-diff.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/11-diff-in-diff/11-diff-in-diff.pdf), [.Rmd](lectures/11-diff-in-diff/11-diff-in-diff.Rmd)), Panel data and two-way fixed effects ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/11a-panel-twfe/11a-panel-twfe.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/11a-panel-twfe/11a-panel-twfe.pdf), [.Rmd](lectures/11a-panel-twfe/11a-panel-twfe.Rmd)) | [Watch first 40min of Teachers and Charter Schools](https://youtu.be/iIIlb1hTbTc?si=rGHD2LCckhG7Rdwn) | |
 | 2023-11-02 | Th | Regression Discontinuity Design ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/12-regression-discontinuity/12-regression-discontinuity.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/12-regression-discontinuity/12-regression-discontinuity.pdf), [.Rmd](lectures/12-regression-discontinuity/12-regression-discontinuity.Rmd)), RDD activity ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/12a-rdd-class-sizes/12a-rdd-class-sizes.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/12a-rdd-class-sizes/12a-rdd-class-sizes.pdf), [.Rmd](lectures/12a-rdd-class-sizes/12a-rdd-class-sizes.Rmd)) | Read [Effect Ch 20](https://theeffectbook.net/ch-RegressionDiscontinuity.html) or [Mixtape Ch 6](https://mixtape.scunning.com/06-regression_discontinuity) | | 
 | **Machine Learning** | | |
-| 2023-11-07 | T | Functions & Parallel Programming | [Refer to Chapters 2-4 of DS4E](https://grantmcdermott.com/ds4e/funcs-intro.html) | |
-| 2023-11-09 | Th | SQL | | [Problem Set 4 due 11/13 at 11:59:59](https://github.com/ECON368-fall2023-big-data-and-economics/ps4-class-sizes) |
-| 2023-11-14 | T | Machine Learning: Decision trees | [Read ISLR 8.1](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf) | |
+| 2023-11-07 | T | Bootstrapping, Functions & Parallel Programming ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/13-bootstrapping/13-bootstrapping.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/13-bootstrapping/13-bootstrapping.pdf), [.Rmd](lectures/13-bootstrapping/13-bootstrapping.Rmd)), Bootstrapping activity ([.html](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/13a-bootstrapping-practice/13a-bootstrapping-practice.html), [.pdf](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/13a-bootstrapping-practice/13a-bootstrapping-practice.pdf), [.Rmd](lectures/13a-bootstrapping-practice/13a-bootstrapping-practice.Rmd)) | [Refer to Chapters 2-4 of DS4E](https://grantmcdermott.com/ds4e/funcs-intro.html), [Chapter 9 of R for Data Science](https://bookdown.org/jgscott/DSGI/the-bootstrap.html) | |
+| 2023-11-09 | Th | SQL (see work by [Tyler Ransom](https://raw.githack.com/tyleransom/DScourseS23/master/LectureNotes/06-SQL-RDD/06slides.html)) | |  |
+| 2023-11-14 | T | Machine Learning: Decision trees | [Read ISLR 8.1](https://drive.google.com/file/d/106d-rN7cXpyAkgrUqjcPONNCyO-rX7MQ/view) | [Problem Set 4 due 11/13 at 11:59:59](https://github.com/ECON368-fall2023-big-data-and-economics/ps4-class-sizes) |
 | 2023-11-16 | Th | Machine Learning: Bias and Judicial Decisions | [Watch Improving Judicial Decisions](https://youtu.be/AuNzoCk_uxM?si=dFpn0aQel4amdH-_) | |
-| 2023-11-28 | T | Machine Learning: Regressional penalization | [Read ISLR Ch 6.1, 6.2](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf)  | Problem Set 5 due 11/27 at 11:59:59 |
-| 2023-11-30 | Th | Machine Learning: Causal Forests, at-risk youth application | [Read ISLR 8.2](https://hastie.su.domains/ISLR2/ISLRv2_corrected_June_2023.pdf) | |
+| 2023-11-28 | T | Machine Learning: Regressional penalization | [Read ISLR Ch 6.1, 6.2](https://drive.google.com/file/d/106d-rN7cXpyAkgrUqjcPONNCyO-rX7MQ/view)  | Problem Set 5 due 11/27 at 11:59:59 |
+| 2023-11-30 | Th | Machine Learning: Causal Forests, at-risk youth application | [Read ISLR 8.2](https://drive.google.com/file/d/106d-rN7cXpyAkgrUqjcPONNCyO-rX7MQ/view) | |
 | 2023-12-05 | T | Regular expressions, WordClouds | [Read Gentzkow (2019): Text as Data](https://bates.primo.exlibrisgroup.com/discovery/openurl?institution=01CBB_BCOLL&vid=01CBB_BCOLL:BATES&volume=57&date=2019&aulast=Gentzkow&issue=3&issn=0022-0515&spage=535&id=doi:10.1257%2Fjel.20181020&auinit=M&title=Journal%20of%20Economic%20Literature&atitle=Text%20as%20data&sid=google) | |
 | 2023-12-07 | Th | Sentiment Analysis | [Read Stephens-Davidowitz (2014)](https://www.sciencedirect.com/science/article/pii/S0047272714000929) | Problem Set 6 due 12/11 at 11:59:59 |
 | If time | T | Topics Modeling, LLMs | [Read Ash and Hansen (2023): Text Algorithms](https://www.annualreviews.org/doi/pdf/10.1146/annurev-economics-082222-074352) | |
@@ -150,7 +150,7 @@ This course is taught in R, but the goal is not for students to learn individual
 You are actively encouraged to use generative AI assistants in this class. These can be used to improve your code, refine your writing, iterate on your ideas, and more.
 
 - [Sign-up for ChatGPT](https://chat.openai.com/auth/login)
-- [Sign-up for GitHub CoPilot](https://github.com/features/copilot)
+- [Sign-up for GitHub CoPilot](https://docs.github.com/en/copilot/quickstart#signing-up-for-github-copilot-for-your-personal-account) (Note: you do not signup through this organization, you signup through your own personal GitHub account as a student.)
 - [Tips to get better with ChatGPT](https://raw.githack.com/tyleransom/DScourseS23/master/LectureNotes/27-GPT/27slides.html#1)
 - [Integration of AI with R](https://intro2r.library.duke.edu/ai.html)
 
@@ -172,6 +172,34 @@ Chrissy Aman is our Course-Attached tutor. She will host office hours in the SAS
 - Sundays at 10am-12pm in PGill 227
 
 Chrissy can help you troubleshoot *R*. She does not know have solution to the problem sets, but she can help you figure them out. 
+
+## GitHub Codespaces
+
+Having trouble with R on your computer?
+
+To get you up and running and writing R code in no time, I have containerized this workshop such that you have a ready out of the box R coding environment.
+
+#### Dev Containers in GitHub CodeSpaces
+
+Click the green "<> Code" button at the top right on this repository page, and then select "Create codespace on main". (GitHub CodeSpaces is available with [GitHub Enterprise](https://github.com/enterprise) and [GitHub Education](https://education.github.com/).)
+
+To open RStudio Server, click the Forwarded Ports "Radio" icon at the bottom of the VS Code Online window.
+
+![Forwarded Ports](img/forwarded_ports.png)
+
+In the Ports tab, click the Open in Browser "World" icon that appears when you hover in the "Local Address" column for the Rstudio row.
+
+![Ports](img/ports.png)
+
+This will launch RStudio Server in a new window. Log in with the username and password `rstudio/rstudio`. 
+
+* NOTE: Sometimes, the RStudio window may fail to open with a timeout error. If this happens, try again, or restart the Codepace.
+
+In RStudio, use the File menu to open the file `test.Rmd`. Use the "Knit" submenu to "Knit as HTML" and view the rendered "R Notebook" Markdown document.
+
+* Note: You may be prompted to install an updated version of the `markdown` package. Select "Yes".
+
+* Note: Pushing/pulling will work a bit differently. In practice, you will use the <picture> <source media="(prefers-color-scheme: light)" srcset="/img/298785_git_branch_icon.png"> <source media="(prefers-color-scheme: dark)" srcset="/img/298785_git_branch_icon_white.png"> <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="/img/298785_git_branch_icon_white.png"></picture> icon for "Source Control" on the RHS bar where you can stage things, commit, and push them. You will need to do this to turn in your problem set. See documentation from GitHub on [Source Control and Codespaces](https://docs.github.com/en/codespaces/developing-in-codespaces/using-source-control-in-your-codespace)
 
 ## Other details
 

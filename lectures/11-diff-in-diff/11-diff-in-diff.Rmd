@@ -84,7 +84,7 @@ class: inverse, center, middle
 # Check-in on causality
 
 - We've been talking about causality for a bit now
-- Popcorn style: what do we need for cauality?
+- Popcorn style: what do we need for causality?
 
 --
 

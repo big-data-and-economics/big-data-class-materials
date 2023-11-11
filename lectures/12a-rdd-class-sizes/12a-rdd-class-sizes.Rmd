@@ -195,7 +195,7 @@ Try to create a polynomial of order 2, 3, and 4 using **ggplot**. Hint: you'll n
 
 Well let's estimate the actual effect of having a smaller class on average math scores.
 
-It is helpful to reset the cohort size to be centered at the cutoff. This is because the default is to estimate the effect at the cutoff, so it is helpful to have the cutoff be at 0. It makes the math smoother.
+Reset the cohort size to be centered at the cutoff. This makes it easier to interpret coefficients and check for changes in slope at the cutoff. You could technically back out the effect size from the coefficients, but it's easier to just recenter the cohort size.
 
 ```{r recenter}
 class5subset <- mutate(class5subset,
