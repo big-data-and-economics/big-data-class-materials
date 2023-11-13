@@ -66,7 +66,11 @@ knit: (function(inputFile, encoding) {
 ---
 
 \`\`\`{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300)
+knitr::opts_chunk\$set(echo = TRUE, cache = TRUE, dpi=300)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load()
+theme_set(theme_minimal())
+
 \`\`\`
 
 
@@ -105,14 +109,15 @@ name: toc
 \`\`\`{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 library(knitr)
-opts_chunk$set(
+opts_chunk\$set(
   fig.align=\"center\", fig.width=6, fig.height=4, 
   # out.width=\"748px\", #out.length=\"520.75px\",
   dpi=300, #fig.path='Figs/',
   cache=T#, echo=F, warning=F, message=F
   )
-
-library(tidyverse)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load()
+theme_set(theme_minimal())
 \`\`\`
 
 # Table of contents
