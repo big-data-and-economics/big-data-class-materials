@@ -561,6 +561,15 @@ Sample is split randomly to how it was generated (e.g. if it's panel data, sampl
 It is ideal to follow the "Cross-validation" camp, but in cases where you don't have many observations (training examples), you may have to go the "Holdout" route.
 
 ---
+# Test/train/hold-out in Kleinberg et al.
+
+```{r echo=FALSE,fig.retina=.6}
+knitr::include_graphics("imgs/test_vs_train_kleinberg.png")
+```
+
+This shows the way the New York City data were randomly partitioned to do ML predictions of optimal bail decisions using data of judicial decisions in New York City. Source: Kleinberg et al. (2019) "Human Decisions and Machine Predictions"
+
+---
 # k-fold cross-validation
 Due to randomness in our data, it may be better to do the cross validation multiple times. To do so, we take the 80% training-plus-validation sample and randomly divide it into the 60/20 components k number of times. Typically k is between 3 and 10. (See graphic below)
 
