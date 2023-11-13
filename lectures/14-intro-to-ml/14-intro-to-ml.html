@@ -529,7 +529,7 @@ For example:
   - LASSO:
 
 `\begin{align*}
-  &amp;\min_{\beta_1, \dots, \beta_K} \frac{1}{N} \left(\sum_{i=1}^N \left(y_i - \sum_{i=1}^K \beta_k X^k_i\right) \right)^2 + \lambda \left| \sum_{i=1}^K \beta^k \right|_1 
+  &amp;\min_{\beta_1, \dots, \beta_K} \frac{1}{N} \left(\sum_{i=1}^N \left(y_i - \sum_{i=1}^K \beta_k X^k_i\right) \right)^2 + \lambda \sum_{i=1}^K  \left|\beta_k \right|
 \end{align*}`
 
 - There are many, many more!
