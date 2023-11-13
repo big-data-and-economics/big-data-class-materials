@@ -1574,8 +1574,8 @@ Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-econom
 <div id="r-packages" class="section level3">
 <h3>R packages</h3>
 <p>It’s important to note that “base” R already provides all of the
-tools to implement a regression discontinuity design, but there are some
-great other tools to use!</p>
+tools to implement bootstrapping, but there are some great other tools
+to use!</p>
 <ul>
 <li>New: <strong>boot</strong>, <strong>parallel</strong>,
 <strong>tictoc</strong>, <strong>pbapply</strong>,
@@ -1704,7 +1704,7 @@ include. Here’s the basic syntax:</p>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="fu">return</span>(something_with_x)</span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>}</span>
 <span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>wrapper_function <span class="ot">&lt;-</span> <span class="cf">function</span>(i,x){</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>wrapper_function <span class="ot">&lt;-</span> <span class="cf">function</span>(i,x) {</span>
 <span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="co"># Do something with i if you want</span></span>
 <span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  something <span class="ot">&lt;-</span> <span class="fu">function_that_uses_x</span>(x)</span>
 <span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  <span class="co"># or do something with i and x together, for example:</span></span>
