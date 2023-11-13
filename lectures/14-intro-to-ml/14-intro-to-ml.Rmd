@@ -583,6 +583,25 @@ knitr::include_graphics("imgs/k-foldCV.png")
 In the extreme, one can do *nested* k-fold cross-validation, wherein the test set is shuffled some number of times and the k-fold CV is repeated each time. So we would end up with "3k" fold CV, for example. 
 
 ---
+# Try a demo on schooling data
+
+- Navigate to [kaggle.com](kaggle.com) 
+  - Create an account (should take 30 seconds)
+  - Validate your email
+
+- Then go to this [practice example](https://bcullen.rbind.io/post/2020-06-02-tidymodels-decision-tree-learning-in-r/) of Decision Trees by Brendan Cullen 
+
+- You'll need to download the Oregon School test and train data from [Kaggle](https://www.kaggle.com/competitions/edld-654-spring-2020/data)
+  - Stick them in a working directory for today's demo and read them in, so you can follow the demo
+
+- Problem Set 6 will feature these data:
+  - You'll essentially write me a problem set that tests whether someone knows how to use the `tidymodels` package in R
+  - I want you to practice `tidymodels` and documenting instructions for something you're learning in real time
+
+- There may be some bumps to using this tutorial! Power through and learn by doing! 
+  - You may need to install some packages (e.g. `rio`, `skimr`, etc.)
+
+---
 class: inverse, center, middle
 
 # Next lecture: Decision Trees and Judicial Decisions
