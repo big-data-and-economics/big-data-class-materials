@@ -44,7 +44,7 @@ knit: (function(inputFile, encoding) {
 
 ### R packages 
 
-It's important to note that "base" R already provides all of the tools to implement a regression discontinuity design, but there are some great other tools to use!
+It's important to note that "base" R already provides all of the tools to implement bootstrapping, but there are some great other tools to use!
 
 - New: **boot**, **parallel**, **tictoc**, **pbapply**, **future**, **future.apply**, **furrr**
 - Already used: **tidyverse**, **fixest**, **haven**, **sandwich**, **broom**, **stargazer**, **lmtest**, **AER**
@@ -211,7 +211,7 @@ function_that_uses_x <- functiion(x) {
   return(something_with_x)
 }
 
-wrapper_function <- function(i,x){
+wrapper_function <- function(i,x) {
   # Do something with i if you want
   something <- function_that_uses_x(x)
   # or do something with i and x together, for example:
