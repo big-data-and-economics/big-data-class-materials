@@ -139,6 +139,7 @@ This course is taught in R, but the goal is not for students to learn individual
 - [Data Visualization: A practical introduction](http://socviz.co/) by Kieran Healy 
 - [Curated List by Nathan Tefft](https://docs.google.com/spreadsheets/d/1yLNdpb0TkYfNN-phme1Amt4XPU1bOB6vINHam1ss_fk/edit#gid=1544370596)
 - [Library of Statistical Techniques (LOST)](https://lost-stats.github.io/)
+
 ### Staying organized
 
 - [Code and Data for the Social Sciences: A Practitioner's Guide](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) by Matthew Gentzkow and Jesse Shapiro
