@@ -597,6 +597,10 @@ In the extreme, one can do *nested* k-fold cross-validation, wherein the test se
 
 - The first example uses the Carseats data, which is a simulated dataset of sales of child car seats at 400 different stores
 
+- Questions:
+  - There's no data dictionary provided in the lab -- how could you find the data dictionary?
+  - Go to it and read up on the variables -- any odd ones? (Note: One is old and has some unfortunate language)
+
 ---
 # Try a demo on schooling data
 
@@ -608,10 +612,6 @@ In the extreme, one can do *nested* k-fold cross-validation, wherein the test se
 
 - You'll need to download the Oregon School test and train data from [Kaggle](https://www.kaggle.com/competitions/edld-654-spring-2020/data)
   - Stick them in a working directory for the demo and read them into R
-
-- Problem Set 6 will feature these data:
-  - You'll essentially write me a problem set that tests whether someone knows how to use the `tidymodels` package in R
-  - I want you to practice `tidymodels` and documenting instructions for something you're learning in real time
 
 - There may be some bumps to using this tutorial! Power through and learn by doing! 
   - You may need to install some packages (e.g. `rio`, `skimr`, etc.)
