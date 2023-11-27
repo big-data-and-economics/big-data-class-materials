@@ -33,7 +33,7 @@ opts_chunk$set(
   cache=T#, echo=F, warning=F, message=F
   )
 if (!require(pacman)) install.packages(pacman)
-pacman::p_load(tidyverse,grf)
+pacman::p_load(tidyverse,grf,ISLR,rpart.plot,tidymodels)
 theme_set(theme_minimal())
 ```
 
@@ -243,6 +243,34 @@ class: inverse, center, middle
 - The result gives a conditional average treatment effect (CATE) for each subgroup from a variety of $X$'s
 
 ### Lots of others, don't worry about them
+
+---
+# Regression Tree of Boston House values
+
+- Each node shows the share of observations and the average median house value
+- Each branch shows the decision rule as a cutoff in whatever variable minimizes the RSS
+
+```{r boston,echo=FALSE,warning=FALSE}
+data("Boston", package = "MASS")
+
+Boston <- as_tibble(Boston)
+
+reg_tree_spec <- decision_tree() %>%
+  set_engine("rpart") %>%
+  set_mode("regression")
+
+set.seed(1234)
+Boston_split <- initial_split(Boston)
+
+Boston_train <- training(Boston_split)
+Boston_test <- testing(Boston_split)
+
+reg_tree_fit <- fit(reg_tree_spec, medv ~ ., Boston_train)
+
+reg_tree_fit %>%
+  extract_fit_engine() %>%
+  rpart.plot()
+```
 
 ---
 name: random-forests
