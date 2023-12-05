@@ -2,7 +2,7 @@
 title: Big Data and Economics
 subtitle: Tidy text activity
 author:
-  name: Kyle Coombs (adapted from Joshua C. Fjelstul)
+  name: Kyle Coombs
   affiliation: Bates College | [DCS/ECON 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)  
 output:
   html_document:
