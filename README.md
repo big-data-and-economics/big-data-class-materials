@@ -329,7 +329,7 @@ Please [open a new issue](https://help.github.com/articles/creating-an-issue/). 
 
 ### Can I use/adapt your material for a similar course that I'm teaching?
 
-Sure. I already borrowed half of it Grant McDermott, Tyler Ransom, Raj Chetty, and Stephen Hansen (links to their pages to come). I have also kept everything publicly available. I ask two favours (like Grant McDermott) 1) Please let me know ([email](mailto:kcoombs@bates.edu) if you do use material from this course, or have found it useful in other ways. 2) An acknowledgment somewhere in your own syllabus or notes would be much appreciated.
+Sure. I already borrowed half of it [Grant McDermott](https://grantmcdermott.com/), [Tyler Ransom](https://tyleransom.github.io/), [Raj Chetty](https://rajchetty.com/), and [Stephen Hansen](https://sekhansen.github.io/). I have also kept everything publicly available. I ask two favours (like Grant McDermott) 1) Please let me know ([email](mailto:kcoombs@bates.edu) if you do use material from this course, or have found it useful in other ways. 2) An acknowledgment somewhere in your own syllabus or notes would be much appreciated.
 
 ### Pull Request of a Specific Commit
 
