@@ -209,12 +209,16 @@ This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/)
 Economics is at the forefront of developing statistical methods for analyzing data collected from uncontrolled sources. Since econometrics addresses challenges in estimation such as sample selection bias and treatment effects identification, the discipline is well-suited for the analysis of large and unsystematically collected datasets. This course introduces statistical (machine) learning methods, which have been developed for analyzing such datasets but which have only recently been implemented in economic research. We will cover a variety of topics including data collection, data management, data description, causal inference, and data visualization.  The course also explores how econometrics and statistical learning methods cross-fertilize and can be used to advance knowledge in the numerous domains where large volumes of data are rapidly accumulating. We will also cover the ethics of data collection and analysis. The course will be taught in *R*. 
 
 ## Grading policy
+
+<!-- TKTKTKTK -- WTF will the final project be this year? -->
+
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
 | 7 × problem sets (10% each)               | 50%    | Top 5  |
-| 1 × short presentation                    | 10%    | Top 1  |
-| 1 × final project                         | 40%    | [In parts](https://github.com/ECON368-fall2023-big-data-and-economics/final-project) |
-| Participation                             | Bonus up to 10%    | End of course  |
+| 1 × short presentation                    | 5%    | Top 1   |
+| 1 × GitHub participation                  | 5%    |         |
+| 1 × final project                         | 40%    | [In parts](https://github.com/big-data-and-economics/final-project) |
+| Classroom participation                   | Bonus up to 2.5%    | End of course  |
 
 - Short presentations summarize either a key lecture reading, or an (approved) software package/platform.
     - Sign up [here](https://github.com/ECON368-fall2023-big-data-and-economics/presentations-team)
@@ -225,10 +229,9 @@ Economics is at the forefront of developing statistical methods for analyzing da
 
 There are several opportunities for bonus points during the semester:
 
-1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material -- including these lecture notes. This can be to fix a typo or to fix a bug in the code.
+1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material. This can be to fix a typo or to fix a bug in the code.
 2. A 2.5% participation bonus on your final grade that I will award at my discretion.
 3. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
-4. Participation on GitHub as mentioned
 
 I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
 
@@ -254,7 +257,7 @@ Throughout the course you will engage in problem sets that deal with actual data
 
 **Grading**
 
-Your problem sets are graded on four dimensions: 
+Your problem sets are graded on four criteria: 
 
 1. Submission via GitHub (10%): Did you use GitHub to stage, commit, and push your code? Did you submit the assignment on time? Did you submit the assignment in the correct format?
 2. Quality of code (30%): Is it well-commented? Is it easy to follow? Can I run it?
@@ -315,14 +318,14 @@ You will write a final project over the course of the semester. Further details 
 
 ### Participation
 
-Participation on GitHub is a bonus worth up to 10% of your grade. I will rate participation based on the following criteria:
+Participation on GitHub is 5 percent of your grade. I will rate participation based on the following criteria:
 
 - Are you posting thoughtful questions to GitHub Issues? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-ask) for posting a good question. 
 - Are you replying to questions on GitHub Issues? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-answer#:~:text=Read%20the%20question%20carefully&text=Make%20sure%20your%20answer%20provides,going%20in%20the%20right%20direction.) to write a good answer.
 
 The goal is to encourage you to work together to solve problems. This is one of the most important skills you can take away from this, and really any, course. I also want to incentivize you to think carefully about how you post. Be kind and respectful, as much as you endeavor to be clear, concise, and helpful.
 
-For each problem set, use the Issues tab for that specific problem set. For course materials, you can use that tab. 
+For each problem set, use the Issues tab for that specific problem set. For course materials, you can use that tab. Within your own private problem set repository, you can create an Issues tab within the Settings tab. 
 
 I will be monitoring the GitHub Issues tab for each repository and will award participation points to those who are actively engaging per the guidelines from stackoverflow. 
 
