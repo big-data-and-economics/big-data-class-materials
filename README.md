@@ -291,6 +291,8 @@ suppressWarnings({
 
 ##### Submission process
 
+To be eligible to resubmit to improve your grade, you must have submitted an initial version of the problem set on time.
+
 1. View my feedback on the `feedback` branch of your problem set repository. 
 2. Fix your problem set answers and comment your code as needed. Write "CORRECTED" in all caps next to any changes. 
 3. Push changes to the `main` branch of your problem set repository.
