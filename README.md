@@ -2,8 +2,8 @@
 
 [Full syllabus](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf)
 
-[`Lectures`](#lectures) | [`Details`](#details) |
-[`FAQ`](#faq) | [`License`](#license)
+[`Lectures`](#lectures) | [`Goals`](#goals-for-this-course) |
+[`Other details`](#other-details) | [`FAQ`](#faq) | [`License`](#license)
 
 # Feedback
 
@@ -11,15 +11,14 @@ I am constantly trying to improve this course. Provide [feedback](https://docs.g
 
 # Office hours:
 My office hours are: 
-- Tuesdays 4pm-5pm
-- Wednesdays 10:30-11:30am
+- TK
+- TK
 
-You can book time [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61).
+<!-- You can book time [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61). -->
 
 # Lectures 
 
-*Note: While I have provided PDF versions of the lectures (in folders above), they are best viewed 
-in the original HTML format.*
+*Note: While I have provided PDF versions of the lectures, they are best viewed as HTMLs.*
 
 The course is broken up into three rough sections. 
 
@@ -61,9 +60,9 @@ This is in progress and subject to change.
 | If time | T | Topics Modeling, LLMs | [Read Ash and Hansen (2023): Text Algorithms](https://www.annualreviews.org/doi/pdf/10.1146/annurev-economics-082222-074352) | |
 | If time | Th | AI and bias | Read [Rambachan et al (2020)](https://www.jstor.org/stable/pdf/27042527.pdf) and [Cowgill et al. (2019)](https://conference.nber.org/confer/2019/YSAIf19/SSRN-id3361280.pdf) | |
 
-## Goals for this course
+# Goals for this course
 
-This class is about helping you build good habits for doing organized and reproducible empirical work. It is not about learning specific R packages or functions. 
+This class is about helping you build good habits for doing organized and reproducible empirical work. It is not about developing expertise in specific R packages or functions. To that end, you should work in groups, and expect to spend several coding sessions working through problems together. I expect you to be flexible with your coding and commit to learning how to solve your own problems. Moreover, once you figure out a solution, I expect you to comment and organize your code, so you can easily reproduce the fix later.^[This is a good habit to get into for your own work, but also for your future collaborators and employers.] 
 
 - Organize empirical projects that are replicable, reproducible, and collaborative using good programming practices
 - Collect and clean big or novel datasets using APIs, web scraping, and other methods
@@ -168,12 +167,12 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 
 #### Course-Attached Tutor
 
-Chrissy Aman is our Course-Attached tutor. She will host office hours in the SASC and will be available for individual appointments. Her hours are:
+TK is our Course-Attached tutor. TK will host office hours in the SASC and will be available for individual appointments. TK hours are:
 
 - Fridays at 6:45pm
 - Sundays at 10am-12pm in PGill 227
 
-Chrissy can help you troubleshoot *R*. She does not know have solution to the problem sets, but she can help you figure them out. 
+TK can help you troubleshoot *R*. TK does not know have solution to the problem sets, but TK can help you figure them out. 
 
 ## GitHub Codespaces
 
@@ -203,7 +202,7 @@ In RStudio, use the File menu to open the file `test.Rmd`. Use the "Knit" submen
 
 * Note: Pushing/pulling will work a bit differently. In practice, you will use the <picture> <source media="(prefers-color-scheme: light)" srcset="/img/298785_git_branch_icon.png"> <source media="(prefers-color-scheme: dark)" srcset="/img/298785_git_branch_icon_white.png"> <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="/img/298785_git_branch_icon_white.png"></picture> icon for "Source Control" on the RHS bar where you can stage things, commit, and push them. You will need to do this to turn in your problem set. See documentation from GitHub on [Source Control and Codespaces](https://docs.github.com/en/codespaces/developing-in-codespaces/using-source-control-in-your-codespace)
 
-## Other details
+# Other details
 
 This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/). Here is the course description, right out of the [syllabus](syllabus/syllabus.pdf):
 
@@ -255,7 +254,7 @@ Throughout the course you will engage in problem sets that deal with actual data
 
 **Grading**
 
-Your problem sets are graded on three dimensions: 
+Your problem sets are graded on four dimensions: 
 
 1. Submission via GitHub (10%): Did you use GitHub to stage, commit, and push your code? Did you submit the assignment on time? Did you submit the assignment in the correct format?
 2. Quality of code (30%): Is it well-commented? Is it easy to follow? Can I run it?
@@ -264,6 +263,8 @@ Your problem sets are graded on three dimensions:
     - If you cannot figure out how to automate a step, you can write a comment explaining what I need to do to run your code (you will lose very few points)
 3. Quality of presentation of graphs and tables (30%): Are they well-labeled? Do they have titles? Do they have legends? Are they formatted well?
 4. Quality of answers (30%): Are they clear? Do they answer the question?
+
+I will provide feedback and a grade in a `feedback` branch of your problem set repository. That will let me add feedback without overwriting your work in the `main` branch. 
 
 #### Solutions 
 
@@ -278,7 +279,7 @@ Instead, you must provide carefully commented explanations of each step of the c
 *Example.* You might write add a comment like this to the top of your code:
 
 ```r
-# Create directories, suppress warning that the directory already exists
+# Create directories, suppress warning that the directory already exists. 
 suppressWarnings({
     dir.create(data)
     dir.create(documentation)
@@ -288,7 +289,23 @@ suppressWarnings({
 })
 ```
 
-**You must let me know that you are submitting for a regrade.**
+##### Submission process
+
+1. View my feedback on the `feedback` branch of your problem set repository. 
+2. Fix your problem set answers and comment your code as needed. Write "CORRECTED" in all caps next to any changes. 
+3. Push changes to the `main` branch of your problem set repository.
+4. Navigate to the `Issues` tab of your problem set repository and create a new issue titled "Resubmission for Problem Set X". Briefly describe your changes in the body of the issue and tag my username, @kgcsport. 
+5. **Deadline for resubmissions**: All resubmissions must be pushed within one week of the solutions being posted.
+
+##### Requests for reconsideration
+
+On occasions, you may disagree with the grade you received on a problem set. Here are my policies for reconsideration:
+
+- **Deadline for requests**: All requests for reconsideration must be submitted within one week of the solutions being posted.
+- **Full regrade**: Any request for reconsideration will result in a full regrade of your problem set. This means that your grade can go up or down.
+- **Regrading high scores**: If you scored a 90 percent or above on a problem set, I will not change your grade. This is not because I do not want to help you, but because we both have limited time and I want to focus my efforts on cases where an incorrectly graded problem set could significantly impact your grade in the course. 
+
+If you would like reconsideration, please raise an issue on the `feedback` branch of your problem set repository. Title the issue "Reconsideration request for Problem Set X". Briefly describe your request in the body of the issue and tag my username, @kgcsport. 
 
 ### Final Project
 
@@ -307,15 +324,15 @@ For each problem set, use the Issues tab for that specific problem set. For cour
 
 I will be monitoring the GitHub Issues tab for each repository and will award participation points to those who are actively engaging per the guidelines from stackoverflow. 
 
-**Note: The main class page is a public repository so others can come and try to use these materials. Please do not post personal information here.**
+**Note: The main class page is a public repository, so others can come and try to use these materials. Please do not post personal information here.**
 
-## FAQ
+# FAQ
 
-### If you find a typo in these lecture notes
+## If you find a typo in these lecture notes
 
 Please raise an issue or submit a pull request. For those taking this course, I offer a 2.5% bonus on your final grade for issuing a *pull request* to any open source material -- including these lecture notes. This can be to fix a typo or to fix a bug in the code. 
 
-### How do I download this material and keep up to date with any changes?
+## How do I download this material and keep up to date with any changes?
 
 Please note that this is a work in progress, with new material being added every week. 
 
@@ -323,15 +340,15 @@ If you just want to read the lecture slides or HTML notebooks in your browser, t
 
 If you actually want to run the analysis and code on your own system (highly recommended), then you will need to download the material to your local machine. The best way to do this is to clone the repo via Git and then pull regularly to get updates. Please take a look at [these slides](https://raw.githack.com/uo-ec607/lectures/main/02-git/02-git.html) if you are unfamiliar with Git or are unsure how to do any of that. Once that's done, you will find each lecture contained in a numbered folder (e.g. `01-intro`). The lectures themselves are written in R Markdown and then exported to HMTL format. Click on the HTML files if you just want to view the slides or notebooks.
 
-### I've spotted a mistake or would like to contribute
+## I've spotted a mistake or would like to contribute
 
 Please [open a new issue](https://help.github.com/articles/creating-an-issue/). Better yet, please fork the repo and [submit an upstream pull request](https://help.github.com/articles/creating-a-pull-request-from-a-fork/). I'm very grateful for any contributions, but may be slow to respond while this course is still be developed. Similarly, I am unlikely to help with software troubleshooting or conceptual difficulties for non-enrolled students. Others may feel free to jump in, though.
 
-### Can I use/adapt your material for a similar course that I'm teaching?
+## Can I use/adapt your material for a similar course that I'm teaching?
 
 Sure. I already borrowed half of it [Grant McDermott](https://grantmcdermott.com/), [Tyler Ransom](https://tyleransom.github.io/), [Raj Chetty](https://rajchetty.com/), and [Stephen Hansen](https://sekhansen.github.io/). I have also kept everything publicly available. I ask two favours (like Grant McDermott) 1) Please let me know ([email](mailto:kcoombs@bates.edu) if you do use material from this course, or have found it useful in other ways. 2) An acknowledgment somewhere in your own syllabus or notes would be much appreciated.
 
-### Pull Request of a Specific Commit
+## Pull Request of a Specific Commit
 
 If you want to make a pull request of a specific commit (and not all changes you have made), you have two options:
 
