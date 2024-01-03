@@ -133,7 +133,7 @@ This course is taught in R, but the goal is not for students to learn individual
 
 ### On R
 
-- [_R_ For Data Science](https://r4ds.had.co.nz/) by Hadley Wickham and Garrett Grolemund
+- [_R_ For Data Science](https://r4ds.hadley.nz/) by Hadley Wickham and Garrett Grolemund
 - [Advanced _R_](https://adv-r.hadley.nz/) by Hadley Wickham
 - [Geocomputation with _R_ by Robin Lovelace](https://geocompr.robinlovelace.net/) by Jakub Nowosad, and Jannes Muenchow
 - [_Posit_ Cheatsheets](https://rstudio.com/resources/cheatsheets/)
