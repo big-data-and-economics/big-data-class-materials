@@ -14,6 +14,12 @@ My office hours are:
 - TK
 - TK
 
+## Getting in touch
+
+In this course, I ask that you use GitHub Issues to ask questions about the problem sets, final projects, presentation clarifications, and other class specifics. This is so that everyone can benefit from the answer. Also, it will encourage collaboration (and declutter my inbox). A portion of the grade is based on participation in GitHub Issues.
+
+If you would like to discuss a private matter, you can of course email me at kcoombs@bates.edu. I will respond as quickly as possible. If you do need to email me, please include "ECON368" in the subject line. If you email me a question that would benefit the whole class or someone else in the class could answer, I will respond by asking you to post it to GitHub Issues. 
+
 <!-- You can book time [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61). -->
 
 # Lectures 
@@ -176,13 +182,13 @@ TK can help you troubleshoot *R*. TK does not know have solution to the problem 
 
 ## GitHub Codespaces
 
-Having trouble with R on your computer?
+Having trouble with R on your computer? To get you up and running and writing R code in no time, I have containerized this workshop such that you have a ready out of the box R coding environment.
 
-To get you up and running and writing R code in no time, I have containerized this workshop such that you have a ready out of the box R coding environment.
+For some problem sets, I will explicitly request that you work with GitHub Codespaces to minimize the amount of time you spend troubleshooting your local R installation and package versions. No more, "but it works on my computer" when I ask you why your code isn't running! On occasion, I may ask you to work on your own computer because I want you to learn how to troubleshoot on your own machine. 
 
-#### Dev Containers in GitHub CodeSpaces
+#### Dev Containers in GitHub Codespaces
 
-Click the green "<> Code" button at the top right on this repository page, and then select "Create codespace on main". (GitHub CodeSpaces is available with [GitHub Enterprise](https://github.com/enterprise) and [GitHub Education](https://education.github.com/).)
+Click the green "<> Code" button at the top right on this repository page, and then select "Create codespace on main". (GitHub Codespaces is available with [GitHub Enterprise](https://github.com/enterprise) and [GitHub Education](https://education.github.com/).)
 
 To open RStudio Server, click the Forwarded Ports "Radio" icon at the bottom of the VS Code Online window.
 
@@ -200,7 +206,7 @@ In RStudio, use the File menu to open the file `test.Rmd`. Use the "Knit" submen
 
 * Note: You may be prompted to install an updated version of the `markdown` package. Select "Yes".
 
-* Note: Pushing/pulling will work a bit differently. In practice, you will use the <picture> <source media="(prefers-color-scheme: light)" srcset="/img/298785_git_branch_icon.png"> <source media="(prefers-color-scheme: dark)" srcset="/img/298785_git_branch_icon_white.png"> <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="/img/298785_git_branch_icon_white.png"></picture> icon for "Source Control" on the RHS bar where you can stage things, commit, and push them. You will need to do this to turn in your problem set. See documentation from GitHub on [Source Control and Codespaces](https://docs.github.com/en/codespaces/developing-in-codespaces/using-source-control-in-your-codespace)
+* Note: Pushing/pulling will work a bit differently. In practice, you will use the <picture> <source media="(prefers-color-scheme: light)" srcset="/img/298785_git_branch_icon.png"> <source media="(prefers-color-scheme: dark)" srcset="/img/298785_git_branch_icon_white.png"> <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="/img/298785_git_branch_icon_white.png"></picture> icon for "Source Control" on the RHS bar where you can stage things, commit, and push them. You will need to do this to turn in your problem set. See documentation from GitHub on [Source Control and Codespaces](https://docs.github.com/en/Codespaces/developing-in-Codespaces/using-source-control-in-your-codespace)
 
 # Other details
 
@@ -214,41 +220,31 @@ Economics is at the forefront of developing statistical methods for analyzing da
 
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
-| 7 × problem sets (10% each)               | 50%    | Top 5  |
-| 1 × short presentation                    | 5%    | Top 1   |
-| 1 × GitHub participation                  | 5%    |         |
-| 1 × final project                         | 40%    | [In parts](https://github.com/big-data-and-economics/final-project) |
-| Classroom participation                   | Bonus up to 2.5%    | End of course  |
+| 6 × problem sets (10% each)               | 50%    | Top 5  |
+| 1 × 5-minute presentation                 | 5%     | Top 1   |
+| 1 × GitHub participation                  | 5%     | Overall   |
+| 1 x Lewiston Hackathon                    | 20%    | [In parts](TK)  |
+| 1 × group final project                   | 20%    | [In parts](https://github.com/big-data-and-economics/final-project) |
+| Classroom participation                   | Bonus up to 2.5%    | Discretion  |
+| Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
 
-- Short presentations summarize either a key lecture reading, or an (approved) software package/platform.
-    - Sign up [here](https://github.com/ECON368-fall2023-big-data-and-economics/presentations-team)
 - Extensions: Each of you gets three ''grace period'' days to extend deadlines. 
 - You can use these days in any way you like, but once they're gone, they're gone.
 
-### Bonus points:
-
-There are several opportunities for bonus points during the semester:
-
-1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material. This can be to fix a typo or to fix a bug in the code.
-2. A 2.5% participation bonus on your final grade that I will award at my discretion.
-3. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
-
-I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
-
 ### Problem sets
 
-Throughout the course you will engage in problem sets that deal with actual data. These may seem out of step with what we do in class, but they are designed to get you to think about how to apply the tools we learn in class to real data. As the class progresses, the problem sets will align more neatly with the material.
+Throughout the course you will engage in problem sets that deal with actual data. These may seem out of step with what we do in class, but they are designed to get you to think about how to apply the tools we learn in class to real data. 
 
 - Problem sets are coding assignments that get you to play with data using R
 - They are extremely challenging, but also extremely rewarding
-- With rare exceptions: You will not be given clear-cut code to copy and paste to accomplish these data cleaning tasks, but instead given a set of instructions and asked to figure out how to write code yourself
+- With rare exceptions: You will not be given code to copy and paste to accomplish these data cleaning tasks, but instead given a set of instructions and asked to figure out how to write code yourself
 - You are encouraged to work together on problem sets, but you must write up your own answers (unless it is a group assignment)
 - All problem sets will be completed and turned in as GitHub repositories
 
 #### What you will turn in:
 
 - Each problem set will be posted as a GitHub repository, which you will fork, set to private, and then clone to your computer (instructions provided in each problem set)
-- You will then work on the problem set on your computer, and push your code to GitHub (push often!)
+- You will then work on the problem set on your computer or a Codespaces server, and push your code to GitHub (push often!) (**Note: You have to push in Codespaces. If you delete your Codespace without pushing changes, you will lose your answers.**)
 - For each problem set, you will turn in modular code (i.e. separate files do separate things) that accomplishes the tasks outlined in the problem set
 - You will also turn in a `.Rmd` file that contains your answers to the questions in the problem set along with a knitted `.html` or `.pdf` of your `.Rmd`
     - This `.Rmd` will "source" the code you wrote, so I can easily run your code from start to finish by `knitting`
@@ -302,6 +298,8 @@ To be eligible to resubmit to improve your grade, you must have submitted an ini
 4. Navigate to the `Issues` tab of your problem set repository and create a new issue titled "Resubmission for Problem Set X". Briefly describe your changes in the body of the issue and tag my username, @kgcsport. 
 5. **Deadline for resubmissions**: All resubmissions must be pushed within one week of the solutions being posted.
 
+Within your own private problem set repository, you can create an Issues tab within the Settings tab for interfacing only with me and any group partners.
+
 ##### Requests for reconsideration
 
 On occasions, you may disagree with the grade you received on a problem set. Here are my policies for reconsideration:
@@ -310,26 +308,91 @@ On occasions, you may disagree with the grade you received on a problem set. Her
 - **Full regrade**: Any request for reconsideration will result in a full regrade of your problem set. This means that your grade can go up or down.
 - **Regrading high scores**: If you scored a 90 percent or above on a problem set, I will not change your grade. This is not because I do not want to help you, but because we both have limited time and I want to focus my efforts on cases where an incorrectly graded problem set could significantly impact your grade in the course. 
 
-If you would like reconsideration, please raise an issue on the `feedback` branch of your problem set repository. Title the issue "Reconsideration request for Problem Set X". Briefly describe your request in the body of the issue and tag my username, @kgcsport. 
+If you would like reconsideration, please raise an `Issue` in your private problem set repository. Title the issue "Reconsideration request for Problem Set X". Briefly describe your request in the body of the issue and tag my username, @kgcsport. 
+
+Within your own private problem set repository, you can create an Issues tab within the Settings tab for interfacing only with me and any group partners.
+
+### Presentations
+
+Each of you will give a 5-minute presentation summarizing a key lecture reading, or an (approved) software package/platform.
+
+Please sign up [here](https://github.com/ECON368-fall2023-big-data-and-economics/presentations-team) at the start of the semester. 
+
 
 ### Final Project
 
-You will write a final project over the course of the semester. Further details are available [here](https://github.com/ECON368-fall2023-big-data-and-economics/final-project).
+You will write a final project over the course of the semester as part of a group. Further details are available [here](TK).
 
-### Participation
+### Lewiston Hack-a-thon
 
-Participation on GitHub is 5 percent of your grade. I will rate participation based on the following criteria:
+This semester, we will be working with the City of Lewiston to help them solve a problem using data. Specifically, we will help the city understand how to use existing administrative data to complement, and at times substitute, for survey data. 
+
+We will specifically be engaging in a Hack-a-thon. A hack-a-thon is a short (often 24 hours), intense period of collaboration between a group of people to solve a problem. Scheduling is still in the works.
+
+#### Data Requests
+
+Several weeks before the hack-a-thon, we will brainstorm datasets that your group would like the City of Lewiston to provide for you. You will then write a short report on how you would use those datasets to solve a problem. 
+
+#### What you will do
+
+- Compete in groups of 3-4 to each propose solutions to the same problem
+- Present your solution to a group from the City of Lewiston
+- Write a short report on your solution
+- Maintain all code and necessary documentation to the City of Lewiston in a GitHub repository
+- Provide any additional documentation the City of Lewiston requests
+
+Your solution may include a variety of things, including:
+
+- A data visualization
+- Suggestions of new databases to maintain
+- Examples from similar cities that have tackled these problems
+
+### GitHub participation
+
+Participation on GitHub is 5 percent of your grade. Please use GitHub Issues to ask questions about the course materials and problem sets. You can also use GitHub Issues and Pull Requests to suggest improvements to the course materials. Here are the guidelines:
+
+- When posting an issue or pull request, please use a clear title (e.g. Problem Set 1: Question about Question 2) and description ("What does term X mean?")- If posting about an error you are encountering, follow these steps:
+    - Briefly state the expected behavior
+    - Write the minimal code needed to reproduce the error (a minimally reproducible example)
+    - Write the full error message you are receiving
+    - Write the steps you have taken to troubleshoot the error
+- If posting a clarifying question about someone's post, follow these steps:
+    - Briefly clarify what you are confused about
+    - Suggest potential interpretations of the post
+- If posting about a suggestion for improvement, follow these steps:
+    - Briefly state the improvement you are suggesting
+    - Write the steps you have taken to troubleshoot the error
+    - If you are suggesting a change to the course materials, please fork the repository, make the change, and submit a pull request
+- Be kind to one another. Coding is hard. We are all learning. 
+
+This policy guidelines are taken from stackoverflow.com. You can read more about how to ask a good question [here](https://stackoverflow.com/help/how-to-ask) and how to answer a question [here](https://stackoverflow.com/help/how-to-answer#:~:text=Read%20the%20question%20carefully&text=Make%20sure%20your%20answer%20provides,going%20in%20the%20right%20direction.).
+
+I will rate participation based on the following criteria:
 
 - Are you posting thoughtful questions to GitHub Issues? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-ask) for posting a good question. 
 - Are you replying to questions on GitHub Issues? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-answer#:~:text=Read%20the%20question%20carefully&text=Make%20sure%20your%20answer%20provides,going%20in%20the%20right%20direction.) to write a good answer.
+- Do you pull request improvements to the course materials? This can be a typo fix, a bug fix, or a new feature.
+
+For each problem set, use the Issues tab for that specific problem set. For course materials, you can use that tab. 
+
+I will be monitoring the GitHub Issues tab for each repository and will participation points to those who are actively engaging per the guidelines from stackoverflow. To receive full credit, you must be asking thoughtful questions and thoughtfully answering each other's questions. Thoughtful questions come after you've spent some time re-reading your code, Googling, and working with ChatGPT to try to solve the problem yourself first. Thoughtful answers may not solve the problem, but they should be clear, concise, good faith efforts to help. You will receive a lower participation grade if you do not follow the posting guidelines. 
 
 The goal is to encourage you to work together to solve problems. This is one of the most important skills you can take away from this, and really any, course. I also want to incentivize you to think carefully about how you post. Be kind and respectful, as much as you endeavor to be clear, concise, and helpful.
 
-For each problem set, use the Issues tab for that specific problem set. For course materials, you can use that tab. Within your own private problem set repository, you can create an Issues tab within the Settings tab. 
-
-I will be monitoring the GitHub Issues tab for each repository and will award participation points to those who are actively engaging per the guidelines from stackoverflow. 
+Furthermore, I want you to take ownership over your learning. You get more out of a course when you are actively engaged in the material. Actively engaging on this repository and suggesting changes to the course materials is a very tactile way to do that. 
 
 **Note: The main class page is a public repository, so others can come and try to use these materials. Please do not post personal information here.**
+
+
+### Bonus points:
+
+There are several opportunities for bonus points during the semester:
+
+1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material. This can be to fix a typo or to fix a bug in the code.
+2. A 2.5% participation bonus on your final grade that I will award at my discretion.
+3. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
+
+I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
 
 # FAQ
 
