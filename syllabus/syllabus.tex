@@ -70,7 +70,7 @@ E-mail: \texttt{kcoombs@bates.edu} & Web: \href{kylecoombs.com}{\tt\bf kylecoomb
 
   Office Hours: T, 4-5pm, W 10:30-11:30am  (Zoom or in-person)  &  Class Hours: T/Th 9:30-10:50am \\
   Office: PGill 276 & Class Room: Pettengill 227 \\ 
-  \multicolumn{2}{c}{Course Website: \href{https://github.com/ECON368-fall2023-big-data-and-economics}{\tt\bf https://github.com/ECON368-fall2023-big-data-and-economics}} \\
+  \multicolumn{2}{c}{Course Website: \href{https://github.com/big-data-and-economics}{\tt\bf https://github.com/big-data-and-economics}} \\
   \multicolumn{2}{c}{OH Link: \href{https://calendar.app.google/XF36Ujpg9NcJbSD58
   }{\tt\bf https://calendar.app.google/XF36Ujpg9NcJbSD58}} \\
 \hline
@@ -79,7 +79,7 @@ E-mail: \texttt{kcoombs@bates.edu} & Web: \href{kylecoombs.com}{\tt\bf kylecoomb
 \subsection*{Note}
 \label{sec:note}
 
-This syllabus contains a rough outline of the course and may change in the future.  If you have any questions, you should check with me.
+This syllabus contains a rough outline of the course and may change in the future. If you have any questions, you should check with me. If this syllabus ever conflicts with what is listed on the course website README, the website takes precedence.
 
 \section*{Course Description}
 \label{sec:desc}
@@ -104,7 +104,7 @@ After this course is done, you should know how to:
 \section*{Required Materials}
 \label{sec:materials}
 
-Course notes, assignments, extra readings, recordings, and all other materials are available on the GitHub Classroom page. \textit{The notes are adapted from Grant McDermott's course at the University of Oregon, Tyler Ransom's course at the University of Oklahoma, and Raj Chetty's course at Harvard University.}
+Course notes, assignments, extra readings, recordings, and all other materials are available on the GitHub class materials repository. \textit{The notes are adapted from Grant McDermott's course at the University of Oregon, Tyler Ransom's course at the University of Oklahoma, Raj Chetty's course at Harvard University, Nick Huntington-Klein's Econometrics course, and others listed in this syllabus.}
 
 \subsection*{Software requirements}
 
@@ -117,15 +117,9 @@ We will mainly be using the statistical programming language \textbf{\textit{R}}
 Please make sure that you install the \textbf{RStudio IDE} too (download \href{https://www.rstudio.com/products/rstudio/download/preview/}{here}).
 
 \vspace{-0.25cm}
-\subsubsection*{Git, GitHub Classroom and GitHub CoPilot}
+\subsubsection*{Git/GitHub Desktop}
 
 We will also make extensive use of the \textbf{Git} version control system (follow the OS-specific installation instructions \href{http://happygitwithr.com/install-git.html}{here}). Once you have installed Git, please create an account on \textbf{GitHub} (\href{https://github.com/join}{here}) and register for an education discount to get unlimited private repos (\href{https://education.github.com/discount_requests/new}{here}).\footnote{GitHub recently \href{https://blog.github.com/changelog/2019-01-08-pricing-changes/}{announced} unlimited free private repos for everyone. However, you are limited to three collaborators per private repo, so the education discount still makes sense.} Now is probably a good time to tell you that I am going to run the course through \href{https://classroom.github.com/}{GitHub Classroom}. You will receive an email invitation to the course repo with instructions in due time, but suffice it to say that this is how we'll submit assignments, provide feedback, receive grades, etc.
-
-You will also need to sign up for a \textbf{GitHub CoPilot} using the instructions here \url{https://docs.github.com/en/copilot/quickstart}. GitHub CoPilot is an AI tool that will help you write code. It is not perfect, but it is very useful. It is free for students, faculty, or maintainers of open source projects. It helped me write this syllabus. 
-
-\vspace{-0.25cm}
-\subsubsection*{Windows only: Windows Subsystem for Linux}
-Windows users will need some form of command line interface tool. My recommendation is Windows Subsystem for Linux (\url{https://learn.microsoft.com/en-us/windows/wsl/install}). This allows you to run Linux within your Windows machine, so you can more easily implement tips you find online for software installation, etc. 
 
 \vspace{-0.25cm}
 \subsubsection*{LaTeX software}
@@ -138,7 +132,7 @@ I also recommend that you create an Overleaf account. Overleaf is a useful tool 
 \vspace{-0.25cm}
 \subsubsection*{Recommended but not required:}
 
-You are ready to start this course once you have installed R, RStudio, and Git (as well as created an account on GitHub). The last thing I want you to do for now is make sure that your system is configured to handle some additional packages/tools that we will be using down the line. 
+You are ready to start this course once you have installed R, RStudio, and Git (as well as created an account on GitHub). Make sure they are fully up-to-date.
 
 \begin{enumerate}
   \item \textit{GitHub Copilot} by GitHub -- \url{https://marketplace.visualstudio.com/items?itemName=GitHub.copilot}
@@ -148,7 +142,7 @@ You are ready to start this course once you have installed R, RStudio, and Git (
 \end{enumerate}
 
 \textbf{Visual Studio Code}
-We will largely be using Visual Studio Code, or VSCode, for coding with \textit{R}. VSCode is free and open-source, and is available for Windows, Mac, and Linux. You can download it at \url{https://code.visualstudio.com/download}. Once you have installed VSCode, you will need to install a variety of extensions. We will cover installations during the problem set (or as they become necessary), but here is a list:
+VSCode is free and open-source, and is available for Windows, Mac, and Linux. You can download it at \url{https://code.visualstudio.com/download}. Once you have installed VSCode, you will need to install a variety of extensions. We will cover installations during the problem set (or as they become necessary), but here is a list:
 
 \begin{enumerate}
   \item The \textit{R} extension by REditorSupport -- \url{https://code.visualstudio.com/docs/languages/r}
@@ -170,16 +164,57 @@ I will provide instructions for any further software requirements as the need ar
 
 There's no set textbook for this course. I'll draw on readings from select \textit{free} sources as needed listed below. You don't \textit{need} to buy any of these (excellent) books to complete the course. But I can eagerly recommend leafing through at least one or two of them. Each of these books is freely available online if you can't afford a hard copy:
 %
+\subsubsection*{On R}
+
 \begin{itemize}
-  \item ``\href{https://mixtape.scunning.com/}{\textbf{Causal Inference: The Mixtape}}'' (Scott Cunningham)
-  \item  ``\href{https://theeffectbook.net/}{\textbf{The Effect}}'' (Nick Huntington-Klein)
-  \item ``\href{http://socviz.co/}{\textbf{Data Visualization: A practical introduction}}'' (Kieran Healy)
-	\item ``\href{https://r4ds.hadley.nz/}{\textbf{\textit{R} for Data Science}}'' (Garrett Grolemund and Hadley Wickham)\footnote{FWIW, Jake VanderPlas's ``\href{https://jakevdp.github.io/PythonDataScienceHandbook/}{\textbf{Python Data Science Handbook}}'' is excellent option for anyone looking for a Python equivalent.}
-   \item ``\href{https://adv-r.hadley.nz/}{\textbf{Advanced \textit{R}}}'' (Hadley Wickham)
-   \item ``\href{https://geocompr.robinlovelace.net/}{\textbf{Geocomputation with \textit{R}}}'' (Robin Lovelace, Jakub Nowosad and Jannes Muenchow)
-   \item ``\href{https://keen-swartz-3146c4.netlify.app/}{\textbf{Spatial Data Science}}'' (Edzer Pebesma and Roger Bivand)
-   \item ``\href{https://statlearning.com}{\textbf{An Introduction to Statistical Learning}}'' (Gareth James, Daniela Witten, Trevor Hastie, and Robert Tibshirani)
-   \item Etc.
+    \item \href{https://r4ds.had.co.nz/}{\emph{R} For Data Science} by Hadley Wickham and Garrett Grolemund
+    \item \href{https://adv-r.hadley.nz/}{Advanced \emph{R}} by Hadley Wickham
+    \item \href{https://geocompr.robinlovelace.net/}{Geocomputation with \emph{R}} by Robin Lovelace, Jakub Nowosad, and Jannes Muenchow
+    \item \href{https://rstudio.com/resources/cheatsheets/}{\emph{Posit} Cheatsheets}
+    \item \href{https://bookdown.org/rdpeng/rprogdatascience/}{R Programming for Data Science} by Roger D. Peng
+    \item \href{https://www.youtube.com/watch?v=Ih84O1vfH8Y&t=3391s}{Bates Alumni Eli Mokas and Ian Ramsay's RStudio Tutorial}
+\end{itemize}
+
+\subsubsection*{On R Markdown}
+
+\begin{itemize}
+    \item \href{https://rmarkdown.rstudio.com/gallery.html}{\emph{RStudio} Gallery}
+    \item \href{https://bookdown.org/yihui/rmarkdown/}{R Markdown: The Definitive Guide} by Yihui Xie, J. J. Allaire, and Garrett Grolemund
+\end{itemize}
+
+\subsubsection*{Econometrics, Statistics, Data Science with R examples}
+
+\begin{itemize}
+    \item \href{https://statlearning.com}{An Introduction to Statistical Learning} by Gareth James, Daniela Witten, Trevor Hastie, and Robert Tibshirani
+    \begin{itemize}
+        \item \href{https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/}{ISLR Labs}
+    \end{itemize}
+    \item \href{https://grantmcdermott.com/ds4e/}{Data Science for Economists and Other Animals} by Grant McDermott and Ed Rubin
+    \item \href{https://mixtape.scunning.com/}{Causal Inference: The Mixtape} by Scott Cunningham
+    \item \href{https://www.theeffectbook.net/}{The Effect} by Nick Huntington-Klein
+    \item \href{https://r-spatial.org/book/}{Spatial Data Science} by Edzer Pebesma and Roger Bivand
+    \item \href{http://socviz.co/}{Data Visualization: A practical introduction} by Kieran Healy
+    \item \href{https://docs.google.com/spreadsheets/d/1yLNdpb0TkYfNN-phme1Amt4XPU1bOB6vINHam1ss_fk/edit#gid=1544370596}{Curated List by Nathan Tefft}
+    \item \href{https://lost-stats.github.io/}{Library of Statistical Techniques (LOST)}
+\end{itemize}
+
+\subsubsection*{Staying organized}
+
+\begin{itemize}
+    \item \href{https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf}{Code and Data for the Social Sciences: A Practitioner's Guide} by Matthew Gentzkow and Jesse Shapiro
+    \item \href{https://scholar.harvard.edu/sites/scholar.harvard.edu/files/ristovska/files/coding_for_econs_20190221.pdf}{Coding for Economists: A Language-Agnostic Guide}
+    \item \href{https://happygitwithr.com/}{happygitwithr} by Jenny Bryan
+\end{itemize}
+
+\subsubsection*{Large Language Models}
+
+You are actively encouraged to use generative AI assistants in this class. These can be used to improve your code, refine your writing, iterate on your ideas, and more.
+
+\begin{itemize}
+    \item \href{https://chat.openai.com/auth/login}{Sign-up for ChatGPT}
+    \item \href{https://docs.github.com/en/copilot/quickstart#signing-up-for-github-copilot-for-your-personal-account}{Sign-up for GitHub CoPilot} (Note: you do not signup through this organization, you signup through your own personal GitHub account as a student.)
+    \item \href{https://raw.githack.com/tyleransom/DScourseS23/master/LectureNotes/27-GPT/27slides.html#1}{Tips to get better with ChatGPT}
+    \item \href{https://intro2r.library.duke.edu/ai.html}{Integration of AI with R}
 \end{itemize}
 
 Taking a step back, one of the goals of this course (and most Data Science courses) is to make you aware of the incredible array of instruction material that is freely available online. I also want to encourage you to be entrepreneurial. In that spirit, many of the lectures will follow a tutorial on someone's blog tutorial, or involve reproducing an existing study with open source tools. Each lecture will come with a set of recommended readings, which I expect you to at least look over before class.
@@ -189,63 +224,72 @@ Prerequisites: ECON 255 and ECON 260 or ECON 270 The course assumes background i
 
 \section*{Teaching Assistant}
 
-There is no teaching assistant for this course. 
+There is no teaching assistant for this course. The course does have a Course-Attached Tutor (CAT), who is a student who has taken the course before and is available to help you with the course. The CAT for this course is \textbf{TK}. The CAT will hold office hours and review sessions. The CAT will also grade your problem sets and final project.
+
+\section*{Student Academic Support Center}
+Scheduled hours for R held in the Student Academic Support Center (SASC) of the Library are:
+
+\begin{itemize}
+  \item Sunday - 7:30-9pm
+  \item Monday - 12-1pm, 2:30pm-4pm
+  \item Tuesday - 12-2:30pm, 6-7:30pm
+  \item Wednesday - 11am-1pm, 6-7:30pm
+  \item Thursday - 12-4pm, 6-7:30pm
+  \item Friday - 11am-12pm
+\end{itemize}
 
 \section*{Grading Policy}
-The course will have seven coding problem sets (50\%), weekly short student presentations (10\%) and a final project (40\%). The final project will be a short research paper on a topic of your choice. 
+The course will have six coding problem sets (50\%), weekly five-minute student presentations (5\%), GitHub participation (5\%), a final project (20\%), and participation in a Hack-A-Thon to assist the City of Lewiston.
+
+\subsection*{Improving your grade}
+
+In an effort to incentivize you to see coding as an ongoing process of learning and improvement, I will allow you to improve the coding and presentation quality portions of your grade on any problem set. However, you cannot just copy and paste the solutions. 
+
+Instead, you must provide carefully commented explanations of each step of the code -- whether from the solutions or of your own invention. This is a great way to learn, but it is also a lot of work. 
+
+*Example.* You might write add a comment like this to the top of your code:
+
+\begin{verbatim}
+# Create directories, suppress warning that the directory already exists. 
+suppressWarnings({
+  dir.create(data)
+  dir.create(documentation)
+  dir.create(code)
+  dir.create(output)
+  dir.create(writing)
+})
+\end{verbatim}
+
+\subsubsection*{Submission process}
+
+To be eligible to resubmit to improve your grade, you must have submitted an initial version of the problem set on time.
+
+\begin{enumerate}
+\item View my feedback on the `feedback` branch of your problem set repository. 
+\item Fix your problem set answers and comment your code as needed. Write "CORRECTED" in all caps next to any changes. 
+\item Push changes to the `main` branch of your problem set repository.
+\item Navigate to the `Issues` tab of your problem set repository and create a new issue titled "Resubmission for Problem Set X". Briefly describe your changes in the body of the issue and tag my username, @kgcsport. 
+\item \textbf{Deadline for resubmissions}: All resubmissions must be pushed within one week of the solutions being posted.
+\end{enumerate}
+Within your own private problem set repository, you can create an `Issues` tab within the Settings tab for interfacing only with me and any group partners.
+
+\subsubsection*{Requests for reconsideration}
+
+On occasions, you may disagree with the grade you received on a problem set. Here are my policies for reconsideration:
 
 \begin{itemize}
-	\item \underline{\textbf{50\%}} of your grade will be determined by the top 5 out of 7 problem sets
-	\item \underline{\textbf{10\%}} of your grade will be determined by 1-2 short class presentations
-	\item \underline{\textbf{40\%}} of your grade will be determined by a final project due 12/11
-	\begin{itemize}
-    \item \underline{\textbf{5\%}} of your grade will be determined by a project proposal due 9/24
-    \item \underline{\textbf{5\%}} of your grade will be determined by a literature review due 10/22
-    \item \underline{\textbf{5\%}} of your grade will be determined by a data description \& analysis due 11/17
-    \item \underline{\textbf{5\%}} of your grade will be determined by a peer review due 12/1
-    \item \underline{\textbf{10\%}} of your grade will be determined by your code
-    \item \underline{\textbf{10\%}} of your grade will be determined by a written summary of results
-  \end{itemize}
+\item \textbf{Deadline for requests}: All requests for reconsideration must be submitted within one week of the solutions being posted.
+\item \textbf{Full regrade}: Any request for reconsideration will result in a full regrade of your problem set. This means that your grade can go up or down.
+\item \textbf{Regrading high scores}: If you scored a 90 percent or above on a problem set, I will not change your grade. This is not because I do not want to help you, but because we both have limited time and I want to focus my efforts on cases where an incorrectly graded problem set could significantly impact your grade in the course. 
 \end{itemize}
 
-% TK The course will be graded on a curve (approximately), using standard distribution of grades in the economics department. 
+If you would like reconsideration, please raise an `Issue` in your private problem set repository. Title the issue "Reconsideration request for Problem Set X". Briefly describe your request in the body of the issue and tag my username, @kgcsport. 
 
-\subsection*{Problem Sets}
+Within your own private problem set repository, you can create an `Issues` tab within the Settings tab for interfacing only with me and any group partners.
 
-All problem sets will be posted on GitHub Classroom and will be due in roughly two weeks. Problem sets should be turned in on GitHub Classroom. Working in groups on problem sets is not forbidden, but every student has to submit individual solutions in his/her own words.
+\medskip
 
-\subsection*{Short Class Presentations}
-
-Almost every lecture will begin with a short student presentation. These should last 5-10 minutes and cover a prescribed topic (either assigned or approved ahead of time). You can sign up at \url{https://github.com/ECON368-fall2023-big-data-and-economics/presentations}.
-
-Presentations will cover a technical skill (e.g. minimally reproducible examples), analytic method (e.g. regression discontinuity design), or a key reading (e.g. an applied research paper). A successful presentation of a skill or method will introduce it, explain how it works, and provide a use case. A successful presentation of a key reading will introduce the research question, explain the methodology, and summarize the key findings.
-
-\subsection*{Final Project}
-
-The final project will be a research paper on a topic of your choice, which uses methods taught in this course. The project will be graded based on a 5-10 page written report and your code. The report should include a literature review, a description of the data, analysis, and discussion of results. The report should be written in \LaTeX or RMarkdown. All code and other materials required\footnote{Large data files do not need to be uploaded. Code to download or instructions to access will suffice.} to reproduce results should be submitted in a GitHub repository.
-
-During the semester, there will be four assignments related to the final project. The first will be a project proposal, which will be due 9/21. The second will be a review of the relevant literature, which will be due 10/17. The third will be a data description, which will be due 11/17. The fourth will be a peer review due 12/1. These are to help you stay on track for the final project, which is due on 12/11. 
-
-For ideas on datasets that are ``big,'' consider \url{https://www.kaggle.com/datasets} or this guide put together by Christine Murray: \url{https://libguides.bates.edu/ECON368}. 
-
-\subsubsection*{Peer review}
-After you submit your data description \& analysis, I will randomly assign each of you a peer's draft up to this point. You will have two weeks to provide constructive feedback on the project in the form of a short paper and a meeting during class. 
-
-Examples of constructive feedback:
-\begin{itemize}
-  \item ``I believe your empirical design does not account for variation by county and time. Consider adding fixed effects.''
-  \item ``This project aligns closely with this other literature. Check out read Author X (YYYY).''
-  \item ``Your regression discontinuity design may suffer from manipulating at the cutoff. Consider implementing a McCrary test.''
-  \item ``It would be helpful to present your results in terms of expected earnings increases. That would make your main outcome easier to interpret.''
-\end{itemize}
-
-Not constructive feedback:
-\begin{itemize}
-  \item ``I noticed three typos.''
-  \item ``This idea is bad, and you should feel bad.''
-  \item ``This is not actually economics.''
-  \item ``Your mother was a hamster and your father smells of elderberry.''
-\end{itemize}
+Further details on assignments and grading policies are provided on the \href{https://github.com/big-data-and-economics/big-data-class-materials?tab=readme-ov-file#grading-policy}{course website}.
 
 \newpage
 \section*{Course Policies}
@@ -262,8 +306,6 @@ Not constructive feedback:
 %Get policy on incompletes
 \subsection*{Policies on Incomplete Grades and Late Assignments}
 \footnotesize{\textbf{Grace Period Days:} Everyone will receive three ``grace period'' days to turn in work after the due date. Late assignments will be accepted for no penalty if turned in within the ``grace period.'' You can use these whenever you wish, but once you use them, they are gone.}
-
-\footnotesize{After the ``grace period,'' the instructor, department, or college must authorize an extension. If not authorized, assignments will be accepted for a 50\% deduction to the score up to 2 days after the deadline. After this any assignments handed in will be given 0.}
 
 \footnotesize{\textbf{End of course:} If an extension beyond the ``grace period'' is not authorized by the instructor, department, or college, an unfinished incomplete grade will automatically change to an F after either (a) the end of the next regular semester in which the student is enrolled (not including short-term), or (b) the end of 12 months if the student is not enrolled, whichever is shorter.}
 

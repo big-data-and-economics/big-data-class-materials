@@ -1,6 +1,6 @@
 # Class Materials for Bates ECON/DCS 368: Big Data and Economics
 
-[Full syllabus](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf)
+[Full syllabus with official policies](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf)
 
 [`Lectures`](#lectures) | [`Goals`](#goals-for-this-course) |
 [`Other details`](#other-details) | [`FAQ`](#faq) | [`License`](#license)
@@ -11,8 +11,10 @@ I am constantly trying to improve this course. Provide [feedback](https://docs.g
 
 # Office hours:
 My office hours are: 
-- TK
-- TK
+- Tuesdays 4pm-5pm
+- Wednesdays 10:30am-11:30am
+
+You can make an appointment at [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61).
 
 ## Getting in touch
 
@@ -184,8 +186,8 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 
 TK is our Course-Attached tutor. TK will host office hours in the SASC and will be available for individual appointments. TK hours are:
 
-- Fridays at 6:45pm
-- Sundays at 10am-12pm in PGill 227
+- TK
+- TK
 
 TK can help you troubleshoot *R*. TK does not know have solution to the problem sets, but TK can help you figure them out. 
 
@@ -239,6 +241,8 @@ Economics is at the forefront of developing statistical methods for analyzing da
 
 - Extensions: Each of you gets three ''grace period'' days to extend deadlines. 
 - You can use these days in any way you like, but once they're gone, they're gone.
+    - Days are counted by rounding up to the nearest day, i.e. turning something in an hour late counts as one grace period day (this is to make the accounting easier)
+- After these grace period days are used up any extensions (due to extenuating circumstances) must be authorized
 
 ### Problem sets
 
@@ -299,7 +303,7 @@ suppressWarnings({
 
 ##### Submission process
 
-To be eligible to resubmit to improve your grade, you must have submitted an initial version of the problem set on time.
+To be eligible to resubmit to improve your grade, you must have submitted an initial version of the problem set on time (or within your "grace period" days).
 
 1. View my feedback on the `feedback` branch of your problem set repository. 
 2. Fix your problem set answers and comment your code as needed. Write "CORRECTED" in all caps next to any changes. 
