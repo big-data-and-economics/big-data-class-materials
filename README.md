@@ -16,9 +16,18 @@ My office hours are:
 
 ## Getting in touch
 
-In this course, I ask that you use GitHub Issues to ask questions about the problem sets, final projects, presentation clarifications, and other class specifics. This is so that everyone can benefit from the answer. Also, it will encourage collaboration (and declutter my inbox). A portion of the grade is based on participation in GitHub Issues.
+In this course, I ask that you use GitHub Discussions and `Issues` to ask questions about the problem sets, final projects, presentation clarifications, and other class specifics. This is so that everyone can benefit from the answer. Also, it will encourage collaboration (and declutter my inbox). A portion of the grade is based on participation in GitHub Issues.
 
-If you would like to discuss a private matter, you can of course email me at kcoombs@bates.edu. I will respond as quickly as possible. If you do need to email me, please include "ECON368" in the subject line. If you email me a question that would benefit the whole class or someone else in the class could answer, I will respond by asking you to post it to GitHub Issues. 
+### GitHub Discussions
+
+The [GitHub Discussions](https://github.com/orgs/big-data-and-economics/discussions) page is hosted on the overall Classroom Organization (details on Organization vs. Repository in [FAQ](#faq)). It is private and can be used like any traditional online forum. You can use it to ask questions, answer questions, and discuss topics related to the course. I will be monitoring the discussions and will answer questions as they come up. I encourage you to answer each other's questions as well.
+
+
+### GitHub Issues
+
+GitHub `Issues` are for repository specific questions. 
+
+If you would like to discuss a private matter, you can of course email me at kcoombs@bates.edu. I will respond as quickly as possible. If you do need to email me, please include "ECON368" in the subject line. If you email me a question that would benefit the whole class or someone else in the class could answer, I will respond by asking you to post it to GitHub Discussions or Issues. 
 
 <!-- You can book time [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61). -->
 
@@ -94,7 +103,7 @@ This is an extremely challenging course. To help you succeed, I have outlined ex
 - Provide examples of skill sets to be used on problem sets in class
 - Grade your problem sets within two weeks (i.e. before the next problem set is due)
     - Post all problem set solutions to the repository within a week of the problem set being due
-- Check the GitHub Issues tab (for all repositories) at least once per day to answer questions
+- Check all GitHub `Issues` and Discussions tabs at least once per day to answer questions
 
 ### For students
 
@@ -102,9 +111,9 @@ This is an extremely challenging course. To help you succeed, I have outlined ex
 - Fork the main problem set repository within 48 hours of the problem set being posted
 - Open problem set data and code within 48 hours of the problem set being posted
 - Work on problem sets in groups, but turn in your own code
-- Post questions about material or problem sets to [GitHub Issues](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/issues) unless it is of a private matter (e.g. grades, extensions)
-    - There is a GitHub Issues tab within every problem set that I create, please post questions about problem sets directly to the tab for each problem set
-    - If I receive an email with a question that will benefit everyone, I will ask you to post it to GitHub Issues
+- Post questions to [GitHub Discussions](https://github.com/orgs/big-data-and-economics/discussions) or page-specific `Issues` unless it is of a private matter (e.g. grades, extensions)
+    - There is a GitHub `Issues` tab within every problem set that I create, please post questions about problem sets directly to the tab for each problem set
+    - If I receive an email with a question that will benefit everyone, I will ask you to post it to GitHub Issues/Discussions
     - This is so that everyone can benefit from the answer
     - Also, it will encourage collaboration
 - Use computers in class for class-related activities only
@@ -298,7 +307,7 @@ To be eligible to resubmit to improve your grade, you must have submitted an ini
 4. Navigate to the `Issues` tab of your problem set repository and create a new issue titled "Resubmission for Problem Set X". Briefly describe your changes in the body of the issue and tag my username, @kgcsport. 
 5. **Deadline for resubmissions**: All resubmissions must be pushed within one week of the solutions being posted.
 
-Within your own private problem set repository, you can create an Issues tab within the Settings tab for interfacing only with me and any group partners.
+Within your own private problem set repository, you can create an `Issues` tab within the Settings tab for interfacing only with me and any group partners.
 
 ##### Requests for reconsideration
 
@@ -310,7 +319,7 @@ On occasions, you may disagree with the grade you received on a problem set. Her
 
 If you would like reconsideration, please raise an `Issue` in your private problem set repository. Title the issue "Reconsideration request for Problem Set X". Briefly describe your request in the body of the issue and tag my username, @kgcsport. 
 
-Within your own private problem set repository, you can create an Issues tab within the Settings tab for interfacing only with me and any group partners.
+Within your own private problem set repository, you can create an `Issues` tab within the Settings tab for interfacing only with me and any group partners.
 
 ### Presentations
 
@@ -349,40 +358,42 @@ Your solution may include a variety of things, including:
 
 ### GitHub participation
 
-Participation on GitHub is 5 percent of your grade. Please use GitHub Issues to ask questions about the course materials and problem sets. You can also use GitHub Issues and Pull Requests to suggest improvements to the course materials. Here are the guidelines:
+Participation on GitHub is 5 percent of your grade. Please use [GitHub Discussions](https://github.com/orgs/big-data-and-economics/discussions) and `Issues` to ask questions about the course materials and problem sets. You can also suggest improvements to the course materials. Here are the guidelines:
 
-- When posting an issue or pull request, please use a clear title (e.g. Problem Set 1: Question about Question 2) and description ("What does term X mean?")- If posting about an error you are encountering, follow these steps:
+- When starting a discussion, posting an issue, or suggesting a pull request, please use a clear title (e.g. Problem Set 1: Question about Question 2) and description ("What does term X mean?")- If posting about an error you are encountering, follow these steps:
     - Briefly state the expected behavior
     - Write the minimal code needed to reproduce the error (a minimally reproducible example)
     - Write the full error message you are receiving
     - Write the steps you have taken to troubleshoot the error
+
 - If posting a clarifying question about someone's post, follow these steps:
     - Briefly clarify what you are confused about
     - Suggest potential interpretations of the post
-- If posting about a suggestion for improvement, follow these steps:
+
+- If posting about a suggestion to improve the class materials, follow these steps:
     - Briefly state the improvement you are suggesting
     - Write the steps you have taken to troubleshoot the error
     - If you are suggesting a change to the course materials, please fork the repository, make the change, and submit a pull request
+
 - Be kind to one another. Coding is hard. We are all learning. 
 
 This policy guidelines are taken from stackoverflow.com. You can read more about how to ask a good question [here](https://stackoverflow.com/help/how-to-ask) and how to answer a question [here](https://stackoverflow.com/help/how-to-answer#:~:text=Read%20the%20question%20carefully&text=Make%20sure%20your%20answer%20provides,going%20in%20the%20right%20direction.).
 
 I will rate participation based on the following criteria:
 
-- Are you posting thoughtful questions to GitHub Issues? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-ask) for posting a good question. 
-- Are you replying to questions on GitHub Issues? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-answer#:~:text=Read%20the%20question%20carefully&text=Make%20sure%20your%20answer%20provides,going%20in%20the%20right%20direction.) to write a good answer.
+- Are you posting thoughtful questions? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-ask) for posting a good question. 
+- Are you replying to questions? Follow the guidelines on [stackoverflow](https://stackoverflow.com/help/how-to-answer#:~:text=Read%20the%20question%20carefully&text=Make%20sure%20your%20answer%20provides,going%20in%20the%20right%20direction.) to write a good answer.
 - Do you pull request improvements to the course materials? This can be a typo fix, a bug fix, or a new feature.
 
-For each problem set, use the Issues tab for that specific problem set. For course materials, you can use that tab. 
+**Note**: I hope to add [Issue templates](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates) across the entire organization. All in good time. 
 
-I will be monitoring the GitHub Issues tab for each repository and will participation points to those who are actively engaging per the guidelines from stackoverflow. To receive full credit, you must be asking thoughtful questions and thoughtfully answering each other's questions. Thoughtful questions come after you've spent some time re-reading your code, Googling, and working with ChatGPT to try to solve the problem yourself first. Thoughtful answers may not solve the problem, but they should be clear, concise, good faith efforts to help. You will receive a lower participation grade if you do not follow the posting guidelines. 
+For each problem set, use the `Issues` tab for that specific problem set. For course materials, please use the organization [Discussions](https://github.com/orgs/big-data-and-economics/discussions) tab. 
+
+I will be monitoring the GitHub `Issues` tab for each repository and will participation points to those who are actively engaging per the guidelines from stackoverflow. To receive full credit, you must be asking thoughtful questions and thoughtfully answering each other's questions. Thoughtful questions come after you've spent some time re-reading your code, Googling, and working with ChatGPT to try to solve the problem yourself first. Thoughtful answers may not solve the problem, but they should be clear, concise, good faith efforts to help. You will receive a lower participation grade if you do not follow the posting guidelines. 
 
 The goal is to encourage you to work together to solve problems. This is one of the most important skills you can take away from this, and really any, course. I also want to incentivize you to think carefully about how you post. Be kind and respectful, as much as you endeavor to be clear, concise, and helpful.
 
 Furthermore, I want you to take ownership over your learning. You get more out of a course when you are actively engaged in the material. Actively engaging on this repository and suggesting changes to the course materials is a very tactile way to do that. 
-
-**Note: The main class page is a public repository, so others can come and try to use these materials. Please do not post personal information here.**
-
 
 ### Bonus points:
 
@@ -395,6 +406,16 @@ There are several opportunities for bonus points during the semester:
 I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
 
 # FAQ
+
+## How is this all structured? What's a repository? What's an organization? 
+
+This course is hosted in a GitHub Organization. An organization is a collection of repositories. A repository contains the full history of "commits" of a coding project, all its folders, etc. 
+
+Organizations are incredibly useful because all the repositories within an organization are linked. This means that you can easily navigate between them. For example, you can click on the "big-data-and-economics" to get to the organization page and navigate over to other repositories under the `Repositories` tab.
+
+## What is a commit? 
+
+We'll go over this in more detail in later lectures, but a commit is a collection of changes made to the code that you intentionally bundle together and can label. You can think of it like saving a file under a separate file name. The difference is you don't create multiple copies of the file, but you can revert to earlier versions easily using your repository. 
 
 ## If you find a typo in these lecture notes
 
@@ -446,6 +467,29 @@ This is the easiest option, but it does mean you will have to clone multiple for
     - The **base repository** is the upstream repo and the base is the main branch
     - The **head repository** is your forked repo and the compare is the the branch named `<pull-request-branch-name>`
 11. *Optional*: Destroy the pull-request-branch once it has served its purpose with `git branch -d <pull-request-branch-name>`
+
+## Setup
+
+This organization is used to run the ECON/DCS 368 course at Bates College, commonly known as Data Science for Economists or Big Data and Economics. This readme documents how to interact with this organization as a student in the course or instructor looking to mimic it.
+
+### Students
+
+Students should await an initial invitation via a Github Classrooms Assignment for Problem Set 0. This will allow you to enroll as a member of the organization. 
+
+#### End of course
+
+About a month after the course is over, students will be moved from Members to Outside Collaborators. This will allow any students to maintain access to private course materials while losing access to (and deleting) any of their problem set repositories that are hosted within the organization. Students will keep local versions of their solutions on their machines and can create new repositories accordingly.
+
+### Professors
+
+Use an organization like this to invite students to use Github Classroom. I am continuously improving how I leverage GH Classroom, which is itself under constant development. I largely use GH Classroom to automate organization enrollment and access to repositories (much faster than adding each name multiple times and managing repository access one-by-one.)
+
+After creating your organization:
+
+1. Create a classroom with GH classroom within said organization. Add your students one-by-one (just once!) or link to your institution's learning management software.
+2. Create an initial problem set assignment through GH classroom that you want to send out to students. Send the link to students so they enroll. **Optional**: Make it a group assignment to create a group that all students are in, which can be used to give access to repositories during the course.
+3. **Optional**: Make problem set repositories within the organization and ask students to fork their own repositories instead of using the GH Classroom links -- that way the students host the forks on their own repositories.
+4. Once students have submitted all work and the class is over, you have two options: (1) archive the classroom and convert them to Outside Collaborators to maintain their access to materials or (2) delete the classroom entirely. Either way they will keep local clones of repositories, but this changes their access to forked repositories/class materials after the course concludes. 
 
 
 ## License
