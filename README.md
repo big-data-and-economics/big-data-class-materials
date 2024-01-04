@@ -14,7 +14,7 @@ My office hours are:
 - Tuesdays 4pm-5pm
 - Wednesdays 10:30am-11:30am
 
-You can make an appointment at [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61).
+You can make an appointment at [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61). 
 
 ## Getting in touch
 
@@ -184,12 +184,12 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 
 #### Course-Attached Tutor
 
-TK is our Course-Attached tutor. TK will host office hours in the SASC and will be available for individual appointments. TK hours are:
+Charlie Berman is our Course-Attached tutor. He will host office hours in the SASC and will be available for individual appointments. His hours are:
 
 - TK
 - TK
 
-TK can help you troubleshoot *R*. TK does not know have solution to the problem sets, but TK can help you figure them out. 
+HE can help you troubleshoot *R*. He does not have solutions to the problem sets, but he can help you figure them out. 
 
 ## GitHub Codespaces
 
