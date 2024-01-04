@@ -23,6 +23,8 @@ RUN install2.r --error --skipinstalled -n -1 \
         markdown \
         ottr \
     && rm -rf /tmp/downloaded_packages \
+    %% apt-get update \
+    && apt-get install -y --no-install-recommends libxt6 \
     && R -q -e 'remotes::install_github("https://github.com/dcomtois/summarytools/tree/0-8-9")'
 
 # Install Python packages
