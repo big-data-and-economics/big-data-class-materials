@@ -239,11 +239,6 @@ Economics is at the forefront of developing statistical methods for analyzing da
 | Classroom participation                   | Bonus up to 2.5%    | Discretion  |
 | Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
 
-- Extensions: Each of you gets three ''grace period'' days to extend deadlines. 
-- You can use these days in any way you like, but once they're gone, they're gone.
-    - Days are counted by rounding up to the nearest day, i.e. turning something in an hour late counts as one grace period day (this is to make the accounting easier)
-- After these grace period days are used up any extensions (due to extenuating circumstances) must be authorized
-
 ### Problem sets
 
 Throughout the course you will engage in problem sets that deal with actual data. These may seem out of step with what we do in class, but they are designed to get you to think about how to apply the tools we learn in class to real data. 
@@ -303,7 +298,7 @@ suppressWarnings({
 
 ##### Submission process
 
-To be eligible to resubmit to improve your grade, you must have submitted an initial version of the problem set on time (or within your "grace period" days).
+To be eligible to resubmit to improve your grade, you must have submitted an initial version of the problem set on time.
 
 1. View my feedback on the `feedback` branch of your problem set repository. 
 2. Fix your problem set answers and comment your code as needed. Write "CORRECTED" in all caps next to any changes. 
