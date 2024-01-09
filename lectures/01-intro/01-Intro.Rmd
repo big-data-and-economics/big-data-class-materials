@@ -616,6 +616,11 @@ name: ai
 ---
 # ChatGPT example
 
+First, submit a [prompt on Mentimeter](https://www.mentimeter.com/app/presentation/bldvy2hwjfb483btveenvon9k7mbtkdm/emjehaixxc7c) 
+that loads the gapminder data, displays some key checks, then makes a scatterplot of GDP per capita and life expectancy
+
+--
+
 **Human:**
 
 Write an R script that does the following:
@@ -690,7 +695,6 @@ print(unique_countries)
 #   ggtitle("Relationship between GDP per Capita and Life Expectancy")
 ```
 
-
 ---
 # How's the code run? (cont.)
 ```{r gapminder-chatgpt-eval2,echo=FALSE}
@@ -733,7 +737,6 @@ ggplot(gapminder_df, aes(x = gdpPercap, y = lifeExp)) +
   - You will not get much mileage if you say, "Read in the gapminder dataset and do something interesting with it"
 
 - Often it only "skeleton code" for you, so you'll need to fill in the blanks
-
 
 ---
 # Visualization
