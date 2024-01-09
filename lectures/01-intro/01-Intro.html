@@ -126,9 +126,34 @@ Data science skills are largely distinct from (and complementary to) the core 'm
 
 - This course will also be **_rewarding_**
   - You can avoid the mistakes you make here on your thesis and in your career
-  - You will learn skills that employers, pre-doc programs, and grad schools want (but teach poorly)
+  - You will learn skills that employers, pre-doc programs, and grad schools want
   - You will learn how to be a better researcher and citizen
     - Seriously, a little data science goes a long way in helping you see through BS
+
+---
+# Tips for coding fruitfully
+
+You're gonna write a lot of code for this class, which means you're gonna troubleshoot a lot of bugs.
+
+- Some of these will be bugs of your own making, some will be bugs of open source R tools
+
+1. Try to describe in plain words/simple pictures what you want code to do before you write it
+  - Read in a CSV file with variables for annual population at the county level and calculate the change in population from the previous year
+
+2. Break this description into smaller steps (1: Read in data, 2: Drop rows with NA County, etc.)
+
+3. Write code "modularly" to do each step
+
+4. Then you can troubleshoot modularly too
+
+5. The `help` documentation for R functions is the best place to start for troubleshooting
+
+6. Google is your dictionary, ChatGPT is your weird friend who knows a lot of words but sometimes uses them wrong&lt;sup&gt;1&lt;/sup&gt;
+  - Be precise in your Google searches and ChatGPT instructions
+
+7. If you're stuck, ask for help from me and classmates on GitHub Discussions
+
+&lt;sup&gt;1&lt;/sup&gt; GitHub CoPilot (ChatGPT's cousin) wrote that sentence fragment!
 
 ---
 # You, at the end of this course
@@ -192,19 +217,19 @@ name: what_is_data_science
 
 - .hi[Data science (DS):] The scientific discipline that deals with transforming data into useful information ("insights") using a variety of stats/ML techniques
 
-    - Facebook: Collects data on search history, friendship links, site clicks
+    - Facebook: Collects data on search history, friendship links, site clicks, occupation, etc.
 
-    - Raj Chetty et al. used these data to estimate users' socioeconomic status and their social network ([Social Capital Atlas](https://www.socialcapital.org/))
+    - Chetty et al. used FB data to estimate users' SES and social network ([Social Capital Atlas](https://www.socialcapital.org/))
 
 - The rise of data science has come because of the so-called Big Data revolution
 
     - The rise of the internet in the late-1990s and 2000s `\(\Rightarrow \,\uparrow\)` opportunities for companies and governments to collect data on consumers &amp; citizens
 
-    - Proliferation of mobile devices &amp; social media from late 2000s until now has generated even more data
+    - Spread of mobile devices &amp; social media from late 2000s until now generated even more data
     
-### Pillars of data science
+#### Pillars of data science
 
-- Programming (for automation of data collection, manipulation, cleaning, visualization, and modeling)
+- Programming (automation of data collection, manipulation, cleaning, visualization, and modeling)
 
 - Visualization &amp; exploration
 
@@ -278,13 +303,13 @@ It depends on who you ask. It could mean:
 
 --
 
-  - A regression model with year fixed effects requires that rows vary by year
-  - So you cannot have a wide data set with one row per person and one column per year
+  - A regression model with year fixed effects requires that year changes between observations, so you need long data
+  - You cannot have a wide data set with one row per unit and one column per year
 
 ---
-# What can we capture in data?
+# What can we measure with data?
 
-- Data can capture a lot of information about the world, but not everything
+- Data can measure a lot of information about the world, but not everything
 
 - Yes, that sounds like buzzword soup, but it is true
 
@@ -370,7 +395,7 @@ If you had trouble completing any of these steps, please raise your hand.
 
 I'll detail further software requirements as and when the need arises. However, to help smooth some software installation issues further down the road, please also do the following (depending on your OS):
 
-- **Windows:** Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/). I also recommend that you install [Chocolately](https://chocolatey.org/). [Windows Subsystem for Linx](https://learn.microsoft.com/en-us/windows/wsl/install).
+- **Windows:** Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/). I also recommend that you install [Chocolately](https://chocolatey.org/) and [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install).
 - **Mac:** Install [Homebrew](https://brew.sh/). I also recommend that you configure/open your C++ toolchain (see [here](https://github.com/rmacoslib/r-macos-rtools#installer-package-for-macos-r-toolchain-).)
 - **Linux:** None (you should be good to go).
 
@@ -418,7 +443,7 @@ Open up the [shell](http://happygitwithr.com/shell.html#shell).
 ☑ Did you introduce yourself to Git? (Substitute in your details.)
   
   ```bash
-  git config --global user.name 'Kyle Coombs'
+  git config --global user.name 'kgcsport'
   git config --global user.email 'kcoombs@bates.edu'
   git config --global --list
   ```
@@ -468,12 +493,7 @@ name: r4ds
 
 ---
 name: whyr
-
-# Why R and RStudio? (cont.)
-&lt;img src="01-Intro_files/figure-html/indeeddotcom-1.svg" style="display: block; margin: auto;" /&gt;
-
----
-# Why R and RStudio? (cont.)
+# Why R and RStudio? 
 
 ### Data science positivism
 
@@ -561,7 +581,50 @@ ggplot(data = mtcars, aes(x = wt, y = mpg)) +
 - Also, we can tap into generative AI to help us climb the steep learning curve of coding in a new language
 
 ---
-# ChatGPT and GitHub CoPilot
+class: inverse, center, middle
+name: ggplot2
+
+# More ggplot2
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+# Install and load
+
+Open up your laptops. For the remainder of this first lecture, we're going to play around with [ggplot2](https://ggplot2.tidyverse.org/) (i.e. livecoding) to answer our question about GDP and life expectancy.
+
+If you don't have them already, install the `ggplot2` and `gapminder` packages via either:
+- **Console:** Enter `install.packages(c("ggplot2", "gapminder"), dependencies=T)`.
+- **RStudio:** Click the "Packages" tab in the bottom-right window pane. Then click "Install" and search for these two packages.
+  
+![](pics/install.gif)
+
+---
+# Install and load (cont.)
+
+Once the packages are installed, load them into your R session with the `library()` function.
+
+```r
+library(ggplot2)
+library(gapminder) ## We're just using this package for the gapminder data
+```
+
+Notice too that you don't need quotes around the package names any more. Reason: R now recognises these packages as defined objects with given names. 
+
+--
+
+PS — A convenient way to combine the package installation and loading steps is with the [pacman package's](https://github.com/trinker/pacman) `p_load()` function. If you run `pacman::p_load(ggplot, gapminder)` it will first look to see whether it needs to install either package before loading them. Clever.
+- We'll get to this later, but if you want to run a function from an (installed) package without loading it, you can use the `PACKAGE::package_function()` syntax.
+
+---
+name: ai
+# Leverage ChatGPT and GitHub CoPilot
+
+- I'm going to ask you to use a number of new technical tools in this class
+
+- The documentation will be concise and oftentimes you won't know where to start
+
+  - For example, how in the world are you supposed to make a ggplot plot of the gapminder data if you've never used ggplot before?
+  - What if you've never even opened R? How do you even look at the gapminder data?
 
 - I strongly encourage you to use ChatGPT and GitHub CoPilot in all aspects of this class
 
@@ -628,9 +691,79 @@ Exported on 1/8/2024.
 
 ---
 # How's the code run? 
-.scroll-box-20[
 
-]
+```
+## # A tibble: 10 × 6
+##    country     continent  year lifeExp      pop gdpPercap
+##    &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+##  1 Afghanistan Asia       1952    28.8  8425333      779.
+##  2 Afghanistan Asia       1957    30.3  9240934      821.
+##  3 Afghanistan Asia       1962    32.0 10267083      853.
+##  4 Afghanistan Asia       1967    34.0 11537966      836.
+##  5 Afghanistan Asia       1972    36.1 13079460      740.
+##  6 Afghanistan Asia       1977    38.4 14880372      786.
+##  7 Afghanistan Asia       1982    39.9 12881816      978.
+##  8 Afghanistan Asia       1987    40.8 13867957      852.
+##  9 Afghanistan Asia       1992    41.7 16317921      649.
+## 10 Afghanistan Asia       1997    41.8 22227415      635.
+```
+
+```
+##   [1] Afghanistan              Albania                  Algeria                 
+##   [4] Angola                   Argentina                Australia               
+##   [7] Austria                  Bahrain                  Bangladesh              
+##  [10] Belgium                  Benin                    Bolivia                 
+##  [13] Bosnia and Herzegovina   Botswana                 Brazil                  
+##  [16] Bulgaria                 Burkina Faso             Burundi                 
+##  [19] Cambodia                 Cameroon                 Canada                  
+##  [22] Central African Republic Chad                     Chile                   
+##  [25] China                    Colombia                 Comoros                 
+##  [28] Congo, Dem. Rep.         Congo, Rep.              Costa Rica              
+##  [31] Cote d'Ivoire            Croatia                  Cuba                    
+##  [34] Czech Republic           Denmark                  Djibouti                
+##  [37] Dominican Republic       Ecuador                  Egypt                   
+##  [40] El Salvador              Equatorial Guinea        Eritrea                 
+##  [43] Ethiopia                 Finland                  France                  
+##  [46] Gabon                    Gambia                   Germany                 
+##  [49] Ghana                    Greece                   Guatemala               
+##  [52] Guinea                   Guinea-Bissau            Haiti                   
+##  [55] Honduras                 Hong Kong, China         Hungary                 
+##  [58] Iceland                  India                    Indonesia               
+##  [61] Iran                     Iraq                     Ireland                 
+##  [64] Israel                   Italy                    Jamaica                 
+##  [67] Japan                    Jordan                   Kenya                   
+##  [70] Korea, Dem. Rep.         Korea, Rep.              Kuwait                  
+##  [73] Lebanon                  Lesotho                  Liberia                 
+##  [76] Libya                    Madagascar               Malawi                  
+##  [79] Malaysia                 Mali                     Mauritania              
+##  [82] Mauritius                Mexico                   Mongolia                
+##  [85] Montenegro               Morocco                  Mozambique              
+##  [88] Myanmar                  Namibia                  Nepal                   
+##  [91] Netherlands              New Zealand              Nicaragua               
+##  [94] Niger                    Nigeria                  Norway                  
+##  [97] Oman                     Pakistan                 Panama                  
+## [100] Paraguay                 Peru                     Philippines             
+## [103] Poland                   Portugal                 Puerto Rico             
+## [106] Reunion                  Romania                  Rwanda                  
+## [109] Sao Tome and Principe    Saudi Arabia             Senegal                 
+## [112] Serbia                   Sierra Leone             Singapore               
+## [115] Slovak Republic          Slovenia                 Somalia                 
+## [118] South Africa             Spain                    Sri Lanka               
+## [121] Sudan                    Swaziland                Sweden                  
+## [124] Switzerland              Syria                    Taiwan                  
+## [127] Tanzania                 Thailand                 Togo                    
+## [130] Trinidad and Tobago      Tunisia                  Turkey                  
+## [133] Uganda                   United Kingdom           United States           
+## [136] Uruguay                  Venezuela                Vietnam                 
+## [139] West Bank and Gaza       Yemen, Rep.              Zambia                  
+## [142] Zimbabwe                
+## 142 Levels: Afghanistan Albania Algeria Angola Argentina Australia ... Zimbabwe
+```
+
+
+---
+# How's the code run? (cont.)
+&lt;img src="01-Intro_files/figure-html/gapminder-chatgpt-eval2-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Tips for using ChatGPT
@@ -650,39 +783,6 @@ Exported on 1/8/2024.
 
 - Often it only "skeleton code" for you, so you'll need to fill in the blanks
 
----
-class: inverse, center, middle
-name: ggplot2
-
-# More ggplot2
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
-
----
-# Install and load
-
-Open up your laptops. For the remainder of this first lecture, we're going to pla around with [ggplot2](https://ggplot2.tidyverse.org/) (i.e. livecoding) to answer our question about GDP and life expectancy.
-
-If you don't have them already, install the `ggplot2` and `causaldata` packages via either:
-- **Console:** Enter `install.packages(c("ggplot2", "causaldata"), dependencies=T)`.
-- **RStudio:** Click the "Packages" tab in the bottom-right window pane. Then click "Install" and search for these two packages.
-  
-![](pics/install.gif)
-
----
-# Install and load (cont.)
-
-Once the packages are installed, load them into your R session with the `library()` function.
-
-```r
-library(ggplot2)
-library(causaldata) ## We're just using this package for the gapminder data, it has many useful datasets! 
-```
-
-Notice too that you don't need quotes around the package names any more. Reason: R now recognises these packages as defined objects with given names. 
---
-
-PS — A convenient way to combine the package installation and loading steps is with the [pacman package's](https://github.com/trinker/pacman) `p_load()` function. If you run `pacman::p_load(ggplot, causaldata)` it will first look to see whether it needs to install either package before loading them. Clever.
-- We'll get to this later, but if you want to run a function from an (installed) package without loading it, you can use the `PACKAGE::package_function()` syntax.
 
 ---
 # Visualization
@@ -778,7 +878,61 @@ ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp, size = pop, col = conti
 
 - I've dropped the "mapping =" part of the ggplot call. `ggplot2` knows the order of the arguments.
 
-- The aesthetics expect "long" data to differentiate series by a variable. This is distinct from the "wide" format, where each series has its own column.
+---
+# 1. Aesthetic mappings (cont.)
+
+The aesthetics expect "long" data. This is distinct from the "wide" format, where each series has its own column.
+
+--
+
+.pull-left[
+  #### Long will work
+
+```
+## # A tibble: 1,704 × 6
+##    country     continent  year lifeExp      pop gdpPercap
+##    &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+##  1 Afghanistan Asia       1952    28.8  8425333      779.
+##  2 Afghanistan Asia       1957    30.3  9240934      821.
+##  3 Afghanistan Asia       1962    32.0 10267083      853.
+##  4 Afghanistan Asia       1967    34.0 11537966      836.
+##  5 Afghanistan Asia       1972    36.1 13079460      740.
+##  6 Afghanistan Asia       1977    38.4 14880372      786.
+##  7 Afghanistan Asia       1982    39.9 12881816      978.
+##  8 Afghanistan Asia       1987    40.8 13867957      852.
+##  9 Afghanistan Asia       1992    41.7 16317921      649.
+## 10 Afghanistan Asia       1997    41.8 22227415      635.
+## # ℹ 1,694 more rows
+```
+]
+.pull-right[
+
+#### Wide would not work
+
+
+```
+## # A tibble: 142 × 26
+##    country     continent lifeExp_1952 lifeExp_1957 lifeExp_1962 lifeExp_1967
+##    &lt;fct&gt;       &lt;fct&gt;            &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+##  1 Afghanistan Asia              28.8         30.3         32.0         34.0
+##  2 Albania     Europe            55.2         59.3         64.8         66.2
+##  3 Algeria     Africa            43.1         45.7         48.3         51.4
+##  4 Angola      Africa            30.0         32.0         34           36.0
+##  5 Argentina   Americas          62.5         64.4         65.1         65.6
+##  6 Australia   Oceania           69.1         70.3         70.9         71.1
+##  7 Austria     Europe            66.8         67.5         69.5         70.1
+##  8 Bahrain     Asia              50.9         53.8         56.9         59.9
+##  9 Bangladesh  Asia              37.5         39.3         41.2         43.5
+## 10 Belgium     Europe            68           69.2         70.2         70.9
+## # ℹ 132 more rows
+## # ℹ 20 more variables: lifeExp_1972 &lt;dbl&gt;, lifeExp_1977 &lt;dbl&gt;,
+## #   lifeExp_1982 &lt;dbl&gt;, lifeExp_1987 &lt;dbl&gt;, lifeExp_1992 &lt;dbl&gt;,
+## #   lifeExp_1997 &lt;dbl&gt;, lifeExp_2002 &lt;dbl&gt;, lifeExp_2007 &lt;dbl&gt;,
+## #   gdpPercap_1952 &lt;dbl&gt;, gdpPercap_1957 &lt;dbl&gt;, gdpPercap_1962 &lt;dbl&gt;,
+## #   gdpPercap_1967 &lt;dbl&gt;, gdpPercap_1972 &lt;dbl&gt;, gdpPercap_1977 &lt;dbl&gt;,
+## #   gdpPercap_1982 &lt;dbl&gt;, gdpPercap_1987 &lt;dbl&gt;, gdpPercap_1992 &lt;dbl&gt;, …
+```
+]
 
 ---
 # 1. Aesthetic mappings (cont.)
@@ -917,7 +1071,7 @@ p2 =
 # What else?
 
 We have barely scratched the surface of ggplot2's or ChatGPT's functionality... let alone talked about the entire ecosystem of packages that has been built around it. 
-- Here's are an additional examples to whet your appetite
+- Here's are an additional example to whet your appetite
 
 --
 
@@ -929,10 +1083,8 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(hrbrthemes, gganimate)
 ```
 
----
-# What else? (cont.)
+#### Animation! (See the next slide for the resulting GIF.)
 
-Elaborate extension: Animation! (See the next slide for the resulting GIF.)
 
 ```r
 # library(gganimate)
@@ -960,7 +1112,7 @@ ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
 Note that this animated plot provides a much more intuitive understanding of the underlying data. Just as [Hans Rosling](https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen) intended.
 
 ---
-# But do increases in GDP per capita cause life expectancy to increase?
+# But do GDP per cap increases cause life expectancy to increase?
 
 - We can't answer this question with a simple plot.
 - We also can't answer this question with a very fancy plot. 
@@ -972,19 +1124,23 @@ Note that this animated plot provides a much more intuitive understanding of the
 ---
 # What else? (cont.)
 
-There's a lot more to say, but I think we'll stop now for today's lecture.
-
 We also haven't touched on ggplot2's relationship to "tidy" data.
   - It actually forms part of a suite of packages collectively known as the [tidyverse](https://www.tidyverse.org/). 
   - We will get back to this.
 
 Rest assured, you will be using ggplot2 throughout the rest of this course and developing your skills along the way.
-- Your very first assignment (coming up) is a chance specifically to hone some of those skills.
+- Your second assignment (coming up) is a chance specifically to hone some of those skills.
 
-In the meantime, I want youyou can do some reading and practice on your own. Pick either of the following (or choose among the litany of online resources) and work through their examples:
+You can do some reading and practice on your own. Pick any of the following (or choose among the litany of online resources) and work through their examples:
 - [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html) of *R for Data Science* by Hadley Wickham and Garett Grolemund.
 - [*Data Visualization: A Practical Guide*](https://socviz.co/makeplot.html) by Kieran Healy.
 - [Designing ggplots](https://designing-ggplots.netlify.com) by Malcom Barrett.
+
+For next class on GitHub, please complete the following:
+
+- Problem Set 0
+- Work through Chapters 1-14 of https://happygitwithr.com/
+- Read through the [Git fundamentals](https://happygitwithr.com/git-intro) unit
 
 ---
 class: inverse, center, middle
