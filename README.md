@@ -333,7 +333,7 @@ Please sign up [here](https://github.com/big-data-and-economics/presentations-te
 
 ### Final Project
 
-You will write a final project over the course of the semester as part of a group. Further details are available [here](TK).
+You will write a final project over the course of the semester as part of a group. Further details are available [here](https://github.com/big-data-and-economics/final-project).
 
 ### Lewiston Hack-a-thon
 
