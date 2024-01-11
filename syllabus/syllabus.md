@@ -6,6 +6,7 @@ header-includes:
 - \fancyhead[L]{Winter 2024}
 - \fancyfoot[C]{\thepage}
 output: pdf_document
+bibliography: syllabus_bigdata.bib
 colorlinks: true
 ---
 
