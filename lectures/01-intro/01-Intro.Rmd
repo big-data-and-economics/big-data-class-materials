@@ -190,7 +190,9 @@ You're gonna write a lot of code for this class, which means you're gonna troubl
 
 3. 5-minute presentations
 
-4. Lewiston Hack-a-thon: 1-day data science competition at end of semester
+4. GitHub Participation
+
+5. _Optional_ Lewiston Hack-a-thon: 1-day data science competition at end of semester
   - Details TBD
   - I will soon be asking your availability for 24-hour periods in late March/April
   - Does 24 hours lead to immediate red flags for anyone's schedule? If so please let me know now. 

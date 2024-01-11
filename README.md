@@ -238,8 +238,8 @@ Economics is at the forefront of developing statistical methods for analyzing da
 | 6 × problem sets (10% each)               | 50%    | Top 5  |
 | 1 × 5-minute presentation                 | 5%     | Top 1   |
 | 1 × GitHub participation                  | 5%     | Overall   |
-| 1 x Lewiston Hackathon                    | 20%    | [In parts](TK)  |
-| 1 × group final project                   | 20%    | [In parts](https://github.com/big-data-and-economics/final-project) |
+| 1 × group final project                   | 30%-40%    | [In parts](https://github.com/big-data-and-economics/final-project) |
+| 1 x Lewiston Hackathon                    | 0%-10%    | Optional  |
 | Classroom participation                   | Bonus up to 2.5%    | Discretion  |
 | Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
 
@@ -265,7 +265,7 @@ Throughout the course you will engage in problem sets that deal with actual data
 
 **Grading**
 
-Your problem sets are graded on four criteria: 
+Your problem sets are (generally) graded on four criteria: 
 
 1. Submission via GitHub (10%): Did you use GitHub to stage, commit, and push your code? Did you submit the assignment on time? Did you submit the assignment in the correct format?
 2. Quality of code (30%): Is it well-commented? Is it easy to follow? Can I run it?
@@ -333,13 +333,15 @@ Please sign up [here](https://github.com/big-data-and-economics/presentations-te
 
 ### Final Project
 
-You will write a final project over the course of the semester as part of a group. Further details are available [here](https://github.com/big-data-and-economics/final-project).
+You will write a final project over the course of the semester as part of a group. Further details are available [here](https://github.com/big-data-and-economics/final-project). If you participate in the Hack-a-thon, your final project will be worth 30 percent of your grade. If you do not participate in the Hack-a-thon, your final project will be worth 40 percent of your grade.
 
 ### Lewiston Hack-a-thon
 
 This semester, we will be working with the City of Lewiston to help them solve a problem using data. Specifically, we will help the city understand how to use existing administrative data to complement, and at times substitute, for survey data. 
 
 We will specifically be engaging in a Hack-a-thon. A hack-a-thon is a short (often 24 hours), intense period of collaboration between a group of people to solve a problem. Scheduling is still in the works.
+
+The Hack-a-thon is planned to be optional and replace a quarter of the final project grade.
 
 #### Data Requests
 
