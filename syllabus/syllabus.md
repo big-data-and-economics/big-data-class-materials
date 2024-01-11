@@ -179,6 +179,18 @@ Prerequisites: ECON 255 and ECON 260 or ECON 270 The course assumes background i
 
 There is no teaching assistant for this course. The course does have a Course-Attached Tutor (CAT), who is a student who has taken the course before and is available to help you with the course. The CAT for this course is Charlie Berman. He will hold office hours and review sessions. The CAT will also grade your problem sets and final project.
 
+
+#### Course-Attached Tutor
+
+Charlie Berman is our Course-Attached tutor. He will host office hours in the SASC and will be available for individual appointments. His hours are:
+
+- **SASC Drop-in Hours**: MTR 2:30-4
+- **Evening Help Session:** R 7:30-9 (room assignment to come)
+
+You can also schedule private office hours at the Calendar Link: https://calendar.app.google/2Abyp3LqY3NPeg4u8. 
+
+He can help you troubleshoot *R*. He does not have solutions to the problem sets, but he can help you figure them out. 
+
 ## Student Academic Support Center
 Scheduled hours for R held in the Student Academic Support Center (SASC) of the Library are:
 

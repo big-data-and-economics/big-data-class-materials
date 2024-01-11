@@ -190,10 +190,12 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 
 Charlie Berman is our Course-Attached tutor. He will host office hours in the SASC and will be available for individual appointments. His hours are:
 
-- TK
-- TK
+- **SASC Drop-in Hours**: MTR 2:30-4
+- **Evening Help Session:** R 7:30-9 (room assignment to come)
 
-HE can help you troubleshoot *R*. He does not have solutions to the problem sets, but he can help you figure them out. 
+You can also schedule private office hours at the Calendar Link: https://calendar.app.google/2Abyp3LqY3NPeg4u8. 
+
+He can help you troubleshoot *R*. He does not have solutions to the problem sets, but he can help you figure them out. 
 
 ## GitHub Codespaces
 
