@@ -95,7 +95,7 @@ We went through a software installation check during the previous lecture. By no
 
 ☑ Created an account on [GitHub](https://github.com/) 
 
-☑ Accepted an invitation to ECON 368 course repo (semester specific).
+☑ Accepted an invitation to ECON 368 course repo.
 
 
 &lt;/br&gt;
@@ -147,7 +147,7 @@ Git and GitHub's role in global software development is not in question.
 Scientists and academic researchers are cottoning on too. 
 - Benefits of VC and collaboration tools aside, Git(Hub) helps to operationalise the ideals of open science and reproducibility.
 - Journals have increasingly strict requirements regarding reproducibility and data access. GH makes this easy (DOI integration, off-the-shelf licenses, etc.)
-- I host all of the code and data for my [papers](http://grantmcdermott.com/research/) on GH. Same for teaching materials. I even use it to host and maintain my [website](https://github.com/grantmcdermott/grantmcdermott.github.io).
+- I host all of the code and data for my [papers](https://kylecoombs.com/research/) on GH. Same for teaching materials. I even use it to host and maintain my [website](https://github.com/grantmcdermott/grantmcdermott.github.io).
 - *Nature:* "[Democratic databases: science on GitHub](https://www.nature.com/news/democratic-databases-science-on-github-1.20719)" (Perkel, 2016).
 
 ---
@@ -169,7 +169,7 @@ One of the (many) great features of RStudio is how well it integrates version co
 
 I also want to bookmark a general point that we'll revisit many times during this course: 
 - The tools that we're using all form part of a coherent data science ecosystem.
-- Greatly reduces the cognitive overhead ("aggregation") associated with traditional workflows, where you have juggle multiple programs and languages at the same time.
+- Greatly reduces the cognitive overhead ("aggregation") associated with traditional workflows, where you have to juggle multiple programs and languages at the same time.
 
 ---
 
@@ -181,8 +181,8 @@ Before we get started, you need to create an SSH key on your local machine.
 - This creates a private key on your local machine and a public key that you can put on servers, GitHub, etc. 
   - Never reveal the private key, only the public
 
-## SSH-Keys
-  -A key has a type of encryption, two examples:
+### SSH-Keys
+  - A key has a type of encryption, two examples:
     - RSA (Rivest-Shamir-Adleman)
     - ED25519 (Edwards-curve Digital Signature Algorithm)
 
@@ -191,6 +191,8 @@ Before we get started, you need to create an SSH key on your local machine.
 
 - We will generate a key, then add the public key to GitHub SSH keys.
   - I will show you the "hard" way first, then an "easier" way second (guess which we'll do?)
+
+- You can add a passphrase to your SSH-key, but you will need to remember that password every time you push/pull. (I often don't use a passphrase for my SSH-keys unless it is for a highly sensitive use case.)
 
 ---
 # The hard way -- ssh-keygen
@@ -225,7 +227,7 @@ ssh-add ~/.ssh/id_ed25519
 - Then you'll go to your GitHub account settings and add the public key to your account under SSH keys.
 
 ---
-# The Rstudio way point-and-click
+# Point-and-click with RStudio
 
 - You can also point-and-click with RStudio: Tools -&gt; Global Options -&gt; Git/SVN -&gt; Create RSA Key...
   - Guess which we're gonna do today?
@@ -354,15 +356,7 @@ Here's a step-by-step summary of what we just did.
 
 &lt;/br&gt;
 
-NB aside: Always pull from the upstream repo *before* you push any changes. Seriously, do this even on solo projects; making it a habit will save you headaches down the road.
-
---
-
-PS — You were likely challenged for your GitHub credentials at some point. Learn how to cache these [here](https://happygitwithr.com/credential-caching.html).
-
---
-
-PPS — Speaking of credentials, an even better approach is to [switch to SSH](https://happygitwithr.com/ssh-keys.html). I recommend you do this once you feel comfortable with the main Git operations.
+**_Note_**: Always pull from the upstream repo *before* you push any changes. Seriously, do this even on solo projects; making it a habit will save you headaches down the road.
 
 ---
 
@@ -375,7 +369,7 @@ Creating the repo on GitHub first means that it will always be "upstream" of you
 
 RStudio Projects are great. 
 - Again, they interact seamlessly with Git(Hub), as we've just seen. 
-- They also solve absolute vs. relative path problems, since the .Rproj file acts as an anchor point for all other files in the repo.&lt;sup&gt;1&lt;/sup&gt;
+- They also solve absolute vs. relative path problems, since the [.Rproj file acts as an anchor point for all other files in the repo](https://martinctc.github.io/blog/rstudio-projects-and-working-directories-a-beginner%27s-guide/).&lt;sup&gt;1&lt;/sup&gt;
 
 .footnote[&lt;sup&gt;1&lt;/sup&gt; You know that calling files from `YourComputer/YourName/Documents/Special-Subfolder/etc` in your scripts makes you a bad person, right?]
 
@@ -397,7 +391,7 @@ The GitHub + RStudio Project combo is ideal for new users.
 However, I want to go over Git &lt;a href="http://happygitwithr.com/ssh-keys.html#shell" target="_blank"&gt;shell&lt;/a&gt; commands so that you can internalise the basics.
 - The shell is more powerful and flexible. Does some things that the RStudio Git GUI can't.
 - Potentially more appropriate for projects that aren't primarily based in R. (Although, no real harm in using RStudio Projects to clone a non-R repo.)
-- Also, I'm kinda tired of screen recording animated GIFs.
+- Also, I don't want to screen record more
 
 --
 
@@ -409,7 +403,7 @@ However, I want to go over Git &lt;a href="http://happygitwithr.com/ssh-keys.htm
 
 Clone a repo.
 ```bash
-$ git clone REPOSITORY-URL
+$ git clone git@REPOSITORY-URL
 ```
 
 See the commit history (hit spacebar to scroll down or q to exit).
@@ -481,7 +475,7 @@ Turn to the person next to you. You are now partners. (Congratulations.)
 
 - P2: Clone P1's repo to your local machine.&lt;sup&gt;1&lt;/sup&gt; Make some edits to the README (e.g. delete lines of text and add your own). Stage, commit and push these changes.
 
-- P1: Make your own changes to the README on your local machine. Stage, commit and then try to push them (*after* pulling from the GitHub repo first).
+- P1: Make your own changes to the README on your local machine. Stage, commit, pull from the GitHub repo, and then try to push them.
 
 .footnote[&lt;sup&gt;1&lt;/sup&gt; Change into a new directory first or give it a different name to avoid conflicts with your own "test" repo. Don't worry, Git tracking will still work if you change the repo name locally.]
 
@@ -628,6 +622,21 @@ Caveats
 - A more elegant and democratic solution to merge conflicts (and repo changes in general) is provided by Git **branches**. We'll get there next.
 
 ---
+# Advice 
+
+- Merge conflicts can create a bit of a headache if you're not careful.
+
+- Often, you can avoid merge conflicts by pulling from the upstream repo before you start working on your local copy of code.
+  - This is especially true if you are working on a project with multiple collaborators.
+  - Before you start editing code, always pull from the upstream repo to make sure that you have the latest version.
+
+- If you do encounter a merge conflict, don't panic. It's not the end of the world.
+  - Git is designed to preserve your work and the work of your collaborators.
+  - You can always revert to a previous commit if you need to.
+
+- Jenny Bryan has a great section on [Git Workflows](https://happygitwithr.com/workflows-intro) to help you use Git productively
+
+---
 
 # Aside: Line endings and different OSs
 
@@ -669,8 +678,9 @@ Branches are one of Git's coolest features.
   - But researchers can easily — and should! — use it to try out new ideas and analysis (e.g. robustness checks, revisions, etc.)
 - If you aren't happy, then you can just delete the experimental branch and continue as if nothing happened.
 
-.footnote[&lt;sup&gt;1&lt;/sup&gt; Github used to call the main branch "master", but has now switched to "main."]
-.footnote[&lt;sup&gt;2&lt;/sup&gt; You can actually have branches of branches (of branches). But let's not get ahead of ourselves.]
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Github used to call the main branch "master", but has now switched to "main."
+
+&lt;sup&gt;2&lt;/sup&gt; You can actually have branches of branches (of branches). But let's not get ahead of ourselves.]
 
 --
 
@@ -711,7 +721,7 @@ $ git checkout main
 Delete a branch
 ```bash
 $ git branch -d NAME-OF-YOUR-FAILED-BRANCH
-$ git push origin :NAME-OF-YOUR-FAILED-BRANCH
+$ git push origin --delete NAME-OF-YOUR-FAILED-BRANCH
 ```
 
 ---
@@ -770,7 +780,7 @@ Git forks lie somewhere between cloning a repo and branching from it.
 
 Forking a repo on GitHub is [very simple](https://help.github.com/articles/fork-a-repo/); just click the "Fork" button in the top-right corner of said repo.
 - This will create an independent copy of the repo under your GitHub account.
-- Try this now. Use one of [my repos](https://github.com/grantmcdermott?tab=repositories) if you can't think of anyone else's.
+- Try this now. Use one of [the class repos](https://github.com/big-data-and-economics) if you can't think of anyone else's.
 
 Once you fork a repo, you are free to do anything you want to it. (It's yours.) However, forking — in combination with pull requests — is actually how much of the world's software is developed. For example:
 - Outside user *B* forks *A*'s repo. She adds a new feature (or fixes a bug she's identified) and then [issues an upstream pull request](https://help.github.com/articles/creating-a-pull-request-from-a-fork/).
@@ -892,12 +902,13 @@ Repeat steps 3—7 (but especially steps 3 and 4) often.
 
 If you haven't done so already, now is a good time to clone/fork the course materials to your local computer.
 
-### Assignment 1
+### Problem Set 0
 
-Now that you've learned the necessary basics, Assignment 1 is up on GitHub Classroom.
-- Impress me with your ggplot2 skills.
-- Deadline: Due by the *start* of our next lecture.
+Problem Set 0 is due on Thursday.
 
+### Problem Set 1 
+
+This will be posted later this week and is due at the end of the month.
 
 ### Next lecture
 
