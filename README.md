@@ -225,13 +225,11 @@ In RStudio, use the File menu to open the file `test.Rmd`. Use the "Knit" submen
 
 # Other details
 
-This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/). Here is the course description, right out of the [syllabus](syllabus/syllabus.pdf):
+This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/). Here is the course description, right out of the [syllabus](syllabus/syllabus.md):
 
 Economics is at the forefront of developing statistical methods for analyzing data collected from uncontrolled sources. Since econometrics addresses challenges in estimation such as sample selection bias and treatment effects identification, the discipline is well-suited for the analysis of large and unsystematically collected datasets. This course introduces statistical (machine) learning methods, which have been developed for analyzing such datasets but which have only recently been implemented in economic research. We will cover a variety of topics including data collection, data management, data description, causal inference, and data visualization.  The course also explores how econometrics and statistical learning methods cross-fertilize and can be used to advance knowledge in the numerous domains where large volumes of data are rapidly accumulating. We will also cover the ethics of data collection and analysis. The course will be taught in *R*. 
 
 ## Grading policy
-
-<!-- TKTKTKTK -- WTF will the final project be this year? -->
 
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
@@ -329,7 +327,6 @@ Within your own private problem set repository, you can create an `Issues` tab w
 Each of you will give a 5-minute presentation summarizing a key lecture reading, or an (approved) software package/platform.
 
 Please sign up [here](https://github.com/big-data-and-economics/presentations-team) at the start of the semester. 
-
 
 ### Final Project
 

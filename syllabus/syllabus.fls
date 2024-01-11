@@ -157,10 +157,10 @@ INPUT ./syllabus.out
 INPUT ./syllabus.out
 INPUT syllabus.out
 INPUT syllabus.out
+OUTPUT syllabus.pdf
 INPUT ./syllabus.out
 INPUT ./syllabus.out
 OUTPUT syllabus.out
-OUTPUT syllabus.pdf
 INPUT c:/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT c:/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 INPUT c:/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
@@ -216,8 +216,8 @@ INPUT c:/texlive/2023/texmf-dist/tex/latex/base/t1cmtt.fd
 INPUT c:/texlive/2023/texmf-dist/tex/latex/base/t1cmtt.fd
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/jknappen/ec/ectt1095.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
-INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/palatino/pplr9e.tfm
+INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/palatino/pplb9e.tfm
 INPUT c:/texlive/2023/texmf-dist/fonts/vf/adobe/palatino/pplr9e.vf
 INPUT c:/texlive/2023/texmf-dist/fonts/tfm/adobe/palatino/pplr8r.tfm
