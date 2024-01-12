@@ -32,6 +32,8 @@ opts_chunk$set(
   )
 ```
 
+<!-- TK: GH gifs? Am I missing anything? -->
+
 # Table of contents
 
 1. [Prologue](#prologue)
@@ -408,6 +410,7 @@ What has changed?
 ```bash
 $ git status
 ```
+
 ---
 
 # Main Git shell commands (cont.)
@@ -852,12 +855,20 @@ Once the .gitignore file is created, simply add in lines of text corresponding t
   - E.g. Don't ignore a  particular file: `!somefile.txt`
 
 ---
+name: vscode
+# Git source control in VS Code
+
+- VS Code has built-in [Git source control integration](https://code.visualstudio.com/docs/sourcecontrol/overview).
+- This is what you will use in GitHub Codespaces
+- The "Git" vocabulary is the same as what we've learned in RStudio, but the UI is different.
+
+---
 
 # GitHub Issues
 
 [GitHub Issues](https://guides.github.com/features/issues/) are another great way to interact with your collaborators and/or package maintainers.
-- If you spot any problems with these lecture notes, please file an issue [here](https://github.com/uo-ec607/lectures/issues)!
-  
+- If you spot any problems with these lecture notes, please file an issue [here](https://github.com/big-data-and-economics/big-data-class-materials/issues)! (Keep in mind that is public!)
+
 ---
 class: inverse, center, middle
 name: summary

@@ -1,4 +1,4 @@
-# Class Materials for Bates ECON/DCS 368: Big Data and Economics
+# Class Materials for Bates ECON/DCS 368: Big Data and Economics/Data Science for Economists
 
 [Full syllabus with official policies](https://github.com/big-data-and-economics/big-data-class-materials/blob/main/syllabus/syllabus.pdf)
 
