@@ -8,6 +8,7 @@
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="libs/ou-colors.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -417,6 +418,7 @@ What has changed?
 ```bash
 $ git status
 ```
+
 ---
 
 # Main Git shell commands (cont.)
@@ -861,12 +863,65 @@ Once the .gitignore file is created, simply add in lines of text corresponding t
   - E.g. Don't ignore a  particular file: `!somefile.txt`
 
 ---
+# GitHub Codespaces
+
+- GitHub Codespaces is a new feature that allows you to code directly in the browser
+
+- All of you have access to this as members of the class GitHub organization and/or if you registered with GitHub Education
+
+- You can access it by clicking the `Code` dropdown menu &gt; `Codespaces` tab &gt; `Create codespace on main` (or whatever branch you prefer)
+
+- It is a great tool to fiddle with a repository in a browser without having to install anything on your local machine
+
+- It is also a great tool to test drive a coding project in a controlled environment
+
+- In this class, there is a port to a server version of RStudio under the `Ports` tab in the bottom panel
+  - The port is labeled `Rstudio`
+  - The username/password are "rstudio" and "rstudio"
+  - I show a gif of this use case on the next slide
+
+---
+# GitHub Codespace/RStudio launch
+
+&lt;div align="center"&gt;
+&lt;img src="pics/github-codespace-rstudio.gif" height=500&gt;
+&lt;/div&gt;
+
+
+---
+name: vscode
+# Git source control in VS Code
+
+- VS Code has built-in [Git source control integration](https://code.visualstudio.com/docs/sourcecontrol/overview).
+
+- This is what you will use in GitHub Codespaces
+
+- The "Git" vocabulary is the same as what we've learned in RStudio, but the UI is different.
+
+- You will need to `git fetch` to pull from the upstream repository (i.e. GitHub)
+
+- It is built a little smarter and will autmatically pull, then push when you select "sync" from the UI
+
+- This is not exactly "best practice," but it does make it easier to get started with Git
+
+- I show a `pull` and `sync` in the GIF on the next slide, but the documentation is linked above
+
+- ALWAYS ALWAYS ALWAYS make sure you use source control to push/pull your changes after coding in the RStudio port
+
+---
+# Git source control gifs
+
+&lt;div align="center"&gt;
+&lt;img src="pics/vscode-source-control.gif" height=500&gt;
+&lt;/div&gt;
+
+---
 
 # GitHub Issues
 
 [GitHub Issues](https://guides.github.com/features/issues/) are another great way to interact with your collaborators and/or package maintainers.
-- If you spot any problems with these lecture notes, please file an issue [here](https://github.com/uo-ec607/lectures/issues)!
-  
+- If you spot any problems with these lecture notes, please file an issue [here](https://github.com/big-data-and-economics/big-data-class-materials/issues)! (Keep in mind that is public!)
+
 ---
 class: inverse, center, middle
 name: summary
