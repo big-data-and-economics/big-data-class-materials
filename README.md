@@ -24,7 +24,6 @@ In this course, I ask that you use GitHub Discussions and `Issues` to ask questi
 
 The [GitHub Discussions](https://github.com/orgs/big-data-and-economics/discussions) page is hosted on the overall Classroom Organization (details on Organization vs. Repository in [FAQ](#faq)). It is private and can be used like any traditional online forum. You can use it to ask questions, answer questions, and discuss topics related to the course. I will be monitoring the discussions and will answer questions as they come up. I encourage you to answer each other's questions as well.
 
-
 ### GitHub Issues
 
 GitHub `Issues` are for repository specific questions. 
