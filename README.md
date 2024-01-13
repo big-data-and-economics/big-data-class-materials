@@ -214,7 +214,7 @@ In the Ports tab, click the Open in Browser "World" icon that appears when you h
 
 ![Ports](img/ports.png)
 
-This will launch RStudio Server in a new window. Log in with the username and password `rstudio/rstudio`. 
+This will launch RStudio Server in a new window. Log in with the username: `rstudio` and password: `rstudio`. 
 
 * NOTE: Sometimes, the RStudio window may fail to open with a timeout error. If this happens, try again, or restart the Codepace.
 
