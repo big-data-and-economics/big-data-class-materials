@@ -64,6 +64,20 @@ name: prologue
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
+# Goal today
+
+1. Introduce version control
+
+2. Learn the steps of a basic Git/GitHub workflow with Rstudio
+  - Create an SSH Key in RStudio.
+  - Create a GitHub repository as a project in RStudio.
+  - Implement a commit, push, and pull using GitHub.
+  - Create a new branch in your repository.
+  - Create and fix a merge conflict in your repository.
+
+3. Talk about READMEs and .gitignore files
+
+---
 
 # Student presentation: R Markdown
 
@@ -96,6 +110,24 @@ We went through a software installation check during the previous lecture. By no
 </br>
 
 If in doubt about software, please consult Jenny Bryan's amazing guide: http://happygitwithr.com.
+
+---
+# Class updates
+
+- The [final project replication](https://github.com/big-data-and-economics/final-project) instructions have been posted. Please read through. 
+  - Replication proposal is due 1/25
+  - It is a group project, please select a partner by 1/18
+
+- I added my policy on posting to GitHub to the [Discussions page](https://github.com/orgs/big-data-and-economics/discussions/6)
+  - tl;dr: Post thoughtfully
+
+- How are folks doing with problem set 0?
+
+- Questions on: 
+  - GitHub course page?
+  - Syllabus and course policies? (Make note of regrading policy.)
+  - Grading? 
+  - GitHub Education?
 
 ---
 class: inverse, center, middle
@@ -173,10 +205,10 @@ I also want to bookmark a general point that we'll revisit many times during thi
 Before we get started, you need to create an SSH key on your local machine.
 
 - SSH keys are a way to identify trusted computers, without involving passwords.
-- This creates a private key on your local machine and a public key that you can put on servers, GitHub, etc. 
+- A private key on your computer that matches a public key to put on servers, GitHub, etc. 
   - Never reveal the private key, only the public
 
-### SSH-Keys
+#### SSH-Keys
   - A key has a type of encryption, two examples:
     - RSA (Rivest-Shamir-Adleman)
     - ED25519 (Edwards-curve Digital Signature Algorithm)
@@ -224,7 +256,7 @@ ssh-add ~/.ssh/id_ed25519
 ---
 # Point-and-click with RStudio
 
-- You can also point-and-click with RStudio: Tools -> Global Options -> Git/SVN -> Create RSA Key...
+- You can also point-and-click with RStudio: `Tools -> Global Options -> Git/SVN -> Create RSA Key...`
   - Guess which we're gonna do today?
 
 - If you already have an SSH key on your local machine, then you can skip this step.
@@ -247,9 +279,9 @@ The starting point for our workflow is to link a GitHub repository (i.e. "repo")
 1. Create the repo on GitHub and initialize with a README.
 2. Copy the HTTPS/SSH link (the green "Clone or Download" button).<sup>1</sup>
 3. Open up RStudio.
-4. Navigate to **File -> New Project -> Version Control -> Git**.
+4. Navigate to `File -> New Project -> Version Control -> Git`.
 5. Paste your copied link into the "Repository URL:" box.
-6. Choose the project path ("Create project as subdirectory of:") and click **Create Project**.
+6. Choose the project path ("Create project as subdirectory of:") and click `Create Project`.
 
 .footnote[<sup>1</sup> It's easiest to start with HTTPS, but <a href="http://happygitwithr.com/ssh-keys.html#ssh-keys" target="_blank">SSH</a> is advised for more advanced users.]
 
