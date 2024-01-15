@@ -955,7 +955,7 @@ name: summary
 
 ---
 
-# Recipe (shell commands in grey)
+# Recipe (shell commands in yellow)
 
 1. Create a repo on GitHub and initialize with a README.
 
