@@ -2,7 +2,7 @@
 title: "Data Science for Economists"
 subtitle: "Lecture 2: Version control with Git(Hub)"
 author: "Grant McDermott, adapted by Kyle Coombs"
-date: "Bates College | [ECON 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)" #"`r format(Sys.time(), '%d %B %Y')`"
+date: "Bates College | [ECON 368](https://github.com/big-data-and-economics/big-data-class-materials)" #"`r format(Sys.time(), '%d %B %Y')`"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts,'libs/ou-colors.css'] 
