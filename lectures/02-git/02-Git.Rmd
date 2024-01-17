@@ -665,6 +665,49 @@ Caveats
 - Jenny Bryan has a great section on [Git Workflows](https://happygitwithr.com/workflows-intro) to help you use Git productively
 
 ---
+# Did you not get a merge conflict?
+
+- Some of you may have encountered a divergent branch:
+
+```bash
+Hint: You have divergent branches and need to specify how to reconcile them.
+Hint: You can do so by running one of the following commands sometime before
+Hint: your next pull:
+Hint: 
+Hint:   git config pull.rebase false  # merge
+Hint:   git config pull.rebase true   # rebase
+Hint:   git config pull.ff only       # fast-forward only
+Hint: 
+Hint: You can replace "git config" with "git config --global" to set a default
+Hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+Hint: or --ff-only on the command line to override the configured default per
+Hint: invocation.
+Git failed with a fatal error.
+Git failed with a fatal error.
+Need to specify how to reconcile divergent branches.
+```
+
+---
+# Divergent branches
+
+- We'll get into branches below, but essentially this is because `git pull` does two things:
+
+  - `git fetch` which downloads the latest changes from the remote repo
+  - `git merge` which merges the changes into your local repo
+
+- For your purposes, I recommend you enter the following in your terminal:
+
+```bash
+git config --global pull.ff only
+```
+
+- Let's try that now
+
+- Essentially, this defauls to a fast-forward merge, which is what you want in most cases.
+
+- Fast-forward literally brings your local repo up-to-date first, then 
+
+---
 
 # Aside: Line endings and different OSs
 
