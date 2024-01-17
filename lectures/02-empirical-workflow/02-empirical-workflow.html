@@ -18,7 +18,7 @@ class: center, middle, inverse, title-slide
 # Big Data and Economics
 ]
 .subtitle[
-## Lecture 2a: The Empirical Workflow and Clean Code
+## Lecture 2b: The Empirical Workflow and Clean Code
 ]
 .author[
 ### Kyle Coombs (adapted from Tyler Ransom + Scott Cunningham)
@@ -44,9 +44,17 @@ class: center, middle, inverse, title-slide
 
 1. [Prologue](#prologue)
 
-2. [Clean Code](#clean_code)
+2. [Empirical Workflow](empirical-workflow)
 
-3. [Principles](#principles)
+3. [Clean Code](#clean_code)
+  - [Automation](#automation)
+  - [Version Control](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-git/02-Git.html#1)
+  - [Organization of data and software files](#organization)
+  - [Abstraction](#abstraction)
+  - [Documentation](#documentation)
+  - [Time / task management](#time-task)
+  - [Test-driven development (unit testing, profiling, refactoring)](#test-driven)
+  - [Pair programming](#pair-programming)
 
 4. [Appendix: FAQ](#faq)
 
@@ -65,43 +73,13 @@ Source: [xkcd](http://xkcd.com/1513/)
 ---
 # Housekeeping
 
-- .hi[Office Hours:]
-    - My office hours are now 4-5pm on Tuesdays and 10:30am-11:30am on Wednesdays
-    - My office is 276 Pettengill
-    - Can also meet on Zoom if needed
-    - Make an [appointment](https://calendar.app.google/XF36Ujpg9NcJbSD58)
+- .hi[Presentations:] Sign-up in the [Presentations github repository](https://classroom.github.com/a/jWcBRDZJ)
 
-- .hi[Presentations:] Everyone does two, sign-up in the [Presentations github repository](https://classroom.github.com/a/jWcBRDZJ)
+- .hi[Problem Set 1:] due on Sunday, January 29th at 11:59pm
 
-- .hi[Problem Set 1:] due on Sunday, September 24th at 11:59pm
-
-- .hi[Project Proposal:] due on Sunday, September 24th at 11:59pm
+- .hi[Final Project Proposal:] due on Sunday, January 25th at 11:59pm
   - Create a fork of the Final Project repository and add me as a collaborator
-
----
-# Play along at home
-
-- Navigate to your fork of class repository on GitHub (**not** the class organization repository)
-  - It should be at `your-github-username/big-data-class-materials`
-
-- Sync your fork of the class repository with the `Sync fork` button
-
-- `Clone` the repository to your computer using RStudio
-  - Copy the repository ssh URL from GitHub
-  - `File` &gt; `New Project` &gt; `Version Control` &gt; `Git` &gt; `Repository ssh URL`
-  - Alternatively, use GitHub Desktop to clone the repository to your computer
-
-- `Pull` the latest changes from the class repository to your computer
-
-- Open RStudio and navigate to the `lectures/02-empirical-workflow` folder
-
-- Open `02-empirical-workflow.Rmd` and you can follow along with any code in the slides
-  - You may need to install tidyverse with `install.packages('tidyverse')`
-
-
-```r
-install.packages('tidyverse')
-```
+  - List the names of you and your partner in the README.md file
 
 ---
 
@@ -139,12 +117,6 @@ Also a small contribution from [here](https://garywoodfine.com/what-is-clean-cod
         - You can also install Windows Subsystem for Linux to run Linux on a Windows machine
 
 ---
-class: inverse, center, middle
-name: clean_code
-
-# Clean Code
-
----
 # Reducing empirical chaos
 
 ## Sad story
@@ -175,51 +147,221 @@ df %&gt;% filter(insample_new==1)
 ```
 - The boy was very frustrated and decided to work on these slides while re-running his code.
 
+- Today I'll present to approaches to avoid this situation:
+
+1. Empirical Workflow
+2. Clean Code
+
+---
+class: inverse, center, middle
+name: empirical-workflow
+
+# Empirical Workflow
+
+---
+# Workflow workflow workflow
+
+## The Cunningham Empirical Workflow Conjecture
+
+- The cause of most of your errors is **not** due to insufficient knowledge of syntax in your chosen programming language
+
+- The cause of most of your errors is due to a poorly designed .hi[Empirical Workflow]
+
+- .[Empirical Workflow]: A fixed set of routines you always follow to identify the most common errors
+	- Think of it as your morning routine: alarm goes off, go to wash up, make your coffee/tea, put pop tart in toaster, contemplate your existence in the universe until **ding**, eat pop tart repeat *ad infinitum*
+
+- Finding weird errors is a different task;  empirical workflows catch typical and common errors
+
+- Empirical workflows follow a checklist
+
+---
+# Why do we use checklists?
+
+- I got engaged in July and am planning a wedding in Princeton for next July
+- I also moved to New England in August and am still unpacking (in ME and MA)
+- I am teaching two upper-level electives
+- I am trying to submit several papers to conferences/journals this year
+- Each of these gets a checklist:
+
+.pull-left[
+- **Wedding:**
+
+    ☐ Finalize tent configuration
+
+    ☐ Pick wedding colors
+
+- **Unpacking:**
+
+    ☐ Put books on shelves
+
+    ☐ Buy dresser
+
+- **AEJ: Policy submission**
+
+    ☐ Write 5-page submission report
+
+    ☐ Submit
+]
+.pull-right[
+- **ECON 368**
+
+    ☐ Write Problem Set 1 solutions
+
+    ☐ Rewrite data tips
+
+- **Senior Thesis:**
+
+    ☐ Create FAQs
+
+    ☐ Develop data guidance
+
+- **Disaster GoFundMe spillovers:**
+  
+    ☐ Skeleton code for Hurricane Iliana DiD
+
+    ☐ Submit to NBER conference by 10/8
+]
+---
+# To remember the obvious stuff
+
+- When I stop to think, I know I need to do everything on my checklists
+
+- But then I forget when I move onto the next task
+
+- Programming is the same, except you have an **empirical checklist**:
+
+- The **empirical checklist**:
+    - Covers the intermediate step between "getting the data" and "analyzing the data"
+    - It largely focuses on ensuring data quality for the most common, easy to identify problems
+    - It'll make you a better coauthor
+
+---
+# Simple data checklist items
+
+- Simple, yet non-negotiable, programming commands and exercises to check for data errors
+
+- Open the data and look at it: "Real eyes realize real lies"&lt;sup&gt;1&lt;/sup&gt;
+
+- Check factor/categorical variables for odd spelling
+
+
+```r
+table(bp$race,bp$sex)
+```
+
+```
+##            
+##             F Female M Male
+##   Asian     0      1 0    1
+##   Black     1      2 1    3
+##   Caucasian 0      3 0    1
+##   Other     0      1 0    1
+##   White     0      2 0    2
+##   WHITE     0      1 0    1
+```
+
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
+
+---
+# Visualize key facets of the data
+
+```r
+bp &lt;- read_csv('data/messier_bp.csv',skip=4,
+    col_names=c('pat_id','birth_month','birth_day','birth_year','race','sex','hispanic','bp_visit1','hr_visit1','bp_visit2','hr_visit2','bp_visit3','hr_visit3'),show_col_types = FALSE)
+
+ggplot(data=bp,aes(y=hr_visit1,x=race)) + geom_bar(stat='summary',fun='mean')
+```
+
+&lt;img src="02-empirical-workflow_files/figure-html/immediate_visual-1.svg" style="display: block; margin: auto;" /&gt;
+- Are Black people's heart rates really more than twice as high?
+
+---
+# Visualize the raw data
+
+- Go beyond the eyeball and graph the data
+
+```r
+# Get the first three rows of the data frame (or as many rows as needed)
+
+#Make a density of the heart rate on visit 1:
+ggplot(data=bp,aes(x=hr_visit1))+geom_density()
+```
+
+&lt;img src="02-empirical-workflow_files/figure-html/funky_data2-1.svg" style="display: block; margin: auto;" /&gt;
+
+What might be going on here?
+
+---
+# Visualize by group
+
+```r
+# Get the first three rows of the data frame (or as many rows as needed)
+
+#Make a density of the heart rate on visit 1:
+ggplot(data=bp %&gt;% mutate(race=ifelse(race=='WHITE' | race=='Caucasian','White',race)),aes(x=hr_visit1,fill=race))+geom_density()
+```
+
+&lt;img src="02-empirical-workflow_files/figure-html/funky_data3-1.svg" style="display: block; margin: auto;" /&gt;
+
+- Oh! I bet 999 means NA and a few Black patients have missing heart rates
+
+---
+# Other tricks:
+
+- Check if the data are the right-size
+
+- If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
+
+- If not, find out why! Maybe there are 1020 because DC is (rightfully) included
+
+- Search for outliers or oddities and work out possible explanations using:
+    - Codebooks
+    - Intuition
+    - Emails to the source/creator of data
+
+---
+class: inverse, center, middle
+name: clean_code
+
+# Clean Code
+
 ---
 # What is Clean Code?
 
-- .hi[Clean Code:] Code that is easy to understand, easy to modify, and hence easy to debug
+.hi[Clean Code:] Code that is easy to understand, easy to modify, and hence easy to debug
 
-- Clean code saves you and your collaborators time
+--
 
----
-# Why clean code: Scientific progress
+#### Clean code advances scientific progress
 
-- Good science is based on careful observations
-
-- Science progresses through iteratively testing hypotheses and making predictions
+- Good science uses careful observations to iteratively test hypotheses/make predictions
 
 - Scientific progress is impeded if
 
     - mistaken previous results are erroneously given authority
-
     - previous hypothesis tests are not reproducible
-
     - previous methods and results are not transparent
 
 - Thus, for science that involves computer code, clean code is a must
 
-- Minimizes (incompletely) the role of "the influence of hidden researcher decisions" (Huntington-Klein et al. 2021)
+- Reduces "the influence of hidden researcher decisions" (Huntington-Klein et al. 2021)
 
----
-# Why clean code: Personal/team sanity
+--
 
-- You will always make a mistake while coding
+#### Clean code increases personal/team sanity
 
-- What makes good programmers great is their ability to quickly identify and correct mistakes
+- You will always make a mistake while coding -- hat makes good programmers great is their ability to quickly identify and correct mistakes 
 
-- Developing a habit of clean coding from the outset of your career will help you more quickly identify and correct mistakes
+- Clean code makes it easier to identify and correct mistakes
 
-- It will save you a lot of stress in the long-run
-
-- It will make your collaborative relationships more pleasant
+- Saves you stress in the long-run and makes your collaborative relationships more pleasant
 
 ---
 # Why clean code is under-produced
 
 - If clean code is so beneficial and important, why isn't there more of it?
 
-&lt;br&gt;
+--
 
 1. .hi[Competitive pressure] to produce research/products as quickly as possible
 
@@ -228,33 +370,29 @@ df %&gt;% filter(insample_new==1)
 3. In the moment, clean code .hi[takes longer to produce] while seemingly conferring no benefit
 
 ---
-class: inverse, center, middle
-name: principles
-
 # How does one produce clean code? Principles
 
+1. Automation
+
+2. Version Control&lt;sup&gt;1&lt;/sup&gt;
+
+3. Organization of data and software files
+
+4. Abstraction
+
+5. Documentation
+
+6. Time / task management
+
+7. Test-driven development (unit testing, profiling, refactoring)
+
+8. Pair programming
+
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Skipped today cause we covered it last class.]
+
 ---
-# How does one produce clean code? Principles
-
-- Automation
-
-- Version control
-
-- Organization of data and software files
-
-- Abstraction
-
-- Documentation
-
-- Time / task management
-
-- Test-driven development (unit testing, profiling, refactoring)
-
-- Pair programming
-
----
-
-# Automation
+name: automation
+# 1. Automation
 
 - Gentzkow &amp; Shapiro's two rules for automation:
 
@@ -273,7 +411,7 @@ name: principles
 ---
 # How to write scripts
 
-## Keep them modular
+### Keep them modular
 - Each script should do one thing and one thing only
 - e.g. It takes an input in, it returns an output
 
@@ -281,7 +419,7 @@ name: principles
     - Taking in two files and merging them
     - Taking in a cleaned file and returning a figure
 
-## Have a main script that runs all scripts in order
+### Have a main script that runs all scripts in order
 
 - This is the script that you run to reproduce your results
 - You will rarely run it all at once, but it will be a nice way to organize your thoughts
@@ -290,53 +428,12 @@ name: principles
 
 -- 
 
-- A main script could be a `.Rmd`, a `.R`, a `.sh`, a `.py`, etc.
+- A main script could be a `.Rmd`, a `.R`, a `.sh`, a `.py`, a `.do` etc.
 
 ---
-# Main script
+name: main-script
+# Main script 
 
-
-```r
-#File: main.Rmd or main.R
-#By: Kyle Coombs
-#What: Runs the project from start to finish in Python
-#Date: 2023/09/12
-
-#Install packages with housekeeping. Also put together paths.
-source('housekeeping.R')
-#User written functions can be sourced -- or you could write a package, your call
-source(paste0(build,'clean_functions.R'))
-source(paste0(analysis,'analysis_functions.R'))
-
-#Import files
-df1 &lt;- read_csv(paste0(raw,'file1.csv'))
-df2 &lt;- read_parquet(paste0(raw,'file2.parquet'))
-df3 &lt;- read_dta(paste0(raw,'file3.dta'))
-
-#Clean files
-cleaned_df1  &lt;- clean_df1(df1)
-cleaned_df2  &lt;- clean_df2(df2)
-cleaned_df3  &lt;- cf.clean_df3(df3)
-
-#Merge files 1 to 2
-merged_df1_df2 = merge(cleaned_df1, cleaned_df2, on=c('merge','vars'))
-
-#Append file 1 to
-append_df1_df2_df3 = rbind(merged_df1_df2, cleaned_df2)
-
-#Analysis
-sum_stats=summary_stats(append_df1_df2_df3,stats=c('mean','median','max'))
-reg_results=basic_regression(append_df1_df2_df3)
-
-#Tables will likely be made with a host of R packages
-make_sum_figures(sum_stats)
-make_figures(reg_results)
-make_sum_tables(sum_stats)
-make_tables(reg_results)
-```
-
----
-# Alternate main script
 
 ```r
 #File: main.Rmd or main.R
@@ -372,17 +469,68 @@ source('analysis/make_sum_tables.R')
 source('analysis/make_reg_tables.R')
 ```
 
----
-
-# Version control
-
-- We've discussed Git and GitHub in a previous slide deck
-
-- Version control provides a principled way for you to easily undo changes, test out new specifications, and more
+[Main script with functions](main-with-functions)
 
 ---
+# Main script as .Rmd
 
-# File organization
+- In this class, your problem sets will be .Rmd files that you knit to PDF/HTML
+
+- The .Rmd file will serve as your main script
+
+- You can `source()` modular code files in code chunks
+
+- PS1 will show you examples of doing this
+
+- This guarantees your code runs from start to finish instead of only when you are working interactively
+
+
+---
+# What's a housekeeping file?
+
+A housekeeping file automates several tasks and goes at the start of every file in your project
+
+
+```r
+# Housekeeping.R
+# By: Your Name
+# Date: YYYY-MM-DD
+# What: This script loads the packages and data needed for the analysis.
+
+## Package installation -- uncomment if running for the first time
+#install.packages(c('here','tidyverse'))
+library(here)
+library(tidyverse)
+library(haven)
+
+## Directory creation
+
+here::i_am('housekeeping.R')
+
+data_dir &lt;- here::here('data')
+raw_dir &lt;- here::here(data_dir,'raw')
+clean_dir &lt;- here::here(data_dir,'clean')
+output_dir &lt;- here::here('output')
+code_dir &lt;- here::here('code')
+processing_dir &lt;- here::here(code_dir,'processing')
+analysis_dir &lt;- here::here(code_dir,'analysis')
+documentation_dir &lt;- here::here('documentation')
+
+suppressWarnings({
+    dir.create(data_dir)
+    dir.create(raw_dir)
+    dir.create(clean_dir)
+    dir.create(documentation_dir)
+    dir.create(code_dir)
+    dir.create(processing_dir)
+    dir.create(analysis_dir)
+    dir.create(output_dir)
+})
+```
+
+---
+name: organization
+# 3a. File organization
 
 1. Separate directories by function
 
@@ -446,7 +594,7 @@ This is called an .hi[absolute path]:
 
 .hi[Relative paths] solve a lot of this:
   - The path to a file or directory starting from the current working directory
-  - If my current working directory is `\big-data-class-materials`, then I can use `lectures/02-empirical-workflow/02-empirical-workflow.Rmd`
+  - If my current working directory is `/big-data-class-materials`, then I can use `lectures/02-empirical-workflow/02-empirical-workflow.Rmd`
   - **This is portable** -- if I send this file to you and you have a copy of the `big-data-class-materials` repository on your computer, it will work on your computer
 
 ---
@@ -476,39 +624,6 @@ This is called an .hi[absolute path]:
 - I'll further more or less as needed
 - See GitHub folder for this lecture as an example
     - I also include a script `make_directory.sh` that automates this process
-
----
-# How I organize research projects
-
-
-```bash
-tree my_project
-```
-
-```
-## my_project
-## ├── code
-## │   ├── analysis
-## │   └── build
-## ├── data
-## │   ├── clean
-## │   ├── raw
-## │   │   └── my_data.csv
-## │   └── temp
-## ├── literature
-## ├── output
-## │   ├── figures
-## │   └── tables
-## ├── presentations
-## │   ├── notes
-## │   └── slides
-## └── writing
-##     ├── drafts
-##     ├── edits
-##     └── notes
-## 
-## 18 directories, 1 file
-```
 
 ---
 # How I organize research projects
@@ -558,19 +673,6 @@ read.csv(paste(data_raw,'my_data.csv',sep='/'))
 - If you move your project to a different computer, you can just change the `my_project` variable and all the other paths will update automatically
 
 ---
-# Help! I am in code/, but I need data/raw/file.csv!
-
-- You can use relative paths to navigate between directories
-- `..` means "go up one directory"
-  - `../data/raw` means "go up one directory, then down into `data/raw`"
-- `.` means "stay in the current directory"
-  - `./code/build` means "stay in the current directory, then down into `code/build`"
-- `../..` means "go up two directories"
-  - `../../data/raw` means "go up two directories, then down into `data/raw`
-
-Play around with them yourself!
-
----
 # Alternative to all the pastes is here()
 
 - Better yet is the [here](https://cran.r-project.org/web/packages/here/vignettes/here.html)
@@ -605,9 +707,27 @@ here('data/raw','my_data.csv')
 
 - Can be less clunky than `paste()` and `sep="/"`
 
+- Get lost in your directories? Use `here::here()` to identify your root directory
+
+- Alternatively, double-click the `.Rproj` file to be redirected to the root directory of your project folder
+
+---
+# Help! I am in code/, but I need data/raw/file.csv!
+
+- You can use relative paths to navigate between directories
+- `..` means "go up one directory"
+  - `../data/raw` means "go up one directory, then down into `data/raw`"
+- `.` means "stay in the current directory"
+  - `./code/build` means "stay in the current directory, then down into `code/build`"
+- `../..` means "go up two directories"
+  - `../../data/raw` means "go up two directories, then down into `data/raw`
+
+Play around with them yourself!
+
+
 ---
 
-# Data organization
+# 3b. Data organization
 
 - The key idea is to practice .hi[relational data base management]
 
@@ -643,7 +763,8 @@ Source: [Code and Data for the Social Sciences](https://web.stanford.edu/~gentzk
 
 
 ---
-# Abstraction
+name: abstraction
+# 4. Abstraction
 
 - What is abstraction? It means "reducing the complexity of something by hiding unnecessary details from the user"
 
@@ -727,79 +848,6 @@ rep(names_short, times = 3)
 
 ---
 
-# Abstract to eliminate redundancy (cont.)
-
-What if you can't find an R function? Write your own!
-
-
-```r
-set.seed(16)
-prod1  = rnorm(1, 0, 1)*rnorm(1,4,6)
-prod2  = rnorm(2, 0, 1)*rnorm(2,0,1)
-prod3  = rnorm(3, 0, 1)*rnorm(3,15,78)
-print(prod1)
-## [1] 1.547257
-print(prod2)
-## [1] 1.2582691 0.6764943
-print(prod3)
-## [1] -60.06036  10.11156  24.32342
-```
-
-
-```r
-set.seed(16)
-multiply_normals = function(count,mean1=0,sd1=1,mean2=0,sd2=1) {
-    prod = rnorm(count,mean1,sd1)*rnorm(count,mean2,sd2)
-    return(prod)
-}
-prod1=multiply_normals(1,mean2=4,sd2=6)
-prod2=multiply_normals(2,mean2=0,sd2=1)
-prod3=multiply_normals(3,mean2=15,sd2=78)
-
-print(prod1)
-## [1] 1.547257
-print(prod2)
-## [1] 1.2582691 0.6764943
-print(prod3)
-## [1] -60.06036  10.11156  24.32342
-```
-
----
-# Note on seeds
-
-- When randomizing in any language, you aren't really randomizing
-
-- You're producing pseudo-random numbers that return in a deterministic ordered list
-
-- If you set the seed, you can reproduce the same "random" numbers
-
-- This is useful for debugging and sharing code
-
-- Use `set.seed` in R
-
-
-```r
-set.seed(0)
-print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
-## [1] 17.26652
-print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
-## [1] 15.14712
-# New seed
-set.seed(1)
-print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
-## [1] 13.72156
-print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
-## [1] 16.10432
-# Reset seed
-set.seed(0)
-print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
-## [1] 17.26652
-print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
-## [1] 15.14712
-```
-
----
-
 # Abstract to improve clarity
 
 - Consider the example of obtaining OLS estimates from a vector `y` and covariate matrix `X` that already exist on our workspace
@@ -841,8 +889,8 @@ The second approach is easier to read and understand what the code is doing
 - As you're starting out programming, I would advise doing almost every inside of a function (i.e. err on the side of over-abstraction when starting out)
 
 ---
-
-# Documentation
+name: documentation
+# 5. Documentation
 
 1. Don't write documentation you will not maintain
 
@@ -924,8 +972,8 @@ amazing_function &lt;- function(x) {
 - Read more [here](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html)
 
 ---
-
-# Time management
+name: time-task
+# 6a. Time management
 
 - Time management is key to writing clean code&lt;sup&gt;2&lt;/sup&gt;
 
@@ -941,7 +989,7 @@ amazing_function &lt;- function(x) {
 
 ---
 
-# Task management
+# 6b. Task management
 
 - When collaborating on code, it is essential to not use email or Slack threads to discuss coding tasks
 
@@ -954,254 +1002,8 @@ amazing_function &lt;- function(x) {
 - GitHub and Trello also have Kanban-style boards where you can easily visually track progress on tasks
 
 ---
-# Workflow workflow workflow
-
-## The Cunningham Empirical Workflow Conjecture
-
-- The cause of most of your errors is **not** due to insufficient knowledge of syntax in your chosen programming language
-
-- The cause of most of your errors is due to a poorly designed .hi[Empirical Workflow]
-
----
-# Empirical Workflow
-
-- A workflow is a fixed set of routines you bind yourself to which when followed identifies the most common errors
-	- Think of it as your morning routine: alarm goes off, go to wash up, make your coffee/tea, put pop tart in toaster, contemplate your existence in the universe until **ding**, eat pop tart repeat *ad infinitum*
-
-
-- Finding the outlier errors is a different task;  empirical workflows catch typical and common errors created by the modal data generating processes
-
-
-- Empirical workflows follow a checklist
-
----
-# Why do we use checklists?
-
-- I got engaged in July and am planning a wedding in Princeton for next July
-- I also moved to New England in August and am still unpacking (in ME and MA)
-- I am teaching two upper-level electives
-- I am trying to submit several papers to conferences/journals this year
-- Each of these gets a checklist:
-
-.pull-left[
-- **Wedding:**
-
-    ☐ Finalize tent configuration
-
-    ☐ Pick wedding colors
-
-- **Unpacking:**
-
-    ☐ Put books on shelves
-
-    ☐ Buy dresser
-
-- **Job Market Paper**
-
-    ☐ Complete two-period model of UI
-
-    ☐ Discussion of intertemporal crowd-in
-]
-.pull-right[
-- **Big Data:**
-
-    ☐ Write Problem Set 1 solutions
-
-    ☐ Develop Opportunity Atlas module
-
-- **Public Economics:**
-
-    ☐ Update solutions for PS2
-
-    ☐ Window Taxes demo
-
-- **Disaster GoFundMe spillovers:**
-  
-    ☐ Skeleton code for Hurricane Iliana DiD
-
-    ☐ Submit to NBER conference by 10/8
-]
----
-# To remember the obvious stuff you keep forgetting
-
-- When I stop to think, I know I need to do everything on my checklists
-
-- But then I forget when I move onto the next task
-
-- Programming is the same, except you have an **empirical checklist**:
-
-- The **empirical checklist**:
-    - Covers the intermediate step between "getting the data" and "analyzing the data"
-    - It largely focuses on ensuring data quality for the most common, easy to identify problems
-    - It'll make you a better coauthor
-
----
-# Simple data checks
-
-- Simple, yet non-negotiable, programming commands and exercises to check for data errors
-
-### Look at the data: "Real eyes realize real lies"&lt;sup&gt;1&lt;/sup&gt;
-
-.scroll-box-8[
-
-```r
-# This is a messy dataset of blood pressure adapted from Peter Higgins at https://github.com/higgi13425/medicaldata/tree/master/data-raw/messy_data
-bp &lt;- read.csv('data/messier_bp.csv')
-bp
-```
-
-```
-##    STOP.Blood.Pressure.Study             X2        X3         X4        X5
-## 1                       &lt;NA&gt;           &lt;NA&gt;      &lt;NA&gt;       &lt;NA&gt;      &lt;NA&gt;
-## 2                     pat_id Month of birth Day birth Year birth      Race
-## 3                          1             11        30       1967     White
-## 4                          2             12        12       1990 Caucasian
-## 5                          3              5         4       1989     White
-## 6                          3              3         8       1977     Other
-## 7                          4              6        14       1963     Black
-## 8                          5              4        19       1973     Black
-## 9                          6              1        23       1986     White
-## 10                         7             11         1       1956     Asian
-## 11                         8              4        17       1961     Other
-## 12                         8             12        24       1967     White
-## 13                        11              9        27       1971     White
-## 14                        12              5        16       1970 Caucasian
-## 15                        13              7        18       1963     Black
-## 16                        14              3         3       1989     Black
-## 17                        15             12         8       1990     Asian
-## 18                        16             11        13       1987     WHITE
-## 19                        17              6        27       1980     WHITE
-## 20                        19              4        11       1975     Black
-## 21                        20              2         7       1967 Caucasian
-## 22                        21              1         9       1988 Caucasian
-## 23                        22             13        32       1899     Black
-## 24                        23             11        21       9999     Black
-## 25                        24              1        30       1992     White
-##        X6           X7      X8   X9     X10  X11     X12  X13
-## 1    &lt;NA&gt;         &lt;NA&gt; Visit 1 &lt;NA&gt; Visit 2 &lt;NA&gt; Visit 3 &lt;NA&gt;
-## 2     Sex     Hispanic      BP   HR      BP   HR      BP   HR
-## 3    Male     Hispanic  167/92   89  156/82   82  144/71   77
-## 4  Female Not Hispanic  158/99   77  147/90   71  138/82   66
-## 5    Male     Hispanic 171/102   88  161/90   81  153/82   75
-## 6  Female Not Hispanic  155/88   69  143/80   63  136/72   58
-## 7    Male Not Hispanic  153/90   73  145/82   66  133/74   62
-## 8  Female     Hispanic  161/94   71  152/86   64  144/78   59
-## 9  Female     Hispanic 181/103   68 172/194   62  164/82   57
-## 10 Female     Hispanic 176/106   83  165/98   76  156/90   70
-## 11   Male Not Hispanic 155/112   88 144/101   82  133/92   75
-## 12   Male Not Hispanic 158/109   92  147/98   85  137/91   79
-## 13 Female Not Hispanic  144/93   84  134/84   77  126/74   72
-## 14   Male Not Hispanic  170/92   86  162/80   79  152/72   75
-## 15 Female Not Hispanic 188/112   79 176/104   73  168/92   67
-## 16   Male     Hispanic 192/122   77 177/108   70  168/99   65
-## 17   Male Not Hispanic  161/88   93  153/76   85  145/68   81
-## 18   Male Not Hispanic  144/91   89  134/82   83  128/73   77
-## 19 Female Not Hispanic  156/93   90  147/84   81  136/75   76
-## 20   Male     Hispanic  167/98   77  158/86   71  145/77   67
-## 21 Female     Hispanic  177/90   68  166/80   60  154/72   55
-## 22 Female Not Hispanic  173/87   91  162/73   82  152/68   75
-## 23      M     Hispanic 999/999   89 999/999   91 999/999  999
-## 24      F     Hispanic  143/20  999 999/999  999 999/999  999
-## 25        Not Hispanic  130/60   65  130/61   75  127/63   57
-```
-]
-### Check factor variables
-
-
-```r
-table(bp$race,bp$sex)
-```
-
-```
-##            
-##             F Female M Male
-##   Asian     0      1 0    1
-##   Black     1      2 1    3
-##   Caucasian 0      3 0    1
-##   Other     0      1 0    1
-##   White     0      2 0    2
-##   WHITE     0      1 0    1
-```
-
-.footnote[&lt;sup&gt;1&lt;/sup&gt; Attributed to Ray Charlies, Woody Guthrie, Tupac Shakur, Machine Head, and others]
-
----
-# Before you summarize the data...
-
-```r
-bp &lt;- read_csv('data/messier_bp.csv',skip=4,
-    col_names=c('pat_id','birth_month','birth_day','birth_year','race','sex','hispanic','bp_visit1','hr_visit1','bp_visit2','hr_visit2','bp_visit3','hr_visit3'),show_col_types = FALSE)
-
-ggplot(data=bp,aes(y=hr_visit1,x=race)) + geom_bar(stat='summary',fun='mean')
-```
-
-&lt;img src="02-empirical-workflow_files/figure-html/immediate_visual-1.svg" style="display: block; margin: auto;" /&gt;
-- Are Black people's heart rates really more than twice as high?
-
----
-# Visualize the raw data
-
-- Go beyond the eyeball and graph the data
-
-```r
-# Get the first three rows of the data frame (or as many rows as needed)
-
-#Make a density of the heart rate on visit 1:
-ggplot(data=bp,aes(x=hr_visit1))+geom_density()
-```
-
-&lt;img src="02-empirical-workflow_files/figure-html/funky_data2-1.svg" style="display: block; margin: auto;" /&gt;
-
-What might be going on here?
-
----
-# Visualize by group
-
-```r
-# Get the first three rows of the data frame (or as many rows as needed)
-
-#Make a density of the heart rate on visit 1:
-ggplot(data=bp %&gt;% mutate(race=ifelse(race=='WHITE' | race=='Caucasian','White',race)),aes(x=hr_visit1,fill=race))+geom_density()
-```
-
-&lt;img src="02-empirical-workflow_files/figure-html/funky_data3-1.svg" style="display: block; margin: auto;" /&gt;
-
-- Oh! I bet 999 means NA and a few Black patients have missing heart rates
-
----
-# Other tricks:
-
-- Check if the data are the right-size
-
-- If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
-
-
-```r
-library(gapminder) #Just load the data
-## 
-## Attaching package: 'gapminder'
-## The following object is masked from 'package:causaldata':
-## 
-##     gapminder
-country_count &lt;- length(unique(gapminder$country))
-year_count &lt;- length(unique(gapminder$year))
-
-print(country_count*year_count)
-## [1] 1704
-print(nrow(gapminder))
-## [1] 1704
-```
-
-- If not, find out why! Maybe there are 1020 because DC is (rightfully) included
-
-- Search for outliers or oddities and work out possible explanations using:
-    - Codebooks
-    - Intuition
-    - Emails to the source/creator of data
-
----
-
-# Test-driven development
+name: test-driven
+# 7. Test-driven development
 
 - The only way to know that your code works is to test it!
 
@@ -1216,16 +1018,13 @@ print(nrow(gapminder))
 - Unit testing is to software developers what washing hands is to surgeons
 
 ---
-
 # Unit testing
 
 - Unit tests are scripts that check that a piece of code does everything it is supposed to do
 
 - When professionals write code, they also write unit tests for that code at the same time
 
-- If code doesn't pass tests, then bugs are caught on the front end
-
-- Test coverage determines how much of the code base is tested. High coverage rates are a must for unit testing to be useful.
+- If code doesn't pass tests, then bugs are caught immediately
 
 - R's [dplyr package](https://github.com/tidyverse/dplyr) shows that all unit tests are passing and that tests cover 88% of the code base
 
@@ -1233,7 +1032,7 @@ print(nrow(gapminder))
 
 ### Assertions
 
-- Assert statements are extremely useful
+- Assert statements are extremely useful for basic unit tests
 - They exist in every langage
 - In R it is called stopifnot()
 
@@ -1258,12 +1057,9 @@ stopifnot(y)
     - That sick new vectorized function to replace the `for` loop?
     - A stray typo?
 
-
 - How do you find the bug in hundreds of lines of code? 
 
-
 - Read your code to see if there is an obvious mistake
-
 
 - .hi[Binary search]: Comment&lt;sup&gt;1&lt;/sup&gt; half your code, run the script, and see if the bug persists
     - If it does, the bug is in the other half
@@ -1279,24 +1075,23 @@ stopifnot(y)
 .footnote[&lt;sup&gt;1&lt;/sup&gt; Comment in R with `#`. Comment in RMarkdown with `&lt;!-- code --&gt;`. Or highlight and press `Ctrl+Shift+C` in RStudio.]
 
 ---
-
+name: mre
 # Minimal reproducible example (MRE)
 
 - There's likely a ton of superfluous stuff in your code that is not relevant to the error
-
 
 - [Minimal reproducible examples](https://stackoverflow.com/help/minimal-reproducible-example) (reprex) are a great way to isolate the error
     - **Minimal**: Use as little code as possible that still produces the same problem
     - **Complete**: Provide all parts needed to reproduce your problem in the question itself
     - **Reproducible**: Test the code you'll provide to make sure it reproduces the problem
 
-
 - That means you should be able to copy and paste the code into R and run it yourself
     - Name all packages and data needed to reproduce error
     - Cut out irrelevant packages, steps, and data that are not relevant to the error
 
-
 - Sometimes writing one will help you find the bug, sometimes it'll help a stranger find the bug in your code faster, and sometimes it'll identify a very real bug in the package itself
+
+- MREs also help you [refactor](#refactor) and [profile](#profile) your code
 
 ---
 
@@ -1401,6 +1196,203 @@ ggplot(data = df, x = Sepal.Length, y = Sepal.Width) +
 
 ---
 
+# 8. Pair programming - work with a buddy
+
+- An essential part of clean code is reviewing code
+
+- An excellent way to review code is to do so at the time of writing
+
+- .hi[Pair programming] involves sitting two programmers at one computer
+
+- One programmer does the writing while the other reviews
+
+- This is a great way to spot silly typos and other issues that would extend development time
+
+- It's also a great way to quickly refactor code at the start
+
+- .hi[I strongly encourage you to do pair programming on problem sets in this course!]
+    - (Sometimes I will require it)
+
+---
+class: inverse, center, middle
+
+# Next lecture: R basics, data wrangling, tidyverse and data.table
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+class: inverse, center, middle
+name: appendix
+# Appendix
+
+
+---
+# Main script with functions
+name: main-with-functions
+
+```r
+#File: main.Rmd or main.R
+#By: Kyle Coombs
+#What: Runs the project from start to finish in Python
+#Date: 2023/09/12
+
+#Install packages with housekeeping. Also put together paths.
+source('housekeeping.R')
+#User written functions can be sourced -- or you could write a package, your call
+source(paste0(build,'clean_functions.R'))
+source(paste0(analysis,'analysis_functions.R'))
+
+#Import files
+df1 &lt;- read_csv(paste0(raw,'file1.csv'))
+df2 &lt;- read_parquet(paste0(raw,'file2.parquet'))
+df3 &lt;- read_dta(paste0(raw,'file3.dta'))
+
+#Clean files
+cleaned_df1  &lt;- clean_df1(df1)
+cleaned_df2  &lt;- clean_df2(df2)
+cleaned_df3  &lt;- cf.clean_df3(df3)
+
+#Merge files 1 to 2
+merged_df1_df2 = merge(cleaned_df1, cleaned_df2, on=c('merge','vars'))
+
+#Append file 1 to
+append_df1_df2_df3 = rbind(merged_df1_df2, cleaned_df2)
+
+#Analysis
+sum_stats=summary_stats(append_df1_df2_df3,stats=c('mean','median','max'))
+reg_results=basic_regression(append_df1_df2_df3)
+
+#Tables will likely be made with a host of R packages
+make_sum_figures(sum_stats)
+make_figures(reg_results)
+make_sum_tables(sum_stats)
+make_tables(reg_results)
+```
+
+[Back to main](main-script)
+---
+
+# Textbooks: Smarter people than me
+
+- Cunningham (2021) [Causal Inference: The Mixtape](https://www.amazon.com/Causal-Inference-Mixtape-Scott-Cunningham/dp/0300251688) (Also, [free version on his website](https://mixtape.scunning.com/))
+- Huntington-Klein (2022) [The Effect](https://theeffectbook.net/introduction.html)
+- Angrist and Pischke (2009) [Mostly Harmless Econometrics](http://www.amazon.com/Mostly-Harmless-Econometrics-Empiricists-Companion/dp/0691120358/) (MHE)
+- Morgan and Winship (2014) [Counterfactuals and Causal Inference](http://www.amazon.com/Counterfactuals-Causal-Inference-Principles-Analytical/dp/1107694167/) (MW)
+- Sweigart (2019) [Automate The Boring Stuff With Python](https://automatetheboringstuff.com/)
+- Wickham (2023) [Advanced R](http://adv-r.had.co.nz/)
+- Wickham and Grolemund (2023) [R for Data Science](https://r4ds.had.co.nz/)
+- Peng (2022) [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/)
+---
+
+# Non-textbook readings
+
+- The help documentation associated with your language (no really)
+- Jesse Shapiro's "How to Present an Applied Micro Paper"
+- Gentzkow and Shapiro's coding practices manual
+- Ljubica "LJ" Ristovska's language agnostic guide to programming for economists
+- Grant McDermott on Version Control using Github [Link](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html#1)
+
+---
+
+# Helpful for troubleshooting
+
+- The help documentation associated with your language (no really)
+- All languages: [Stack Overflow](https://stackoverflow.com), [Stack Exchange](https://stackexchange.com)
+- Stata-specific (all hail Nick Cox): [Statalist](https://www.statalist.org/forums/forum/general-stata-discussion/general)
+- Cheatsheets: [Stata](https://www.stata.com/bookstore/statacheatsheets.pdf), [RStudio](https://www.rstudio.com/resources/cheatsheets/), [Python](https://betterprogramming.pub/10-must-have-python-cheatsheets-2b74e8097bc3?gi=cfdb14820caa)
+- Me: [Sign up for office hours](https://calendar.google.com/calendar/u/1/selfsched?sstoken=UUF5d0hzbmlvemxVfGRlZmF1bHR8NDRjMWFiMjA5OTNkNzMwNTVkYzBkYWYyYzc2NmQ5Yjc/)
+
+---
+
+# Learn by Immersion
+
+- Just like learning a real language, no amount of talking today will teach you how to use any program.
+  - You have to need to use it (immersion) to learn it.
+  - Google is your dictionary.
+  - Help files are your grammar books.
+  - ChatGPT is your phrasebook.
+  - A great way to start coding is to see lots of other people's code and copy what you read.
+
+- You must learn how to ask the “right” question:
+  - Never: "Importing csv file into R not working."
+  - Better: "read_csv R [specific error message]."
+  - Better still: "read_csv tidyverse [specific error message]."
+
+
+---
+
+# Abstract to eliminate redundancy (cont.)
+
+What if you can't find an R function? Write your own!
+
+
+```r
+set.seed(16)
+prod1  = rnorm(1, 0, 1)*rnorm(1,4,6)
+prod2  = rnorm(2, 0, 1)*rnorm(2,0,1)
+prod3  = rnorm(3, 0, 1)*rnorm(3,15,78)
+print(prod1)
+## [1] 1.547257
+print(prod2)
+## [1] 1.2582691 0.6764943
+print(prod3)
+## [1] -60.06036  10.11156  24.32342
+```
+
+
+```r
+set.seed(16)
+multiply_normals = function(count,mean1=0,sd1=1,mean2=0,sd2=1) {
+    prod = rnorm(count,mean1,sd1)*rnorm(count,mean2,sd2)
+    return(prod)
+}
+prod1=multiply_normals(1,mean2=4,sd2=6)
+prod2=multiply_normals(2,mean2=0,sd2=1)
+prod3=multiply_normals(3,mean2=15,sd2=78)
+
+print(prod1)
+## [1] 1.547257
+print(prod2)
+## [1] 1.2582691 0.6764943
+print(prod3)
+## [1] -60.06036  10.11156  24.32342
+```
+
+---
+# Note on seeds
+
+- When randomizing in any language, you aren't really randomizing
+
+- You're producing pseudo-random numbers that return in a deterministic ordered list
+
+- If you set the seed, you can reproduce the same "random" numbers
+
+- This is useful for debugging and sharing code
+
+- Use `set.seed` in R
+
+
+```r
+set.seed(0)
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+## [1] 17.26652
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+## [1] 15.14712
+# New seed
+set.seed(1)
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+## [1] 13.72156
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+## [1] 16.10432
+# Reset seed
+set.seed(0)
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+## [1] 17.26652
+print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
+## [1] 15.14712
+```
+
+---
+name: refactor
 # Refactoring
 
 - Refactoring refers to the action of restructuring code without changing its external behavior or functionality. Think of it as "reorganizing"
@@ -1469,7 +1461,7 @@ get_some_data &lt;- function(config, outfile) {
 - Jenny Bryan gave a [great talk](https://www.youtube.com/watch?v=7oyiPBjLAWY) on refactoring
 
 ---
-
+name: profiling
 # Profiling
 
 - Profiling refers to checking the resource demands of your code
@@ -1488,83 +1480,8 @@ get_some_data &lt;- function(config, outfile) {
   - Using `system.time` and `Rprofs` from R Programming for Data Science[https://bookdown.org/rdpeng/rprogdatascience/profiling-r-code.html]
   - Using `lineprof` from Advanced R[http://adv-r.had.co.nz/Profiling.html]
 
----
+[Back to MREs](#mres)
 
-# Pair programming - work with a buddy
-
-- An essential part of clean code is reviewing code
-
-- An excellent way to review code is to do so at the time of writing
-
-- .hi[Pair programming] involves sitting two programmers at one computer
-
-- One programmer does the writing while the other reviews
-
-- This is a great way to spot silly typos and other issues that would extend development time
-
-- It's also a great way to quickly refactor code at the start
-
-- .hi[I strongly encourage you to do pair programming on problem sets in this course!]
-    - (Sometimes I will require it)
-
----
-class: inverse, center, middle
-
-# Next lecture: R basics, data wrangling, tidyverse and data.table
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
-
----
-class: inverse, center, middle
-name: appendix
-# Appendix
-
----
-
-# Textbooks: Smarter people than me
-
-- Cunningham (2021) [Causal Inference: The Mixtape](https://www.amazon.com/Causal-Inference-Mixtape-Scott-Cunningham/dp/0300251688) (Also, [free version on his website](https://mixtape.scunning.com/))
-- Huntington-Klein (2022) [The Effect](https://theeffectbook.net/introduction.html)
-- Angrist and Pischke (2009) [Mostly Harmless Econometrics](http://www.amazon.com/Mostly-Harmless-Econometrics-Empiricists-Companion/dp/0691120358/) (MHE)
-- Morgan and Winship (2014) [Counterfactuals and Causal Inference](http://www.amazon.com/Counterfactuals-Causal-Inference-Principles-Analytical/dp/1107694167/) (MW)
-- Sweigart (2019) [Automate The Boring Stuff With Python](https://automatetheboringstuff.com/)
-- Wickham (2023) [Advanced R](http://adv-r.had.co.nz/)
-- Wickham and Grolemund (2023) [R for Data Science](https://r4ds.had.co.nz/)
-- Peng (2022) [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/)
----
-
-# Non-textbook readings
-
-- The help documentation associated with your language (no really)
-- Jesse Shapiro's "How to Present an Applied Micro Paper"
-- Gentzkow and Shapiro's coding practices manual
-- Ljubica "LJ" Ristovska's language agnostic guide to programming for economists
-- Grant McDermott on Version Control using Github [Link](https://raw.githack.com/uo-ec607/lectures/master/02-git/02-Git.html#1)
-
----
-
-# Helpful for troubleshooting
-
-- The help documentation associated with your language (no really)
-- All languages: [Stack Overflow](https://stackoverflow.com), [Stack Exchange](https://stackexchange.com)
-- Stata-specific (all hail Nick Cox): [Statalist](https://www.statalist.org/forums/forum/general-stata-discussion/general)
-- Cheatsheets: [Stata](https://www.stata.com/bookstore/statacheatsheets.pdf), [RStudio](https://www.rstudio.com/resources/cheatsheets/), [Python](https://betterprogramming.pub/10-must-have-python-cheatsheets-2b74e8097bc3?gi=cfdb14820caa)
-- Me: [Sign up for office hours](https://calendar.google.com/calendar/u/1/selfsched?sstoken=UUF5d0hzbmlvemxVfGRlZmF1bHR8NDRjMWFiMjA5OTNkNzMwNTVkYzBkYWYyYzc2NmQ5Yjc/)
-
----
-
-# Learn by Immersion
-
-- Just like learning a real language, no amount of talking today will teach you how to use any program.
-  - You have to need to use it (immersion) to learn it.
-  - Google is your dictionary.
-  - Help files are your grammar books.
-  - ChatGPT is your phrasebook.
-  - A great way to start coding is to see lots of other people's code and copy what you read.
-
-- You must learn how to ask the “right” question:
-  - Never: "Importing csv file into R not working."
-  - Better: "read_csv R [specific error message]."
-  - Better still: "read_csv tidyverse [specific error message]."
 
 ---
 
