@@ -10,5 +10,3 @@ RUN install2.r --error --skipinstalled -n -1 \
     && apt-get update \
     && apt update \
     && apt-get install -y --no-install-recommends libxt6 
-
-RUN wget -qO- "https://yihui.org/tinytex/install-bin-unix.sh" | sh
