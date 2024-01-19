@@ -30,16 +30,20 @@ knitr::opts_chunk$set(
   fig.align='center', fig.width=6, fig.height=4, 
   # out.width=748px, #out.length=520.75px,
   dpi=300, #fig.path='Figs/',
-  cache=T#, echo=F, warning=F, message=F
+  root.dir='../../',
+  cache=T,#, echo=F, warning=F, message=F
+  warning=F,
+  message=F
   )
-pacman::p_load(tidyverse,arrow)
-library(tidyverse)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse,arrow,datasauRus,gganimate)
 ```
 
 # Table of contents
 
 - [Prologue](#prologue)
 - [Empirical Workflow](#data-checklist)
+- [Downloading data](#downloading-data)
 - [File formats](#file-formats)
 - [Archiving & file compression](#archiving)
 - [Dictionaries](#dictionaries) (if time)
@@ -69,10 +73,29 @@ Today we'll focus on grappling with data
   - Big Data file types
 
 ---
+# Housekeeping
+
+- If you notice something wrong with a problem set or lecture, please either:
+
+1. Raise it as an issue in the relevant repository
+2. Pull request the change you think is needed
+
+- Typo corrections, documentation improvement, etc. earn you extra credit (up to 10 points per problem set)
+
+- I will ask you to pull request fixes to receive the point
+
+- How do I pull request? It is in the git lecture, but I provide [instructions on the class materials page](https://github.com/big-data-and-economics/big-data-class-materials?tab=readme-ov-file#ive-spotted-a-mistake-or-would-like-to-contribute)
+
+- I have to approve any fixes, but I will aim to do so within 24 hours
+
+---
+# Student Presentation: GitHub Desktop
+
+---
 # Why do we need to do this?
 
-- We summarize data because we can't look at every data point and see a pattern, but that can obscure problems
-- Lots of data are messy or frankly bogus, but you wouldn't know it from sum stats
+- We summarize data because we can't look at every data point and see a pattern
+- But lots of data are messy or frankly bogus, but you wouldn't know it from sum stats
 - Meet Anscombe's Quartet (Anscombe, 1973)
   
 ```{r data-viz-reason,echo=FALSE,warning=FALSE}
@@ -113,15 +136,22 @@ ggplot(datasaurus_dozen, aes(x = x, y = y))+
 ```
 
 ---
-# Not every outlier is bad
+# Not every odd dataset is wrong
 
-- Sometimes bizarre looking outliers in data are real! 
+- Sometimes bizarre looking dataaset is real (see the [Japan Phillips curve](https://twitter.com/BaldwinRE/status/1372920323943886849/photo/1))
 
-- But sometimes they're nonsense or an unusually coded "NA" value
+- For example, sometimes there are real outliers in the data 
+  - You'll need to decide what to do about them
 
-- Today we're focusing on how to catch the latter so they don't cause you problems later
+- But sometimes they're a sign of nonsense or "NA"/missing values
 
-- Imagine writing an entire paper only to discover your dataset looks like a T-rex
+- If you find an oddity in your data, you still have to decide what it is and how to handle it
+  - Maybe that odd outlier is real, so you shouldn't drop it
+  - Are the data missing? Due to randomness or a systematic error?
+
+- Throughout this course we'll think about how to deal with these issues
+
+- Today we're making sure you have safeguards in place so you don't write an entire paper only to discover your dataset looks like a T-rex
 
 ---
 class: inverse, center, middle
@@ -214,16 +244,30 @@ name: empirical-workflow
 
 - Clone your fork of the class materials repository to your class folder
 
-- Navigate to the folder `big-data-class-materials/lectures/03-data-tips/`
+- Double-click the file `big-data-class-materials.Rproj` to open the project in RStudio at the correct working directory
 
-- Double-click the file `data-tips.Rproj` to open the project in RStudio at the correct working directory
+- Type `setwd(lectures/03-data-tips/)` to make sure you are in the same directory as this `.Rmd`
+
+- Package installation: Install the following functions using `install.packages()` and `library()`
+  - Note: once you install a package, you don't need to do it again, just use `library()`
+
+```{r,eval=FALSE}
+install.packages(c('tidyverse','arrow','datasauRus','gganimate'))
+library(tidyverse,arrow,datasauRus,gganimate)
+```
+
+- We're going to explore a mangled version of the dataset from the Bertrand and Mullainathan (2004) resume audit study
+
+- Suspend some disbelief, please as I mangled the data to make it more interesting
+
+**Note**: I put data files on Github. This is bad practice for large files, but fine for small ones. I recommend you add a data file extensions (e.g. *.csv, *.dta) for data files to your `.gitignore` file.
 
 ---
 # Simple data checklist items
 
 - Simple, yet non-negotiable, programming commands and exercises to check for data errors
 
-- Here I'll present a few using a messy dataset of blood pressure measurements by race
+- Let's work through a few using a messy dataset of blood pressure measurements with some demographic information
 
 - First, above all else, read any documentation associated with the file
   - Codebooks, READMEs, etc.
@@ -233,19 +277,18 @@ name: empirical-workflow
 - Open the raw data and look at it: "Real eyes realize real lies"<sup>1</sup>
 
 ```{r open-data}
-bp <- read_csv('data/messier_bp.csv',
+resumes <- read_csv('data/lakisha_aer.csv',
   show_col_types= FALSE) # Don't tell me the column types
-head(bp)
+head(resumes)
 ```
 
 - Oh weird, the first few rows are junk, let's skip them and give more informative names
 
 ```{r skip-rows}
-bp <- read_csv('data/messier_bp.csv',skip=2,
-  col_names=c('pat_id','birth_month','birth_day','birth_year','race','sex','hispanic',
-  'bp_visit1','hr_visit1','bp_visit2','hr_visit2','bp_visit3','hr_visit3'), # Column names
+resumes <- read_csv('data/lakisha_aer.csv',skip=4,
+  col_names=c('id','ofjobs','firstname','sex','race','call','lmedhhinc'), # Column names
   show_col_types = FALSE) # Don't tell me the column types
-head(bp)
+head(resumes)
 ```
 
 .footnote[<sup>1</sup> Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
@@ -256,52 +299,54 @@ head(bp)
 Do factor variables have multiple spellings?
 
 ```{r factor}
-table(bp$race,bp$sex)
+table(resumes$race,resumes$sex)
 ```
 
-The `skimr` package is great for this! 
+The `skimr` package is great!
 .scroll-box-12[
 ```{r continuous}
-skimr::skim(bp)
+skimr::skim(resumes)
 ```
 ]
+
+- What's 99?
 
 ---
 # Visualize key facets of the data
 ```{r immediate_visual, dev="svg"}
-bp <- read_csv('data/messier_bp.csv',skip=4,
-    col_names=c('pat_id','birth_month','birth_day','birth_year','race','sex','hispanic',
-    'bp_visit1','hr_visit1','bp_visit2','hr_visit2','bp_visit3','hr_visit3'),show_col_types = FALSE)
-
-ggplot(data=bp,aes(y=hr_visit1,x=race)) + geom_bar(stat='summary',fun='mean')
+# ggplot is a great tool for visualizing data
+ggplot(data=resumes,aes(y=ofjobs,x=race)) + 
+  geom_bar(stat='summary',fun='mean')
 ```
 
-- Are Black people's heart rates really more than twice as high?
+- Wait, this is an RCT, why are the previous job counts of black/white applicants different?
 
 ---
 # Visualize the raw data
 
 - Go beyond the eyeball and graph the data
 ```{r funky_data2, dev="svg"}
-# Get the first three rows of the data frame (or as many rows as needed)
-
-#Make a density of the heart rate on visit 1:
-ggplot(data=bp,aes(x=hr_visit1))+geom_density()
+ggplot(data=resumes,aes(x=ofjobs))+
+  geom_histogram()
 ```
 
-What might be going on here?
+- Wait a minute! What's going on with the -99 values?
 
 ---
 # Visualize by group
 ```{r funky_data3, dev="svg"}
 # Get the first three rows of the data frame (or as many rows as needed)
 #Make a density of the heart rate on visit 1:
-bp %>% # pipes are a greate tool, we'll cover them in a bit
-  mutate(race=ifelse(race=='WHITE' | race=='Caucasian','White',race)) %>% # change the data up
-  ggplot(aes(x=hr_visit1,fill=race))+geom_density()
+resumes %>% # pipes are a greate tool, we'll cover them in a bit
+  mutate(race=ifelse(race=='w' | race=='Caucasian','White',
+    ifelse(race=="BLACK" | race=="b", "Black",race))) %>% # change the data up
+  ggplot(aes(x=ofjobs,fill=race))+
+    geom_histogram(alpha=0.25) # alpha makes bars see through! 
 ```
 
-- Oh! I bet 999 means NA and a few Black patients have missing heart rates
+- Oh! I bet -99 means NA or missing
+- This disproportionately occurs for fake black name applicant profiles
+- That be bad news for this RCT...
 
 ---
 # Other tricks:
@@ -316,6 +361,59 @@ bp %>% # pipes are a greate tool, we'll cover them in a bit
     - Codebooks
     - Intuition
     - Emails to the source/creator of data
+
+---
+# Wait, how does ggplot work?
+
+See slides from [Lecture 1](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html#58) for a full explanations
+
+- Basically, it is a useful data visualization tool that allows you to specify the data and the type of plot you want to make
+
+- **Pro tip:** It works best when your are organized "long" instead of wide
+
+- If you'd like to present on ggplot in class this month (instead of the topic you signed up for), let me know!
+
+---
+class: inverse, center, middle
+name: downloading-data
+
+# Downloading data
+
+---
+# Downloading data
+
+
+- Often it is good practice to have a script that downloads the data for you
+
+- This way, you can rerun the script and get the latest version of the data
+
+- Of course, there is a tradeoff to this -- your results may not replicate exactly with newer data
+
+- But it's a good practice to get into for reproducibility
+
+- Also, if you have to downloading thousands of files manually, you'll go insane
+
+- Automate it
+
+---
+# R makes it easy to download
+
+- The R function to download is `download.file()`
+
+- Here is an example that downloads my copy of the Bertrand and Mullainathan (2004) data off of GitHub
+
+```{r download-data,eval=FALSE}
+download.file(
+  url='https://raw.githubusercontent.com/big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/data/lakisha_aer.csv',
+  destfile='data/lakisha_aer.csv')
+```
+
+- Several R packages will read files right off of the internet
+
+```{r read-data}
+readr::read_csv(
+  file='https://raw.githubusercontent.com/big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/data/lakisha_aer.csv')
+```
 
 ---
 class: inverse, center, middle
@@ -495,13 +593,11 @@ The following file extensions typically require additional software to read, edi
 - When in doubt, Google/ChatGPT "How do I open file .XXX in R?"
   - I bet you someone has already needed to solve this problem
 
-```{r read-opp-atlas,warning=FALSE,message=FALSE}
-df_csv   <- read_csv('https://www2.census.gov/ces/opportunity/national_percentile_outcomes.csv')
-df_fread   <- data.table::fread('https://www2.census.gov/ces/opportunity/national_percentile_outcomes.csv')
-df_stata <- haven::read_dta('https://www2.census.gov/ces/opportunity/national_percentile_outcomes.dta')
-
-head(df_csv)
-
+```{r read-types,warning=FALSE,message=FALSE}
+df_csv   <- read_csv('data/lakisha_aer.csv')
+df_fread   <- data.table::fread('data/lakisha_aer.tab')
+df_stata <- haven::read_dta('data/lakisha_aer.dta')
+df_xlsx <- readxl::read_xlsx('data/lakisha_aer.xlsx')
 ```
 
 ---
@@ -516,8 +612,7 @@ Just read in a single row to see the column names:
 # I need to sete an environment variable to increase the size of the connection
 # R will complain if you try to read in a file that's too big
 # This will reset when I close this session.
-Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) 
-df <- read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',n_max=1)
+df <- read_csv('data/lakisha_aer.csv',n_max=1)
 ```
 
 - You can and should also consult the codebook (remember those?)
@@ -530,9 +625,8 @@ Once you know your columns, read those in:
 
 ```{r read-in-columns,warning=FALSE,message=FALSE}
 Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
-read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',
-  col_select=c('cz', 'kfr_pooled_pooled_p1', 'kfr_pooled_pooled_p25',
-  'kfr_pooled_pooled_p50','kfr_pooled_pooled_p75','kfr_pooled_pooled_p100'))
+read_csv('data/lakisha_aer.csv',
+  col_select=c('id', 'race', 'sex','call'))
 ```
 
 ---
@@ -583,12 +677,7 @@ Because data can be big and bulky, it is often easier to store and share the dat
 - And you can may still want to read in a few rows or columns like before
 
 ```{r read-in-zip,warning=FALSE,message=FALSE}
-download.file('https://www2.census.gov/ces/opportunity/county_outcomes.zip','county_outcomes.zip')
-read_csv(unz('county_outcomes.zip','county_outcomes.csv'),
-  col_select=c('county','kfr_pooled_pooled_p1','kfr_pooled_pooled_p25',
-  'kfr_pooled_pooled_p50','kfr_pooled_pooled_p75','kfr_pooled_pooled_p100'))
-# Delete the file
-file.remove('county_outcomes.zip')
+read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv'),show_col_types = FALSE)
 ```
 
 ---

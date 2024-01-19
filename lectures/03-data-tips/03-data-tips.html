@@ -18,7 +18,7 @@ class: center, middle, inverse, title-slide
 # Big Data and Economics
 ]
 .subtitle[
-## Tips for Managing Data
+## Lecture 3: Data tips
 ]
 .author[
 ### Kyle Coombs
@@ -44,10 +44,11 @@ name: toc
 # Table of contents
 
 - [Prologue](#prologue)
+- [Empirical Workflow](#data-checklist)
 - [File formats](#file-formats)
 - [Archiving &amp; file compression](#archiving)
-- [Dictionaries](#dictionaries)
-- [Big Data file types](#big-data)
+- [Dictionaries](#dictionaries) (if time)
+- [Big Data file types](#big-data) (if time)
 
 ---
 class: inverse, center, middle
@@ -60,15 +61,369 @@ name: prologue
 
 Today we'll focus on grappling with data
 
+- Checklist to ensure data quality
+
 - File formats and extensions
 
 - Archiving &amp; file compression
 
-- Dictionaries (hash tables)
+- If time:
 
-- Big Data file types
+  - Dictionaries (hash tables)
 
-You're gonna need to know how to do a lot of this! 
+  - Big Data file types
+
+---
+# Housekeeping
+
+- If you notice something wrong with a problem set or lecture, please either:
+
+1. Raise it as an issue in the relevant repository
+2. Pull request the change you think is needed
+
+- Typo corrections, documentation improvement, etc. earn you extra credit (up to 10 points per problem set)
+
+- I will ask you to pull request fixes to receive the point
+
+- How do I pull request? It is in the git lecture, but I provide [instructions on the class materials page](https://github.com/big-data-and-economics/big-data-class-materials?tab=readme-ov-file#ive-spotted-a-mistake-or-would-like-to-contribute)
+
+- I have to approve any fixes, but I will aim to do so within 24 hours
+
+---
+# Student Presentation: GitHub Desktop
+
+---
+# Why do we need to do this?
+
+- We summarize data because we can't look at every data point and see a pattern
+- But lots of data are messy or frankly bogus, but you wouldn't know it from sum stats
+- Meet Anscombe's Quartet (Anscombe, 1973)
+  
+&lt;img src="03-data-tips_files/figure-html/data-viz-reason-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# DataSarus Dozen
+
+- A more ambitious example is the [Datasaurus Dozen](https://www.autodeskresearch.com/publications/samestats) dataset.
+
+&lt;img src="03-data-tips_files/figure-html/datasaurus_dozen-1.gif" style="display: block; margin: auto;" /&gt;
+
+---
+# Not every odd dataset is wrong
+
+- Sometimes bizarre looking dataaset is real (see the [Japan Phillips curve](https://twitter.com/BaldwinRE/status/1372920323943886849/photo/1))
+
+- For example, sometimes there are real outliers in the data 
+  - You'll need to decide what to do about them
+
+- But sometimes they're a sign of nonsense or "NA"/missing values
+
+- If you find an oddity in your data, you still have to decide what it is and how to handle it
+  - Maybe that odd outlier is real, so you shouldn't drop it
+  - Are the data missing? Due to randomness or a systematic error?
+
+- Throughout this course we'll think about how to deal with these issues
+
+- Today we're making sure you have safeguards in place so you don't write an entire paper only to discover your dataset looks like a T-rex
+
+---
+class: inverse, center, middle
+name: empirical-workflow
+
+# Empirical Workflow
+
+---
+# Workflow workflow workflow
+
+## The Cunningham Empirical Workflow Conjecture
+
+- The cause of most of your empirical coding errors is **not** due to insufficient knowledge of syntax in your chosen programming language
+
+- The cause of most of your errors is due to a poorly designed .hi[Empirical Workflow]
+
+- .[Empirical Workflow]: A fixed set of routines you always follow to identify the most common errors
+	- Think of it as your morning routine: alarm goes off, go to wash up, make your coffee/tea, put pop tart in toaster, contemplate your existence in the universe until **ding**, eat pop tart repeat *ad infinitum*
+
+- Finding weird errors is a different task; empirical workflows catch typical and common errors
+
+- Empirical workflows follow a checklist
+
+---
+# Why do we use checklists?
+
+- I got engaged in July and am planning a wedding in Princeton for next July
+- I also moved to New England in August and am still unpacking (in ME and MA)
+- I am teaching two upper-level electives
+- I am trying to submit several papers to conferences/journals this year
+- Each of these gets a checklist:
+
+.pull-left[
+- **Wedding:**
+
+    ☐ Pick invitation design
+
+    ☐ Send invitations
+
+- **Unpacking:**
+
+    ☐ Put books on shelves
+
+    ☐ Buy dresser
+
+- **AEJ: Policy submission**
+
+    ☐ Write 5-page submission report
+
+    ☐ Submit
+]
+.pull-right[
+- **ECON 368**
+
+    ☐ Write Problem Set 1 solutions
+
+    ☐ Rewrite data tips
+
+- **Senior Thesis:**
+
+    ☐ Create FAQs
+
+    ☐ Develop data guidance
+
+- **Census shocks and racial integration paper**
+  
+    ☐ Replicate census shocks results
+
+    ☐ Acquire data on employment, racial wage gap
+]
+
+---
+# To remember the obvious stuff
+
+- When I stop to think, I know I need to do everything on my checklists
+
+- But then I forget when I move onto the next task
+
+- Programming is the same, except you have an **empirical checklist**:
+
+- The **empirical checklist**:
+    - Covers the intermediate step between "getting the data" and "analyzing the data"
+    - It largely focuses on ensuring data quality for the most common, easy to identify problems
+    - It'll make you a better coauthor
+
+---
+# Play along at home
+
+- Everyone fork the class materials repository
+
+- Clone your fork of the class materials repository to your class folder
+
+- Double-click the file `big-data-class-materials.Rproj` to open the project in RStudio at the correct working directory
+
+- Type `setwd(lectures/03-data-tips/)` to make sure you are in the same directory as this `.Rmd`
+
+- Package installation: Install the following functions using `install.packages()` and `library()`
+  - Note: once you install a package, you don't need to do it again, just use `library()`
+
+
+```r
+install.packages(c('tidyverse','arrow','datasauRus','gganimate'))
+library(tidyverse,arrow,datasauRus,gganimate)
+```
+
+- We're going to explore a mangled version of the dataset from the Bertrand and Mullainathan (2004) resume audit study
+
+- Suspend some disbelief, please as I mangled the data to make it more interesting
+
+---
+# Simple data checklist items
+
+- Simple, yet non-negotiable, programming commands and exercises to check for data errors
+
+- Let's work through a few using a messy dataset of blood pressure measurements with some demographic information
+
+- First, above all else, read any documentation associated with the file
+  - Codebooks, READMEs, etc.
+  - They're not riveting, but they clarify tons of small things
+  - Your first problem set doesn't come with one -- you're gonna build it!
+
+- Open the raw data and look at it: "Real eyes realize real lies"&lt;sup&gt;1&lt;/sup&gt;
+
+
+```r
+resumes &lt;- read_csv('data/lakisha_aer.csv',
+  show_col_types= FALSE) # Don't tell me the column types
+head(resumes)
+```
+
+```
+## # A tibble: 6 × 7
+##   id       ofjobs firstname       sex       race        call lmedhhinc
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+## 1 id row 1      2 firstname row 3 sex row 4 race row 5     0      9.53
+## 2 id row 1      3 firstname row 3 sex row 4 race row 5     0     10.4 
+## 3 id row 1      1 firstname row 3 sex row 4 race row 5     0     10.5 
+## 4 b             2 Allison         FEMALE    Caucasian      0      9.53
+## 5 b             3 Kristen         FEMALE    Caucasian      0     10.4 
+## 6 b             1 Lakisha         FEMALE    BLACK          0     10.5
+```
+
+- Oh weird, the first few rows are junk, let's skip them and give more informative names
+
+
+```r
+resumes &lt;- read_csv('data/lakisha_aer.csv',skip=4,
+  col_names=c('id','ofjobs','firstname','sex','race','call','lmedhhinc'), # Column names
+  show_col_types = FALSE) # Don't tell me the column types
+head(resumes)
+```
+
+```
+## # A tibble: 6 × 7
+##   id    ofjobs firstname sex    race       call lmedhhinc
+##   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 b          2 Allison   FEMALE Caucasian     0      9.53
+## 2 b          3 Kristen   FEMALE Caucasian     0     10.4 
+## 3 b          1 Lakisha   FEMALE BLACK         0     10.5 
+## 4 b          4 Latonya   FEMALE BLACK         0     10.4 
+## 5 b          3 Carrie    FEMALE Caucasian     0      9.88
+## 6 b          2 Jay       MALE   Caucasian     0     10.4
+```
+
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
+
+---
+# Look at summaries of variables
+
+Do factor variables have multiple spellings?
+
+
+```r
+table(resumes$race,resumes$sex)
+```
+
+```
+##            
+##                f FEMALE    m MALE  MLE WOMAN WOMN
+##   b         1140    131  471   18    0   325    0
+##   BLACK        0    290    0   60    0     0    0
+##   Caucasian    0    193    0   55    1     0    1
+##   w         1113    220  488   31    0   333    0
+```
+
+The `skimr` package is great!
+.scroll-box-12[
+
+```r
+skimr::skim(resumes)
+```
+
+
+Table: Data summary
+
+|                         |        |
+|:------------------------|:-------|
+|Name                     |resumes |
+|Number of rows           |4870    |
+|Number of columns        |7       |
+|_______________________  |        |
+|Column type frequency:   |        |
+|character                |4       |
+|numeric                  |3       |
+|________________________ |        |
+|Group variables          |None    |
+
+
+**Variable type: character**
+
+|skim_variable | n_missing| complete_rate| min| max| empty| n_unique| whitespace|
+|:-------------|---------:|-------------:|---:|---:|-----:|--------:|----------:|
+|id            |         0|             1|   1|   3|     0|      289|          0|
+|firstname     |         0|             1|   3|   8|     0|       36|          0|
+|sex           |         0|             1|   1|   6|     0|        7|          0|
+|race          |         0|             1|   1|   9|     0|        4|          0|
+
+
+**Variable type: numeric**
+
+|skim_variable | n_missing| complete_rate| mean|    sd|  p0|  p25|   p50|   p75|  p100|hist  |
+|:-------------|---------:|-------------:|----:|-----:|---:|----:|-----:|-----:|-----:|:-----|
+|ofjobs        |         0|             1| 3.07|  7.86| -99| 3.00|  4.00|  4.00|  7.00|▁▁▁▁▇ |
+|call          |         0|             1| 0.08|  0.27|   0| 0.00|  0.00|  0.00|  1.00|▇▁▁▁▁ |
+|lmedhhinc     |         0|             1| 8.22| 14.38| -99| 9.93| 10.14| 10.34| 11.12|▁▁▁▁▇ |
+]
+
+- What's 99?
+
+---
+# Visualize key facets of the data
+
+```r
+# ggplot is a great tool for visualizing data
+ggplot(data=resumes,aes(y=ofjobs,x=race)) + 
+  geom_bar(stat='summary',fun='mean')
+```
+
+&lt;img src="03-data-tips_files/figure-html/immediate_visual-1.svg" style="display: block; margin: auto;" /&gt;
+
+- Wait, this is an RCT, why are the previous job counts of black/white applicants different?
+
+---
+# Visualize the raw data
+
+- Go beyond the eyeball and graph the data
+
+```r
+ggplot(data=resumes,aes(x=ofjobs))+
+  geom_histogram()
+```
+
+&lt;img src="03-data-tips_files/figure-html/funky_data2-1.svg" style="display: block; margin: auto;" /&gt;
+
+- Wait a minute! What's going on with the -99 values?
+
+---
+# Visualize by group
+
+```r
+# Get the first three rows of the data frame (or as many rows as needed)
+#Make a density of the heart rate on visit 1:
+resumes %&gt;% # pipes are a greate tool, we'll cover them in a bit
+  mutate(race=ifelse(race=='w' | race=='Caucasian','White',
+    ifelse(race=="BLACK" | race=="b", "Black",race))) %&gt;% # change the data up
+  ggplot(aes(x=ofjobs,fill=race))+
+    geom_histogram(alpha=0.25) # alpha makes bars see through! 
+```
+
+&lt;img src="03-data-tips_files/figure-html/funky_data3-1.svg" style="display: block; margin: auto;" /&gt;
+
+- Oh! I bet -99 means NA or missing
+- This disproportionately occurs for fake black name applicant profiles
+- That be bad news for this RCT...
+
+---
+# Other tricks:
+
+- Check if the data are the right-size
+
+- If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
+
+- If not, find out why! Maybe there are 1020 because DC is (rightfully) included
+
+- Search for outliers or oddities and work out possible explanations using:
+    - Codebooks
+    - Intuition
+    - Emails to the source/creator of data
+
+---
+# Wait, how does ggplot work?
+
+See slides from [Lecture 1](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html#58) for a full explanations
+
+- Basically, it is a useful data visualization tool that allows you to specify the data and the type of plot you want to make
+
+- **Pro tip:** It works best when your are organized "long" instead of wide
+
+- If you'd like to present on ggplot in class this month (instead of the topic you signed up for), let me know!
 
 ---
 class: inverse, center, middle
@@ -76,7 +431,9 @@ name: file-formats
 # File formats
 
 ---
-# A note on file extensions
+# File extensions
+
+- A file extension is the part of the file name after the period `.dta`, `.csv`, `.tab`, etc.
 
 - Often, if you download a file, you will immediately understand what type of a file it is by its extension 
 
@@ -84,14 +441,13 @@ name: file-formats
 
 - File extensions were created so that humans could keep track of which files on their workspace are scripts, which are binaries, etc.
 
----
-# Why is the file format important?
+### Why is the file format important?
 
-- File formats matter because they may need to match the environment you're working in 
+- File formats matter because they may need to match the coding tools you're using
 
-- If you use the wrong file format, it may cause your computations to run slower than otherwise 
+- If you use the wrong file format, it may cause your computations to run slower than otherwise
 
-- To the extent that the environment you're working in requires a specific file format, then using the correct format is essential
+- To the extent that the tools you're using require a specific file format, then using the correct format is essential
 
 ---
 # Common file extensions when working with data
@@ -292,18 +648,6 @@ Sys.setenv("VROOM_CONNECTION_SIZE"=1e6)
 df &lt;- read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',n_max=1)
 ```
 
-```
-## Rows: 1 Columns: 10825
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## chr    (1): czname
-## dbl (9658): cz, kir_natam_female_p1, kir_natam_female_p25, kir_natam_female_...
-## lgl (1166): proginc_natam_female_p1, proginc_natam_female_p25, proginc_natam...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-```
-
 - You can and should also consult the codebook (remember those?)
 
 ---
@@ -314,7 +658,7 @@ Once you know your columns, read those in:
 
 
 ```r
-Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) 
+Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
 read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',
   col_select=c('cz', 'kfr_pooled_pooled_p1', 'kfr_pooled_pooled_p25',
   'kfr_pooled_pooled_p50','kfr_pooled_pooled_p75','kfr_pooled_pooled_p100'))
@@ -337,13 +681,6 @@ read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',
 ## # ℹ 731 more rows
 ## # ℹ 2 more variables: kfr_pooled_pooled_p75 &lt;dbl&gt;, kfr_pooled_pooled_p100 &lt;dbl&gt;
 ```
-
----
-
-# Anticipating large files
-
-- How can you guess if file will be too big to read in?
-- 
 
 ---
 class: inverse, center, middle
