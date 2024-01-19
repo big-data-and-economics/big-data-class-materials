@@ -150,7 +150,23 @@ df %>% filter(insample_new==1)
 - Today and next class are about minimizing these struggles through Clean Code and a reproducible workflow
 
 ---
-# Student Presentation: Hidden Researcher Decisions
+# Student Presentation 
+
+## Hidden Researcher Decisions
+
+- Bottom line: empirical work is full of little arbitrary decisions
+
+- These add up quickly
+
+- It does not necessarily mean anything nefarious is going on or that the research is wrong
+
+- But it underscores why we should be skeptical of empirical work
+
+- And why we should work to clearly document any empirical work we do
+
+- And why replication efforts by [University of Goettingen](https://replication.uni-goettingen.de/wiki/index.php/Main_Page) or [datacolada](https://datacolada.org/) are so important
+
+- Similarly why the American Economic Association's [Data and Code Availability Policy](https://www.aeaweb.org/journals/data/data-code-policy) matters so much
 
 ---
 class: inverse, center, middle
@@ -203,7 +219,7 @@ name: clean_code
 3. In the moment, clean code .hi[takes longer to produce] while seemingly conferring no benefit
 
 ---
-# How does one produce clean code? Principles
+# How does one produce clean code?
 
 1. Automation
 
@@ -259,7 +275,7 @@ name: automation
 - This is a further benefit of a well-organized directory -- you can easily see what scripts you need to run in what order
 - Use `source('rscript.R')` to run an external script
 
--- 
+--
 
 - A main script could be a `.Rmd`, a `.R`, a `.sh`, a `.py`, a `.do` etc.
 
@@ -594,29 +610,30 @@ name: abstraction
 
 # Abstract to eliminate redundancy
 
-- Sometimes you might find yourself repeating lines of code:
+- Sometimes you might find yourself repeating lines of code to accomplish a task
 
-```{r naming redundancy}
-names_thrice <- c('kyle','alex','charlie','sadie','laila','aidan','alice','ethan','ian','jaden','john','maggie','rawson','sam','sean','tyler','will','yun','yuna',
-  'kile','alex','charlie','sadie','laila','aidan','alice','ethan','ian','jaden','john','maggie','rawson','sam','sean','tyler','will','yun','yuna',
-  'alex','charlie','sadie','laila','aidan','alice','ethan','ian','jaden','john','maggie','rawson','sam','sean','tyler','will','yun','yuna')
+```{r downloading_a_lot,eval=FALSE}
+# Downloading a sequence of files from 2004 to 2020 gets tedious
+download.file('https://data.nber.org/tax-stats/zipcode/2020/zipcode2020.zip',destfile=paste0(data_dir,'zipcode2020.zip',sep='/'))
+download.file('https://data.nber.org/tax-stats/zipcode/2019/zipcode2019.zip',destfile=paste0(data_dir,'zipcode2019.zip',sep='/'))
+download.file('https://data.nber.org/tax-stats/zipcode/2019/zipcode2019.zip',destfile=paste0(data_dir,'zipcode2018.zip',sep='/'))
+# etc.
 ```
 
 Notice any problems?
 
-```{r improving}
-#Better
-names_short <- c('kyle','alex','charlie','sadie','laila','aidan','alice','ethan','ian','jaden','john','maggie','rawson','sam','sean','tyler','will','yun','yuna')
-c(names_short,names_short,names_short)
+```{r improving,eval=FALSE}
+# Downloading a sequence of files from 20 wih a loop
+for (y in 2004:2020) {
+    download.file(paste0('https://data.nber.org/tax-stats/zipcode/',y,'/zipcode',y,'.zip'),destfile=paste0(data_dir,'zipcode',y,'.zip',sep='/'))
+}
 ```
 
-R anticipated repetition and created an in-built function
+- We'll learn more about iteration later with the apply family in R
 
-```{r rep_function}
-#Even better use rep function
-rep(names_short, times = 3)
+- There are many other forms of redundancy that can be eliminated with abstraction beyond iteration
 
-```
+- This is just the simplest to understand
 
 ---
 
@@ -650,13 +667,12 @@ The second approach is easier to read and understand what the code is doing
 
 - One could argue that the examples on the previous slides are overly abstract
 
-- OLS is a simple operation that only takes one line of code
-
 - If we're only doing it once in our script, then it may not make sense to use the function version
 
 - This discussion points out that it can be difficult to know if one has reached the optimal level of abstraction
 
-- As you're starting out programming, I would advise doing almost every inside of a function (i.e. err on the side of over-abstraction when starting out)
+- As you're starting out programming, I would advise doing almost everything inside of a function (i.e. err on the side of over-abstraction when starting out)
+  - And look for opportunities to loop (or use apply functions)
 
 ---
 name: documentation
@@ -710,36 +726,6 @@ name: documentation
 - .hi[Package vignettes:] access using `vignette("vignette_name")`
 
 - .hi[Cheatsheets:] access at [Posit Cheatsheets](https://posit.co/resources/cheatsheets/)
-
-
----
-
-# Make your own documentation
-
-- R has excellent built-in documentation called `Roxygen2`
-
-- These make great documents above functions to increase readability
-
-- Here's an example:
-
-```{r roxygen}
-library(roxygen2)
-#' This is a sample function
-#'
-#' This function does something amazing.
-#'
-#' @param x A numeric input.
-#' @return The result of the amazing operation.
-#' @examples
-#' amazing_function(5)
-amazing_function <- function(x) {
-  # function implementation
-}
-
-```
-
-- Use `roxygen::roxygenise()` to generate documentation for all functions in a file
-- Read more [here](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html)
 
 ---
 name: time-task
@@ -1119,6 +1105,35 @@ set.seed(0)
 print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
 print(rnorm(1)+rnorm(1,5)+rnorm(1,10))
 ```
+
+---
+
+# Make your own documentation
+
+- R has excellent built-in documentation called `Roxygen2`
+
+- These make great documents above functions to increase readability
+
+- Here's an example:
+
+```{r roxygen}
+library(roxygen2)
+#' This is a sample function
+#'
+#' This function does something amazing.
+#'
+#' @param x A numeric input.
+#' @return The result of the amazing operation.
+#' @examples
+#' amazing_function(5)
+amazing_function <- function(x) {
+  # function implementation
+}
+
+```
+
+- Use `roxygen::roxygenise()` to generate documentation for all functions in a file
+- Read more [here](https://cran.r-project.org/web/packages/roxygen2/vignettes/roxygen2.html)
 
 ---
 name: refactor

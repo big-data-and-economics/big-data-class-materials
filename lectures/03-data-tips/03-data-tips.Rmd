@@ -75,6 +75,14 @@ Today we'll focus on grappling with data
 ---
 # Housekeeping
 
+- .hi[Presentations:] Sign-up in the [Presentations github repository](https://classroom.github.com/a/jWcBRDZJ)
+
+- .hi[Problem Set 1:] due on Sunday, January 29th at 11:59pm
+
+- .hi[Final Project Proposal:] due on Sunday, January 25th at 11:59pm
+  - Create a fork of the Final Project repository and add me as a collaborator
+  - List the names of you and your partner in the README.md file
+
 - If you notice something wrong with a problem set or lecture, please either:
 
 1. Raise it as an issue in the relevant repository
@@ -98,7 +106,7 @@ Today we'll focus on grappling with data
 - But lots of data are messy or frankly bogus, but you wouldn't know it from sum stats
 - Meet Anscombe's Quartet (Anscombe, 1973)
   
-```{r data-viz-reason,echo=FALSE,warning=FALSE}
+```{r data-viz-reason,echo=FALSE,warning=FALSE,fig.width=6,fig.height=3.5}
 # Reshape the data
 data(anscombe) 
 anscombe_df <-anscombe %>%
@@ -220,7 +228,7 @@ name: empirical-workflow
   
     ☐ Replicate census shocks results
 
-    ☐ Acquire data on employment, racial wage gap
+    ☐ Acquire data by county and race
 ]
 
 ---
@@ -240,9 +248,9 @@ name: empirical-workflow
 ---
 # Play along at home
 
-- Everyone fork the class materials repository
+#### Your computer
 
-- Clone your fork of the class materials repository to your class folder
+- Everyone fork and clone the class materials repository to your class folder
 
 - Double-click the file `big-data-class-materials.Rproj` to open the project in RStudio at the correct working directory
 
@@ -256,6 +264,8 @@ install.packages(c('tidyverse','arrow','datasauRus','gganimate'))
 library(tidyverse,arrow,datasauRus,gganimate)
 ```
 
+#### Alternatively, you can use GitHub Codespaces
+
 - We're going to explore a mangled version of the dataset from the Bertrand and Mullainathan (2004) resume audit study
 
 - Suspend some disbelief, please as I mangled the data to make it more interesting
@@ -267,14 +277,27 @@ library(tidyverse,arrow,datasauRus,gganimate)
 
 - Simple, yet non-negotiable, programming commands and exercises to check for data errors
 
-- Let's work through a few using a messy dataset of blood pressure measurements with some demographic information
+#### 1. Read the documentation
+#### 2. Look at the data ("Real eyes realize real lies"<sup>1</sup>)
+#### 3. Look at summaries and frequency tables of variables
+#### 4. Plot histograms of key variables
+#### 5. Visualize by key groups
+#### 6. Check sum stats by key groups
+#### 7. Check if the data are the right "size"
+
+- There are many more potential checklist items: you'll develop your own with experience
 
 - First, above all else, read any documentation associated with the file
-  - Codebooks, READMEs, etc.
+  - Codebooks, READMEs, etc. -- check out `data/README.txt.` for this dataset
   - They're not riveting, but they clarify tons of small things
   - Your first problem set doesn't come with one -- you're gonna build it!
 
-- Open the raw data and look at it: "Real eyes realize real lies"<sup>1</sup>
+.footnote[<sup>1</sup> Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
+
+---
+# 2. Look at the data
+
+- Open the raw data and look at it: 
 
 ```{r open-data}
 resumes <- read_csv('data/lakisha_aer.csv',
@@ -285,16 +308,15 @@ head(resumes)
 - Oh weird, the first few rows are junk, let's skip them and give more informative names
 
 ```{r skip-rows}
-resumes <- read_csv('data/lakisha_aer.csv',skip=4,
+resumes <- read_csv('data/lakisha_aer.csv',
+  skip=4, # skip some rows
   col_names=c('id','ofjobs','firstname','sex','race','call','lmedhhinc'), # Column names
   show_col_types = FALSE) # Don't tell me the column types
 head(resumes)
 ```
 
-.footnote[<sup>1</sup> Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
-
 ---
-# Look at summaries of variables
+# 3. Look at summaries of variables
 
 Do factor variables have multiple spellings?
 
@@ -309,53 +331,54 @@ skimr::skim(resumes)
 ```
 ]
 
-- What's 99?
+- What's -99?
 
 ---
-# Visualize key facets of the data
-```{r immediate_visual, dev="svg"}
-# ggplot is a great tool for visualizing data
-ggplot(data=resumes,aes(y=ofjobs,x=race)) + 
-  geom_bar(stat='summary',fun='mean')
-```
-
-- Wait, this is an RCT, why are the previous job counts of black/white applicants different?
-
----
-# Visualize the raw data
+# 4. Visualize the raw data
 
 - Go beyond the eyeball and graph the data
-```{r funky_data2, dev="svg"}
-ggplot(data=resumes,aes(x=ofjobs))+
+```{r funky_data1, dev="svg"}
+# ggplot is a great tool for visualizing data
+ggplot(data=resumes,mapping=aes(x=ofjobs))+
   geom_histogram()
 ```
 
 - Wait a minute! What's going on with the -99 values?
 
 ---
-# Visualize by group
-```{r funky_data3, dev="svg"}
-# Get the first three rows of the data frame (or as many rows as needed)
-#Make a density of the heart rate on visit 1:
-resumes %>% # pipes are a greate tool, we'll cover them in a bit
+# 5. Visualize by group
+```{r funky_data2, dev="svg",fig.width=6,fig.height=3.5}
+resumes <- resumes %>% # pipes are a greate tool, we'll cover them in a bit
   mutate(race=ifelse(race=='w' | race=='Caucasian','White',
-    ifelse(race=="BLACK" | race=="b", "Black",race))) %>% # change the data up
-  ggplot(aes(x=ofjobs,fill=race))+
+    ifelse(race=="BLACK" | race=="b", "Black",race))) # change the data up
+ggplot(data=resumes,aes(x=ofjobs,fill=race))+
     geom_histogram(alpha=0.25) # alpha makes bars see through! 
 ```
 
 - Oh! I bet -99 means NA or missing
-- This disproportionately occurs for fake black name applicant profiles
+- This only occurs for fake black name applicant profiles
 - That be bad news for this RCT...
 
 ---
-# Other tricks:
+# 6. Visualize summaries by group
+
+```{r funky_data3, dev="svg"}
+ggplot(data=resumes,aes(y=ofjobs,x=race)) + 
+  geom_bar(stat='summary',fun='mean')
+```
+
+- Yep, the job counts differ meaningfully by race -- uh oh.
+
+---
+# 7. Are the data the right-size?
 
 - Check if the data are the right-size
 
 - If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
 
-- If not, find out why! Maybe there are 1020 because DC is (rightfully) included
+- If not, find out why! 
+  - Maybe there are 1020 because DC is (rightfully) included
+  - Alternatively, data are missing for a few states in a few years and dropped entirely
 
 - Search for outliers or oddities and work out possible explanations using:
     - Codebooks
@@ -365,7 +388,7 @@ resumes %>% # pipes are a greate tool, we'll cover them in a bit
 ---
 # Wait, how does ggplot work?
 
-See slides from [Lecture 1](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html#58) for a full explanations
+See slides from [Lecture 1](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html#55) for a full explanations
 
 - Basically, it is a useful data visualization tool that allows you to specify the data and the type of plot you want to make
 
@@ -440,22 +463,13 @@ name: file-formats
 - To the extent that the tools you're using require a specific file format, then using the correct format is essential
 
 ---
-# Common file extensions when working with data
-
-- In the following table, I list some of the most common file extensions
-
-- For a more complete list of almost every file extension imaginable (note: they missed Stata's `.do` and `.dta` formats), see [here](https://en.wikipedia.org/wiki/List_of_file_formats).
-
-- Another great discussion about file formats is [here](https://opendata.stackexchange.com/questions/1208/a-python-guide-for-open-data-file-formats) on stackexchange
-
----
 # Open-format file extensions
 
 The following file extensions are not tied to a specific software program 
 
 - In this sense they are "raw" and can be viewed in any sort of text editor
 
-.scroll-box-12[
+.scroll-box-18[
 | File extension                     | Description |
 |------------------------------------|-------------|
 | CSV                                | Comma separated values; data is in tabular form with column breaks marked by commas |
@@ -473,11 +487,14 @@ The following file extensions are not tied to a specific software program
 | MP3, WAV                           | These common audio formats may be used to store data. For example, voice-to-text applications have some way of converting income audio (in some format) into data that the machine can comprehend. The same holds for MP4 and other video file formats (e.g. for video input to self-driving cars, etc.) |
 ]
 
+- Here's a more [complete list](https://en.wikipedia.org/wiki/List_of_file_formats) of almost every file extension (note: missed Stata's `.do` and `.dta` formats).
+
+- Another great discussion about file formats is [here](https://opendata.stackexchange.com/questions/1208/a-python-guide-for-open-data-file-formats) on stackexchange
+
 ---
-# Examples of CSV, TSV, XML, YAML, and JSON files
+# ExamplesL JSON
 
 A possible JSON representation describing a person ([source](https://en.wikipedia.org/wiki/JSON#Example))
-.scroll-box-16[
 ```JSON
 {
   "firstName": "John",
@@ -508,13 +525,12 @@ A possible JSON representation describing a person ([source](https://en.wikipedi
   "spouse": null
 }
 ```
-]
 
 ---
-# Examples of CSV, TSV, XML, YAML, and JSON files
+# Examples: XML
 
 The same example as previously, but in XML: ([source](https://en.wikipedia.org/wiki/JSON#Example))
-.scroll-box-16[
+
 ```xml
 <person>
   <firstName>John</firstName>
@@ -539,13 +555,12 @@ The same example as previously, but in XML: ([source](https://en.wikipedia.org/w
   </gender>
 </person>
 ```
-]
 
 ---
-# Examples of CSV, TSV, XML, YAML, and JSON files
+# Examples: YAML
 
 The same example, but in YAML: ([source](https://en.wikipedia.org/wiki/JSON#Example))
-.scroll-box-12[
+
 ```YAML
 firstName: John
 lastName: Smith
@@ -563,7 +578,6 @@ phoneNumber:
 gender: 
   type: male
 ```
-]
 
 Note that the JSON code above is also valid YAML; YAML simply has an alternative syntax that makes it more human-readable
 
@@ -639,7 +653,6 @@ name: archiving
 
 Because data can be big and bulky, it is often easier to store and share the data in compressed form
 
-.scroll-box-4[
 | File extension                     | Description |
 |------------------------------------|-------------|
 | ZIP                                | The most common format for file compression |
@@ -649,7 +662,6 @@ Because data can be big and bulky, it is often easier to store and share the dat
 | TAR                                | So-called "tarball" which is a way to collect many files into one archive file. TAR stands for "Tape ARchive" |
 | TAR.GZ; TGZ                        | A compressed version of a tarball (compression via `gzip`) |
 | TAR.BZ2; .TB2; .TBZ; .TBZ2         | Compressed tarball (via `bzip2`) |
-]
 
 ![Tarball vs. TGZ](Targzip.svg)
 ```{r,include=F}
@@ -677,7 +689,8 @@ Because data can be big and bulky, it is often easier to store and share the dat
 - And you can may still want to read in a few rows or columns like before
 
 ```{r read-in-zip,warning=FALSE,message=FALSE}
-read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv'),show_col_types = FALSE)
+unz('data/lakisha_aer.zip','lakisha_aer.csv') %>% # Unzip the file
+  read_csv(show_col_types = FALSE) # pipe to a read csv
 ```
 
 ---
@@ -774,7 +787,7 @@ name: big-data
 ---
 # Your challenge
 
-- With time left, try to download each of the following files to a folder and read in a five columns of your choosing:
+- With time left, try to download each of the following files to a folder and read in five columns of your choosing:
   - https://www2.census.gov/ces/opportunity/tract_covariates.csv
   - https://www2.census.gov/ces/opportunity/county_outcomes.zip
   - https://www2.census.gov/ces/opportunity/tract_outcomes.zip (challenge)

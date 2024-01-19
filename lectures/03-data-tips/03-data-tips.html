@@ -45,6 +45,7 @@ name: toc
 
 - [Prologue](#prologue)
 - [Empirical Workflow](#data-checklist)
+- [Downloading data](#downloading-data)
 - [File formats](#file-formats)
 - [Archiving &amp; file compression](#archiving)
 - [Dictionaries](#dictionaries) (if time)
@@ -75,6 +76,14 @@ Today we'll focus on grappling with data
 
 ---
 # Housekeeping
+
+- .hi[Presentations:] Sign-up in the [Presentations github repository](https://classroom.github.com/a/jWcBRDZJ)
+
+- .hi[Problem Set 1:] due on Sunday, January 29th at 11:59pm
+
+- .hi[Final Project Proposal:] due on Sunday, January 25th at 11:59pm
+  - Create a fork of the Final Project repository and add me as a collaborator
+  - List the names of you and your partner in the README.md file
 
 - If you notice something wrong with a problem set or lecture, please either:
 
@@ -193,7 +202,7 @@ name: empirical-workflow
   
     ☐ Replicate census shocks results
 
-    ☐ Acquire data on employment, racial wage gap
+    ☐ Acquire data by county and race
 ]
 
 ---
@@ -213,9 +222,9 @@ name: empirical-workflow
 ---
 # Play along at home
 
-- Everyone fork the class materials repository
+#### Your computer
 
-- Clone your fork of the class materials repository to your class folder
+- Everyone fork and clone the class materials repository to your class folder
 
 - Double-click the file `big-data-class-materials.Rproj` to open the project in RStudio at the correct working directory
 
@@ -230,23 +239,40 @@ install.packages(c('tidyverse','arrow','datasauRus','gganimate'))
 library(tidyverse,arrow,datasauRus,gganimate)
 ```
 
+#### Alternatively, you can use GitHub Codespaces
+
 - We're going to explore a mangled version of the dataset from the Bertrand and Mullainathan (2004) resume audit study
 
 - Suspend some disbelief, please as I mangled the data to make it more interesting
+
+**Note**: I put data files on Github. This is bad practice for large files, but fine for small ones. I recommend you add a data file extensions (e.g. *.csv, *.dta) for data files to your `.gitignore` file.
 
 ---
 # Simple data checklist items
 
 - Simple, yet non-negotiable, programming commands and exercises to check for data errors
 
-- Let's work through a few using a messy dataset of blood pressure measurements with some demographic information
+#### 1. Read the documentation
+#### 2. Look at the data ("Real eyes realize real lies"&lt;sup&gt;1&lt;/sup&gt;)
+#### 3. Look at summaries and frequency tables of variables
+#### 4. Plot histograms of key variables
+#### 5. Visualize by key groups
+#### 6. Check sum stats by key groups
+#### 7. Check if the data are the right "size"
+
+- There are many more potential checklist items: you'll develop your own with experience
 
 - First, above all else, read any documentation associated with the file
-  - Codebooks, READMEs, etc.
+  - Codebooks, READMEs, etc. -- check out `data/README.txt.` for this dataset
   - They're not riveting, but they clarify tons of small things
   - Your first problem set doesn't come with one -- you're gonna build it!
 
-- Open the raw data and look at it: "Real eyes realize real lies"&lt;sup&gt;1&lt;/sup&gt;
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
+
+---
+# 2. Look at the data
+
+- Open the raw data and look at it: 
 
 
 ```r
@@ -271,7 +297,8 @@ head(resumes)
 
 
 ```r
-resumes &lt;- read_csv('data/lakisha_aer.csv',skip=4,
+resumes &lt;- read_csv('data/lakisha_aer.csv',
+  skip=4, # skip some rows
   col_names=c('id','ofjobs','firstname','sex','race','call','lmedhhinc'), # Column names
   show_col_types = FALSE) # Don't tell me the column types
 head(resumes)
@@ -289,10 +316,8 @@ head(resumes)
 ## 6 b          2 Jay       MALE   Caucasian     0     10.4
 ```
 
-.footnote[&lt;sup&gt;1&lt;/sup&gt; Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
-
 ---
-# Look at summaries of variables
+# 3. Look at summaries of variables
 
 Do factor variables have multiple spellings?
 
@@ -352,62 +377,63 @@ Table: Data summary
 |lmedhhinc     |         0|             1| 8.22| 14.38| -99| 9.93| 10.14| 10.34| 11.12|▁▁▁▁▇ |
 ]
 
-- What's 99?
+- What's -99?
 
 ---
-# Visualize key facets of the data
-
-```r
-# ggplot is a great tool for visualizing data
-ggplot(data=resumes,aes(y=ofjobs,x=race)) + 
-  geom_bar(stat='summary',fun='mean')
-```
-
-&lt;img src="03-data-tips_files/figure-html/immediate_visual-1.svg" style="display: block; margin: auto;" /&gt;
-
-- Wait, this is an RCT, why are the previous job counts of black/white applicants different?
-
----
-# Visualize the raw data
+# 4. Visualize the raw data
 
 - Go beyond the eyeball and graph the data
 
 ```r
-ggplot(data=resumes,aes(x=ofjobs))+
+# ggplot is a great tool for visualizing data
+ggplot(data=resumes,mapping=aes(x=ofjobs))+
   geom_histogram()
 ```
 
-&lt;img src="03-data-tips_files/figure-html/funky_data2-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="03-data-tips_files/figure-html/funky_data1-1.svg" style="display: block; margin: auto;" /&gt;
 
 - Wait a minute! What's going on with the -99 values?
 
 ---
-# Visualize by group
+# 5. Visualize by group
 
 ```r
-# Get the first three rows of the data frame (or as many rows as needed)
-#Make a density of the heart rate on visit 1:
-resumes %&gt;% # pipes are a greate tool, we'll cover them in a bit
+resumes &lt;- resumes %&gt;% # pipes are a greate tool, we'll cover them in a bit
   mutate(race=ifelse(race=='w' | race=='Caucasian','White',
-    ifelse(race=="BLACK" | race=="b", "Black",race))) %&gt;% # change the data up
-  ggplot(aes(x=ofjobs,fill=race))+
+    ifelse(race=="BLACK" | race=="b", "Black",race))) # change the data up
+ggplot(data=resumes,aes(x=ofjobs,fill=race))+
     geom_histogram(alpha=0.25) # alpha makes bars see through! 
+```
+
+&lt;img src="03-data-tips_files/figure-html/funky_data2-1.svg" style="display: block; margin: auto;" /&gt;
+
+- Oh! I bet -99 means NA or missing
+- This only occurs for fake black name applicant profiles
+- That be bad news for this RCT...
+
+---
+# 6. Visualize summaries by group
+
+
+```r
+ggplot(data=resumes,aes(y=ofjobs,x=race)) + 
+  geom_bar(stat='summary',fun='mean')
 ```
 
 &lt;img src="03-data-tips_files/figure-html/funky_data3-1.svg" style="display: block; margin: auto;" /&gt;
 
-- Oh! I bet -99 means NA or missing
-- This disproportionately occurs for fake black name applicant profiles
-- That be bad news for this RCT...
+- Yep, the job counts differ meaningfully by race -- uh oh.
 
 ---
-# Other tricks:
+# 7. Are the data the right-size?
 
 - Check if the data are the right-size
 
 - If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
 
-- If not, find out why! Maybe there are 1020 because DC is (rightfully) included
+- If not, find out why! 
+  - Maybe there are 1020 because DC is (rightfully) included
+  - Alternatively, data are missing for a few states in a few years and dropped entirely
 
 - Search for outliers or oddities and work out possible explanations using:
     - Codebooks
@@ -417,13 +443,74 @@ resumes %&gt;% # pipes are a greate tool, we'll cover them in a bit
 ---
 # Wait, how does ggplot work?
 
-See slides from [Lecture 1](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html#58) for a full explanations
+See slides from [Lecture 1](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html#55) for a full explanations
 
 - Basically, it is a useful data visualization tool that allows you to specify the data and the type of plot you want to make
 
 - **Pro tip:** It works best when your are organized "long" instead of wide
 
 - If you'd like to present on ggplot in class this month (instead of the topic you signed up for), let me know!
+
+---
+class: inverse, center, middle
+name: downloading-data
+
+# Downloading data
+
+---
+# Downloading data
+
+
+- Often it is good practice to have a script that downloads the data for you
+
+- This way, you can rerun the script and get the latest version of the data
+
+- Of course, there is a tradeoff to this -- your results may not replicate exactly with newer data
+
+- But it's a good practice to get into for reproducibility
+
+- Also, if you have to downloading thousands of files manually, you'll go insane
+
+- Automate it
+
+---
+# R makes it easy to download
+
+- The R function to download is `download.file()`
+
+- Here is an example that downloads my copy of the Bertrand and Mullainathan (2004) data off of GitHub
+
+
+```r
+download.file(
+  url='https://raw.githubusercontent.com/big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/data/lakisha_aer.csv',
+  destfile='data/lakisha_aer.csv')
+```
+
+- Several R packages will read files right off of the internet
+
+
+```r
+readr::read_csv(
+  file='https://raw.githubusercontent.com/big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/data/lakisha_aer.csv')
+```
+
+```
+## # A tibble: 4,873 × 7
+##    id       ofjobs firstname       sex       race        call lmedhhinc
+##    &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+##  1 id row 1      2 firstname row 3 sex row 4 race row 5     0      9.53
+##  2 id row 1      3 firstname row 3 sex row 4 race row 5     0     10.4 
+##  3 id row 1      1 firstname row 3 sex row 4 race row 5     0     10.5 
+##  4 b             2 Allison         FEMALE    Caucasian      0      9.53
+##  5 b             3 Kristen         FEMALE    Caucasian      0     10.4 
+##  6 b             1 Lakisha         FEMALE    BLACK          0     10.5 
+##  7 b             4 Latonya         FEMALE    BLACK          0     10.4 
+##  8 b             3 Carrie          FEMALE    Caucasian      0      9.88
+##  9 b             2 Jay             MALE      Caucasian      0     10.4 
+## 10 b             2 Jill            FEMALE    Caucasian      0     10.5 
+## # ℹ 4,863 more rows
+```
 
 ---
 class: inverse, center, middle
@@ -450,22 +537,13 @@ name: file-formats
 - To the extent that the tools you're using require a specific file format, then using the correct format is essential
 
 ---
-# Common file extensions when working with data
-
-- In the following table, I list some of the most common file extensions
-
-- For a more complete list of almost every file extension imaginable (note: they missed Stata's `.do` and `.dta` formats), see [here](https://en.wikipedia.org/wiki/List_of_file_formats).
-
-- Another great discussion about file formats is [here](https://opendata.stackexchange.com/questions/1208/a-python-guide-for-open-data-file-formats) on stackexchange
-
----
 # Open-format file extensions
 
 The following file extensions are not tied to a specific software program 
 
 - In this sense they are "raw" and can be viewed in any sort of text editor
 
-.scroll-box-12[
+.scroll-box-18[
 | File extension                     | Description |
 |------------------------------------|-------------|
 | CSV                                | Comma separated values; data is in tabular form with column breaks marked by commas |
@@ -483,11 +561,14 @@ The following file extensions are not tied to a specific software program
 | MP3, WAV                           | These common audio formats may be used to store data. For example, voice-to-text applications have some way of converting income audio (in some format) into data that the machine can comprehend. The same holds for MP4 and other video file formats (e.g. for video input to self-driving cars, etc.) |
 ]
 
+- Here's a more [complete list](https://en.wikipedia.org/wiki/List_of_file_formats) of almost every file extension (note: missed Stata's `.do` and `.dta` formats).
+
+- Another great discussion about file formats is [here](https://opendata.stackexchange.com/questions/1208/a-python-guide-for-open-data-file-formats) on stackexchange
+
 ---
-# Examples of CSV, TSV, XML, YAML, and JSON files
+# ExamplesL JSON
 
 A possible JSON representation describing a person ([source](https://en.wikipedia.org/wiki/JSON#Example))
-.scroll-box-16[
 ```JSON
 {
   "firstName": "John",
@@ -518,13 +599,12 @@ A possible JSON representation describing a person ([source](https://en.wikipedi
   "spouse": null
 }
 ```
-]
 
 ---
-# Examples of CSV, TSV, XML, YAML, and JSON files
+# Examples: XML
 
 The same example as previously, but in XML: ([source](https://en.wikipedia.org/wiki/JSON#Example))
-.scroll-box-16[
+
 ```xml
 &lt;person&gt;
   &lt;firstName&gt;John&lt;/firstName&gt;
@@ -549,13 +629,12 @@ The same example as previously, but in XML: ([source](https://en.wikipedia.org/w
   &lt;/gender&gt;
 &lt;/person&gt;
 ```
-]
 
 ---
-# Examples of CSV, TSV, XML, YAML, and JSON files
+# Examples: YAML
 
 The same example, but in YAML: ([source](https://en.wikipedia.org/wiki/JSON#Example))
-.scroll-box-12[
+
 ```YAML
 firstName: John
 lastName: Smith
@@ -573,7 +652,6 @@ phoneNumber:
 gender: 
   type: male
 ```
-]
 
 Note that the JSON code above is also valid YAML; YAML simply has an alternative syntax that makes it more human-readable
 
@@ -605,30 +683,10 @@ The following file extensions typically require additional software to read, edi
 
 
 ```r
-df_csv   &lt;- read_csv('https://www2.census.gov/ces/opportunity/national_percentile_outcomes.csv')
-df_fread   &lt;- data.table::fread('https://www2.census.gov/ces/opportunity/national_percentile_outcomes.csv')
-df_stata &lt;- haven::read_dta('https://www2.census.gov/ces/opportunity/national_percentile_outcomes.dta')
-
-head(df_csv)
-```
-
-```
-## # A tibble: 6 × 3,914
-##   par_pctile kfr_pooled_pooled kir_pooled_pooled jail_pooled_pooled
-##        &lt;dbl&gt;             &lt;dbl&gt;             &lt;dbl&gt;              &lt;dbl&gt;
-## 1          1             0.305             0.34              0.0559
-## 2          2             0.317             0.352             0.0503
-## 3          3             0.326             0.360             0.0463
-## 4          4             0.333             0.367             0.0445
-## 5          5             0.338             0.371             0.0417
-## 6          6             0.342             0.375             0.0405
-## # ℹ 3,910 more variables: married_asian_female_n &lt;dbl&gt;,
-## #   married_asian_female &lt;dbl&gt;, s_married_asian_female &lt;dbl&gt;,
-## #   imp_married_asian_female &lt;dbl&gt;, working_asian_female_n &lt;dbl&gt;,
-## #   working_asian_female &lt;dbl&gt;, s_working_asian_female &lt;dbl&gt;,
-## #   imp_working_asian_female &lt;dbl&gt;, has_dad_asian_female_n &lt;dbl&gt;,
-## #   has_dad_asian_female &lt;dbl&gt;, s_has_dad_asian_female &lt;dbl&gt;,
-## #   imp_has_dad_asian_female &lt;dbl&gt;, kir_top20_asian_female_n &lt;dbl&gt;, …
+df_csv   &lt;- read_csv('data/lakisha_aer.csv')
+df_fread   &lt;- data.table::fread('data/lakisha_aer.tab')
+df_stata &lt;- haven::read_dta('data/lakisha_aer.dta')
+df_xlsx &lt;- readxl::read_xlsx('data/lakisha_aer.xlsx')
 ```
 
 ---
@@ -644,8 +702,7 @@ Just read in a single row to see the column names:
 # I need to sete an environment variable to increase the size of the connection
 # R will complain if you try to read in a file that's too big
 # This will reset when I close this session.
-Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) 
-df &lt;- read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',n_max=1)
+df &lt;- read_csv('data/lakisha_aer.csv',n_max=1)
 ```
 
 - You can and should also consult the codebook (remember those?)
@@ -659,27 +716,25 @@ Once you know your columns, read those in:
 
 ```r
 Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
-read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',
-  col_select=c('cz', 'kfr_pooled_pooled_p1', 'kfr_pooled_pooled_p25',
-  'kfr_pooled_pooled_p50','kfr_pooled_pooled_p75','kfr_pooled_pooled_p100'))
+read_csv('data/lakisha_aer.csv',
+  col_select=c('id', 'race', 'sex','call'))
 ```
 
 ```
-## # A tibble: 741 × 6
-##       cz kfr_pooled_pooled_p1 kfr_pooled_pooled_p25 kfr_pooled_pooled_p50
-##    &lt;dbl&gt;                &lt;dbl&gt;                 &lt;dbl&gt;                 &lt;dbl&gt;
-##  1   100                0.260                 0.364                 0.461
-##  2   200                0.264                 0.363                 0.456
-##  3   301                0.286                 0.380                 0.467
-##  4   302                0.262                 0.366                 0.462
-##  5   401                0.251                 0.359                 0.459
-##  6   402                0.249                 0.362                 0.466
-##  7   500                0.241                 0.352                 0.454
-##  8   601                0.283                 0.384                 0.478
-##  9   602                0.267                 0.382                 0.489
-## 10   700                0.240                 0.351                 0.454
-## # ℹ 731 more rows
-## # ℹ 2 more variables: kfr_pooled_pooled_p75 &lt;dbl&gt;, kfr_pooled_pooled_p100 &lt;dbl&gt;
+## # A tibble: 4,873 × 4
+##    id       race       sex        call
+##    &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;     &lt;dbl&gt;
+##  1 id row 1 race row 5 sex row 4     0
+##  2 id row 1 race row 5 sex row 4     0
+##  3 id row 1 race row 5 sex row 4     0
+##  4 b        Caucasian  FEMALE        0
+##  5 b        Caucasian  FEMALE        0
+##  6 b        BLACK      FEMALE        0
+##  7 b        BLACK      FEMALE        0
+##  8 b        Caucasian  FEMALE        0
+##  9 b        Caucasian  MALE          0
+## 10 b        Caucasian  FEMALE        0
+## # ℹ 4,863 more rows
 ```
 
 ---
@@ -692,7 +747,6 @@ name: archiving
 
 Because data can be big and bulky, it is often easier to store and share the data in compressed form
 
-.scroll-box-4[
 | File extension                     | Description |
 |------------------------------------|-------------|
 | ZIP                                | The most common format for file compression |
@@ -702,7 +756,6 @@ Because data can be big and bulky, it is often easier to store and share the dat
 | TAR                                | So-called "tarball" which is a way to collect many files into one archive file. TAR stands for "Tape ARchive" |
 | TAR.GZ; TGZ                        | A compressed version of a tarball (compression via `gzip`) |
 | TAR.BZ2; .TB2; .TBZ; .TBZ2         | Compressed tarball (via `bzip2`) |
-]
 
 ![Tarball vs. TGZ](Targzip.svg)
 
@@ -729,37 +782,25 @@ Because data can be big and bulky, it is often easier to store and share the dat
 
 
 ```r
-download.file('https://www2.census.gov/ces/opportunity/county_outcomes.zip','county_outcomes.zip')
-read_csv(unz('county_outcomes.zip','county_outcomes.csv'),
-  col_select=c('county','kfr_pooled_pooled_p1','kfr_pooled_pooled_p25',
-  'kfr_pooled_pooled_p50','kfr_pooled_pooled_p75','kfr_pooled_pooled_p100'))
+unz('data/lakisha_aer.zip','lakisha_aer.csv') %&gt;% # Unzip the file
+  read_csv(show_col_types = FALSE) # pipe to a read csv
 ```
 
 ```
-## # A tibble: 3,219 × 6
-##    county kfr_pooled_pooled_p1 kfr_pooled_pooled_p25 kfr_pooled_pooled_p50
-##     &lt;dbl&gt;                &lt;dbl&gt;                 &lt;dbl&gt;                 &lt;dbl&gt;
-##  1      1                0.245                 0.362                 0.471
-##  2      3                0.292                 0.389                 0.479
-##  3      5                0.233                 0.349                 0.457
-##  4      7                0.249                 0.363                 0.469
-##  5      9                0.293                 0.392                 0.483
-##  6     11                0.244                 0.346                 0.440
-##  7     13                0.231                 0.357                 0.474
-##  8     15                0.256                 0.362                 0.461
-##  9     17                0.236                 0.341                 0.437
-## 10     19                0.265                 0.365                 0.459
-## # ℹ 3,209 more rows
-## # ℹ 2 more variables: kfr_pooled_pooled_p75 &lt;dbl&gt;, kfr_pooled_pooled_p100 &lt;dbl&gt;
-```
-
-```r
-# Delete the file
-file.remove('county_outcomes.zip')
-```
-
-```
-## [1] TRUE
+## # A tibble: 4,873 × 7
+##    id       ofjobs firstname       sex       race        call lmedhhinc
+##    &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+##  1 id row 1      2 firstname row 3 sex row 4 race row 5     0      9.53
+##  2 id row 1      3 firstname row 3 sex row 4 race row 5     0     10.4 
+##  3 id row 1      1 firstname row 3 sex row 4 race row 5     0     10.5 
+##  4 b             2 Allison         FEMALE    Caucasian      0      9.53
+##  5 b             3 Kristen         FEMALE    Caucasian      0     10.4 
+##  6 b             1 Lakisha         FEMALE    BLACK          0     10.5 
+##  7 b             4 Latonya         FEMALE    BLACK          0     10.4 
+##  8 b             3 Carrie          FEMALE    Caucasian      0      9.88
+##  9 b             2 Jay             MALE      Caucasian      0     10.4 
+## 10 b             2 Jill            FEMALE    Caucasian      0     10.5 
+## # ℹ 4,863 more rows
 ```
 
 ---
@@ -867,7 +908,7 @@ name: big-data
 ---
 # Your challenge
 
-- With time left, try to download each of the following files to a folder and read in a five columns of your choosing:
+- With time left, try to download each of the following files to a folder and read in five columns of your choosing:
   - https://www2.census.gov/ces/opportunity/tract_covariates.csv
   - https://www2.census.gov/ces/opportunity/county_outcomes.zip
   - https://www2.census.gov/ces/opportunity/tract_outcomes.zip (challenge)
