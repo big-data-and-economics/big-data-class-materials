@@ -35,7 +35,6 @@ opts_chunk$set(
   cache=T#, echo=F, warning=F, message=F
   )
 library(tidyverse)
-library(skimr)
 library(RefManageR)
 BibOptions(check.entries = FALSE,
            bib.style = "authoryear",
@@ -149,6 +148,9 @@ df %>% filter(insample_new==1)
 - The boy was very frustrated and decided to work on these slides while re-running his code.
 
 - Today and next class are about minimizing these struggles through Clean Code and a reproducible workflow
+
+---
+# Student Presentation: Hidden Researcher Decisions
 
 ---
 class: inverse, center, middle
