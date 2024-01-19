@@ -1,6 +1,6 @@
 ---
 title: Big Data and Economics
-subtitle: Tips for Managing Data
+subtitle: "Lecture 3: Data tips"
 author: Kyle Coombs
 date: "Bates College | [ECON/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)"
 output:
@@ -39,10 +39,11 @@ library(tidyverse)
 # Table of contents
 
 - [Prologue](#prologue)
+- [Empirical Workflow](#data-checklist)
 - [File formats](#file-formats)
 - [Archiving & file compression](#archiving)
-- [Dictionaries](#dictionaries)
-- [Big Data file types](#big-data)
+- [Dictionaries](#dictionaries) (if time)
+- [Big Data file types](#big-data) (if time)
 
 ---
 class: inverse, center, middle
@@ -55,15 +56,266 @@ name: prologue
 
 Today we'll focus on grappling with data
 
+- Checklist to ensure data quality
+
 - File formats and extensions
 
 - Archiving & file compression
 
-- Dictionaries (hash tables)
+- If time:
 
-- Big Data file types
+  - Dictionaries (hash tables)
 
-You're gonna need to know how to do a lot of this! 
+  - Big Data file types
+
+---
+# Why do we need to do this?
+
+- We summarize data because we can't look at every data point and see a pattern, but that can obscure problems
+- Lots of data are messy or frankly bogus, but you wouldn't know it from sum stats
+- Meet Anscombe's Quartet (Anscombe, 1973)
+  
+```{r data-viz-reason,echo=FALSE,warning=FALSE}
+# Reshape the data
+data(anscombe) 
+anscombe_df <-anscombe %>%
+  mutate(x4=x4-5,y4=y4-3) %>%
+  pivot_longer(cols= x1:y4, names_pattern='([a-z])(\\d)', names_to=c('.value','sample')) %>%
+  mutate(sample=factor(sample, levels=1:4, labels=c('Linear','Quadratic','Single outlier','Low x variance')))
+
+# Plot faceted scatterplot grid
+ggplot(anscombe_df, aes(x = x, y = y)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  facet_wrap(~ sample, nrow = 2) +
+  labs(x = "x", y = "y") +
+  theme_bw()
+
+```
+
+---
+# DataSarus Dozen
+
+- A more ambitious example is the [Datasaurus Dozen](https://www.autodeskresearch.com/publications/samestats) dataset.
+
+```{r datasaurus_dozen,echo=FALSE,warning=FALSE}
+datasaurus_dozen <- datasaurus_dozen %>% 
+  mutate(dataset_counter = as.integer(factor(dataset, levels = unique(dataset))))
+
+ggplot(datasaurus_dozen, aes(x = x, y = y))+
+    geom_point()+
+    geom_smooth(method = "lm", se = FALSE) +
+    theme_bw() +
+    theme(legend.position = "none") +
+    transition_states(dataset, transition_length=1, state_length=30) +
+    ease_aes('linear') +
+    labs(title='Sample: {closest_state}')
+```
+
+---
+# Not every outlier is bad
+
+- Sometimes bizarre looking outliers in data are real! 
+
+- But sometimes they're nonsense or an unusually coded "NA" value
+
+- Today we're focusing on how to catch the latter so they don't cause you problems later
+
+- Imagine writing an entire paper only to discover your dataset looks like a T-rex
+
+---
+class: inverse, center, middle
+name: empirical-workflow
+
+# Empirical Workflow
+
+---
+# Workflow workflow workflow
+
+## The Cunningham Empirical Workflow Conjecture
+
+- The cause of most of your empirical coding errors is **not** due to insufficient knowledge of syntax in your chosen programming language
+
+- The cause of most of your errors is due to a poorly designed .hi[Empirical Workflow]
+
+- .[Empirical Workflow]: A fixed set of routines you always follow to identify the most common errors
+	- Think of it as your morning routine: alarm goes off, go to wash up, make your coffee/tea, put pop tart in toaster, contemplate your existence in the universe until **ding**, eat pop tart repeat *ad infinitum*
+
+- Finding weird errors is a different task; empirical workflows catch typical and common errors
+
+- Empirical workflows follow a checklist
+
+---
+# Why do we use checklists?
+
+- I got engaged in July and am planning a wedding in Princeton for next July
+- I also moved to New England in August and am still unpacking (in ME and MA)
+- I am teaching two upper-level electives
+- I am trying to submit several papers to conferences/journals this year
+- Each of these gets a checklist:
+
+.pull-left[
+- **Wedding:**
+
+    ☐ Pick invitation design
+
+    ☐ Send invitations
+
+- **Unpacking:**
+
+    ☐ Put books on shelves
+
+    ☐ Buy dresser
+
+- **AEJ: Policy submission**
+
+    ☐ Write 5-page submission report
+
+    ☐ Submit
+]
+.pull-right[
+- **ECON 368**
+
+    ☐ Write Problem Set 1 solutions
+
+    ☐ Rewrite data tips
+
+- **Senior Thesis:**
+
+    ☐ Create FAQs
+
+    ☐ Develop data guidance
+
+- **Census shocks and racial integration paper**
+  
+    ☐ Replicate census shocks results
+
+    ☐ Acquire data on employment, racial wage gap
+]
+
+---
+# To remember the obvious stuff
+
+- When I stop to think, I know I need to do everything on my checklists
+
+- But then I forget when I move onto the next task
+
+- Programming is the same, except you have an **empirical checklist**:
+
+- The **empirical checklist**:
+    - Covers the intermediate step between "getting the data" and "analyzing the data"
+    - It largely focuses on ensuring data quality for the most common, easy to identify problems
+    - It'll make you a better coauthor
+
+---
+# Play along at home
+
+- Everyone fork the class materials repository
+
+- Clone your fork of the class materials repository to your class folder
+
+- Double click the file `big-data-class-materials.Rproj` to open the project in RStudio
+
+- 
+
+---
+# Simple data checklist items
+
+- Simple, yet non-negotiable, programming commands and exercises to check for data errors
+
+- Here I'll present a few using a messy dataset of blood pressure measurements by race
+
+- First, above all else, read any documentation associated with the file
+  - Codebooks, READMEs, etc.
+  - They're not riveting, but they clarify tons of small things
+  - Your first problem set doesn't come with one -- you're gonna build it!
+
+- Open the raw data and look at it: "Real eyes realize real lies"<sup>1</sup>
+
+```{r open-data}
+bp <- read_csv('data/messier_bp.csv',
+  show_col_types= FALSE) # Don't tell me the column types
+head(bp)
+```
+
+- Oh weird, the first few rows are junk, let's skip them and give more informative names
+
+```{r skip-rows}
+bp <- read_csv('data/messier_bp.csv',skip=2,
+  col_names=c('pat_id','birth_month','birth_day','birth_year','race','sex','hispanic',
+  'bp_visit1','hr_visit1','bp_visit2','hr_visit2','bp_visit3','hr_visit3'), # Column names
+  show_col_types = FALSE) # Don't tell me the column types
+head(bp)
+```
+
+.footnote[<sup>1</sup> Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
+
+---
+# Look at summaries of variables
+
+Do factor variables have multiple spellings?
+
+```{r factor}
+table(bp$race,bp$sex)
+```
+
+The `skimr` package is great for this! 
+.scroll-box-12[
+```{r continuous}
+skimr::skim(bp)
+```
+]
+
+---
+# Visualize key facets of the data
+```{r immediate_visual, dev="svg"}
+bp <- read_csv('data/messier_bp.csv',skip=4,
+    col_names=c('pat_id','birth_month','birth_day','birth_year','race','sex','hispanic',
+    'bp_visit1','hr_visit1','bp_visit2','hr_visit2','bp_visit3','hr_visit3'),show_col_types = FALSE)
+
+ggplot(data=bp,aes(y=hr_visit1,x=race)) + geom_bar(stat='summary',fun='mean')
+```
+
+- Are Black people's heart rates really more than twice as high?
+
+---
+# Visualize the raw data
+
+- Go beyond the eyeball and graph the data
+```{r funky_data2, dev="svg"}
+# Get the first three rows of the data frame (or as many rows as needed)
+
+#Make a density of the heart rate on visit 1:
+ggplot(data=bp,aes(x=hr_visit1))+geom_density()
+```
+
+What might be going on here?
+
+---
+# Visualize by group
+```{r funky_data3, dev="svg"}
+# Get the first three rows of the data frame (or as many rows as needed)
+#Make a density of the heart rate on visit 1:
+bp %>% # pipes are a greate tool, we'll cover them in a bit
+  mutate(race=ifelse(race=='WHITE' | race=='Caucasian','White',race)) %>% # change the data up
+  ggplot(aes(x=hr_visit1,fill=race))+geom_density()
+```
+
+- Oh! I bet 999 means NA and a few Black patients have missing heart rates
+
+---
+# Other tricks:
+
+- Check if the data are the right-size
+
+- If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
+
+- If not, find out why! Maybe there are 1020 because DC is (rightfully) included
+
+- Search for outliers or oddities and work out possible explanations using:
+    - Codebooks
+    - Intuition
+    - Emails to the source/creator of data
 
 ---
 class: inverse, center, middle
@@ -71,7 +323,9 @@ name: file-formats
 # File formats
 
 ---
-# A note on file extensions
+# File extensions
+
+- A file extension is the part of the file name after the period `.dta`, `.csv`, `.tab`, etc.
 
 - Often, if you download a file, you will immediately understand what type of a file it is by its extension 
 
@@ -79,14 +333,13 @@ name: file-formats
 
 - File extensions were created so that humans could keep track of which files on their workspace are scripts, which are binaries, etc.
 
----
-# Why is the file format important?
+### Why is the file format important?
 
-- File formats matter because they may need to match the environment you're working in 
+- File formats matter because they may need to match the coding tools you're using
 
-- If you use the wrong file format, it may cause your computations to run slower than otherwise 
+- If you use the wrong file format, it may cause your computations to run slower than otherwise
 
-- To the extent that the environment you're working in requires a specific file format, then using the correct format is essential
+- To the extent that the tools you're using require a specific file format, then using the correct format is essential
 
 ---
 # Common file extensions when working with data
@@ -276,18 +529,11 @@ df <- read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',n_max=1
 Once you know your columns, read those in:
 
 ```{r read-in-columns,warning=FALSE,message=FALSE}
-Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) 
+Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
 read_csv('https://www2.census.gov/ces/opportunity/cz_outcomes.csv',
   col_select=c('cz', 'kfr_pooled_pooled_p1', 'kfr_pooled_pooled_p25',
   'kfr_pooled_pooled_p50','kfr_pooled_pooled_p75','kfr_pooled_pooled_p100'))
 ```
-
----
-
-# Anticipating large files
-
-- How can you guess if file will be too big to read in?
-- 
 
 ---
 class: inverse, center, middle

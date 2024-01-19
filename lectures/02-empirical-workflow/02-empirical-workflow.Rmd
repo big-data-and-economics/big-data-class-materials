@@ -1,6 +1,6 @@
 ---
 title: "Big Data and Economics"
-subtitle: "Lecture 2b: The Empirical Workflow and Clean Code"
+subtitle: "Lecture 2b: Clean Code"
 author: Kyle Coombs (adapted from Tyler Ransom + Scott Cunningham)
 date: "Bates College | [EC/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
 output:
@@ -35,6 +35,7 @@ opts_chunk$set(
   cache=T#, echo=F, warning=F, message=F
   )
 library(tidyverse)
+library(skimr)
 library(RefManageR)
 BibOptions(check.entries = FALSE,
            bib.style = "authoryear",
@@ -47,8 +48,6 @@ BibOptions(check.entries = FALSE,
 # Table of contents
 
 1. [Prologue](#prologue)
-
-2. [Empirical Workflow](empirical-workflow)
 
 3. [Clean Code](#clean_code)
   - [Automation](#automation)
@@ -149,158 +148,7 @@ df %>% filter(insample_new==1)
 ```
 - The boy was very frustrated and decided to work on these slides while re-running his code.
 
-- Today I'll present to approaches to avoid this situation:
-
-1. Empirical Workflow
-2. Clean Code
-
----
-class: inverse, center, middle
-name: empirical-workflow
-
-# Empirical Workflow
-
----
-# Workflow workflow workflow
-
-## The Cunningham Empirical Workflow Conjecture
-
-- The cause of most of your errors is **not** due to insufficient knowledge of syntax in your chosen programming language
-
-- The cause of most of your errors is due to a poorly designed .hi[Empirical Workflow]
-
-- .[Empirical Workflow]: A fixed set of routines you always follow to identify the most common errors
-	- Think of it as your morning routine: alarm goes off, go to wash up, make your coffee/tea, put pop tart in toaster, contemplate your existence in the universe until **ding**, eat pop tart repeat *ad infinitum*
-
-- Finding weird errors is a different task;  empirical workflows catch typical and common errors
-
-- Empirical workflows follow a checklist
-
----
-# Why do we use checklists?
-
-- I got engaged in July and am planning a wedding in Princeton for next July
-- I also moved to New England in August and am still unpacking (in ME and MA)
-- I am teaching two upper-level electives
-- I am trying to submit several papers to conferences/journals this year
-- Each of these gets a checklist:
-
-.pull-left[
-- **Wedding:**
-
-    ☐ Finalize tent configuration
-
-    ☐ Pick wedding colors
-
-- **Unpacking:**
-
-    ☐ Put books on shelves
-
-    ☐ Buy dresser
-
-- **AEJ: Policy submission**
-
-    ☐ Write 5-page submission report
-
-    ☐ Submit
-]
-.pull-right[
-- **ECON 368**
-
-    ☐ Write Problem Set 1 solutions
-
-    ☐ Rewrite data tips
-
-- **Senior Thesis:**
-
-    ☐ Create FAQs
-
-    ☐ Develop data guidance
-
-- **Disaster GoFundMe spillovers:**
-  
-    ☐ Skeleton code for Hurricane Iliana DiD
-
-    ☐ Submit to NBER conference by 10/8
-]
----
-# To remember the obvious stuff
-
-- When I stop to think, I know I need to do everything on my checklists
-
-- But then I forget when I move onto the next task
-
-- Programming is the same, except you have an **empirical checklist**:
-
-- The **empirical checklist**:
-    - Covers the intermediate step between "getting the data" and "analyzing the data"
-    - It largely focuses on ensuring data quality for the most common, easy to identify problems
-    - It'll make you a better coauthor
-
----
-# Simple data checklist items
-
-- Simple, yet non-negotiable, programming commands and exercises to check for data errors
-
-- Open the data and look at it: "Real eyes realize real lies"<sup>1</sup>
-
-- Check factor/categorical variables for odd spelling
-
-```{r factor}
-
-table(bp$race,bp$sex)
-
-```
-
-.footnote[<sup>1</sup> Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
-
----
-# Visualize key facets of the data
-```{r immediate_visual, dev="svg"}
-bp <- read_csv('data/messier_bp.csv',skip=4,
-    col_names=c('pat_id','birth_month','birth_day','birth_year','race','sex','hispanic','bp_visit1','hr_visit1','bp_visit2','hr_visit2','bp_visit3','hr_visit3'),show_col_types = FALSE)
-
-ggplot(data=bp,aes(y=hr_visit1,x=race)) + geom_bar(stat='summary',fun='mean')
-```
-- Are Black people's heart rates really more than twice as high?
-
----
-# Visualize the raw data
-
-- Go beyond the eyeball and graph the data
-```{r funky_data2, dev="svg"}
-# Get the first three rows of the data frame (or as many rows as needed)
-
-#Make a density of the heart rate on visit 1:
-ggplot(data=bp,aes(x=hr_visit1))+geom_density()
-```
-
-What might be going on here?
-
----
-# Visualize by group
-```{r funky_data3, dev="svg"}
-# Get the first three rows of the data frame (or as many rows as needed)
-
-#Make a density of the heart rate on visit 1:
-ggplot(data=bp %>% mutate(race=ifelse(race=='WHITE' | race=='Caucasian','White',race)),aes(x=hr_visit1,fill=race))+geom_density()
-```
-
-- Oh! I bet 999 means NA and a few Black patients have missing heart rates
-
----
-# Other tricks:
-
-- Check if the data are the right-size
-
-- If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
-
-- If not, find out why! Maybe there are 1020 because DC is (rightfully) included
-
-- Search for outliers or oddities and work out possible explanations using:
-    - Codebooks
-    - Intuition
-    - Emails to the source/creator of data
+- Today and next class are about minimizing these struggles through Clean Code and a reproducible workflow
 
 ---
 class: inverse, center, middle
