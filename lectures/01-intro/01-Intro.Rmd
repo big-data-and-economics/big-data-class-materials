@@ -45,7 +45,6 @@ BibOptions(check.entries = FALSE,
            style = "markdown",
            hyperlink = FALSE,
            dashed = TRUE)
-pacman::p_load(datasauRus)
 #biblio <- ReadBib("../../References/References.bib", check = FALSE)
 ```
 
