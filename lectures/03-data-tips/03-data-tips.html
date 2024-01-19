@@ -222,13 +222,13 @@ name: empirical-workflow
 ---
 # Play along at home
 
-#### Your computer
+#### On your computer
 
 - Everyone fork and clone the class materials repository to your class folder
 
-- Double-click the file `big-data-class-materials.Rproj` to open the project in RStudio at the correct working directory
+- Double-click `big-data-class-materials.Rproj` to open RStudio at the correct working directory
 
-- Type `setwd(lectures/03-data-tips/)` to make sure you are in the same directory as this `.Rmd`
+- Type `setwd(lectures/03-data-tips/)` to make sure you are in the same directory as this `.Rmd`&lt;sup&gt;1&lt;/sup&gt;
 
 - Package installation: Install the following functions using `install.packages()` and `library()`
   - Note: once you install a package, you don't need to do it again, just use `library()`
@@ -239,13 +239,15 @@ install.packages(c('tidyverse','arrow','datasauRus','gganimate'))
 library(tidyverse,arrow,datasauRus,gganimate)
 ```
 
-#### Alternatively, you can use GitHub Codespaces
+- Alternatively, you can open a codespace
+
+- You can run code chunks by clicking the green play button in the top right of each chunk or the shortcut `Ctrl+Shift+Enter`
 
 - We're going to explore a mangled version of the dataset from the Bertrand and Mullainathan (2004) resume audit study
 
 - Suspend some disbelief, please as I mangled the data to make it more interesting
 
-**Note**: I put data files on Github. This is bad practice for large files, but fine for small ones. I recommend you add a data file extensions (e.g. *.csv, *.dta) for data files to your `.gitignore` file.
+.footnote[&lt;sup&gt;1&lt;/sup&gt; **Note**: I put data files on Github. This is bad practice for large files, but fine for small ones.]
 
 ---
 # Simple data checklist items
@@ -398,8 +400,7 @@ ggplot(data=resumes,mapping=aes(x=ofjobs))+
 # 5. Visualize by group
 
 ```r
-resumes &lt;- resumes %&gt;% # pipes are a greate tool, we'll cover them in a bit
-  mutate(race=ifelse(race=='w' | race=='Caucasian','White',
+resumes &lt;-  mutate(resumes,race=ifelse(race=='w' | race=='Caucasian','White',
     ifelse(race=="BLACK" | race=="b", "Black",race))) # change the data up
 ggplot(data=resumes,aes(x=ofjobs,fill=race))+
     geom_histogram(alpha=0.25) # alpha makes bars see through! 
@@ -802,6 +803,25 @@ unz('data/lakisha_aer.zip','lakisha_aer.csv') %&gt;% # Unzip the file
 ## 10 b             2 Jill            FEMALE    Caucasian      0     10.5 
 ## # ℹ 4,863 more rows
 ```
+
+
+---
+# Minor aside: what's `%&gt;%`?
+
+- This may be the first time you're seeing `%&gt;%` called a pipe
+
+- This comes from the `tidyverse`, which is a group of R functions that are designed to work well together and follow the .hi[tidy data] principles
+
+- Basically a pipe takes the output of the function before it and sends it to the first argument of the function after it
+
+- It means you can do things in order of how you think about them 
+
+1. unzip first (returns the file name)
+2. then feed the file name to the `read_csv` function
+
+- You can do this with lots of functions, not just `unz()` and `read_csv()`
+
+- We'll cover the tidyverse more in the next lecture
 
 ---
 class: inverse, center, middle
