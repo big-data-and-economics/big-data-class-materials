@@ -214,9 +214,9 @@ name: empirical-workflow
 
 - Clone your fork of the class materials repository to your class folder
 
-- Double click the file `big-data-class-materials.Rproj` to open the project in RStudio
+- Navigate to the folder `big-data-class-materials/lectures/03-data-tips/`
 
-- 
+- Double-click the file `data-tips.Rproj` to open the project in RStudio at the correct working directory
 
 ---
 # Simple data checklist items
