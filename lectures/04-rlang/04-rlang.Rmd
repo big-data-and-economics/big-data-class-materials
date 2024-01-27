@@ -333,7 +333,7 @@ Most R users (purists?) seem to prefer `<-` for assignment, since `=` also has s
 
 Imagine that you have a large bank transaction dataset. You know government payments are only divisible by $100, but never divisible by $4 or $400. 
 
-Write code to check if a transaction is possibly a government payment. 
+Write code to check if a transaction is possibly a government payment. [Submit to Mentimeter](https://www.mentimeter.com/app/presentation/bleq87wo3evgh3j6ks3wqro6zdfh7nwz/v5wc59b5wfph).
 
 - Implement the modulo operator `%`
 - Employ the corder order of logical operators (`&`, `|`)
