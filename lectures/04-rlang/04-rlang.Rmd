@@ -23,6 +23,12 @@ name: toc
 }
 ```
 
+<!-- To do:
+Create a "DIY" portion? 
+Convert the explainers to explicit: try this yourself options.
+Add mentimeter quiz as an incentive to try things? 
+ -->
+
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 library(knitr)
@@ -46,9 +52,11 @@ opts_chunk$set(
 
 5. ["Everything has a name"](#ename)
 
-6. [Indexing](#indexing)
+6. [Indexing](#indexing)<sup>1</sup>
 
-7. [Cleaning up](#cleaning)
+7. [Cleaning up](#cleaning)<sup>1</sup>
+
+.footnote[<sup>1</sup> Items 6 and 7 are less critical to complete today. 6 is helpful to understand, but we can come back to it later as needed. 7 is just tips on how to refresh your R session without restarting.]
 
 ---
 class: inverse, center, middle
@@ -64,64 +72,63 @@ name: prologue
 
 - Full version of these slides available on [Grant McDermott's website](https://github.com/uo-ec607/lectures)
 
-- Please submit your project proposals if you have not already
+- Project proposals looked good: 
+  - Note: Some of these papers have proprietary data components, I need you to confirm that you can replicate sufficient parts of their analysis
+  - Note 2: Some of you picked experimental data (cool), I want you to spend some time stress-testing to confirm the data are "real"
+  - Unless I _specifically_ say otherwise, you should not upload to Lyceum
 
-- Problem Set 2 has been posted and is due 10/9 by Midnight
+- Please navigate to these slides on your desktop to follow along
+
+- Try the code interactively on your laptop (with a Codespace or by forking/cloning the repository to your computer)
 
 ---
 
 # Checklist
 
+☑ Fork repo class material if you haven't done so
+
+☑ Clone repo if you haven't done so
+
 ☑ Pull from the lecture repo to get the latest slides.
 
-☑ Did everyone fork the final project repo and submit a project proposal? (If not, please do so ASAP.)
-
-☑ Update your R packages. Do this regularly as a matter of good habit.
-
---
-
-### Packages that you will need for today.
-
-We'll use **base** R today and then dive into the `tidyverse` and `data.table`
-
-☑  `tidyverse`
-☑ [**nycflights13**](hhttps://github.com/hadley/nycflights13)
-☑ `data.table`
-
---
-
-</br>
-
-I'll hold off loading these libraries for now. But you can install/update them both with the following command.
-
-```r
-install.packages(c('tidyverse', 'nycflights13'), repos = 'https://cran.rstudio.com', dependencies  = TRUE)
-```
-
-**Tip:** If you're on Linux, then I _strongly_ recommend installing the pre-compiled binary versions of these packages from [RSPM](https://packagemanager.rstudio.com/client/#/repos/1/overview) instead of CRAN. The exact repo mirror varies by distro (see the link). But on Ubuntu 20.04, for example, you'd use: 
-
-```r
-install.packages(c('tidyverse', 'nycflights13'), repos = 'https://packagemanager.rstudio.com/all/__linux__/focal/latest', dependencies  = TRUE)
-```
-
-<!-- - (P.S. If you're on Linux, I recommend installing the pre-compiled binary version of **dplyr** from [RSPM](https://packagemanager.rstudio.com/client/#/repos/1/overview). This avoids the need to build the package from source, greatly reducing your installation time. See related example [here](https://twitter.com/grant_mcdermott/status/1263951531461603328).) -->
+☑ Update your R packages. Do this regularly as a matter of good habit. (`update.packages()` should do the trick, or click `Update` under the Packages tab (lower right-hand side))
 
 ---
 
 # Agenda
 
-Today and the next lecture are going to be very hands on. 
+- We're going to spent a lot of time live coding together. This is deliberate. 
 
-- I'll have slides as per usual, but we're going to spent a lot of time live coding together.
+- I want you to type R commands — and navigate RStudio — without copy+paste.
+  - Slightly more painful in the beginning, but much better payoff in the long-run.
 
-This is deliberate. 
+#### Goal:
 
-- I want you to get comfortable typing R commands yourself — and navigating the RStudio IDE — without resorting to copy+paste.
-- Slightly more painful in the beginning, but much better payoff in the long-run.
+- Today's goal is to make sure you know how to do basic skills in R
 
-These slides are abridged
+- These skills may seem simple, but are a critical foundation for the rest of the course
 
-- The full slides for `R basics`, `tidyverse`, and `data.table` are available on the course website
+- There will also be some review from PS1
+  - This is intentional: it is easier to understand a concept you see in multiple contexts
+  - It also proves to you that you can figure a lot out on your own
+
+#### Not the goal: Fluency
+
+- My goal is not that you leave this lecture, or even this class, fluent in R
+  - That's outside the scope of 80 minutes, let alone 12 weeks
+
+---
+# While I still have your attention
+
+- Guess what? Everything I'm teaching you is summarized in a cheatsheet
+
+- Posit, the parent organization of R, hosts [loads of cheatsheets](https://posit.co/resources/cheatsheets/)
+
+- I link to them on the course website
+
+- I cannot stress enough how useful these are when trying to figure out how to write code 
+
+- It will save you time painstakingly searching Google, StackOverflow, scouring help files, and bickering with ChatGPT/GitHub CoPilot, etc.
 
 ---
 class: inverse, center, middle
@@ -144,7 +151,7 @@ R is a powerful calculator and recognizes all of the standard arithmetic operato
 6-7 ## Subtraction
 5/2 ## Division
 2^3 ## Exponentiation
-2+4*1^3 ## Standard order of precedence (`*` before `+`, etc.)
+2+4*1^3 ## Please Excuse My Dear Aunt Sally (PEMDAS)
 ```
 
 ---
@@ -182,9 +189,17 @@ You can read more about logical operators and types <a href="https://stat.ethz.c
 
 ### Order of precedence
 
+Is this statement TRUE or FALSE?
+
+```{r,eval=FALSE}
+1 > 0.5 & 2
+```
+
+--
+
 Much like standard arithmetic, logic statements follow a strict order of precedence. Logical operators (`>`, `==`, etc) are evaluated before Boolean operators (`&` and `|`). Failure to recognise this can lead to unexpected behaviour...
 
-```{r}
+```{r,include=FALSE}
 1 > 0.5 & 2
 ```
 
@@ -192,7 +207,7 @@ Much like standard arithmetic, logic statements follow a strict order of precede
 
 What's happening here is that R is evaluating two separate "logical" statements: 
  - `1 > 0.5`, which is is obviously TRUE.
- - `2`, which is TRUE(!) because R is "helpfully" converting it to `as.logical(2)`.
+ - `2`, which is TRUE(!) because R is "helpfully" converting it to `as.logical(2)==TRUE`.
  
 --
 
@@ -217,31 +232,19 @@ is.na(1:10)
 # Negate(is.na)(1:10) ## This also works. Try it yourself.
 ```
 
-
-
 ---
-
+name: in-slide
 # Logical operators (cont.)
 
 ### Value matching: `%in%`
 
-To see whether an object is contained within (i.e. matches one of) a list of items, use `%in%`.
+To see whether an object is contained within (i.e. matches one of) a list of items, use `%in%`<sup>1</sup> .
 ```{r}
 4 %in% 1:10
 4 %in% 5:10
 ```
 
---
-
-There's no equivalent "not in" command, but how might we go about creating one?
-- Hint: Think about negation...
-
---
-
-```{r}
-`%ni%` = Negate(`%in%`) ## The backticks (`) help to specify functions.
-4 %ni% 5:10
-```
+.footnote[<sup>1</sup> There's no equivalent "not in" command, but how might we go about creating one? [See here.](#notin-slide)]
 
 ---
 
@@ -258,20 +261,36 @@ We'll get to assignment shortly. However, to preempt it somewhat, we use two equ
 ```
 
 ---
+# if/else
+
+The `if/else` statement is a fundamental building block of programming logic. It allows us to evaluate a logical statement and then execute a particular command if that statement is TRUE. For example:
+
+```{r logical}
+x = 5
+if (1>x) {
+  print("x is greater than 1")
+} else {
+  print("x is less than or equal to 1")
+}
+```
+
+R's `ifelse` collapses this into one line. (Try it yourself.)
+
+```{r ifelse}
+ifelse(1>x, "x is greater than 1", "x is less than or equal to 1")
+```
+
+---
 
 # Assignment
 
 In R, we can use either `<-` or `=` to handle assignment.<sup>1</sup>
 
-.footnote[
-<sup>1</sup> The `<-` is really a `<` followed by a `-`. It just looks like one thing b/c of the [font](https://github.com/tonsky/FiraCode) I'm using here.
-]
-
 --
 
 ### Assignment with `<-`
 
-`<-` is normally read aloud as "gets". You can think of it as a (left-facing) arrow saying *assign in this direction*.
+`<-` is normally read aloud as "gets". You can think of it as a (left-facing) arrow saying *assign in this direction*.<sup>2</sup> 
 
 ```{r}
 a <- 10 + 5
@@ -280,10 +299,11 @@ a
 
 --
 
-Of course, an arrow can point in the other direction too (i.e. `->`). So, the following code chunk is equivalent to the previous one, although used much less frequently.
-```{r}
-10 + 5 -> a
-```
+.footnote[
+  <sup>1</sup> The `<-` is really a `<` followed by a `-`. It just looks like one thing b/c of the [font](https://github.com/tonsky/FiraCode) I'm using here.
+
+  <sup>2</sup> An arrow can point in the other direction too (i.e. `->`). So, `10 + 5 -> a` following code chunk is equivalent, although used much less frequently.
+]
 
 ---
 
@@ -306,7 +326,25 @@ Most R users (purists?) seem to prefer `<-` for assignment, since `=` also has s
 - We'll see lots of examples of this later.
 - But I don't think it matters; `=` is quicker to type and is more intuitive if you're coming from another programming language. (More discussion [here](https://github.com/Robinlovelace/geocompr/issues/319#issuecomment-427376764) and [here](https://www.separatinghyperplanes.com/2018/02/why-you-should-use-and-never.html).)
 
-**Bottom line:** Use whichever you prefer. Just be consistent.
+**Bottom line:** Pick one and be consistent.
+
+---
+# Challenge: Detect government payments
+
+Imagine that you have a large bank transaction dataset. You know government payments are only divisible by $100, but never divisible by $4 or $400. 
+
+Write code to check if a transaction is possibly a government payment. 
+
+- Implement the modulo operator `%`
+- Employ the corder order of logical operators (`&`, `|`)
+- Utilize any arithmetic operations you need
+
+```{r uc, eval=FALSE}
+transaction <- 9400
+# Your code here
+```
+
+- I had to do a slightly more complicated verison of this for my dissertation.
 
 ---
 
@@ -327,11 +365,10 @@ Or, more simply, just use `?`:
 
 --
 
-</br>
-
 **Aside 1:** Comments in R are demarcated by `#`. 
 - Hit `Ctrl+Shift+c` (`Cmd+Shift+c` on Macs) in RStudio to (un)comment whole sections of highlighted code.
-- In Rmarkdown files, `<!--- --->` is the equivalent syntax for comments.
+- In Rmarkdown files, `<!--- --->` is the equivalent syntax for comments. NOT `#`. 
+  - Yes, that's confusing. Yes, I expect you to use the syntax correctly.
 
 --
 
@@ -397,33 +434,22 @@ name: oop
 
 # Motivation
 
-In our very first lecture, I mentioned R's approach to [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) (OOP), which is often summarised as:
+R is an [object-oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) (OOP)<sup>1</sup> , which is often summarised as:
 
 > **"Everything is an object and everything has a name."**
 
 --
 
 In the next two sections, I want to dive into this idea a little more. I also want to preempt some issues that might trip you up if you new to R or OOP in general.
-- At least, they were things that tripped me up at the beginning.
+- At least, they were things that tripped me up at the beginning (and still do)
 
---
-
-The good news, as we'll see, is that avoiding and solving these issues is pretty straightforward.
+The good news is that avoiding and solving these issues is pretty straightforward.
 - Not to mention: A very small price to pay for the freedom and control that R offers us.
 
----
 
-# Disclaimer
-
-Okay, this slide is just to let you know that I'm being a little fast and loose with terms.
-
-Most obviously, there are actually _multiple_ OOP frameworks in R.
-- **S3**, **S4**, **R6**...
-- Hadley Wickham's "Advanced R" provides a [very thorough overview](https://adv-r.hadley.nz/oo.html) of the main ones.
-
-But for our purposes, I think it is much more helpful to think about (a) the shared characteristics of these different systems and (b) the broad implications of OOP in R.
-- What we lose in detail, we hopefully gain in perspective.
-- But do read Hadley's book if you get the chance. It's incredibly helpful (as are all his books).
+.footnote[
+<sup>1</sup> Technically, there are actually _multiple_ OOP frameworks in R (**S3**, **S4**, **R6**). Hadley Wickham's "Advanced R" provides a [very thorough overview](https://adv-r.hadley.nz/oo.html) of the main ones. Read his book sometime if you're into this stuff, it is superbly helpful.
+]
 
 ---
 class: inverse, center, middle
@@ -449,56 +475,54 @@ We'll revisit the issue of "type" vs "class" in a slide or two. For the moment, 
 --
 
 Most likely, you already have a good idea of what distinguishes these objects and how to use them.
-- However, bear in mind that there subtleties that may confuse while you're still getting used to R. 
-- E.g. There are different kinds of data frames. We'll soon encounter "[tibbles](https://tibble.tidyverse.org/)" and "[data.tables](https://rdatatable.gitlab.io/data.table/articles/datatable-intro.html#what-is-datatable-1a)", which are enhanced versions of the standard data frame in R. 
-
----
-
-# What are objects? (cont.)
-
-Each object class has its own set of rules ("methods") for determining valid operations.
-- For example, you can perform many of the same operations on matrices and data frames. But there are some operations that only work on a matrix, and vice versa.
-- At the same time, you can (usually) convert an object from one type to another.
-
-```{r d}
-## Create a small data frame called "d".
-d = data.frame(x = 1:2, y = 3:4) 
-d
-```
-
-```{r m}
-## Convert it to (i.e. create) a matrix call "m".
-m = as.matrix(d)
-m
-```
+- However, there are subtleties that may confuse while you're still getting used to R. 
+- E.g. There are different kinds of data frames. "[tibbles](https://tibble.tidyverse.org/)" and "[data.tables](https://rdatatable.gitlab.io/data.table/articles/datatable-intro.html#what-is-datatable-1a)" are enhanced versions of the standard data frame in R. 
 
 ---
 
 # Object class, type, and structure
 
-Use the `class`, `typeof`, and `str` commands if you want understand more about a particular object.
+```{r df1}
+## Create a small data frame called "df1".
+df1 = data.frame(x = 1:2, y = 3:4) 
+```
+
+Use the `class`, `typeof`, and `str` commands to understand more about a particular object.
 
 ```{r}
-# d = data.frame(x = 1:2, y = 3:4) ## Create a small data frame called "d".
-class(d) ## Evaluate its class.
-typeof(d) ## Evaluate its type.
-str(d) ## Show its structure.
+class(df1) ## Evaluate its class.
+typeof(df1) ## Evaluate its type.
+str(df1) ## Show its structure.
 ```
 
 --
 
-PS — Confused by the fact that `typeof(d)` returns "list"? See [here](https://stackoverflow.com/questions/45396538/typeofdata-frame-shows-list-in-r).
+.footnote[
+  PS — Confused why `typeof(df1)` returns "list"? See [here](https://stackoverflow.com/questions/45396538/typeofdata-frame-shows-list-in-r).
+
+  PPS — Convert classes with `as.[class]()`. e.g. `as.matrix(df1)` makes a matrix.
+]
 
 ---
 
 # Object class, type, and structure (cont.)
 
 Of course, you can always just inspect/print an object directly in the console.
-- E.g. Type `d` and hit Enter.
 
+- E.g. Type `df1` and hit Enter.
+
+```{r df1-enter}
+df1
+```
 
 The `View()` function is also very helpful. This is the same as clicking on the object in your RStudio *Environment* pane. (Try both methods now.)
-- E.g. `View(d)`.
+- E.g. `View(df1)`.
+
+- Why is it important to know how to inspect objects? 
+
+--
+
+- R is open source and you will often be working with functions that you did not write which return objects that you are unfamiliar with.
 
 ---
 name: global_env
@@ -507,7 +531,7 @@ name: global_env
 
 Let's go back to the simple data frame that we created a few slides earlier.
 ```{r}
-d
+df1
 ```
 
 --
@@ -544,7 +568,7 @@ R can't find the variables that we've supplied in our [Global Environment](https
 
 --
 
-Put differently: Because the variables "x" and "y" live as separate objects in the global environment, we have to tell R that they belong to the object `d`.
+Put differently: Because the variables "x" and "y" live as separate objects in the global environment, we have to tell R that they belong to the object `df1`.
 - Think about how you might do this before clicking through to the next slide.
 
 ---
@@ -554,36 +578,35 @@ Put differently: Because the variables "x" and "y" live as separate objects in t
 There are a various ways to solve this problem. One is to simply specify the datasource:
 
 ```{r}
-lm(y ~ x, data = d) ## Works when we add "data = d"!
+lm(y ~ x, data = df1) ## Works when we add "data = df1"!
 ```
 
 --
 
-I wanted to emphasize this global environment issue, because it is something that Stata users (i.e. many economists) struggle with when they first come to R.
-- In Stata, the entire workspace essentially consists of one (and only one) data frame. So there can be no ambiguity where variables are coming from.
-- However, that "convenience" comes at a really high price IMO. You can never read more than two separate datasets (let alone object types) into memory at the same time, have to resort all sorts of hacks to add summary variables to your dataset, etc. 
+I want to emphasize this global environment issue, because it is something that Stata users (i.e. many economists) struggle with when they first come to R.
+- In Stata, the entire workspace essentially consists of one (and only one) data frame meaning no ambiguity where variables are coming from.
+- That "convenience" has a high price -- literally you need to buy Stata 16 or higher to use `frames` to open multiple data frames with less flexibility.
 - Speaking of which...
-
 
 ---
 
 # Working with multiple objects
 
-As I keep saying, R's ability to keep multiple objects in memory at the same time is a huge plus when it comes to effective data work. 
+R's ability to keep multiple objects in memory at the same time is a huge plus when it comes to effective data work. 
 - E.g. We can copy an exiting data frame, or create new one entirely from scratch. Either will exist happily with our existing objects in the global environment.
 
-```{r d2}
-d2 = data.frame(x = rnorm(10), y = runif(10))
+```{r df2}
+df2 = data.frame(x = rnorm(10), y = runif(10))
 ```
 
-![Now with d2 added](pics/environment2.png)
+![Now with df2 added](pics/environment2.png)
 
 ---
 
 # Working with multiple objects (cont.)
 
 Again, however, it does mean that you have to pay attention to the names of those distinct data frames and be specific about which objects you are referring to.
-- Do we want to run a regression of "y" on "x" from data frame `d` or data frame `d2`?
+- Do we want to run a regression of "y" on "x" from data frame `df1` or data frame `df2`?
 
 ---
 class: inverse, center, middle
@@ -767,7 +790,7 @@ In a similar vein, one of the most common and confusing errors that even experie
 Again, R will figure out what you mean if you are clear/lucky enough. But, much the same as with `c()`, it's relatively easy to run into problems.
 - Case in point: Triggering the infamous "object of type closure is not subsettable" error message. (See from 1:45 [here](https://rstudio.com/resources/rstudioconf-2020/object-of-type-closure-is-not-subsettable/).)
 
-.footnote[<sup>1</sup> Guess who has two thumbs and has made this mistake on PS1? This guy.]
+.footnote[<sup>1</sup> Guess who has two thumbs and keeps making this mistake? This guy.]
 
 ---
 class: inverse, center, middle
@@ -797,7 +820,7 @@ rnorm(n = 100, mean = 0, sd = 1)
 ```
 
 .footnote[
-[1] Indexing in R begins at 1. Not 0 like some languages (e.g. Python and JavaScript).
+[1] Indexing in R begins at 1. Not 0 like some languages (e.g. Python, JavaScript, or my problem sets).
 ]
 
 ---
@@ -814,18 +837,18 @@ a[c(4, 6)] ## Get the 4th and 6th elements
 
 It also works on larger arrays (vectors, matrices, data frames, and lists). For example:
 ```{r}
-starwars[1, 1] ## Show the cell corresponding to the 1st row & 1st column of the data frame.
+df1[1, 1] ## Show the cell corresponding to the 1st row & 1st column of the data frame.
 ```
 
 --
 
-What does `starwars[1:3, 1]` give you?
+What does `df2[1:3, 1]` give you?
 
 ---
 
 # Option 1: [] (cont.)
 
-We haven't covered them properly yet (patience), but **lists** are a more complex type of array object in R.
+We haven't covered them yet, but **lists** are a more complex type of array object in R.
 - They can contain an assortment of objects that don't share the same class, or have the same shape (e.g. rank) or common structure.
 - E.g. A list can contain a scalar, a string, and a data frame. Or you can have a list of data frames, or even lists of lists.
 
@@ -905,13 +928,13 @@ my_list$c$x ## Return column "x" of list object "c"
 The `$` form of indexing also works (and in the manner that you probably expect) for other object types in R, like `data.frame`s.
 
 In some cases, you can also combine the two index options.
-- E.g. Get the 1st element of the "name" column from the starwars data frame.
+- E.g. Get the 1st element of the "name" column from the our data frame.
 ```{r}
-starwars$name[1]
+df2$x[1]
 ```
 --
 
-However, note some key differences between the output from this example and that of our previous `starwars[1, 1]` example. What are they?
+However, note some key differences between the output from this example and that of our previous `df2[1, 1]` example. What are they?
 - Hint: Apart from the visual cues, try wrapping each command in `str()`.
 
 ---
@@ -922,7 +945,7 @@ The last thing that I want to say about `$` is that it provides another way to a
 
 ```{r, error=T}
 lm(y ~ x) ## Doesn't work
-lm(d$y ~ d$x) ## Works!
+lm(df1$y ~ df1$x) ## Works!
 ```
 
 ---
@@ -980,3 +1003,25 @@ class: inverse, center, middle
 infile = list.files(pattern = '.html')
 pagedown::chrome_print(input = infile, timeout = 100)
 ```
+
+---
+
+class: inverse, center, middle
+
+# Appendix
+
+---
+name: notin-slide
+# Not in
+
+There's no equivalent "not in" command, but how might we go about creating one?
+- Hint: Think about negation...
+
+--
+
+```{r}
+`%ni%` = Negate(`%in%`) ## The backticks (`) help to specify functions.
+4 %ni% 5:10
+```
+
+[Back](#in-slide)
