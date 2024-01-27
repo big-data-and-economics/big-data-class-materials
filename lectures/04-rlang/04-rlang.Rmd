@@ -359,8 +359,7 @@ help(plot)
 Or, more simply, just use `?`:
   
 ```R
-# This is what most people use.
-?plot 
+?plot # This is what most people use. 
 ```
 
 --

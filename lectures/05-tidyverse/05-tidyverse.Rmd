@@ -72,9 +72,7 @@ name: prologue
 
 - Full version of these slides available on [Grant McDermott's website](https://github.com/uo-ec607/lectures)
 
-- Problem Set 2 has been posted and is due 10/9 by Midnight
-
-- Sync your fork, pull the latest changes to your computer
+- Participate using GitHub Codespace or syncing a fork on your local computer
 
 ---
 
@@ -117,17 +115,23 @@ The following code chunk will install (if necessary) and load everything for you
 
 ```{r libs, cache=FALSE, message=FALSE}
 if (!require(pacman)) install.packages('pacman', repos = 'https://cran.rstudio.com')
-pacman::p_load(tidyverse, data.table, dtplyr, tidyfast, microbenchmark, ggplot2, nycflights13)
+pacman::p_load(tidyverse, ggplot2, nycflights13)
 ```
+<!-- scorecard + what? -->
+---
+# Goal: Relational Database Management with R
 
-**Tip:** If you're on Linux, then I _strongly_ recommend installing the pre-compiled binary versions of these packages from [RSPM](https://packagemanager.rstudio.com/client/#/repos/1/overview) instead of CRAN. The exact repo mirror varies by distro (see the link). But on Ubuntu 20.04, for example, you'd use: 
+- Remember Relational Database Management from our work on Empirical Organization?
 
-```r
-install.packages(c('tidyverse', 'nycflights13','data.table','dtplyr','tidyfast','microbenchmark','ggplot2'), repos = 'https://packagemanager.rstudio.com/all/__linux__/focal/latest', dependencies  = TRUE)
-library(tidyverse)
-library(data.table)
-#etc.
-```
+- And some of the data cleaning tricks?
+
+- Today, we'll learn how to implement it using packages in the `tidyverse`
+
+- We'll cover:
+  - Subsetting data
+  - Variable creation, renaming, selection
+  - Grouping and summarizing data
+  - Joining and appending datasets
 
 ---
 class: inverse, center, middle
@@ -148,12 +152,8 @@ Much digital ink has been spilled over the "tidyverse vs. base R" debate.
 I won't delve into this debate here, because I think the answer is [clear](http://varianceexplained.org/r/teach-tidyverse/): We should teach the tidyverse first (or, at least, early).
 - The documentation and community support are outstanding.
 - Having a consistent philosophy and syntax makes it easier to learn.
-- Provides a convenient "front-end" to big data tools that we'll use later in the course.
+- Provides a convenient "front-end" to big data tools.
 - For data cleaning, wrangling, and plotting, the tidyverse really is a no-brainer.<sup>1</sup>
-
-.footnote[
-<sup>1</sup> I'm also a huge fan of [**data.table**](http://r-datatable.com/). This package will be the subject of our next lecture.
-]
 
 --
 
@@ -162,6 +162,10 @@ I won't delve into this debate here, because I think the answer is [clear](http:
 - There are some things that you'll have to venture outside of the tidyverse for.
 - A combination of tidyverse and base R is often the best solution to a problem.
 - Excellent base R data manipulation tutorials: [here](https://www.rspatial.org/intr/index.html) and [here](https://github.com/matloff/fasteR).
+
+.footnote[
+<sup>1</sup> I'm also a huge fan of [**data.table**](http://r-datatable.com/). This package will be the subject of our next lecture.
+]
 
 ---
 
@@ -209,8 +213,8 @@ tidyverse_packages()
 
 We'll use several of these additional packages during the remainder of this course.
 
-- E.g. The **lubridate** package for working with dates and the **rvest** package for webscraping.
-- However, bear in mind that these packages will have to be loaded separately.
+- E.g. The **lubridate** package for working with dates, **rvest** package for webscraping, **broom** to `tidy()` R objects into tables
+- However, bear in mind that these packages will have to be loaded separately with `library()`
 
 .footnote[
 <sup>1</sup> It also includes a *lot* of dependencies upon installation. This is a matter of some [controversy](http://www.tinyverse.org/).
@@ -296,7 +300,7 @@ allow you to chain together code in a way that reads from left to right.]
 Regular expressions work well too.
 ```{r filter2}
 starwars %>% 
-  filter(grepl("Skywalker", name))
+  filter("Skywalker" %in% name)
 ```
 
 ---
@@ -391,7 +395,6 @@ starwars %>%
 
 ---
 
-
 # 4) dplyr::mutate *cont.*
 
 *Note:* `mutate` is order aware. So you can chain multiple mutates in a single call.
@@ -463,12 +466,18 @@ starwars %>%
 
 The same `across`-based workflow that we saw with `mutate` a few slides back also works with `summarise`. For example:
 
-```{r, summ4}
+```{r summ4}
 starwars %>% 
   group_by(species) %>% 
   summarise(across(where(is.numeric), \(x) (mean(x, na.rm=T)))) %>% #<<
   head(5)
 ```
+
+--
+
+Try to intuit what `\(x)` does above!
+
+
 
 ---
 
@@ -485,7 +494,7 @@ starwars %>%
 --
 
 `pull`: Extract a column from as a data frame as a vector or scalar.
-- E.g. `starwars %>% filter(gender=="female") %>% pull(height)`
+- E.g. `starwars %>% filter(gender=="female") %>% pull(height)` returns a `height` as a vector
 
 --
 

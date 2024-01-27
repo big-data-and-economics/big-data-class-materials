@@ -37,7 +37,7 @@ knit: (function(inputFile, encoding) {
  output_format = 'all') 
  })
 ---
-
+<!-- demos: rvest -->
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300)
 ```
