@@ -447,7 +447,9 @@ Sure. I already borrowed half of it [Grant McDermott](https://grantmcdermott.com
 
 ## Pull Request of a Specific Commit
 
-If you want to make a pull request of a specific commit (and not all changes you have made), you are best off using the command line interface for Git. You'll need to do something called [cherry picking](https://stackoverflow.com/questions/66639992/git-create-branch-that-is-equal-to-master-of-fork-parent). Here's how you do it:
+If you want to make a pull request of a specific commit (and not all changes you have made), you are best off using the command line interface for Git. There are two ways to do this thanks to a recent innovation by GitHub. The first, more traditional approach, involves something called [cherry picking](https://stackoverflow.com/questions/66639992/git-create-branch-that-is-equal-to-master-of-fork-parent). 
+
+You'll need to do something called [cherry picking](https://stackoverflow.com/questions/66639992/git-create-branch-that-is-equal-to-master-of-fork-parent). Here's how you do it:
 
 **Use the command line (Git Bash, WSL, Terminal)**
 
@@ -466,7 +468,29 @@ If you want to make a pull request of a specific commit (and not all changes you
 10. Make sure: 
     - The **base repository** is the upstream repo and the base is the main branch
     - The **head repository** is your forked repo and the compare is the the branch named `<pull-request-branch-name>`
-11. *Optional*: Destroy the pull-request-branch once it has served its purpose with `git branch -d <pull-request-branch-name>`
+11. *Optional after pull request is accepted*: Destroy the pull-request-branch once it has served its purpose with `git branch -d <pull-request-branch-name>`
+
+The second, more recent approach, involves using the GitHub Desktop interface to create a new branch that is directly aligned with the top branch. This involves some setup, but is a bit more user-friendly (i.e. point-and-click based). This assumes you are working with a clone of an existing, forked repository. 
+
+**Use GitHub Desktop**
+
+1. Open GitHub Desktop.
+2. Navigate to your repository under the `Current Repository` tab. If you don't see it, you may need to `Add > Add to existing repository` (navigate to the repositories local path on your computer, so GitHub Desktop knows where to look.)
+3. Click on the dropdown menu `Repository` and select `Repository settings`. 
+4. Click on `Fork behavior` and select "To contribute to the parent repository" under "I'll be using this fork..." (This will mean all new branches are aligned with the upstream "parent fork" repository.)
+5. Click `Save` and move on.
+6. Create a new branch by clicking on the `Current Branch` tab and selecting `New Branch`.
+7. Name the branch something that is descriptive of the changes you are making, i.e. `<pull-request-branch-name>`
+8. Navigate to the `Branch` tab and select the new branch you just created
+9. Publish the branch to your forked repository by clicking `Publish branch` in the bottom right corner.
+10. Make the changes you want to make in the repository. 
+11. Commit the changes to the branch by clicking `Commit to <pull-request-branch-name>` in the bottom left corner in GitHub Desktop. (Or use RStudio, etc.)
+12. Push the changes to the branch by clicking `Push origin` in the bottom left corner in GitHub Desktop.
+13. Navigate to your forked repository on GitHub and create a pull request from the branch you just pushed (you should see a banner that says "Compare & pull request" when you navigate to your forked repo)
+14. Make sure: 
+    - The **base repository** is the upstream repo and the base is the main branch
+    - The **head repository** is your forked repo and the compare is the the branch named `<pull-request-branch-name>`
+15. *Optional after pull request is accepted*: Destroy the pull request branch by navigating to the `Branch` tab in GitHub Desktop and selecting `Delete <pull-request-branch-name>`. Select `Yes, delete this branch on the remote` as well to fully kill this branch. 
 
 ## Setup
 
