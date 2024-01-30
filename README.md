@@ -447,17 +447,9 @@ Sure. I already borrowed half of it [Grant McDermott](https://grantmcdermott.com
 
 ## Pull Request of a Specific Commit
 
-If you want to make a pull request of a specific commit (and not all changes you have made), you have two options:
+If you want to make a pull request of a specific commit (and not all changes you have made), you are best off using the command line interface for Git. You'll need to do something called [cherry picking](https://stackoverflow.com/questions/66639992/git-create-branch-that-is-equal-to-master-of-fork-parent). Here's how you do it:
 
-**Option 1: Manually create a new fork**
-
-1. Create a separate fork of the upstream repository for each commit you want to make a pull request for. 
-2. Clone this separate fork to your local machine, make the changes, commit, and push.
-3. Pull request from this separate fork.
-
-This is the easiest option, but it does mean you will have to clone multiple forks to your local machine.
-
-**Option 2: Use the command line (Git Bash, WSL, Terminal)**
+**Use the command line (Git Bash, WSL, Terminal)**
 
 1. Create a fork of this repository (called the upstream repository) if you have not before
 2. Clone the forked repo to your local computer
@@ -465,7 +457,7 @@ This is the easiest option, but it does mean you will have to clone multiple for
 4. Fetch the upstream repo (`git fetch upstream`)
 5. Create a branch of this upstream repo (`git checkout -b <pull-request-branch-name> upstream/main`)
 6. Either:
-    - Make the changes you want to make to the code
+    - Make the changes you want to make
     - Cherry pick the specific commit you want to merge as a pull request by typing `git cherry pick <commit-hash>` into the command line
         - A commit hash is a unique combination of letters and numbers that identifies a specific commit. You can find the commit hash by running `git log` and copying the hash of the commit you want to make a pull request for OR by clicking on the commit history on GitHub and copying the SHA (the icon with two interlocked squares.)
 7. Push this branch to the forked repository with `git push -u origin <pull-request-branch-name>`
