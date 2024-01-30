@@ -199,7 +199,9 @@ He can help you troubleshoot *R*. He does not have solutions to the problem sets
 
 ## GitHub Codespaces
 
-Having trouble with R on your computer? Do _NOT_ use a school computer as these do not have Git or GitHub integrated. 
+Having trouble with R on your computer? 
+
+### Do _NOT_ use a school computer as these do not have Git or GitHub integrated. 
 
 To get you up and running and writing R code in no time, I have containerized this workshop such that you have a ready out of the box R coding environment.
 
