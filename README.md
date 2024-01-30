@@ -128,7 +128,7 @@ This is an extremely challenging course. To help you succeed, I have outlined ex
 
 ### How I will run class
 
-Most classes will be divided into a "lecture" and an "interactive" component. During the lecture, computers will be closed. During the interactive component, computers will be open for you to work through it. 
+Most classes will (hopefully) be divided into a "lecture" and an "interactive" component. During the lecture, computers will be closed. During the interactive component, computers will be open for you to work through it. 
 
 ## Resources to use for class
 
@@ -199,7 +199,9 @@ He can help you troubleshoot *R*. He does not have solutions to the problem sets
 
 ## GitHub Codespaces
 
-Having trouble with R on your computer? To get you up and running and writing R code in no time, I have containerized this workshop such that you have a ready out of the box R coding environment.
+Having trouble with R on your computer? Do _NOT_ use a school computer as these do not have Git or GitHub integrated. 
+
+To get you up and running and writing R code in no time, I have containerized this workshop such that you have a ready out of the box R coding environment.
 
 For some problem sets, I will explicitly request that you work with GitHub Codespaces to minimize the amount of time you spend troubleshooting your local R installation and package versions. No more, "but it works on my computer" when I ask you why your code isn't running! On occasion, I may ask you to work on your own computer because I want you to learn how to troubleshoot on your own machine. 
 
