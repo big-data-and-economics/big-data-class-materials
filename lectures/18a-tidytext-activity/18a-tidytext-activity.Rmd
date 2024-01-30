@@ -38,6 +38,8 @@ knit: (function(inputFile, encoding) {
  })
 ---
 
+<!-- https://juliasilge.com/blog/pay-gap-uk/ -->
+
 The following activity is adapted from work by [Joshua C. Fjelstul](https://jfjelstul.github.io/regular-expressions-tutorial/#using-the-stringr-package) and [Julia Silge and David Robinson](https://cran.r-project.org/web/packages/tidytext/vignettes/tidytext.html). 
 
 ## Software requirements
