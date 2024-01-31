@@ -72,14 +72,70 @@ name: prologue
 
 - Full version of these slides available on [Grant McDermott's website](https://github.com/uo-ec607/lectures)
 
-- Participate using GitHub Codespace or syncing a fork on your local computer
+- Participate using GitHub Codespaces created from the course materials repository (not your fork)
+
+- That will ensure we're all working with the same versions of the data and packages
+
+- If you want to use your own fork or the clone in your local environment, first `sync` your fork with the parent repository
+
+- Then, `pull` the latest changes from the parent repository onto your local machine or create a GitHub Codespace
+
+---
+
+# Checklist
+
+### R packages you'll need for this lecture
+
+☑ [**tidyverse**](https://www.tidyverse.org/)
+  - This is a meta-package that loads a suite of other packages, including **dplyr** and **tidyr**, which includes the `starwars` dataset that we'll use for practice.
+
+☑ [**nycflights13**](https://github.com/hadley/nycflights13)
+
+--
+
+</br>
+
+The following code chunk will install (if necessary) and load everything for you.
+
+```{r libs, cache=FALSE, message=FALSE}
+if (!require(pacman)) install.packages('pacman', repos = 'https://cran.rstudio.com')
+pacman::p_load(tidyverse, ggplot2, nycflights13)
+```
+
+---
+# For problem set
+
+On the problem set you'll be using the National Longitudinal Survey of Youth, 1997 cohort (**NLSY 1997**).
+
+- This is a long-running survey of a representative sample of U.S. youth born between 1980 and 1984.
+
+- The data is available from the [NLS Investigator](https://www.nlsinfo.org/investigator/pages/search) website.
+
+- I've provided a zipped folder with the data in the `data/raw` folder, which you can access from the problem set
+
+- You may not recognize all the file extensions, but the [NLSY documentation](https://www.nlsinfo.org/content/access-data-investigator/investigator-user-guide/zip-file-contents) can help
+
+- The key file to note is `nlsy1997-ps2.NLSY97` is a tagset file that you can upload to the NLS Investigator to get an exact copy of the data to use for the problem set
+  - Further details provided on the problem set
+  - **Replication** alert: tagsets are one way to ensure that your data is reproducible.
+
+<!-- Archive:  nlsy1997-ps2.zip
+  | Length  |     Date     |  Time  |   Name              |
+  |---------|--------------|--------|---------------------|
+  |  41288  |  2024-01-29  | 17:35  |   nlsy1997-ps2.cdb  |
+  |   2990  |  2024-01-29  | 17:35  |   nlsy1997-ps2.sdf  |
+  |  38830  |  2024-01-29  | 17:35  |   nlsy1997-ps2.R    |
+  |   194   |  2024-01-29  | 17:35  |   extract.log       |
+  |   261   |  2024-01-29  | 17:35  |   nlsy1997-ps2.NLSY97 |
+  | 1043688 |  2024-01-29  | 17:35  |   nlsy1997-ps2.csv  |
+  | 1043368 |  2024-01-29  | 17:35  |   nlsy1997-ps2.dat  | -->
 
 ---
 
 # What is "tidy" data?
 
 ### Resources:
-- [Vignette](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) (from the **tidyr** package)
+- [Vignettes](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) (from the **tidyr** package)
 - [Original paper](https://vita.had.co.nz/papers/tidy-data.pdf) (Hadley Wickham, 2014 JSS)
 
 --
@@ -98,32 +154,9 @@ name: prologue
 Basically, tidy data is more likely to be [long (i.e. narrow) format](https://en.wikipedia.org/wiki/Wide_and_narrow_data) than wide format.
 
 ---
+# Relational Database Management with R
 
-# Checklist
-
-### R packages you'll need for this lecture
-
-☑ [**tidyverse**](https://www.tidyverse.org/)
-
-☑ [**nycflights13**](https://github.com/hadley/nycflights13)
-
---
-
-</br>
-
-The following code chunk will install (if necessary) and load everything for you.
-
-```{r libs, cache=FALSE, message=FALSE}
-if (!require(pacman)) install.packages('pacman', repos = 'https://cran.rstudio.com')
-pacman::p_load(tidyverse, ggplot2, nycflights13)
-```
-<!-- scorecard + what? -->
----
-# Goal: Relational Database Management with R
-
-- Remember Relational Database Management from our work on Empirical Organization?
-
-- And some of the data cleaning tricks?
+- Remember Relational Database Management from our work on [Empirical Organization](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-empirical-workflow/02-empirical-workflow.html#1)?
 
 - Today, we'll learn how to implement it using packages in the `tidyverse`
 
@@ -145,11 +178,9 @@ name: basics
 
 # Tidyverse vs. base R
 
-Much digital ink has been spilled over the "tidyverse vs. base R" debate.
+(Almost) everything you can do in the tidyverse can be done in base R without loading new packages.
 
---
-
-I won't delve into this debate here, because I think the answer is [clear](http://varianceexplained.org/r/teach-tidyverse/): We should teach the tidyverse first (or, at least, early).
+I won't delve into the debate, because I think the answer is [clear](http://varianceexplained.org/r/teach-tidyverse/): We should teach the tidyverse first (or, at least, early).
 - The documentation and community support are outstanding.
 - Having a consistent philosophy and syntax makes it easier to learn.
 - Provides a convenient "front-end" to big data tools.
@@ -178,8 +209,9 @@ These generally follow a `tidyverse::snake_case` vs `base::period.case` rule. E.
 | tidyverse  |  base |
 |---|---|
 | `?readr::read_csv`  | `?utils::read.csv` |
-|  `?dplyr::if_else` |  `?base::ifelse` |
-|  `?tibble::tibble` |  `?base::data.frame` |
+| `?dplyr::if_else` |  `?base::ifelse` |
+| `?tibble::tibble` |  `?base::data.frame` |
+
 Etcetera.
   
 If you call up the above examples, you'll see that the tidyverse alternative typically offers some enhancements or other useful options (and sometimes restrictions) over its base counterpart.
@@ -200,20 +232,20 @@ library(tidyverse)
 --
 
 We see that we have actually loaded a number of packages (which could also be loaded individually): **ggplot2**, **tibble**, **dplyr**, etc.
-- We can also see information about the package versions and some [namespace conflicts](https://raw.githack.com/uo-ec607/lectures/master/04-rlang/04-rlang.html#59).
-
+- We can also see information about the package versions and some [namespace conflicts](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/04-rlang/04-rlang.html#62). 
+<!-- TK : change lecture notes to mine -->
 ---
 
 # Tidyverse packages (cont.)
 
-The tidyverse actually comes with a lot more packages than those that are just loaded automatically.<sup>1</sup>
+The tidyverse actually comes with a lot more packages than those loaded automatically.<sup>1</sup>
 ```{r tverse_pkgs}
 tidyverse_packages()
 ```
 
-We'll use several of these additional packages during the remainder of this course.
+We'll use most of these packages during the remainder of this course.
 
-- E.g. The **lubridate** package for working with dates, **rvest** package for webscraping, **broom** to `tidy()` R objects into tables
+- E.g. The **lubridate** for dates, **rvest** for webscraping, **broom** to `tidy()` R objects into tables
 - However, bear in mind that these packages will have to be loaded separately with `library()`
 
 .footnote[
@@ -224,7 +256,7 @@ We'll use several of these additional packages during the remainder of this cour
 
 # Tidyverse packages (cont.)
 
-I hope to cover most of the tidyverse packages over the length of this course.
+We will cover most of the tidyverse packages over the length of this course.
 
 Today, however, I'm only really going to focus on two packages: 
 1. [**dplyr**](https://dplyr.tidyverse.org/)
@@ -269,38 +301,45 @@ There are five key dplyr verbs that you need to learn.
 <sup>1</sup> `summarize` with a "z" works too, but Hadley Wickham is from New Sealand.
 ]
 
---
+---
+# Learn the verbs
 
-</br>
+Practice these commands together using the `starwars` data frame that comes pre-packaged with dplyr. **Stop** when you hit the last `summarise` slide (approx. 33). 
 
-Let's practice these commands together using the `starwars` data frame that comes pre-packaged with dplyr. 
+```{r see-starwars}
+starwars
+```
 
 ---
 name: filter
 
 # 1) dplyr::filter
 
-We can chain multiple filter commands with the pipe `%>%`<sup>1</sup>, or just separate them within a single filter command using commas.
+Filter means "subset" the rows of a data frame based on some condition(s). 
+
 ```{r filter1}
-starwars %>% 
-  filter( 
-    species == "Human", 
-    height >= 190
-    ) 
+filter(starwars, species == "Human", height >= 190)
 ```
 
-.footnote[<sup>1<\sup> Pipes were invented by Doug McIlroy in 1964, are widely used in Unix shells (e.g. bash) and other programming languages (e.g. `F#`). They pass the preceding object as the first argument to the following function. In R, they
+---
+# 1) dplyr::filter *cont.* (pipes)
+
+We can chain multiple commands with the pipe `%>%` from the **magrittr** package<sup>1</sup>.
+```{r filter_pipe}
+starwars %>% 
+  filter(species == "Human", height >= 190)
+```
+
+.footnote[<sup>1</sup> Pipes were invented by Doug McIlroy in 1964, are widely used in Unix shells (e.g. bash) and other programming languages (e.g. `F#`). They pass the preceding object as the first argument to the following function. In R, they
 allow you to chain together code in a way that reads from left to right.]
 
-
 ---
-
 # 1) dplyr::filter *cont.*
 
-Regular expressions work well too.
+String operations from the **stringr** package are also auto-loaded with **tidyverse** and work well with `filter` too. 
 ```{r filter2}
 starwars %>% 
-  filter("Skywalker" %in% name)
+  filter(str_detect(name,'Skywalker')) # str_detect is from the stringr package
 ```
 
 ---
@@ -312,10 +351,6 @@ A very common `filter` use case is identifying (or removing) missing data cases.
 starwars %>% 
   filter(is.na(height))
 ```
-
---
-
-</br>
 
 To remove missing observations, simply use negation: `filter(!is.na(height))`. Try this yourself.
 
@@ -348,10 +383,13 @@ name: select
 
 # 3) dplyr::select
 
+Select means subset the columns of a data frame based on their names. 
+
 Use commas to select multiple columns out of a data frame. (You can also use "first:last" for consecutive columns). Deselect a column with "-".
 ```{r select1}
 starwars %>% 
-  select(name:skin_color, species, -height)
+  select(name:skin_color, species, -height) %>% 
+  head()
 ```
 
 ---
@@ -361,7 +399,8 @@ starwars %>%
 You can also rename some (or all) of your selected variables in place.
 ```{r select2}
 starwars %>%
-  select(alias=name, crib=homeworld, sex=gender) 
+  select(alias=name, crib=homeworld, sex=gender) %>% 
+  head()
 ```
 
 --
@@ -375,10 +414,9 @@ If you just want to rename columns without subsetting them, you can use `rename`
 The `select(contains(PATTERN))` option provides a nice shortcut in relevant cases.
 ```{r select3}
 starwars %>% 
-  select(name, contains("color"))
+  select(name, contains("color")) %>% 
+  head()
 ```
-
----
 
 ---
 name: mutate
@@ -390,7 +428,8 @@ You can create new columns from scratch, or (more commonly) as transformations o
 starwars %>% 
   select(name, birth_year) %>%
   mutate(dog_years = birth_year * 7) %>%
-  mutate(comment = paste0(name, " is ", dog_years, " in dog years."))
+  mutate(comment = paste0(name, " is ", dog_years, " in dog years.")) %>%
+  head()
 ```
 
 ---
@@ -403,8 +442,8 @@ starwars %>%
   select(name, birth_year) %>%
   mutate(
     dog_years = birth_year * 7, ## Separate with a comma
-    comment = paste0(name, " is ", dog_years, " in dog years.")
-    )
+    comment = paste0(name, " is ", dog_years, " in dog years.")) %>%
+    head()
 ```
 
 ---
@@ -434,6 +473,10 @@ starwars %>%
   head(5)
 ```
 
+--
+
+Try to intuit what `\(x)` does above!
+
 ---
 name: summarise
 
@@ -443,7 +486,8 @@ Particularly useful in combination with the `group_by` command.
 ```{r summ1}
 starwars %>% 
   group_by(species, gender) %>% 
-  summarise(mean_height = mean(height, na.rm = TRUE))
+  summarise(mean_height = mean(height, na.rm = TRUE)) %>%
+  head()
 ```
 
 ---
@@ -470,14 +514,8 @@ The same `across`-based workflow that we saw with `mutate` a few slides back als
 starwars %>% 
   group_by(species) %>% 
   summarise(across(where(is.numeric), \(x) (mean(x, na.rm=T)))) %>% #<<
-  head(5)
+  head()
 ```
-
---
-
-Try to intuit what `\(x)` does above!
-
-
 
 ---
 
@@ -489,38 +527,40 @@ Try to intuit what `\(x)` does above!
 --
 
 `slice`: Subset rows by position rather than filtering by values.
-- E.g. `starwars %>% slice(c(1, 5))`
+- `starwars %>% slice(c(1, 5))`
 
 --
 
-`pull`: Extract a column from as a data frame as a vector or scalar.
-- E.g. `starwars %>% filter(gender=="female") %>% pull(height)` returns a `height` as a vector
+`pull`: Extract a column as a vector or scalar.
+- `starwars %>% filter(gender=="female") %>% pull(height)` returns `height` as a vector
 
 --
 
 `count` and `distinct`: Number and isolate unique observations.
-- E.g. `starwars %>% count(species)`, or `starwars %>% distinct(species)`
-- You could also use a combination of `mutate`, `group_by`, and `n()`, e.g. `starwars %>% group_by(species) %>% mutate(num = n())`.
+- `starwars %>% count(species)`, or `starwars %>% distinct(species)`
+- Or use `mutate`, `group_by`, and `n()`, e.g. `starwars %>% group_by(species) %>% mutate(num = n())`.
+
+There are also [window functions](https://cran.r-project.org/web/packages/dplyr/vignettes/window-functions.html) for leads and lags, ranks, cumulative aggregation, etc.
+- See `vignette("window-functions")`.
 
 
 ---
+# Quick quiz
 
-# Other dplyr goodies (cont.)
+Write me code that will tells me the average birth year, unique skin colors, and number of characters by homeworld of the human characters in the `starwars` dataset.
 
-There are also a whole class of [window functions](https://cran.r-project.org/web/packages/dplyr/vignettes/window-functions.html) for getting leads and lags, ranking, creating cumulative aggregates, etc.
-- See `vignette("window-functions")`.
+Submit on mentimeter: https://www.mentimeter.com/app/presentation/bleq87wo3evgh3j6ks3wqro6zdfh7nwz/v5wc59b5wfph
 
---
-
-</br>
-
-The final set of dplyr "goodies" are the family of join operations. However, these are important enough that I want to go over some concepts in a bit more depth...
-- We will encounter and practice these many more times as the course progresses.
+Join at https://www.menti.com | use code `97 37 37 3`
 
 ---
 name: combining
 
 # Combining data frames
+
+The final set of dplyr "goodies" are the family of **append** and **join** operations. However, these are important enough that I want to go over some concepts in a bit more depth...
+
+- We will encounter and practice these many more times as the course progresses.
 
 - Imagine you have two data frames, `df1` and `df2`, that you want to combine.
 
@@ -556,8 +596,6 @@ df2 <- data.frame(x = 1:4, y = 10:13, z=letters[1:4])
 
 ## Append df2 to df1
 bind_rows(df1, df2)
-#rbind(df1, df2) # fails because columns differ
-rbind(df1, select(df2,x,y), fill = TRUE) # this works because of fill
 ```
 
 ---
@@ -638,6 +676,8 @@ Luckily, there's an easy way to avoid this problem.
 - See if you can figure it out before turning to the next slide.
 - Try `?dplyr::join`.
 
+- Submit your answer to https://www.menti.com using code `97 37 37 3`
+
 ---
 
 # Joins (cont.)
@@ -689,9 +729,9 @@ name: tidyr
 
 # Key tidyr verbs
 
-1. `pivot_longer`: Pivot wide data into long format (i.e. "melt").<sup>1</sup> 
+1. `pivot_longer`: Pivot wide data into long format.<sup>1</sup> 
 
-2. `pivot_wider`: Pivot long data into wide format (i.e. "cast").<sup>2</sup> 
+2. `pivot_wider`: Pivot long data into wide format.<sup>2</sup> 
 
 3. `separate`: Separate (i.e. split) one column into multiple columns.
 
@@ -718,25 +758,10 @@ name: pivot_longer
 ```{r pivot_longer1}
 stocks = data.frame( ## Could use "tibble" instead of "data.frame" if you prefer
   time = as.Date('2009-01-01') + 0:1,
-  X = rnorm(2, 0, 1),
-  Y = rnorm(2, 0, 2),
-  Z = rnorm(2, 0, 4)
-  )
+  X = rnorm(2, 0, 1), Y = rnorm(2, 0, 2), Z = rnorm(2, 0, 4))
 stocks
-stocks %>% pivot_longer(-time, names_to="stock", values_to="price")
-```
-
----
-
-# 1) tidyr::pivot_longer *cont.*
-
-Let's quickly save the "tidy" (i.e. long) stocks data frame for use on the next slide. 
-
-```{r pivot_longer2}
-## Write out the argument names this time: i.e. "names_to=" and "values_to="
-tidy_stocks = 
-  stocks %>% 
-  pivot_longer(-time, names_to="stock", values_to="price")
+tidy_stocks = stocks %>% pivot_longer(-time, names_to="stock", values_to="price")
+tidy_stocks
 ```
 
 ---
@@ -754,6 +779,41 @@ tidy_stocks %>% pivot_wider(names_from=time, values_from=price)
 </br>
 Note that the second example &mdash; which has combined different pivoting arguments &mdash; has effectively transposed the data.
 
+---
+# 2) tidyr::pivot_longer with prefix
+
+Let's pivot the pre-loaded billboard data: showing weekly rankings of top 100 in the year 2000
+
+```{r billboard}
+head(billboard)
+```
+
+---
+# 2) tidyr::pivot_longer with prefix *cont.*
+
+Wait, why is there 'wk' in the 'week' column?
+
+```{r pivot_longer3}
+billboard %>% 
+  pivot_longer(cols=starts_with('wk'), names_to="week", 
+    values_to="rank") %>%
+  head()
+```
+
+Try to fix with the `names_prefix` argument. Submit your answer to https://www.menti.com using code `97 37 37 3`
+
+---
+# 2) tidyr::pivot_longer with prefix *cont.*
+
+That fixed it. 
+
+```{r pivot_longer4}
+billboard %>% 
+  pivot_longer(cols=starts_with('wk'), names_to="week", 
+    values_to="rank",names_prefix='wk') %>%
+  mutate(week=as.numeric(week)) %>% # Make week a numeric variable
+  head()
+```
 
 ---
 
@@ -761,7 +821,15 @@ Note that the second example &mdash; which has combined different pivoting argum
 
 There's a long-running joke about no-one being able to remember Stata's "reshape" command. ([Exhibit A](https://twitter.com/helleringer143/status/1117234887902285836).)
 
-It's easy to see this happening with the `pivot_*` functions too. However, I find that I never forget the commands as long as I remember the argument order is *"names"* then *"values"*.
+It's easy to see this happening with the `pivot_*` functions too. Remember the documentation is your friend! 
+
+```{r pivot_help,eval=FALSE}
+?pivot_longer
+```
+
+And GitHub CoPilot, ChatGPT and other AI tools are also your friends if you use precise language about what you want the AI tool to do and you try their suggestions carefully.^[<sup>1</sup>]
+
+.footnote[<sup>1</sup> Back in my day we had to scour StackOverflow for hours to find the right answer. And we liked it!]
 
 ---
 name: separate
@@ -778,7 +846,7 @@ economists %>% separate(name, c("first_name", "last_name"))
 
 </br>
 
-This command is pretty smart. But to avoid ambiguity, you can also specify the separation character with `separate(..., sep=".")`.
+This command is pretty smart at detecting separators. But to avoid ambiguity, you can also specify the separation character with `separate(..., sep=".")`.
 
 ---
 
@@ -839,6 +907,21 @@ gdp_u %>% mutate(date = ymd(date))
 ```
 
 ---
+# Other tidyr goodies
+
+- `fill`: Fill in missing values with the last non-missing value.
+  - `fill(df, starts_with("X"))` will fill in missing values in all columns that start with "X".
+
+- `drop_na`: Drop rows with missing values.
+
+- `expand`: Create a complete set of combinations from a set of factors.
+
+- `nest` and `unnest`: Combine columns into lists within a single cell or split a column of lists into separate rows.
+  - Try with the `starwars` data frame: `unnest(starwars, films,names_sep='')`
+
+- And much, much more
+
+---
 class: inverse, center, middle
 name: summary
 
@@ -867,9 +950,18 @@ name: summary
 Other useful items include: pipes (`%>%`), grouping (`group_by`), joining functions (`left_join`, `inner_join`, etc.).
 
 ---
+# Start your problem set!
+
+- Go to the course calendar and click on the link for problem set 2
+
+- Fork and clone the repository to your GitHub account
+
+- Follow instructions to get the NLSY downloaded and loaded into your R environment
+
+---
 class: inverse, center, middle
 
-# Next lecture: Data cleaning and wrangling: (2) data.table
+# Next lecture: Scraping data!
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
