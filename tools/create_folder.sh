@@ -8,6 +8,8 @@ if [ $# -ne 3 ]; then
     exit 1
 fi
 
+echo "Creating folder $1 with subtitle $2 and type $3"
+
 # type can only be lecture or slides
 if [ "$3" != "lecture" ] && [ "$3" != "slides" ]; then
     echo "Type can only be lecture or slides"

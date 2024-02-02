@@ -1,0 +1,196 @@
+---
+title: "Big Data and Economics"
+# subtitle: "<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>"
+subtitle: "Lecture 1: Introduction"
+author: "Kyle Coombs (he/him/his)"
+date: "Bates College | [EC/DCS 368](https://github.com/big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, 'ou-colors.css'] 
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+```{css, echo=FALSE}
+# CSS for including pauses in printed PDF output (see bottom of lecture)
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+```
+
+```{r setup, include=FALSE}
+# xaringanExtra::use_scribble() ## Draw on slides. Requires dev version of xaringanExtra.
+
+options(htmltools.dir.version = FALSE)
+library(knitr)
+opts_chunk$set(
+  fig.align="center",  
+  fig.height=4, #fig.width=6,
+  # out.width="748px", #out.length="520.75px",
+  dpi=300, #fig.path='Figs/',
+  message=FALSE,
+  cache=T#, echo=F, warning=F, message=F
+  )
+library(tidyverse)
+library(hrbrthemes)
+library(fontawesome)
+library(RefManageR)
+theme_set(theme_minimal())
+BibOptions(check.entries = FALSE,
+           bib.style = "authoryear",
+           style = "markdown",
+           hyperlink = FALSE,
+           dashed = TRUE)
+#biblio <- ReadBib("../../References/References.bib", check = FALSE)
+```
+
+# Table of contents
+
+1. [Prologue](#prologue)
+
+2. [Worldwide Web of Data](#web-data)
+
+3. [Examples of scraping in economics research](#examples-of-scraping-in-economics-research)
+
+4. [Access methods](#access-methods)
+  - [Client-side scraping](#client-side-scraping)
+  - [Server-side scraping](#server-side-scraping)
+
+6. [Ethics of web scraping](#ethics-of-web-scraping)
+
+---
+class: inverse, center, middle
+name: prologue
+
+# Prologue
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+---
+# Prologue
+
+- Plan for today
+
+  - What is scraping? 
+
+  - Contrast Client-side and Server-side scraping
+
+  - Examples of scraping in economics research
+
+  - Learn by doing with APIs (CSS will happen later -- potentially end of semester)
+
+  - Ethical considerations
+
+---
+# Check-in
+
+- Final project annotated bibliographies were due yesterday 
+
+- How are you feeling about them? 
+
+- Any thoughts on the data description due Feb 16 (next Wednesday) lined up with the Problem Set?
+  - Tell me: https://www.mentimeter.com/app/presentation/bleq87wo3evgh3j6ks3wqro6zdfh7nwz/aduipo2ve12v
+
+---
+# Attribution
+
+- These slides take inspiration from the following sources:
+
+  - [Nathan Schiff's web data lecture](https://nathanschiff.com/wp-content/uploads/2017/02/web_data_lecture.pdf)
+
+  - [Andrew MacDonald's slides](https://stat545.com/supporting-docs/webdata01_slides.html#1)
+
+  - [Jenny Bryan's textbook](https://stat545.com/web-data-slides.html)
+
+  - [Grant McDermott's notes on CSS](https://raw.githack.com/uo-ec607/lectures/master/06-web-css/06-web-css.html) and [APIs](https://raw.githack.com/uo-ec607/lectures/master/07-web-apis/07-web-apis.html)
+
+  - [James Densmore's stance on ethics](https://towardsdatascience.com/ethics-in-web-scraping-b96b18136f01)
+
+---
+class: inverse, center, middle
+name: web-data
+
+# Worldwide Web of Data
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+---
+# Worldwide Web of Data
+
+- Every website you visit is packed with data
+
+- Every app on your phone is packed with data and taking data from you
+
+- Guess what? 
+
+--
+
+  - These data often measure hard to measure things
+  - These data are often public (at some level of aggregation/anonymity)
+  - These data are often not easily accessibe and not **tidy**
+  - Samples might be biased (have to navigate that)
+  - This is legal (usually) and ethical (usually)
+
+-- 
+
+- Guess what? All this makes these data (and knowing how to access it) valuable 
+
+  - It also makes this a hard skill to pick up
+
+---
+class: inverse, center, middle
+name: examples-of-scraping-in-economics-research
+
+# Examples of scraping in economics research
+
+---
+# What cool things can you do with web data?
+
+- Can anyone think of examples of web data being used in economics research?
+
+---
+# Measuring hard to measure things
+
+- Imagine you survey a ton of people about their beliefs that a candidate is unfit to be president because of their race
+
+- Due to social desirability bias, you get a lot of "I don't know" or "I don't think that"
+
+- There are lots of creative survey methods to get at this, but is there some way to measure this without asking people? 
+
+- Say, why not find out the frequency that people search Google for racial epithets in connection to the candidate?
+
+- Guess what? Stephens-Davidowitz (2014) did just that
+  - Finds racial animus cost Barack Obama 4 percentage points in the 2008 election (equivalent of a home-state advantage)
+  - Google search term data yield effects that are 1.5 to 3 times larger than survey estimates of racial animus
+
+\[ \text{Racially Charged Search Rate}_j=\frac{\text{Google searches including theword “[Word1](s)”}}{Total Google searches}_{j,2004–2007} \]
+
+---
+# Racial Animus Map
+
+<div align="center">
+<img src="pics/racial_animus_map.jpg" height=500>
+</div>
+
+---
+# Election performance
+
+<div align="center">
+<img src="pics/racial_animus_vote_performance.jpg" height=500>
+</div>
+
+---
+class: inverse, center, middle
+
+# Next lecture: Onto scraping and API activities! 
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+infile = list.files(pattern = '.html')
+#pagedown::chrome_print(input = infile, timeout = 100)
+```
+
