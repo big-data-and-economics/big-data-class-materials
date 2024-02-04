@@ -4,7 +4,7 @@ subtitle: "Lecture 6: Webscraping: (1) Server-side and CSS"
 author:
   name: Kyle Coombs
   affiliation: Bates College | [ECON 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)
-# date: Lecture 6  #"10 October 2023"
+# date: Lecture 6  #"04 February 2024"
 output: 
   html_document:
     theme: flatly
@@ -37,7 +37,7 @@ knit: (function(inputFile, encoding) {
  output_format = 'all') 
  })
 ---
-
+<!-- demos: rvest -->
 
 
 ## Software requirements
@@ -48,8 +48,8 @@ Today we'll be using [SelectorGadget](https://selectorgadget.com/), which is a C
 
 ### R packages 
 
-- New: **rvest**, **janitor**
-- Already used: **tidyverse**, **lubridate**, **data.table**, **hrbrthemes**
+- New: **rvest**, **janitor**, **polite**, **xml2**
+- Already used: **tidyverse**, **lubridate**
 
 Recall that **rvest** was automatically installed with the rest of the tidyverse. These lecture notes assume that you have at least installed **rvest** 1.0.0, which `install.packages("tidyverse")` should give you.
 
@@ -57,10 +57,14 @@ Recall that **rvest** was automatically installed with the rest of the tidyverse
 ```r
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse, rvest, lubridate, janitor, data.table, hrbrthemes,gsheet,polite)
+pacman::p_load(tidyverse, rvest, lubridate, janitor, hrbrthemes,polite)
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
 ```
+
+### Attribution
+
+Most of these notes taken from work by [Grant McDermott](https://raw.githack.com/uo-ec607/lectures/master/06-web-css/06-web-css.html) and [José Roberto Ayala Solares](https://towardsdatascience.com/web-scraping-tutorial-in-r-5e71fd107f32). 
 
 ## Webscraping basics
 
@@ -93,7 +97,7 @@ The good news is that both server-side and client-side websites allow for webscr
 
 ### Caveat: Ethical ~~and legal~~ considerations
 
-The previous sentence elides some important ethical considerations. Just because you *can* scrape it, doesn't mean you *should*. Now, I first have to tell you that this paragraph used to contain a warning about the legal restrictions pertaining to webscraping activity. I've decided to drop those in the wake of the landmark [*hiQ Labs vs LinkedIn*](https://twitter.com/kjhealy/status/1255636154453549057) court ruling. (Short version: It is currently legal to scrape data from the web using automated tools, as long as the data are publicly available.) However, it's still important to realize that the tools we'll be using over these next two lectures are very powerful. A computer can process commands much, much faster than we can ever type them up manually. It's pretty easy to write up a function or program that can overwhelm a host server or application through the sheer weight of requests.Or, just as likely, the host server has built-in safeguards that will block you in case of a suspected malicious [attack](https://en.wikipedia.org/wiki/Denial-of-service_attack). We'll return to the "be nice" mantra at the end of this lecture, as well as in the next lecture. 
+The previous sentence elides some important ethical/legal considerations. Just because you *can* scrape it, doesn't mean you *should*. Now, I first have to tell you that this paragraph used to contain a warning about the legal restrictions pertaining to webscraping activity. I've decided to drop those in the wake of the landmark [*hiQ Labs vs LinkedIn*](https://en.wikipedia.org/wiki/HiQ_Labs_v._LinkedIn) court ruling. (Short version: It is currently legal to scrape data from the web using automated tools, as long as the data are publicly available.) However, it's still important to realize that the tools we'll be using over these next two lectures are very powerful. A computer can process commands much, much faster than we can ever type them up manually. It's pretty easy to write up a function or program that can overwhelm a host server or application through the sheer weight of requests.Or, just as likely, the host server has built-in safeguards that will block you in case of a suspected malicious [attack](https://en.wikipedia.org/wiki/Denial-of-service_attack). We'll return to the "be nice" mantra at the end of this lecture, as well as in the next lecture. 
 
 One way to stay ethical is to use the [**polite**](https://github.com/dmi3kno/polite) package. I'll show you how to use this package alongside the **rvest** package below when we start scraping the NYT website. Essentially, polite checks the robots.txt file of a website to see if it is okay to scrape. If it is, then it will automatically add a delay between each request that you make. This is a good way to avoid overwhelming a host server. A robots.txt function is a file that is hosted on a website that tells you what you can and cannot scrape. You can find the robots.txt file for any website by typing the url of the website followed by "/robots.txt". For example, here is the [robots.txt](https://www.nytimes.com/robots.txt) file for the New York Times and the [robots.txt](https://en.wikipedia.org/robots.txt) for Wikipedia. Technically these are not legally binding, but they give guidance on how to proceed. Here is a deeper dive into [robots.txt](https://developers.google.com/search/docs/crawling-indexing/robots/intro) files and how they are used to help regulate traffic from search engines like Google. 
 
@@ -103,111 +107,6 @@ If you scrape the site over and over -- likely if you are collecting big data --
 
 Webscraping is extremely trick and code may stop working after just a small change to the underlying HTML. Organizations are constantly rewriting their webpages, which can break webscraping code -- whether intentionally or not. This is why it is important to be able to read HTML and CSS. You can often find the information you want by looking at the HTML and CSS. For example, these lecture notes used to feature a Craigslist example, but that company has made it far harder to scrape since 2021, so I need to find a new scraping example. (NYT below.) 
 
-## Easy webscraping for popular platforms
-
-Sometimes specific platforms are so popular they get dedicated packages for scraping them. Of course, these platforms are also very aware of the potential for abuse and are constantly building in safeguards that break open source tools. Google is one such platform. Tons of publicly available data is stored in Google Sheets, Google Docs, etc.
-
-### Packages to scrape Google Sheets
-
-- [**gsheet**](https://cran.r-project.org/web/packages/gsheet/gsheet.pdf): A simple package for reading Google Sheets into R.
-- [**googlesheets4**](https://googlesheets4.tidyverse.org/): The latest and greatest version of the **googlesheets** package. There's a reference for it in the [RStudio cheatsheets](https://github.com/rstudio/cheatsheets/blob/main/data-import.pdf).
-- [**googledrive**](Google is one such platform. ): A more general package for interacting with Google Drive. (E.g. Downloading files, etc.)
-
-We'll work with **gsheet** because it is relatively straightforward to accomplish the task on the problem set. However, I recommend that you check out the other two packages as well. They are more powerful and will likely be more useful in the long run. 
-
-Let's take the [Ask A Manager Survey for 2023](https://docs.google.com/spreadsheets/d/1ioUjhnz6ywSpEbARI-G3RoPyO0NRBqrJnWf-7C_eirs/edit?resourcekey#gid=1854892322). This sheet is publicly available and you just need to read it like you would any CSV. The function, `gsheet2tbl()` within **gsheet** is a convenient way to do this. It will read in the data. Try it for the [2021](https://docs.google.com/spreadsheets/d/1IPS5dBSGtwYVbjsfbaMCYIWnOuRmJcbequohNxCyGVw/edit?resourcekey#gid=1625408792) and [2022](https://docs.google.com/spreadsheets/d/1Uq5GwatBdujitJkP2X5SDChHSbg68rmuOz9T9eTzu40/edit?resourcekey#gid=1660826355) versions as well.
-
-
-```r
-gsheet2tbl('https://docs.google.com/spreadsheets/d/1IPS5dBSGtwYVbjsfbaMCYIWnOuRmJcbequohNxCyGVw/edit?resourcekey#gid=1625408792') 
-```
-
-```
-## # A tibble: 27,985 × 18
-##    Timestamp          `How old are you?` What industry do you work…¹ `Job title`
-##    <chr>              <chr>              <chr>                       <chr>      
-##  1 4/27/2021 11:02:10 25-34              Education (Higher Educatio… Research a…
-##  2 4/27/2021 11:02:22 25-34              Computing or Tech           Change & I…
-##  3 4/27/2021 11:02:38 25-34              Accounting, Banking & Fina… Marketing …
-##  4 4/27/2021 11:02:41 25-34              Nonprofits                  Program Ma…
-##  5 4/27/2021 11:02:42 25-34              Accounting, Banking & Fina… Accounting…
-##  6 4/27/2021 11:02:46 25-34              Education (Higher Educatio… Scholarly …
-##  7 4/27/2021 11:02:51 25-34              Publishing                  Publishing…
-##  8 4/27/2021 11:03:00 25-34              Education (Primary/Seconda… Librarian  
-##  9 4/27/2021 11:03:01 45-54              Computing or Tech           Systems An…
-## 10 4/27/2021 11:03:02 35-44              Accounting, Banking & Fina… Senior Acc…
-## # ℹ 27,975 more rows
-## # ℹ abbreviated name: ¹​`What industry do you work in?`
-## # ℹ 14 more variables:
-## #   `If your job title needs additional context, please clarify here:` <chr>,
-## #   `What is your annual salary? (You'll indicate the currency in a later question. If you are part-time or hourly, please enter an annualized equivalent -- what you would earn if you worked the job 40 hours a week, 52 weeks a year.)` <dbl>,
-## #   `How much additional monetary compensation do you get, if any (for example, bonuses or overtime in an average year)? Please only include monetary compensation here, not the value of benefits.` <chr>,
-## #   `Please indicate the currency` <chr>, …
-```
-
-This renders in the tibble format which we've seen before. Each column describes a different variable and each row describes a different respondent. Tibbles also let you know the type of a character. For example, the `How old are you?` column is a character. Why is a column with numbers a character? Because it includes non-numeric characters.
-
-Let's inspect how `gsheet2tbl` works so you can learn a little bit about how to access data that lives on the internet. (Note: This functions more similarly to how APIs work, but it is a nice introduction and helps you with your problem set.) Type `gsheet2tbl` as I've done below without `()` after it. What do you see? 
-
-
-```r
-gsheet2tbl
-```
-
-```
-## function (url, sheetid = NULL) 
-## {
-##     if (requireNamespace("readr", quietly = TRUE)) {
-##         suppressMessages(table <- readr::read_csv(file = construct_download_url(url, 
-##             format = "csv", sheetid = NULL)))
-##     }
-##     else {
-##         table <- utils::read.csv(text = gsheet2text(url = url, 
-##             format = "csv", sheetid = sheetid), stringsAsFactors = FALSE)
-##         class(table) <- c("tbl_df", "tbl", "data.frame")
-##     }
-##     return(table)
-## }
-## <bytecode: 0x000001796b2399b8>
-## <environment: namespace:gsheet>
-```
-
-The output is what is inside the function `gsheet2tbl`. See if you can interpret what it is doing. 
-
-The function takes the argument `url` and `sheetid` for the google sheets url and its sheetid. It has some if/else logic based on whether the `sheetid` was specified. If so, the function will need to take an extra step to pinpoint the specific sheet you are requesting. If not, it continues. The function uses the `readr::read_csv()` function to read a csv like you would a file on your computer, but it does so with a csv on the internet. How does it do that? It uses a function called `construct_download_url()` to access it. Let's look inside of this one. 
-
-
-```r
-construct_download_url
-```
-
-```
-## function (url, format = "csv", sheetid = NULL) 
-## {
-##     key <- stringr::str_extract(url, "[[:alnum:]_-]{30,}")
-##     if (is.null(sheetid) & stringr::str_detect(url, "gid=[[:digit:]]+")) {
-##         sheetid <- as.numeric(stringr::str_extract(stringr::str_extract(url, 
-##             "gid=[[:digit:]]+"), "[[:digit:]]+"))
-##     }
-##     address <- paste0("https://docs.google.com/spreadsheets/export?id=", 
-##         key, "&format=", format)
-##     if (!is.null(sheetid)) {
-##         address <- paste0(address, "&gid=", sheetid)
-##     }
-##     return(address)
-## }
-## <bytecode: 0x0000017968fa51f0>
-## <environment: namespace:gsheet>
-```
-
-Again we see function output. `construct_download_url` takes a `url`, file `format` (defaults to "csv"), and `sheetid`. Then it creates a `key` using the `stringr` library. This library let's you use regular expressions to manipulate strings. It extracts all alphanumeric characters in a sequence of at least 30 (but possibly more). This is because Google uses these `key`s to identify specific google sheets similar to how APIs work. We'll talk more about these on Thursday. 
-
-Next, `construct_download_url` creates the `address` for the `.csv` file using the paste function. It uses a preset url for google spreadsheets CSVs, "https://docs.google.com/spreadsheets/export?id=", followed by the `key`, followed by "&format" and the `format` specified (again "csv" by default). Then it returns the `address`, which is fed to `gsheet2tbl`. 
-
-### Clean Code alert: Abstraction
-
-Google does not host its spreadsheets as CSVs that you can immediately use a `read_csv` to read. This is for proprietary reasons. But when the spreadsheet is hosted publicly, it is straightforward, but tedious to remember how to construct a link to the relevant CSV file. `gsheet2tbl` abstracts this process for you so you do not need to remember. It is a function that takes a URL and returns a tibble. That said, if Google ever changed the way it hosted its spreadsheets, `gsheet2tbl` would break. If the package owner was slow to fix it and you knew a fix, you could write it, and pull request the fix to GitHub. 
-
 ## Webscraping with **rvest** (server-side)
 
 The primary R package that we'll be using today is **rvest** ([link](https://rvest.tidyverse.org/)), a simple webscraping library inspired by Python's **Beautiful Soup** ([link](https://www.crummy.com/software/BeautifulSoup/)), but with extra tidyverse functionality. **rvest** is designed to work with webpages that are built server-side and thus requires knowledge of the relevant CSS selectors... Which means that now is probably a good time for us to cover what these are.
@@ -216,7 +115,7 @@ The primary R package that we'll be using today is **rvest** ([link](https://rve
 
 When your web browser displays an HTML (Hypertext Markup Language) document (i.e. a webpage), it merges the content (words, pictures, data, videos) with style information to make it look good. The style information is specified using a language called Cascading Style Sheets (CSS), which provides rules. 
 
-Here's a simplified version of how that works:
+Here's how that works:
 
 1. The browser downloads the HTML document from the web server.
 2. The browser parses the HTML document and builds a "Document Object Model" (DOM) tree. This is a fancy way of saying that the browser creates a hierarchical representation of the document's content called a "tree" that is similar to the file paths on your computer. Each node in the tree represents an HTML element (e.g. a paragraph, a table, a header, etc.) and the relationship between nodes represents the nesting of these elements. For example, a paragraph element that is nested within a table element will be a child node of the table element.
@@ -225,24 +124,12 @@ Here's a simplified version of how that works:
 5. The render tree is then laid out in the browser window according to the specific screen dimensions of the user's device. This is called the layout.
 6. The visual display of the page is shown on the screen. 
 
-Here's a nice analogy to wrap your head around this. Imagine you are building a house. 
-
-![](pics/css_rendering.jpg)
-Taken from [Mozilla](https://developer.mozilla.org/en-US/docs/Learn/CSS/First_steps/How_CSS_works).
-
-1. The web server is the contractor who provides the blueprint for the house from an architect. 
-2. The HTML document is the blueprint for the house.
-3. The DOM is a organized outline of the house by room, with the materials for each room listed. <-- This is the trickiest to fit into analogies! 
-4. The CSS is the interior decorating plan for the house. 
-5. The browser is the construction team that builds the house.
-6. Bonus: The electrical appliances inside are the JavaScript that makes everything run.
-
 In short, CSS is a language for specifying the appearance of HTML documents (including web pages). It does this by providing web browsers a set of display rules, which are formed by:
 
 1. _Properties._ CSS properties are the "how" of the display rules. These are things like which font family, styles and colours to use, page width, etc.
 2. _Selectors._ CSS selectors are the "what" of the display rules. They identify which rules should be applied to which elements. E.g. Text elements that are selected as ".h1" (i.e. top line headers) are usually larger and displayed more prominently than text elements selected as ".h2" (i.e. sub-headers).
 
-The key point is that if you can identify the CSS selector(s) of the content you want, then you can isolate it from the rest of the webpage content that you don't want. This where SelectorGadget comes in. We'll work through an extended example (with a twist!) below, but I highly recommend looking over this [quick vignette](https://cran.r-project.org/web/packages/rvest/vignettes/selectorgadget.html) before proceding.
+The key point is that if you can identify the CSS selector(s) of the data you want, then you can isolate the data from the rest of the webpage content that you don't want. This where SelectorGadget comes in. We'll work through an extended example (with a twist!) below, but I highly recommend looking over this [quick vignette](https://rvest.tidyverse.org/articles/selectorgadget.html) before proceding.
 
 ## Application 1: Wikipedia
 
@@ -343,7 +230,7 @@ Now that we have our cleaned pre-IAAF data frame, we could easily plot it. I'm g
 
 #### Aside: Get CSS selectors via browser inspection tools
 
-SelectorGadget is a great tool. But it isn't available on all browsers and can involve more work than I'd like sometimes, with all that iterative clicking.^[Historically, at least, it also had a tendency to provide CSS selectors that weren't exactly what we were looking for. To be fair, this may have reflected some issues coming from the R + **rvest** as much as anything else. These minor incompatibilities have been largely eliminated with **rvest** 1.0.0... [prompting a re-write](https://twitter.com/grant_mcdermott/status/1354518507208105984) of these notes!] I therefore wanted to mention an alternative (and very precise) approach to obtaining CSS selectors: Use the "[inspect web element](https://www.lifewire.com/get-inspect-element-tool-for-browser-756549)" feature of your browser.
+SelectorGadget is a great tool. But it isn't available on all browsers and can involve more work than I'd like sometimes, with all that iterative clicking.^[Historically, at least, it also had a tendency to provide CSS selectors that weren't exactly what we were looking for. To be fair, this may have reflected some issues coming from the R + **rvest** as much as anything else. These minor incompatibilities have been largely eliminated with **rvest** 1.0.0.] I therefore wanted to mention an alternative (and very precise) approach to obtaining CSS selectors: Use the "[inspect web element](https://www.lifewire.com/get-inspect-element-tool-for-browser-756549)" feature of your browser.
 
 Here's a quick example using Google Chrome. First, I open up the inspect console (**Ctrl+Shift+I**, or right-click and choose "Inspect"). I then proceed to scroll over the source elements, until Chrome highlights the table of interest on the actual page. Once the table (or other element of interest) is highlighted, I can grab its CSS by right-clicking and selecting **Copy -> Copy selector**.
 
@@ -517,7 +404,7 @@ wr100 %>%
 
 ## Application 2: New York Times
 
-There are several features of the previous Wikipedia example that make it a good introductory application. Most notably, the HTML table format provides a regular structure that is easily coercible into a data frame (via `html_table()`). Oftentimes, however, the information that we want to scrape off the web doesn't have this nice regular structure. For this next example, then, I'm going to walk you through a slightly more messy application: Scraping items from [The New York Times](https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html). The following is adapted from an R notebook of a Medium [blog post](https://towardsdatascience.com/web-scraping-tutorial-in-r-5e71fd107f32) from August 2, 2017 by José Roberto Ayala Solares, who in term adapted it from work by [Kevin Markham](https://twitter.com/justmarkham?lang=en). The post walks through a tutorial to scrape the [Trump Lies](https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html) article from the NYT. I've made some minor modifications to the code and added some extra commentary.
+There are several features of the previous Wikipedia example that make it a good introductory application. Most notably, the HTML table format provides a regular structure that is easily coercible into a data frame (via `html_table()`). Oftentimes, however, the information that we want to scrape off the web doesn't have this nice regular structure. For this next example, then, I'm going to walk you through a slightly more messy application: Scraping items from [The New York Times](https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html). The following is adapted from an R notebook of a Medium [blog post](https://towardsdatascience.com/web-scraping-tutorial-in-r-5e71fd107f32) from August 2, 2017 by José Roberto Ayala Solares, who adapted it from work by [Kevin Markham](https://twitter.com/justmarkham?lang=en). The post walks through a tutorial to scrape the [Trump Lies](https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html) article from the NYT. I've made some minor modifications to the code and added some extra commentary.
 
 ## Examining the New York Times Article
 For a nice description about the article that we'll be working with, look at Kevin's [tutorial](http://www.dataschool.io/python-web-scraping-of-president-trumps-lies/). In summary, the data that we are interested in consists of a record of lies, each with 4 parts:
@@ -531,25 +418,31 @@ For a nice description about the article that we'll be working with, look at Kev
 
 ## Reading the web page into R
 
-I will show you how to read with **rvest** and **polite** here. Note for yourself that the output is the same, but the polite version is requires to steps and a little slower.
+I will show you how to read with **rvest** and **polite** here. Note for yourself that the output is the same, but the polite version works behind the scenes to guarantee that you are not overwhelming the host server. 
+
+### First with polite
 
 
 ```r
 # library(polite)
 
-nyt_session = polite::bow("https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html") #start your session
+nyt_session = bow("https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html") #start your session politely
 
-webpage <- polite::scrape(nyt_session)
+webpage <- scrape(nyt_session) # politely scrape
 webpage
 ## {html_document}
-## <html lang="en" class="no-js page-interactive section-opinion page-theme-standard tone-opinion page-interactive-default limit-small layout-xlarge app-interactive" itemid="https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html" itemtype="http://schema.org/NewsArticle" itemscope="" xmlns:og="http://opengraphprotocol.org/schema/">
+## <html lang="en" class="no-js page-interactive section-opinion page-theme-standard tone-opinion page-interactive-default limit-small layout-xlarge app-interactive" itemid="https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html" itemtype="https://schema.org/NewsArticle" itemscope="" xmlns:og="http://opengraphprotocol.org/schema/">
 ## [1] <head>\n<meta http-equiv="Content-Type" content="text/html; charset=UTF-8 ...
 ## [2] <body>\n<style>\n.lt-ie10 .messenger.suggestions {\n  display: block !imp ...
+```
 
-webpage_html <- rvest::read_html("https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html")
+### Next with rvest
+
+```r
+webpage_html <- read_html("https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html")
 webpage_html
 ## {html_document}
-## <html lang="en" class="no-js page-interactive section-opinion page-theme-standard tone-opinion page-interactive-default limit-small layout-xlarge app-interactive" itemid="https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html" itemtype="http://schema.org/NewsArticle" itemscope="" xmlns:og="http://opengraphprotocol.org/schema/">
+## <html lang="en" class="no-js page-interactive section-opinion page-theme-standard tone-opinion page-interactive-default limit-small layout-xlarge app-interactive" itemid="https://www.nytimes.com/interactive/2017/06/23/opinion/trumps-lies.html" itemtype="https://schema.org/NewsArticle" itemscope="" xmlns:og="http://opengraphprotocol.org/schema/">
 ## [1] <head>\n<meta http-equiv="Content-Type" content="text/html; charset=UTF-8 ...
 ## [2] <body>\n<style>\n.lt-ie10 .messenger.suggestions {\n  display: block !imp ...
 ```
