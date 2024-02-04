@@ -3,8 +3,8 @@ title: "Data Science for Economists"
 subtitle: "Lecture 7: Webscraping: (2) Client-side and APIs"
 author:
   name: Kyle Coombs
-  affiliation: "Bates College | [EC/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)" #"10 October 2023"
-# date: Lecture 7  #"10 October 2023"
+  affiliation: "Bates College | [EC/DCS 368](https://github.com/-big-data-and-economics)" #"04 February 2024"
+# date: Lecture 7  #"04 February 2024"
 output: 
   html_document:
     theme: flatly
@@ -37,7 +37,7 @@ knit: (function(inputFile, encoding) {
  output_format = 'all') 
  })
 ---
-
+<!-- demos: httr -->
 
 
 ## Sign-up and software requirements
@@ -271,7 +271,7 @@ typeof(fred)
 ## [1] "list"
 ```
 
-It turns that the previous step has yielded a list object in R.^[complex nested lists are the law of the land when it comes to json information. don't worry too much about this now; just rest assured that r is well suited to handling these kinds of objects. it's one reason why r and json play so well together. we'll see more examples later in the course when we start working with programming and spatial data.] so now we need to inspect this list to better understand its structure before  extracting the information that we care about (and coerce it to a data frame.) I'd use the base `View()` function to do this in an interactive r session. but that won't work as well for these lecture notes. Instead, I'll use the `listviewer::jsonedit()` function to create an interactive widget that renders nicely in knitted r markdown documents.
+It turns that the previous step has yielded a list object in R.^[complex nested lists are the law of the land when it comes to json information. don't worry too much about this now; just rest assured that R is well suited to handling these kinds of objects. it's one reason why r and json play so well together. we'll see more examples later in the course when we start working with programming and spatial data.] so now we need to inspect this list to better understand its structure before  extracting the information that we care about (and coerce it to a data frame.) I'd use the base `View()` function to do this in an interactive r session. but that won't work as well for these lecture notes. Instead, I'll use the `listviewer::jsonedit()` function to create an interactive widget that renders nicely in knitted r markdown documents.
 
 
 ```r
@@ -283,7 +283,7 @@ jsonedit(fred, mode = "view") ## Better for RMarkdown documents
 
 ```{=html}
 <div class="jsonedit html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-48c9e86dbd39665df362" style="width:100%;height:10%;"></div>
-<script type="application/json" data-for="htmlwidget-48c9e86dbd39665df362">{"x":{"data":{"realtime_start":"2023-10-10","realtime_end":"2023-10-10","observation_start":"1600-01-01","observation_end":"9999-12-31","units":"lin","output_type":1,"file_type":"json","order_by":"observation_date","sort_order":"asc","count":94,"offset":0,"limit":100000,"observations":{"realtime_start":["2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10"],"realtime_end":["2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10","2023-10-10"],"date":["1929-01-01","1930-01-01","1931-01-01","1932-01-01","1933-01-01","1934-01-01","1935-01-01","1936-01-01","1937-01-01","1938-01-01","1939-01-01","1940-01-01","1941-01-01","1942-01-01","1943-01-01","1944-01-01","1945-01-01","1946-01-01","1947-01-01","1948-01-01","1949-01-01","1950-01-01","1951-01-01","1952-01-01","1953-01-01","1954-01-01","1955-01-01","1956-01-01","1957-01-01","1958-01-01","1959-01-01","1960-01-01","1961-01-01","1962-01-01","1963-01-01","1964-01-01","1965-01-01","1966-01-01","1967-01-01","1968-01-01","1969-01-01","1970-01-01","1971-01-01","1972-01-01","1973-01-01","1974-01-01","1975-01-01","1976-01-01","1977-01-01","1978-01-01","1979-01-01","1980-01-01","1981-01-01","1982-01-01","1983-01-01","1984-01-01","1985-01-01","1986-01-01","1987-01-01","1988-01-01","1989-01-01","1990-01-01","1991-01-01","1992-01-01","1993-01-01","1994-01-01","1995-01-01","1996-01-01","1997-01-01","1998-01-01","1999-01-01","2000-01-01","2001-01-01","2002-01-01","2003-01-01","2004-01-01","2005-01-01","2006-01-01","2007-01-01","2008-01-01","2009-01-01","2010-01-01","2011-01-01","2012-01-01","2013-01-01","2014-01-01","2015-01-01","2016-01-01","2017-01-01","2018-01-01","2019-01-01","2020-01-01","2021-01-01","2022-01-01"],"value":["1202.659","1100.67","1029.038","895.802","883.847","978.188","1065.716","1201.443","1264.393","1222.966","1320.924","1435.656","1690.844","2008.853","2349.125","2535.744","2509.982","2221.51","2199.313","2291.804","2277.883","2476.097","2677.414","2786.602","2915.598","2900.038","3107.796","3175.622","3243.263","3215.954","3438.007","3527.996","3620.292","3843.844","4012.113","4243.962","4519.102","4812.8","4944.919","5188.802","5348.589","5358.035","5537.202","5829.057","6170.549","6145.506","6118.231","6454.905","6758.055","7127.776","7375.014","7355.39","7528.705","7397.849","7730.794","8280.163","8598.506","8876.436","9179.633","9569.566","9920.542","10120.114","10100.371","10452.604","10738.246","11155.769","11459.835","11893.706","12408.947","12954.457","13583.582","14144.962","14294.624","14529.585","14949.293","15542.707","16075.089","16483.539","16867.78","16940.097","16514.062","17013.917","17306.204","17686.281","18049.236","18499.72","19021.225","19372.908","19905.052","20490.925","20977.326","20451.945","21590.414","21992.687"]}},"options":{"mode":"view","modes":["text","tree","table"]}},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-48c9e86dbd39665df362">{"x":{"data":{"realtime_start":"2024-02-04","realtime_end":"2024-02-04","observation_start":"1600-01-01","observation_end":"9999-12-31","units":"lin","output_type":1,"file_type":"json","order_by":"observation_date","sort_order":"asc","count":94,"offset":0,"limit":100000,"observations":{"realtime_start":["2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04"],"realtime_end":["2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04","2024-02-04"],"date":["1929-01-01","1930-01-01","1931-01-01","1932-01-01","1933-01-01","1934-01-01","1935-01-01","1936-01-01","1937-01-01","1938-01-01","1939-01-01","1940-01-01","1941-01-01","1942-01-01","1943-01-01","1944-01-01","1945-01-01","1946-01-01","1947-01-01","1948-01-01","1949-01-01","1950-01-01","1951-01-01","1952-01-01","1953-01-01","1954-01-01","1955-01-01","1956-01-01","1957-01-01","1958-01-01","1959-01-01","1960-01-01","1961-01-01","1962-01-01","1963-01-01","1964-01-01","1965-01-01","1966-01-01","1967-01-01","1968-01-01","1969-01-01","1970-01-01","1971-01-01","1972-01-01","1973-01-01","1974-01-01","1975-01-01","1976-01-01","1977-01-01","1978-01-01","1979-01-01","1980-01-01","1981-01-01","1982-01-01","1983-01-01","1984-01-01","1985-01-01","1986-01-01","1987-01-01","1988-01-01","1989-01-01","1990-01-01","1991-01-01","1992-01-01","1993-01-01","1994-01-01","1995-01-01","1996-01-01","1997-01-01","1998-01-01","1999-01-01","2000-01-01","2001-01-01","2002-01-01","2003-01-01","2004-01-01","2005-01-01","2006-01-01","2007-01-01","2008-01-01","2009-01-01","2010-01-01","2011-01-01","2012-01-01","2013-01-01","2014-01-01","2015-01-01","2016-01-01","2017-01-01","2018-01-01","2019-01-01","2020-01-01","2021-01-01","2022-01-01"],"value":["1202.659","1100.67","1029.038","895.802","883.847","978.188","1065.716","1201.443","1264.393","1222.966","1320.924","1435.656","1690.844","2008.853","2349.125","2535.744","2509.982","2221.51","2199.313","2291.804","2277.883","2476.097","2677.414","2786.602","2915.598","2900.038","3107.796","3175.622","3243.263","3215.954","3438.007","3527.996","3620.292","3843.844","4012.113","4243.962","4519.102","4812.8","4944.919","5188.802","5348.589","5358.035","5537.202","5829.057","6170.549","6145.506","6118.231","6454.905","6758.055","7127.776","7375.014","7355.39","7528.705","7397.849","7730.794","8280.163","8598.506","8876.436","9179.633","9569.566","9920.542","10120.114","10100.371","10452.604","10738.246","11155.769","11459.835","11893.706","12408.947","12954.457","13583.582","14144.962","14294.624","14529.585","14949.293","15542.707","16075.089","16483.539","16867.78","16940.097","16514.062","17013.917","17306.204","17686.281","18049.236","18499.72","19021.225","19372.908","19905.052","20490.925","20977.326","20451.945","21590.414","21992.687"]}},"options":{"mode":"view","modes":["text","tree","table"]}},"evals":[],"jsHooks":[]}</script>
 ```
 
 Luckily, this particular list object isn't too complicated. We can see that what we're really interested in, is the `fred$observations` sub-element. I'll use `purrr::pluck()` to extract this element (there are various other ways to do this) and then coerce it to a tibble.
@@ -303,16 +303,16 @@ fred
 ## # A tibble: 94 × 4
 ##    realtime_start realtime_end date       value   
 ##    <chr>          <chr>        <chr>      <chr>   
-##  1 2023-10-10     2023-10-10   1929-01-01 1202.659
-##  2 2023-10-10     2023-10-10   1930-01-01 1100.67 
-##  3 2023-10-10     2023-10-10   1931-01-01 1029.038
-##  4 2023-10-10     2023-10-10   1932-01-01 895.802 
-##  5 2023-10-10     2023-10-10   1933-01-01 883.847 
-##  6 2023-10-10     2023-10-10   1934-01-01 978.188 
-##  7 2023-10-10     2023-10-10   1935-01-01 1065.716
-##  8 2023-10-10     2023-10-10   1936-01-01 1201.443
-##  9 2023-10-10     2023-10-10   1937-01-01 1264.393
-## 10 2023-10-10     2023-10-10   1938-01-01 1222.966
+##  1 2024-02-04     2024-02-04   1929-01-01 1202.659
+##  2 2024-02-04     2024-02-04   1930-01-01 1100.67 
+##  3 2024-02-04     2024-02-04   1931-01-01 1029.038
+##  4 2024-02-04     2024-02-04   1932-01-01 895.802 
+##  5 2024-02-04     2024-02-04   1933-01-01 883.847 
+##  6 2024-02-04     2024-02-04   1934-01-01 978.188 
+##  7 2024-02-04     2024-02-04   1935-01-01 1065.716
+##  8 2024-02-04     2024-02-04   1936-01-01 1201.443
+##  9 2024-02-04     2024-02-04   1937-01-01 1264.393
+## 10 2024-02-04     2024-02-04   1938-01-01 1222.966
 ## # ℹ 84 more rows
 ```
 
@@ -343,7 +343,6 @@ fred %>%
 ```
 
 ![](07-web-apis_files/figure-html/fred6-1.png)<!-- -->
-
 
 ### Aside: Safely store and use API keys as environment variables
 
@@ -378,7 +377,7 @@ FRED_API_KEY
 ## [1] "abcdefghijklmnopqrstuvwxyz0123456789"
 ```
 
-**Important:** While this approach is very simple, note that in practice the `Sys.setenv()` part should only be run directly in your R console. *Never* include code chunks with sensitive `Sys.setenv()` calls in an R Markdown file or other shared documents.^[Since the new R environment variable is defined for the duration of the current session, R Markdown will have access to this variable irrespective of whether it was defined in the R Markdown script or not.] That would entirely defeat the purpose! Apart from the annoyance of having to manually set my API key each time I start a new R session, this is one reason that I prefer the next approach of persisting environment variables across sessions...
+**Important:** While this approach is very simple, note that in practice the `Sys.setenv()` part should only be run directly in your R console. **_Never_** include code chunks with sensitive `Sys.setenv()` calls in an R Markdown file or other shared documents.^[Since the new R environment variable is defined for the duration of the current session, R Markdown will have access to this variable irrespective of whether it was defined in the R Markdown script or not.] That would entirely defeat the purpose! Apart from the annoyance of having to manually set my API key each time I start a new R session, this is one reason that I prefer the next approach of persisting environment variables across sessions...
 
 #### 2) Set an environment variable that persist across R sessions
 
@@ -396,7 +395,7 @@ This will open up your `~/.Renviron` file in a new RStudio window, which you can
 FRED_API_KEY="abcdefghijklmnopqrstuvwxyz0123456789" ## Replace with your actual key
 ```
 
-Once you have saved your changes, you'll need to refresh so that this new environment variable is available in the current session. You could also restart R, but that's overkill.
+Once you have saved your changes, you'll need to refresh so that this new environment variable is available in the current session. You could also restart R.
 
 
 ```r
@@ -417,20 +416,63 @@ params = list(
 
 We're going to be revisiting (and setting) environment variables once we get to the cloud computation part of the course. So please make sure that you've understood this section and that your new FRED API key works.
 
-### Use a package
+## Application 2a. API wrapper packages and the Census
 
-One of the great features about the R (and data science community in general) is that someone has probably written a package that does all the heavy API lifting for you. We'll come across many examples during the remainder of this course, but for the moment I want to flag the **fredr** package ([link](http://sboysel.github.io/fredr/index.html)). Take a look at the "Get started" page to see how you could access the same GDP data as above, but this time going through a package. 
+Imagine I asked you to work out how to use the Census API (as I do on the problem set). 
 
-The same goes for **censusapi** or **tidycensus**, which you can use on your problem set. These packages allow you to access data from the Census API. **censusapi** is a more general package that allows you to access any Census API endpoint. **tidycensus** is a more specific package that allows you to access a subset of the Census API endpoints (e.g. American Community Survey and the Decennial census), but does so in a more user-friendly way. As is always the case, you can use **httr** or **httr2** to do the same thing! See the [Census Available API](https://www.census.gov/data/developers/data-sets.html) webpage for more on how to access different API endpoints.
+You can of course do it yourself! 
 
-Do you learn to learn by doing? Well you're in luck! Many of these packages include a `show_call` option to see the actual API call that is being used. This can help you learn the ins and outs, so that you can eventually write your own API calls from scratch. For example, here's how to see the API call that **tidycensus** is using to get Median Household Income in the Past 12 Months (inflation-adjusted dollars) from 5-year American Community Survey for each county in Maine in 2017:
+1. Read the [Census API developer docs](https://www.census.gov/data/developers/guidance/api-user-guide.html).
+2. Identify the endpoint path that you're interested in.
+3. Identify the parameters that you need to pass to the endpoint.
+4. Use the `httr::GET()` function to request the data.
+5. Use the `httr::content()` function to extract the content from the response.
+6. Use the `jsonlite::fromJSON()` function to convert the content into an R object.
+
+But doesn't it seem like someone has probably already written a package that does all of this for you? 
+
+One of the great features about the R (and data science community in general) is that someone has probably written a package that does all the heavy API lifting for you. We'll come across many examples during the remainder of this course, but for the moment I want to flag a few: 
+
+- **censusapi** ([link](https://www.hrecht.com/censusapi/articles/getting-started.html)) is a package that allows you to access any Census API endpoint.
+
+- **tidycensus** ([link](https://walker-data.com/tidycensus/)) is a package that allows you to access a subset of the Census API endpoints (e.g. American Community Survey and the Decennial census), but does so in a more user-friendly way.
+  - **tidycensus** includes a `show_call` option to see the actual API call that is being used, so that you can eventually write your own API calls from scratch.
+
+- **fredr** ([link](http://sboysel.github.io/fredr/index.html)) is a package that allows you to access FRED data. The "Get started" page shows you how to access the same GDP data as above, but this time going through the package.
+
+### How do you figure out series names?!
+
+Curious how to figure out variable names in these APIs? Technically they follow a pattern based on the relevant table code and variable code, but it's not always easy to figure out. 
+
+Here are some options:
+
+1. Read the documentation. For example, each Census surgvey product Census Bureau has a variable lookup tool for each year that you can use to search for variables. The syntax of the link is simple: https://api.census.gov/data/<year>/<survey>/<sub-survey>/variables.html.
+  - **Warning**: These lists are often poorly formatted and difficult to read. Be patient. 
+
+2. If you have trouble finding the URL for the look up tool, **tidycensus** offers the alternative: `load_variables(YEAR, "sub-survey")` to load the variables into R. As a warning, it has errors due to constant Census API changes.
+
+3. Ask ChatGPT or GitHub CoPilot to tell you the code for a given variable. 
+
+Want to find a list of all the Census APIs? Navigate to: https://api.census.gov/data.html. If you want to look within a specific year, https://api.census.gov/data/<year>.html, and so on.
+
+### Example
+
+Let's say we want to get the median household income for each county in Maine in 2017. Well first, a lesson on the Census American Community Survey. The ACS is a yearly survey that the Census Bureau conducts to get a better understanding of the US population. It's a big deal. The 5-year ACS is a rolling average of the last 5 years of the ACS. It's the most detailed of the ACS products, but it's also the most lagged. The 1-year ACS is the least detailed, but it's the most current. The 5-year ACS is the most detailed, but it's the most lagged. The 3-year ACS is in the middle.
+
+If we wanted to see the list of variables in this survey for 2017, we would use the URL: [https://api.census.gov/data/**2017**/**acs**/**acs5**/variables.html](https://api.census.gov/data/2017/acs/acs5/variables.html) following the rule above. 
+
+<img src="pics/census_acs5_2017_dictionary.png" width="100%" />
+
+There are many options for median household income. I've narrowed to `B19013_001E`, which seems to match the Median Household Income in the Past 12 months!^[A tricky thing about the Census API is that the `E` in that name stands for 'Estimate,' 'M' stands for 'Margin of Error,' and 'PE' stands for 'Percentage Estimate.' By default, **tidycensus** will returns the estimate and margin of error for each variable. **tidycensus** also mixes up where the `E` and `M` are in the variable name due to changes in Census schema over time.]
+
+Here's an API call run through **tidycensus** is using to get Median Household Income in the Past 12 Months (inflation-adjusted dollars) from 5-year American Community Survey for each county in Maine in 2017:
 
 
 ```r
 #library(tidycensus) # Already loaded
 get_acs(geography = "county", 
   state="ME", 
-  variables = "B19013_001",
+  variables = "B19013_001E",
   year = 2017, 
   show_call = TRUE,
   survey='acs5')
@@ -466,20 +508,34 @@ get_acs(geography = "county",
 ## 16 23031 York County, Maine         B19013_001    62618  1559
 ```
 
-Curious how to figure out variable names in these APIs? Here are some options:
+### Spoiler: Tigerfiles and mapping
 
-1. Read the documentation. For example, the Census Bureau has a [variable lookup tool](https://api.census.gov/data/2017/acs/acs5/variables.html) for each year that you can use to search for variables. The syntax of the link is simple: https://api.census.gov/data/<year>/<survey>/<sub-survey>/variables.html But be warned, these lists are large and may freeze your browser if you have too much happening on your computer. 
-2. Ask ChatGPT or GitHub CoPilot to tell you the code for a given variable. 
+The **tidycensus** functions let you easily map the data you've downloaded by having an option `geometry = TRUE`. This will return a `sf` object that you can plot using `ggplot2`. We'll get into `sf` objects in the future, but for now just know that they are a special type of data frame that is used for spatial data.
 
-Want to find a list of all the Census APIs? Navigate to: https://api.census.gov/data.html. If you want to look within a specific year, https://api.census.gov/data/<year>.html, and so on.
+I don't show output here to save sapce, but you can run the following code to see the geometry of the counties in Maine:
 
-## Application 3: World rugby rankings
 
-Our final application will involve a more challenging case where the API endpoint is *hidden from view*. In particular, I'm going to show you how to access data on [**World Rugby rankings**](https://www.world.rugby/tournaments/rankings/mru). Because --- real talk --- what's more important than teaching Americans about rugby?
+```r
+#library(tidycensus) # Already loaded
+get_acs(geography = "county", 
+  state="ME", 
+  variables = "B19013_001E",
+  year = 2017, 
+  survey='acs5',
+  geometry = TRUE) 
+```
+
+### Challenge: 
+
+Figure out how to do the same thing without the **tidycensus** package.
+
+## Bonus Application 4: World rugby rankings
+
+Our final application will involve a more challenging case where the API endpoint is *hidden from view*. In particular, I'm going to show you how to access data on [**World Rugby rankings**](https://www.world.rugby/tournaments/rankings/mru). Because Grant wanted to teach Americans about rugby?
 
 *<b>Disclaimer:</b> World Rugby's [Terms & Conditions](https://www.world.rugby/terms-and-conditions) permits data downloading for own non-commerical use. It seems reasonable to me that these lecture notes fall under this use category.^[If you're reading this from World Rugby and disagree, please [contact me](mailto:kcoombs@bates.edu).] None of the methods presented below should be construed as an endorsement of data acquisition and use that violates these terms. Again: Just because you can scrape something, doesn't mean you should.*
 
-Start by taking a look at the complicated structure of the website in a [live session](https://www.world.rugby/tournaments/rankings/mru). Pay attention to the various tables and other interactive elements like calendars. Now take a minute or two for a quick challenge: Try to scrape the full country rankings using the `rvest` + CSS selectors approach that we practiced last time...
+Start by taking a look at the complicated structure of the website in a [live session](https://www.world.rugby/tournaments/rankings/mru). Pay attention to the various tables and other interactive elements like calendars. Now take a minute or two for a quick challenge: Try to scrape the full country rankings using the `rvest` + CSS selectors approach that we practiced last time...^[Disregard if we have not yet covered CSS scraping!]
 
 .
 

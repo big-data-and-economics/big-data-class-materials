@@ -255,7 +255,7 @@ fred =
 typeof(fred)
 ```
 
-It turns that the previous step has yielded a list object in R.^[complex nested lists are the law of the land when it comes to json information. don't worry too much about this now; just rest assured that r is well suited to handling these kinds of objects. it's one reason why r and json play so well together. we'll see more examples later in the course when we start working with programming and spatial data.] so now we need to inspect this list to better understand its structure before  extracting the information that we care about (and coerce it to a data frame.) I'd use the base `View()` function to do this in an interactive r session. but that won't work as well for these lecture notes. Instead, I'll use the `listviewer::jsonedit()` function to create an interactive widget that renders nicely in knitted r markdown documents.
+It turns that the previous step has yielded a list object in R.^[complex nested lists are the law of the land when it comes to json information. don't worry too much about this now; just rest assured that R is well suited to handling these kinds of objects. it's one reason why r and json play so well together. we'll see more examples later in the course when we start working with programming and spatial data.] so now we need to inspect this list to better understand its structure before  extracting the information that we care about (and coerce it to a data frame.) I'd use the base `View()` function to do this in an interactive r session. but that won't work as well for these lecture notes. Instead, I'll use the `listviewer::jsonedit()` function to create an interactive widget that renders nicely in knitted r markdown documents.
 
 ```{r fred3b, cache=F, out.width="100%", out.height="10%"}
 # View(fred) ## What I'd use in an interactive R session
@@ -300,7 +300,6 @@ fred %>%
     )
 ```
 
-
 ### Aside: Safely store and use API keys as environment variables
 
 In the above example, I assumed that you would just replace the "YOUR_FRED_KEY" holder text with your actual API key. This is obviously not very secure or scalable, since it means that you can't share your R script without giving away your key.^[The same is true for compiled R Markdown documents like these lecture notes.] Luckily, there's an easy way to safely store and use sensitive information like API keys or passwords: Simply save them as an R [**environment variables**](https://stat.ethz.ch/R-manual/R-devel/library/base/html/EnvVar.html). There are two, closely related approaches:
@@ -328,7 +327,7 @@ FRED_API_KEY = Sys.getenv("FRED_API_KEY")
 FRED_API_KEY
 ```
 
-**Important:** While this approach is very simple, note that in practice the `Sys.setenv()` part should only be run directly in your R console. *Never* include code chunks with sensitive `Sys.setenv()` calls in an R Markdown file or other shared documents.^[Since the new R environment variable is defined for the duration of the current session, R Markdown will have access to this variable irrespective of whether it was defined in the R Markdown script or not.] That would entirely defeat the purpose! Apart from the annoyance of having to manually set my API key each time I start a new R session, this is one reason that I prefer the next approach of persisting environment variables across sessions...
+**Important:** While this approach is very simple, note that in practice the `Sys.setenv()` part should only be run directly in your R console. **_Never_** include code chunks with sensitive `Sys.setenv()` calls in an R Markdown file or other shared documents.^[Since the new R environment variable is defined for the duration of the current session, R Markdown will have access to this variable irrespective of whether it was defined in the R Markdown script or not.] That would entirely defeat the purpose! Apart from the annoyance of having to manually set my API key each time I start a new R session, this is one reason that I prefer the next approach of persisting environment variables across sessions...
 
 #### 2) Set an environment variable that persist across R sessions
 
@@ -345,7 +344,7 @@ This will open up your `~/.Renviron` file in a new RStudio window, which you can
 FRED_API_KEY="abcdefghijklmnopqrstuvwxyz0123456789" ## Replace with your actual key
 ```
 
-Once you have saved your changes, you'll need to refresh so that this new environment variable is available in the current session. You could also restart R, but that's overkill.
+Once you have saved your changes, you'll need to refresh so that this new environment variable is available in the current session. You could also restart R.
 
 ```{r readRenviron, eval = F}
 ## Optional: Refresh your .Renviron file.  
@@ -364,38 +363,96 @@ params = list(
 
 We're going to be revisiting (and setting) environment variables once we get to the cloud computation part of the course. So please make sure that you've understood this section and that your new FRED API key works.
 
-### Use a package
+## Application 3. API wrapper packages and the Census
 
-One of the great features about the R (and data science community in general) is that someone has probably written a package that does all the heavy API lifting for you. We'll come across many examples during the remainder of this course, but for the moment I want to flag the **fredr** package ([link](http://sboysel.github.io/fredr/index.html)). Take a look at the "Get started" page to see how you could access the same GDP data as above, but this time going through a package. 
+Imagine I asked you to work out how to use the Census API (as I do on the problem set). 
 
-The same goes for **censusapi** or **tidycensus**, which you can use on your problem set. These packages allow you to access data from the Census API. **censusapi** is a more general package that allows you to access any Census API endpoint. **tidycensus** is a more specific package that allows you to access a subset of the Census API endpoints (e.g. American Community Survey and the Decennial census), but does so in a more user-friendly way. As is always the case, you can use **httr** or **httr2** to do the same thing! See the [Census Available API](https://www.census.gov/data/developers/data-sets.html) webpage for more on how to access different API endpoints.
+You can of course do it yourself! 
 
-Do you learn to learn by doing? Well you're in luck! Many of these packages include a `show_call` option to see the actual API call that is being used. This can help you learn the ins and outs, so that you can eventually write your own API calls from scratch. For example, here's how to see the API call that **tidycensus** is using to get Median Household Income in the Past 12 Months (inflation-adjusted dollars) from 5-year American Community Survey for each county in Maine in 2017:
+1. Read the [Census API developer docs](https://www.census.gov/data/developers/guidance/api-user-guide.html).
+2. Identify the endpoint path that you're interested in.
+3. Identify the parameters that you need to pass to the endpoint.
+4. Use the `httr::GET()` function to request the data.
+5. Use the `httr::content()` function to extract the content from the response.
+6. Use the `jsonlite::fromJSON()` function to convert the content into an R object.
+
+But doesn't it seem like someone has probably already written a package that does all of this for you? 
+
+One of the great features about the R (and data science community in general) is that someone has probably written a package that does all the heavy API lifting for you. We'll come across many examples during the remainder of this course, but for the moment I want to flag a few: 
+
+- **censusapi** ([link](https://www.hrecht.com/censusapi/articles/getting-started.html)) is a package that allows you to access any Census API endpoint.
+
+- **tidycensus** ([link](https://walker-data.com/tidycensus/)) is a package that allows you to access a subset of the Census API endpoints (e.g. American Community Survey and the Decennial census), but does so in a more user-friendly way.
+  - **tidycensus** includes a `show_call` option to see the actual API call that is being used, so that you can eventually write your own API calls from scratch.
+
+- **fredr** ([link](http://sboysel.github.io/fredr/index.html)) is a package that allows you to access FRED data. The "Get started" page shows you how to access the same GDP data as above, but this time going through the package.
+
+### How do you figure out series names?!
+
+Curious how to figure out variable names in these APIs? Technically they follow a pattern based on the relevant table code and variable code, but it's not always easy to figure out. 
+
+Here are some options:
+
+1. Read the documentation. For example, each Census surgvey product Census Bureau has a variable lookup tool for each year that you can use to search for variables. The syntax of the link is simple: https://api.census.gov/data/<year>/<survey>/<sub-survey>/variables.html.
+  - **Warning**: These lists are often poorly formatted and difficult to read. Be patient. 
+
+2. If you have trouble finding the URL for the look up tool, **tidycensus** offers the alternative: `load_variables(YEAR, "sub-survey")` to load the variables into R. As a warning, it has errors due to constant Census API changes.
+
+3. Ask ChatGPT or GitHub CoPilot to tell you the code for a given variable. 
+
+Want to find a list of all the Census APIs? Navigate to: https://api.census.gov/data.html. If you want to look within a specific year, https://api.census.gov/data/<year>.html, and so on.
+
+### Example
+
+Let's say we want to get the median household income for each county in Maine in 2017. Well first, a lesson on the Census American Community Survey. The ACS is a yearly survey that the Census Bureau conducts to get a better understanding of the US population. It's a big deal. The 5-year ACS is a rolling average of the last 5 years of the ACS. It's the most detailed of the ACS products, but it's also the most lagged. The 1-year ACS is the least detailed, but it's the most current. The 5-year ACS is the most detailed, but it's the most lagged. The 3-year ACS is in the middle.
+
+If we wanted to see the list of variables in this survey for 2017, we would use the URL: [https://api.census.gov/data/**2017**/**acs**/**acs5**/variables.html](https://api.census.gov/data/2017/acs/acs5/variables.html) following the rule above. 
+
+```{r census_dictionary, echo=FALSE, out.width="100%", message=FALSE, warning=FALSE}
+knitr::include_graphics('pics/census_acs5_2017_dictionary.png')
+```
+
+There are many options for median household income. I've narrowed to `B19013_001E`, which seems to match the Median Household Income in the Past 12 months!^[A tricky thing about the Census API is that the `E` in that name stands for 'Estimate,' 'M' stands for 'Margin of Error,' and 'PE' stands for 'Percentage Estimate.' By default, **tidycensus** will returns the estimate and margin of error for each variable. **tidycensus** also mixes up where the `E` and `M` are in the variable name due to changes in Census schema over time.]
+
+Here's an API call run through **tidycensus** is using to get Median Household Income in the Past 12 Months (inflation-adjusted dollars) from 5-year American Community Survey for each county in Maine in 2017:
 
 ```{r tidycensus}
 #library(tidycensus) # Already loaded
 get_acs(geography = "county", 
   state="ME", 
-  variables = "B19013_001",
+  variables = "B19013_001E",
   year = 2017, 
   show_call = TRUE,
   survey='acs5')
 ```
 
-Curious how to figure out variable names in these APIs? Here are some options:
+### Spoiler: Tigerfiles and mapping
 
-1. Read the documentation. For example, the Census Bureau has a [variable lookup tool](https://api.census.gov/data/2017/acs/acs5/variables.html) for each year that you can use to search for variables. The syntax of the link is simple: https://api.census.gov/data/<year>/<survey>/<sub-survey>/variables.html But be warned, these lists are large and may freeze your browser if you have too much happening on your computer. 
-2. Ask ChatGPT or GitHub CoPilot to tell you the code for a given variable. 
+The **tidycensus** functions let you easily map the data you've downloaded by having an option `geometry = TRUE`. This will return a `sf` object that you can plot using `ggplot2`. We'll get into `sf` objects in the future, but for now just know that they are a special type of data frame that is used for spatial data.
 
-Want to find a list of all the Census APIs? Navigate to: https://api.census.gov/data.html. If you want to look within a specific year, https://api.census.gov/data/<year>.html, and so on.
+I don't show output here to save sapce, but you can run the following code to see the geometry of the counties in Maine:
 
-## Application 3: World rugby rankings
+```{r tidycensus_geometry, eval=FALSE}
+#library(tidycensus) # Already loaded
+get_acs(geography = "county", 
+  state="ME", 
+  variables = "B19013_001E",
+  year = 2017, 
+  survey='acs5',
+  geometry = TRUE) 
+```
 
-Our final application will involve a more challenging case where the API endpoint is *hidden from view*. In particular, I'm going to show you how to access data on [**World Rugby rankings**](https://www.world.rugby/tournaments/rankings/mru). Because --- real talk --- what's more important than teaching Americans about rugby?
+### Challenge: 
+
+Figure out how to do the same thing without the **tidycensus** package.
+
+## Bonus Application 4: World rugby rankings
+
+Our final application will involve a more challenging case where the API endpoint is *hidden from view*. In particular, I'm going to show you how to access data on [**World Rugby rankings**](https://www.world.rugby/tournaments/rankings/mru). Because Grant wanted to teach Americans about rugby?
 
 *<b>Disclaimer:</b> World Rugby's [Terms & Conditions](https://www.world.rugby/terms-and-conditions) permits data downloading for own non-commerical use. It seems reasonable to me that these lecture notes fall under this use category.^[If you're reading this from World Rugby and disagree, please [contact me](mailto:kcoombs@bates.edu).] None of the methods presented below should be construed as an endorsement of data acquisition and use that violates these terms. Again: Just because you can scrape something, doesn't mean you should.*
 
-Start by taking a look at the complicated structure of the website in a [live session](https://www.world.rugby/tournaments/rankings/mru). Pay attention to the various tables and other interactive elements like calendars. Now take a minute or two for a quick challenge: Try to scrape the full country rankings using the `rvest` + CSS selectors approach that we practiced last time...
+Start by taking a look at the complicated structure of the website in a [live session](https://www.world.rugby/tournaments/rankings/mru). Pay attention to the various tables and other interactive elements like calendars. Now take a minute or two for a quick challenge: Try to scrape the full country rankings using the `rvest` + CSS selectors approach that we practiced last time...^[Disregard if we have not yet covered CSS scraping!]
 
 .
 
