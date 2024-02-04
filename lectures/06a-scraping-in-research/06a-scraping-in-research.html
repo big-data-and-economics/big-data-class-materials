@@ -66,17 +66,29 @@ name: prologue
 ---
 # Prologue
 
-- Plan for today
+- We've spent the first month of this class on learning: 
+  - empirical organization skills ("Clean Code"), 
+  - basics of R
+  - basics of data wrangling and tidy data
 
-  - What is scraping? 
+- Now we're going to learn about a data acquisition skill: **scraping**
 
-  - Contrast Client-side and Server-side scraping
+- Essentially, we're going to learn how to get data from the web
 
-  - Examples of scraping in economics research
+- These data are usually messy in one way or another, so it'll give you something to tidy
 
-  - Learn by doing with APIs (CSS will happen later -- potentially end of semester)
+---
+# Plan for today
 
-  - Ethical considerations
+- What is scraping? 
+
+- Contrast Client-side and Server-side scraping
+
+- Examples of scraping in economics research
+
+- Ethical considerations
+
+- Learn by doing with APIs (CSS will happen later -- potentially end of semester)
 
 ---
 # Check-in
@@ -421,6 +433,40 @@ name: client-side-scraping
   - It's like a password, but it's not a password
   - It tracks who is using the API and how much they're using it
   - Example: `asdfjaw523a3523414at43sad`
+
+---
+# Hide your API Key
+
+- In general, you don't want to share your API key with anyone
+
+- Instead, you can make it an environment variable either for a single session or permanently
+
+
+```r
+Sys.setenv(FRED_API_KEY_TEST="abcdefghijklmnopqrstuvwxyz0123456789") 
+FRED_API_KEY_TEST = Sys.getenv("FRED_API_KEY_TEST")
+FRED_API_KEY_TEST
+```
+
+```
+## [1] "abcdefghijklmnopqrstuvwxyz0123456789"
+```
+
+- You can also permanently add it to your `.Renviron` file, by running the `edit_r_environ()` function from the **usethis** package
+
+
+```r
+usethis::edit_r_environ() 
+```
+
+- Then just type in `FRED_API_KEY_TEST=abcdefghijklmnopqrstuvwxyz0123456789` and save the file and re-read using 
+
+
+```r
+readRenviron("~/.Renviron") 
+```
+
+- Any time you need it, you can just call `Sys.getenv("FRED_API_KEY_TEST")`
 
 ---
 # Popular APIs
