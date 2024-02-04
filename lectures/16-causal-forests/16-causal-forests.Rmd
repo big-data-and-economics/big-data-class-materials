@@ -2,7 +2,7 @@
 title: Big Data and Economics
 subtitle: Causal Forests
 author: Kyle Coombs
-date: "Bates College | [ECON/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)"
+date: "Bates College | [ECON/DCS 368](https://github.com/-big-data-and-economics)"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts,css/ou-colors.css] 

@@ -2,7 +2,7 @@
 title: Big Data and Economics
 subtitle: Bootstrapping, Functions, and Parallel Programming
 author: Kyle Coombs
-date: "Bates College | [ECON/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)"
+date: "Bates College | [ECON/DCS 368](https://github.com/-big-data-and-economics)"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts,css/ou-colors.css] 
@@ -814,7 +814,7 @@ furrr_boot %>%
 
 - Better yet, learn to do it in parallel
 
-- Navigate to the lecture activity [13a-bootstrapping-functions-practice](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/blob/main/lectures/12a-rdd-class-sizes/13a-bootstrapping-practice.Rmd)
+- Navigate to the lecture activity [13a-bootstrapping-functions-practice](https://github.com/-big-data-and-economics/big-data-class-materials/blob/main/lectures/12a-rdd-class-sizes/13a-bootstrapping-practice.Rmd)
 
 ---
 class: inverse, center, middle

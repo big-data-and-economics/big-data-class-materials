@@ -3,7 +3,7 @@ title: "Big Data and Economics"
 # subtitle: "<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>"
 subtitle: "Lecture 5: Data cleaning & wrangling: (1) Tidyverse"
 author: "Grant McDermott, adapted by Kyle Coombs"
-date: "Bates College | [EC/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
+date: "Bates College | [EC/DCS 368](https://github.com/-big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts] 
