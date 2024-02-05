@@ -271,7 +271,11 @@ Throughout the course you will engage in problem sets that deal with actual data
 
 Your problem sets are (generally) graded on four criteria: 
 
-1. Submission via GitHub (10%): Did you use GitHub to stage, commit, and push your code? Did you submit the assignment on time? Did you submit the assignment in the correct format?
+1. Submission via GitHub (10%): Did you use GitHub to stage, commit, and push your code? Did you submit the assignment on time? Did you submit the assignment in the correct format?   
+    - If you are unable to submit via GitHub pushing/pulling, you can create a zip folder of your problem set and upload it as a single file to your repository.
+    - Zip instructions: https://www.wikihow.com/Make-a-Zip-File
+    - Click `Add file` in your repository to upload the zip file. 
+    - You will forgo this 10% of your grade. 
 2. Quality of code (30%): Is it well-commented? Is it easy to follow? Can I run it?
     - Any scripts needed to run your code should be included in the repository and sourced in the `.Rmd` file
     - Write code that automates as much of the process as possible. For example, if you need to download a file, write code that downloads the file automation
