@@ -3,8 +3,8 @@ title: "Big Data and Economics"
 subtitle: "Lecture 6: Webscraping: (1) Server-side and CSS"
 author:
   name: Kyle Coombs
-  affiliation: Bates College | [ECON 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)
-# date: Lecture 6  #"04 February 2024"
+  affiliation: Bates College | [ECON 368](https://github.com/-big-data-and-economics/big-data-class-materials)
+# date: Lecture 6  #"08 February 2024"
 output: 
   html_document:
     theme: flatly
@@ -44,7 +44,7 @@ knit: (function(inputFile, encoding) {
 
 ### External software
 
-Today we'll be using [SelectorGadget](https://selectorgadget.com/), which is a Chrome extension that makes it easy to discover CSS selectors.  (Install the extension directly [here](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb).) Please note that SelectorGadget is only available for Chrome. If you prefer using Firefox, then you can try [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/).
+Today we'll be using [SelectorGadget](https://selectorgadget.com/), which is a Chrome extension that makes it easy to discover CSS selectors.  (Install the extension directly [here](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb).) Please note that SelectorGadget is only available for Chrome. If you prefer using Firefox, then you can try [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/). The student presentation will go in depth.
 
 ### R packages 
 

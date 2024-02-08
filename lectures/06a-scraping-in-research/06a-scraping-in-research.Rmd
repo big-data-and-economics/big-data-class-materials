@@ -241,16 +241,16 @@ There are three ways to data off the web:
 1. **click-and-download** on the internet as a "flat" file, like a CSV or Excel file
   - What you're used to
 
-2. **Server-side** websites that sends HTML and JavaScript to your browser, which then renders the page
-  - People often call this "scraping"
-  - All the data is there, but not in a tidy format
-  - **Key concepts**: CSS, Xpath, HTML
-
-3. **Client-side**_ websites contain an empty template that _request_ data from a server and then fills in the template with the data 
+2. **Client-side**_ websites contain an empty template that _request_ data from a server and then fills in the template with the data 
   - The request is sent to an API (application programming interface) endpoint
   - Technically you can just source right from the API endpoint (if you can find it) and skip the website altogether
   - I consider this a form of scraping
   - **Key concepts**: APIs, API endpoints
+
+3. **Server-side** websites that sends HTML and JavaScript to your browser, which then renders the page
+  - People often call this "scraping"
+  - All the data is there, but not in a tidy format
+  - **Key concepts**: CSS, Xpath, HTML
 
 - Key takeaway: if there's a structure to how the data is presented, you can exploit it to get the data
 

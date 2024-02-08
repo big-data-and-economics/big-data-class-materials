@@ -46,7 +46,7 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300)
 
 ### External software
 
-Today we'll be using [SelectorGadget](https://selectorgadget.com/), which is a Chrome extension that makes it easy to discover CSS selectors.  (Install the extension directly [here](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb).) Please note that SelectorGadget is only available for Chrome. If you prefer using Firefox, then you can try [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/).
+Today we'll be using [SelectorGadget](https://selectorgadget.com/), which is a Chrome extension that makes it easy to discover CSS selectors.  (Install the extension directly [here](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb).) Please note that SelectorGadget is only available for Chrome. If you prefer using Firefox, then you can try [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/). The student presentation will go in depth.
 
 ### R packages 
 
@@ -106,7 +106,7 @@ If you scrape the site over and over -- likely if you are collecting big data --
 
 ### Caveat: Stability and dependencies
 
-Webscraping is extremely trick and code may stop working after just a small change to the underlying HTML. Organizations are constantly rewriting their webpages, which can break webscraping code -- whether intentionally or not. This is why it is important to be able to read HTML and CSS. You can often find the information you want by looking at the HTML and CSS. For example, these lecture notes used to feature a Craigslist example, but that company has made it far harder to scrape since 2021, so I need to find a new scraping example. (NYT below.) 
+Webscraping is extremely tricky and code may stop working after just a small change to the underlying HTML. Organizations are constantly rewriting their webpages, which can break webscraping code -- whether intentionally or not. This is why it is important to be able to read HTML and CSS. You can often find the information you want by looking at the HTML and CSS. For example, these lecture notes used to feature a Craigslist example, but that company has made it far harder to scrape since 2021, so I switched to the NYT example.
 
 ## Webscraping with **rvest** (server-side)
 

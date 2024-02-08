@@ -86,7 +86,7 @@ Recall that websites or applications that are built using a **client-side** fram
 - If your request if valid, then the server issues a *response* that fetches the necessary data for you and renders the page dynamically in your browser.
 - The page that you actually see in your browser is thus a mix of static content and dynamic information that is rendered by your browser (i.e. the "client").
 
-All of this requesting, responding and rendering takes places through the host application's **API** (or **A**pplication **P**rogram **I**nterface). Time for a student presentation to go over APIs in more depth...
+All of this requesting, responding and rendering takes places through the host application's **API** (or **A**pplication **P**rogram **I**nterface). 
 
 ### A bit more about API endpoints
 
