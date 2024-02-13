@@ -55,3 +55,33 @@ Important folder locations to know:
 - writing folder: drafts for RMarkdown sections, final for the RMarkdown final draft.
 housekeeping.r is an R script in the main directory that sets relative file paths and loads all packages. It is run at the beginning of all other R scripts.
 
+## Relevant files (R version, Stata version is similar)
+
+- `main_script.R` or `main_script.do`: runs all other scripts in the correct order
+- `housekeeping.r`: sets relative file paths and loads all packages
+- `code/build/clean_functions.R`
+- `analysis/analysis_functions.R`
+
+- `code/build/01_import_census.R`
+- `code/build/02_import_admin_data.R`
+
+- `code/build/03_clean_census.R`
+- `code/build/04_clean_admin_data.R`
+
+- `code/build/05_merge_census_admin.R`
+
+- `code/analysis/06_summary_stats.R`
+- `code/analysis/07_basic_regression.R`
+- `code/analysis/08_make_sum_figures.R`
+- `code/analysis/09_make_reg_figures.R`
+- `code/analysis/10_make_sum_tables.R`
+- `code/analysis/11_make_reg_tables.R`
+
+### Data sources
+
+Here are the main data sources in the data project. Descriptions to come! 
+
+- taylorswift.com: concert dates and locations
+- Yelp scrapes: traffic and sales
+- Google Maps mobility data: traffic
+- International database of daily sales tax payment records: sales data from local businesses
