@@ -56,6 +56,31 @@ name: prologue
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
+# Housekeeping
+
+- Problem Set 2 is due on Friday
+
+- Your data description is due after break
+
+---
+# Prologue 
+
+- Today's lecture is a little different than the last few
+
+- We're talking about an application of big data to a big question: why do some people move up the income ladder and others don't?
+
+- This is a big question in economics and public policy
+
+- Chetty answered it using big data and spatial analysis
+  - By big I mean: essentially all tax returns in the USA from 1989-2015
+
+- He released summaries of the data publicly in 2018 as the Opportunity Atlas
+
+- These show tons of descriptive measures of income mobility at various levels of geography: state, county, and Census Tract
+
+- Problem Set 3 will involve using the Census Tract data to learn about income mobility in Lewiston
+
+---
 
 ```{r img_wide, echo=F, out.width="90%"}
 knitr::include_graphics('pics/fading_dream.png')
@@ -101,9 +126,9 @@ There's bound to be a messy with this much data, so they create an analysis samp
 
 - Data visualization
 
-- Spatial analysis
+- Spatial analysis (this week)
 
-- Regression analysis (next class)
+- Regression analysis (after break)
 
 ---
 # Parent and Children Incomes in Tax Data
@@ -116,6 +141,10 @@ There's bound to be a messy with this much data, so they create an analysis samp
 
   - Use percentile ranks in the *national* distribution
   - Rank children relative to others born in same year and parents relative to other parents
+
+- [What is a percentile?](https://www.mentimeter.com/app/presentation/blkhnym4ou7ejzod9b1gc6b24id49nr5/xeit9p23asph)
+
+--
 
 - **Income percentile**: The fraction of the national income distribution that a person's income exceeds
 
@@ -156,13 +185,22 @@ name: geo-vary
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
-# What is mobility for each Census tract? 
+# What is mobility for a given area?
 
-- Run this same regression of income ranks by Census tract in the USA 
+- Run this same regression of income ranks by Census tract, county, or commuting zone in the USA<sup>1</sup>
   - Census tracts are small geographic areas that contain 1,200-8,000 people
-  
-- Technical detail: Weight each child by fraction of childhood (up to 23) in a given area
-  - Accounts for movement across areas during childhood
+
+- For simplicity, Chetty et al. (2018) report the average income percentile of children whose parents were at the 25th percentile of the national income distribution
+
+- This is a single measure of upward mobility that is easy to understand and compare across areas
+  - It is not the only measure, but it is a good one
+
+- **Big data tip**: Sensibly summary statisics make big data more useful
+  - The right statistic depends on the question you're asking
+
+- [Where do you think has the lowest upward mobility? The highest?](https://www.mentimeter.com/app/presentation/blkhnym4ou7ejzod9b1gc6b24id49nr5/9zp5t7zs6ot5)
+
+.footnote[<sup>1</sup> Technical detail: Weight each child by fraction of childhood (up to 23) in a given area to account for movement across areas during childhood]
 
 ---
 ```{r op_atlas_map, echo=F, out.width="90%"}
@@ -180,7 +218,9 @@ name: characteristics
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
-# Why does upward mobility differ across areas? 
+# Why does upward mobility differ? 
+
+Armed with a summary measure of upward mobility, we can ask:
 
 - Why do some areas have more upward mobility than others?
 
@@ -194,14 +234,11 @@ name: characteristics
   - Culture? 
 
 ---
-# Upward Mobility vs. Job Growth in 30 Largest Metro Areas
+# Upward Mobility vs. Job Growth
 
 ```{r job_growth, echo=F, out.width="90%"}
 knitr::include_graphics('pics/metro_areas.png')
 ```
-
-*Note: You'll make a version of this on your problem set.*
-*Source: [Using Big Data to Solve Economic and Social Problems: Neighborhood Effects lecture](https://opportunityinsights.org/wp-content/uploads/2019/05/Lecture-2-neighborhood-effects-1.pdf)*
 
 ---
 # Actual correlates
@@ -219,8 +256,6 @@ knitr::include_graphics('pics/metro_areas.png')
 5. Social Capital
   - It takes a village to raise a child
   - Chetty et al. (2023) leveraged Facebook Data to create the Social Capital Atlas
-
-We'll look at some of these relationships (and their applications) in more detail in the coming weeks.
 
 ---
 class: inverse, center, middle
@@ -272,13 +307,13 @@ knitr::include_graphics('pics/seattle_opportunity.png')
 - The answer to this question changes the policy approach
 
 ---
-# Spatial decay of Correlation between Upward Mobility and Tract-level poverty
+# Spatial decay suggests localized effects
 
 ```{r spatial, echo=F, out.width="90%"}
 knitr::include_graphics('pics/spatial_correlation_decay.png')
 ```
 
---- 
+---
 
 # Overall Takeaways
 
