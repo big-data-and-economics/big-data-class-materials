@@ -24,7 +24,7 @@ class: center, middle, inverse, title-slide
 ### Kyle Coombs
 ]
 .date[
-### Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics">ECON/DCS 368</a>
+### Bates College | <a href="https://github.com/-big-data-and-economics">ECON/DCS 368</a>
 ]
 
 ---
@@ -786,6 +786,87 @@ unz('data/lakisha_aer.zip','lakisha_aer.csv') %&gt;% # Unzip the file
 ## # ℹ 4,863 more rows
 ```
 
+---
+# What if there is only one file in the zip?
+
+Turns out, you can read the file directly from the zip file with `read_csv()`:
+
+
+```r
+read_csv('data/lakisha_aer.zip',show_col_type=FALSE)
+```
+
+```
+## # A tibble: 4,873 × 7
+##    id       ofjobs firstname       sex       race        call lmedhhinc
+##    &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
+##  1 id row 1      2 firstname row 3 sex row 4 race row 5     0      9.53
+##  2 id row 1      3 firstname row 3 sex row 4 race row 5     0     10.4 
+##  3 id row 1      1 firstname row 3 sex row 4 race row 5     0     10.5 
+##  4 b             2 Allison         FEMALE    Caucasian      0      9.53
+##  5 b             3 Kristen         FEMALE    Caucasian      0     10.4 
+##  6 b             1 Lakisha         FEMALE    BLACK          0     10.5 
+##  7 b             4 Latonya         FEMALE    BLACK          0     10.4 
+##  8 b             3 Carrie          FEMALE    Caucasian      0      9.88
+##  9 b             2 Jay             MALE      Caucasian      0     10.4 
+## 10 b             2 Jill            FEMALE    Caucasian      0     10.5 
+## # ℹ 4,863 more rows
+```
+
+---
+# What is VROOM_CONNECTION_SIZE?
+
+- You'll often hit an error when reading zipped files
+
+
+```r
+read_csv('data/county_outcomes.zip',show_col_type=FALSE)
+```
+
+```
+## Error: The size of the connection buffer (131072) was not large enough
+## to fit a complete line:
+##   * Increase it by setting `Sys.setenv("VROOM_CONNECTION_SIZE")`
+```
+
+---
+# What is `VROOM_CONNECTION_SIZE`?
+
+`VROOM_CONNECTION_SIZE` is an environment variable that tells R how much data to read in at a time
+
+- It's a way to read in large files without crashing your computer
+
+- It basically tells R to read in a certain number of bytes at a time
+
+- When R unzips and reads simultaneously, it needs more memory than usual while it decompresses
+
+- Think of it like having too narrow a space to squeeze the data through
+
+- If the data are wide, this can be a problem because of how `read_csv()` works
+  - It reads in the entire file and then tries to figure out the column types
+
+---
+# Two Fixes 
+
+### Fix 1: Increase `VROOM_CONNECTION_SIZE`
+
+
+```r
+Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
+read_csv(unz('data/county_outcomes.zip','county_outcomes.csv'),show_col_type=FALSE)
+Sys.setenv("VROOM_CONNECTION_SIZE"=131072) # Returning to default
+```
+
+### Fix 2: Unzip then read
+
+
+```r
+unz('data/county_outcomes.zip','county_outcomes.csv') %&gt;% # Unzip the file
+  read_csv(show_col_types = FALSE) # pipe to a read csv
+rm('county_outcomes.csv') # remove the file
+```
+
+I don't evaluate the code because it will make knitting take awhile, but try it yourself
 
 ---
 # Minor aside: what's `%&gt;%`?

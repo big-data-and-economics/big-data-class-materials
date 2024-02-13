@@ -676,6 +676,60 @@ unz('data/lakisha_aer.zip','lakisha_aer.csv') %>% # Unzip the file
   read_csv(show_col_types = FALSE) # pipe to a read csv
 ```
 
+---
+# What if there is only one file in the zip?
+
+Turns out, you can read the file directly from the zip file with `read_csv()`:
+
+```{r read_csv_zip_lakisha,warning=FALSE,message=FALSE}
+read_csv('data/lakisha_aer.zip',show_col_type=FALSE)
+```
+
+---
+# What is VROOM_CONNECTION_SIZE?
+
+- You'll often hit an error when reading zipped files
+
+```{r read_csv_zip_county,warning=FALSE,message=FALSE,error=TRUE}
+read_csv('data/county_outcomes.zip',show_col_type=FALSE)
+```
+
+---
+# What is `VROOM_CONNECTION_SIZE`?
+
+`VROOM_CONNECTION_SIZE` is an environment variable that tells R how much data to read in at a time
+
+- It's a way to read in large files without crashing your computer
+
+- It basically tells R to read in a certain number of bytes at a time
+
+- When R unzips and reads simultaneously, it needs more memory than usual while it decompresses
+
+- Think of it like having too narrow a space to squeeze the data through
+
+- If the data are wide, this can be a problem because of how `read_csv()` works
+  - It reads in the entire file and then tries to figure out the column types
+
+---
+# Two Fixes 
+
+### Fix 1: Increase `VROOM_CONNECTION_SIZE`
+
+```{r read_csv_zip_vroom,warning=FALSE,message=FALSE,eval=FALSE}
+Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
+read_csv(unz('data/county_outcomes.zip','county_outcomes.csv'),show_col_type=FALSE)
+Sys.setenv("VROOM_CONNECTION_SIZE"=131072) # Returning to default
+```
+
+### Fix 2: Unzip then read
+
+```{r unzip_read_csv,warning=FALSE,message=FALSE,eval=FALSE}
+unz('data/county_outcomes.zip','county_outcomes.csv') %>% # Unzip the file
+  read_csv(show_col_types = FALSE) # pipe to a read csv
+rm('county_outcomes.csv') # remove the file
+```
+
+I don't evaluate the code because it will make knitting take awhile, but try it yourself
 
 ---
 # Minor aside: what's `%>%`?
