@@ -3,7 +3,7 @@ title: "Data Science for Economists"
 # subtitle: "<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>"
 subtitle: "Lecture 5: Data cleaning & wrangling: (2) data.table"
 author: "Grant McDermott, adapted by Kyle Coombs"
-date: "Bates College | [ECON368](https://github.com/-big-data-and-economics/big-data-class-materials/tree/main)" #"`r format(Sys.time(), '%d %B %Y')`"
+date: "Bates College | [ECON368](https://github.com/big-data-and-economics/big-data-class-materials/tree/main)" #"`r format(Sys.time(), '%d %B %Y')`"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts, "libs/cols.css"] 

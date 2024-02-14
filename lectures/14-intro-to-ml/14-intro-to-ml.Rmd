@@ -2,7 +2,7 @@
 title: Big Data and Economics
 subtitle: Introduction to Machine Learning
 author: Kyle Coombs, adapated from Tyler Ransom
-date: "Bates College | [ECON/DCS 368](https://github.com/-big-data-and-economics)"
+date: "Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics)"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts,css/ou-colors.css] 

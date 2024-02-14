@@ -3,7 +3,7 @@ title: "Data Science for Economists"
 subtitle: "Lecture 7: Webscraping: (2) Client-side and APIs"
 author:
   name: Kyle Coombs
-  affiliation: "Bates College | [EC/DCS 368](https://github.com/-big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
+  affiliation: "Bates College | [EC/DCS 368](https://github.com/big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
 # date: Lecture 7  #"`r format(Sys.time(), '%d %B %Y')`"
 output: 
   html_document:

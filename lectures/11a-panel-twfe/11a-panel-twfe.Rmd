@@ -3,7 +3,7 @@ title: "Big Data and Economics"
 subtitle: "Fixed Effects and Difference-in-differences"
 author:
   name: Kyle Coombs
-  affiliation: Bates College | [ECON/DCS 368](https://github.com/-big-data-and-economics/big-data-class-materials#lectures)
+  affiliation: Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics/big-data-class-materials#lectures)
 # date: Lecture 6  #"`r format(Sys.time(), '%d %B %Y')`"
 output: 
   html_document:

@@ -2,7 +2,7 @@
 title: "Big Data and Economics"
 subtitle: "Regression Discontinuity by Kyle Coombs"
 author: Kyle Coombs, adapted from Nick Huntington-Klein
-date: "Bates College | [ECON/DCS 368](https://github.com/-big-data-and-economics)"
+date: "Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics)"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts,css/my-css.css] 

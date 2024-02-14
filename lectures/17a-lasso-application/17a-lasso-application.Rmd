@@ -3,7 +3,7 @@ title: Big Data and Economics
 subtitle: Application of LASSO and Ridge
 author:
   name: Kyle Coombs (adapted from [ISLR tidymodels labs](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/06-regularization.html))
-  affiliation: Bates College | [DCS/ECON 368](https://github.com/-big-data-and-economics/big-data-class-materials)  
+  affiliation: Bates College | [DCS/ECON 368](https://github.com/big-data-and-economics/big-data-class-materials)  
 output:
   html_document:
     theme: journal

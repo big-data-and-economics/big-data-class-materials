@@ -2,7 +2,7 @@
 title: "Big Data and Economics"
 subtitle: "Lecture 2b: Clean Code"
 author: Kyle Coombs (adapted from Tyler Ransom + Scott Cunningham)
-date: "Bates College | [EC/DCS 368](https://github.com/-big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
+date: "Bates College | [EC/DCS 368](https://github.com/big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts, 'ou-colors.css'] 

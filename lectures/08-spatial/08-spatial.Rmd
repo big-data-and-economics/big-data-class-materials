@@ -3,7 +3,7 @@ title: "Big Data and Economics"
 subtitle: "Spatial analysis in R"
 author:
   name: Kyle Coombs (adapted from Grant McDermott)
-  affiliation: Bates College | [ECON/DCS 368](https://github.com/-big-data-and-economics/big-data-class-materials)
+  affiliation: Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics/big-data-class-materials)
 # date: Lecture 9  #"`r format(Sys.time(), '%d %B %Y')`"
 output: 
   html_document:
@@ -110,7 +110,7 @@ options(timeout=60) # Reset the timeout to the default
 
 On your problem set, you will be using the [Opportunity Atlas datasets](https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html) at the Census tract level. It takes much longer to download and automating it may require your to increase the timeout even more. Alternatively, you can download manually. 
 
-There a couple ways to open up this file. We'll go with a two-step approach of unzipping the file and then reading it in.^[If you're curious about reading in the file directly from the zip file, check the [Data Tips notes](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.html#1).] The code block below shows you how to unzip then read with `readr::read_csv`. 
+There a couple ways to open up this file. We'll go with a two-step approach of unzipping the file and then reading it in.^[If you're curious about reading in the file directly from the zip file, check the [Data Tips notes](https://raw.githack.com/ECON368-fall2023big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.html#1).] The code block below shows you how to unzip then read with `readr::read_csv`. 
 
 ```{r unzip_read,eval=FALSE}
 unzip("data/county_outcomes.zip", exdir = "data")

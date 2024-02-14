@@ -2,7 +2,7 @@
 title: Big Data and Economics
 subtitle: Difference-in-differences
 author: Kyle Coombs
-date: Bates College | [DCS/ECON 368](https://github.com/-big-data-and-economics/big-data-class-materials)
+date: Bates College | [DCS/ECON 368](https://github.com/big-data-and-economics/big-data-class-materials)
 output:
   xaringan::moon_reader:
     css: [default, metropolis, metropolis-fonts,css/my-css.css] 
