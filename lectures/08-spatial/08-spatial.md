@@ -3,7 +3,7 @@ title: "Big Data and Economics"
 subtitle: "Spatial analysis in R"
 author:
   name: Kyle Coombs (adapted from Grant McDermott)
-  affiliation: Bates College | [ECON/DCS 368](https://github.com/-big-data-and-economics/big-data-class-materials)
+  affiliation: Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics/big-data-class-materials)
 # date: Lecture 9  #"14 February 2024"
 output: 
   html_document:
@@ -112,7 +112,7 @@ options(timeout=60) # Reset the timeout to the default
 
 On your problem set, you will be using the [Opportunity Atlas datasets](https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html) at the Census tract level. It takes much longer to download and automating it may require your to increase the timeout even more. Alternatively, you can download manually. 
 
-There a couple ways to open up this file. We'll go with a two-step approach of unzipping the file and then reading it in.^[If you're curious about reading in the file directly from the zip file, check the [Data Tips notes](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.html#1).] The code block below shows you how to unzip then read with `readr::read_csv`. 
+There a couple ways to open up this file. We'll go with a two-step approach of unzipping the file and then reading it in.^[If you're curious about reading in the file directly from the zip file, check the [Data Tips notes](https://raw.githack.com/ECON368-fall2023big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.html#1).] The code block below shows you how to unzip then read with `readr::read_csv`. 
 
 
 ```r
@@ -220,56 +220,34 @@ me
 ```
 
 ```
-## Simple feature collection with 16 features and 19 fields
+## Simple feature collection with 16 features and 5 fields
 ## Geometry type: MULTIPOLYGON
 ## Dimension:     XY
-## Bounding box:  xmin: -71.08392 ymin: 42.91713 xmax: -66.88544 ymax: 47.45985
+## Bounding box:  xmin: -71.08433 ymin: 42.97776 xmax: -66.9499 ymax: 47.45969
 ## Geodetic CRS:  NAD83
 ## First 10 features:
-##      STATEFP10 COUNTYFP10 COUNTYNS10 GEOID10     NAME10        NAMELSAD10
-## 45          23        019   00581295   23019  Penobscot  Penobscot County
-## 231         23        029   00581300   23029 Washington Washington County
-## 239         23        003   00581287   23003  Aroostook  Aroostook County
-## 257         23        009   00581290   23009    Hancock    Hancock County
-## 3009        23        007   00581289   23007   Franklin   Franklin County
-## 3010        23        025   00581298   23025   Somerset   Somerset County
-## 3011        23        017   00581294   23017     Oxford     Oxford County
-## 3014        23        027   00581299   23027      Waldo      Waldo County
-## 3015        23        015   00581293   23015    Lincoln    Lincoln County
-## 3016        23        031   00581301   23031       York       York County
-##      LSAD10 CLASSFP10 MTFCC10 CSAFP10 CBSAFP10 METDIVFP10 FUNCSTAT10
-## 45       06        H1   G4020    <NA>    12620       <NA>          A
-## 231      06        H1   G4020    <NA>     <NA>       <NA>          A
-## 239      06        H1   G4020    <NA>     <NA>       <NA>          A
-## 257      06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3009     06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3010     06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3011     06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3014     06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3015     06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3016     06        H1   G4020     438    38860       <NA>          A
-##          ALAND10   AWATER10  INTPTLAT10   INTPTLON10
-## 45    8799125852  413670635 +45.3906022 -068.6574869
-## 231   6637257545 1800019787 +44.9670088 -067.6093542
-## 239  17278664655  404653951 +46.7270567 -068.6494098
-## 257   4110034060 1963321064 +44.5649063 -068.3707034
-## 3009  4394196449  121392907 +44.9730124 -070.4447268
-## 3010 10164156961  438038365 +45.5074824 -069.9760395
-## 3011  5378990983  256086721 +44.4945850 -070.7346875
-## 3014  1890479704  318149622 +44.5053607 -069.1396775
-## 3015  1180563700  631400289 +43.9942645 -069.5140292
-## 3016  2565935077  722608929 +43.4272386 -070.6704023
-##                            geometry COUNTYFP STATEFP
-## 45   MULTIPOLYGON (((-69.28127 4...      019      23
-## 231  MULTIPOLYGON (((-67.7543 45...      029      23
-## 239  MULTIPOLYGON (((-68.43227 4...      003      23
-## 257  MULTIPOLYGON (((-68.80096 4...      009      23
-## 3009 MULTIPOLYGON (((-70.29383 4...      007      23
-## 3010 MULTIPOLYGON (((-69.85327 4...      025      23
-## 3011 MULTIPOLYGON (((-71.05825 4...      017      23
-## 3014 MULTIPOLYGON (((-69.26888 4...      027      23
-## 3015 MULTIPOLYGON (((-69.69056 4...      015      23
-## 3016 MULTIPOLYGON (((-70.76779 4...      031      23
+##    GEOID                       NAME   variable estimate moe
+## 1  23001 Androscoggin County, Maine B01001_001   107882  NA
+## 2  23003    Aroostook County, Maine B01001_001    72412  NA
+## 3  23005   Cumberland County, Maine B01001_001   279994  NA
+## 4  23007     Franklin County, Maine B01001_001    30657  NA
+## 5  23009      Hancock County, Maine B01001_001    54309  NA
+## 6  23011     Kennebec County, Maine B01001_001   121925  NA
+## 7  23013         Knox County, Maine B01001_001    40111  NA
+## 8  23015      Lincoln County, Maine B01001_001    34719  NA
+## 9  23017       Oxford County, Maine B01001_001    57867  NA
+## 10 23019    Penobscot County, Maine B01001_001   152934  NA
+##                          geometry
+## 1  MULTIPOLYGON (((-70.16011 4...
+## 2  MULTIPOLYGON (((-68.5918 47...
+## 3  MULTIPOLYGON (((-70.10624 4...
+## 4  MULTIPOLYGON (((-70.83471 4...
+## 5  MULTIPOLYGON (((-68.53108 4...
+## 6  MULTIPOLYGON (((-69.74428 4...
+## 7  MULTIPOLYGON (((-69.11864 4...
+## 8  MULTIPOLYGON (((-69.31302 4...
+## 9  MULTIPOLYGON (((-71.01489 4...
+## 10 MULTIPOLYGON (((-68.03364 4...
 ```
 
 Now we can see the explicit data frame structure. The object has the familiar tibble-style output that we're used to (e.g. it only prints the first 10 rows of the data). However, it also has some additional information in the header, like a description of the geometry type ("MULTIPOLYGON") and CRS (e.g. EPSG ID 4267). One thing I want to note in particular is the `geometry` column right at the end of the data frame. This geometry column is how **sf** package achieves much of its magic: It stores the geometries of each row element in its own list column.^[For example, we could print out the coordinates needed to plot the first element in our data frame, Lincoln county, by typing `me$geometry[[1]]`. In contrast, I invite you to see how complicated the structure of a traditional spatial object is by running, say, `str(as(me, "Spatial"))`.] Since all we really care about are the key feature attributes --- county name, FIPS code, population size, etc. --- we can focus on those instead of getting bogged down by hundreds (or thousands or even millions) of coordinate points. In turn, this all means that our favourite **tidyverse** operations and syntax (including the pipe operator `%>%`) can be applied to spatial data. Let's review some examples, starting with plotting.
@@ -307,23 +285,17 @@ me %>%
 ```
 
 ```
-## Simple feature collection with 2 features and 19 fields
+## Simple feature collection with 2 features and 5 fields
 ## Geometry type: MULTIPOLYGON
 ## Dimension:     XY
-## Bounding box:  xmin: -5611693 ymin: 5265977 xmax: -5411199 ymax: 5490974
+## Bounding box:  xmin: -5752691 ymin: 5221221 xmax: -5348115 ymax: 5604910
 ## Projected CRS: +proj=moll
-##     STATEFP10 COUNTYFP10 COUNTYNS10 GEOID10     NAME10        NAMELSAD10 LSAD10
-## 45         23        019   00581295   23019  Penobscot  Penobscot County     06
-## 231        23        029   00581300   23029 Washington Washington County     06
-##     CLASSFP10 MTFCC10 CSAFP10 CBSAFP10 METDIVFP10 FUNCSTAT10    ALAND10
-## 45         H1   G4020    <NA>    12620       <NA>          A 8799125852
-## 231        H1   G4020    <NA>     <NA>       <NA>          A 6637257545
-##       AWATER10  INTPTLAT10   INTPTLON10                       geometry COUNTYFP
-## 45   413670635 +45.3906022 -068.6574869 MULTIPOLYGON (((-5607577 53...      019
-## 231 1800019787 +44.9670088 -067.6093542 MULTIPOLYGON (((-5432146 54...      029
-##     STATEFP
-## 45       23
-## 231      23
+##   GEOID                       NAME   variable estimate moe
+## 1 23001 Androscoggin County, Maine B01001_001   107882  NA
+## 2 23003    Aroostook County, Maine B01001_001    72412  NA
+##                         geometry
+## 1 MULTIPOLYGON (((-5732558 52...
+## 2 MULTIPOLYGON (((-5397957 55...
 ```
 
 Or, we can specify a common projection directly in the ggplot call using `coord_sf()`. This is often the most convenient approach when you are combining multiple **sf** data frames in the same plot.^[Note that we used a PROJ string to define the CRS reprojection below. But we could easily use an EPSG code instead. For example, here's the [ME west plane](https://epsg.io/26984) projection, which we could use by setting `crs=26984`.]
@@ -444,7 +416,7 @@ me %>% st_area() %>% head(5) ## Only show the area of the first five counties to
 
 ```
 ## Units: [m^2]
-## [1]  9191355157  8418644946 17637152538  6060468737  4506281023
+## [1]  1284898459 17640149313  2469968814  4505380911  4615153654
 ```
 
 And:
@@ -715,7 +687,7 @@ Sometimes you'll want to know more than neighbors, you'll want to know the neare
 knitr::include_graphics("../09-oppatlas/pics/spatial_correlation_decay.png")
 ```
 
-<img src="../09-oppatlas/pics/spatial_correlation_decay.png" width="1232" />
+<img src="../09-oppatlas/pics/spatial_correlation_decay.png" width="75%" />
 
 This is plots the spatial correlation of income mobility with poverty for neighboring census tracts. The spatial correlation is highest within group, but then decays. 
 
@@ -841,7 +813,7 @@ This returns the five nearest neighbors to each county including itself.
 
 That's about as much **sf** functionality as I can show you for today. The remaining part of this lecture will cover some additional mapping considerations and some bonus spatial R "swag". However, I'll try to slip in a few more **sf**-specific operations along the way.
 
-## Bonus 1: Where to get map data
+## BONUS 1: Where to get map data
 
 As our first Maine examples demonstrate, you can easily import external shapefiles, KML files, etc., into R. Just use the generic `sf::st_read()` function on any of these formats and the **sf** package will take care of the rest. However, we've also seen with the France example that you might not even need an external shapefile. Indeed, R provides access to a large number of base maps --- e.g. countries of the world, US states and counties, etc. --- through the **maps**, (higher resolution) **mapdata** and **spData** packages, as well as a whole ecosystem of more specialized GIS libraries.^[The list of specialised maps packages is far too long for me to cover here. You can get [marine regions](https://github.com/ropensci/mregions), [protected areas](https://github.com/ropenscilabs/rwdpa), [nightlights](https://github.com/chrisvwn/Rnightlights), ..., etc., etc.] To convert these maps into "**sf**-friendly" data frame format, we can use the `sf::st_as_sf()` function as per the below examples.
 

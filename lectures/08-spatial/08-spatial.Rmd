@@ -473,7 +473,7 @@ st_join(me,me,join=st_touches)
 
 Sometimes you'll want to know more than neighbors, you'll want to know the nearest $k$ neighbors, where $k$ is some arbitrary number. Consider this plot:
 
-```{r oppatlas}
+```{r oppatlas,out.width='75%'}
 knitr::include_graphics("../09-oppatlas/pics/spatial_correlation_decay.png")
 ```
 
@@ -498,7 +498,7 @@ This returns the five nearest neighbors to each county including itself.
 
 That's about as much **sf** functionality as I can show you for today. The remaining part of this lecture will cover some additional mapping considerations and some bonus spatial R "swag". However, I'll try to slip in a few more **sf**-specific operations along the way.
 
-## Bonus 1: Where to get map data
+## BONUS 1: Where to get map data
 
 As our first Maine examples demonstrate, you can easily import external shapefiles, KML files, etc., into R. Just use the generic `sf::st_read()` function on any of these formats and the **sf** package will take care of the rest. However, we've also seen with the France example that you might not even need an external shapefile. Indeed, R provides access to a large number of base maps --- e.g. countries of the world, US states and counties, etc. --- through the **maps**, (higher resolution) **mapdata** and **spData** packages, as well as a whole ecosystem of more specialized GIS libraries.^[The list of specialised maps packages is far too long for me to cover here. You can get [marine regions](https://github.com/ropensci/mregions), [protected areas](https://github.com/ropenscilabs/rwdpa), [nightlights](https://github.com/chrisvwn/Rnightlights), ..., etc., etc.] To convert these maps into "**sf**-friendly" data frame format, we can use the `sf::st_as_sf()` function as per the below examples.
 
