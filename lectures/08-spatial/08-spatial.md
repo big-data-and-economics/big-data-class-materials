@@ -3,8 +3,8 @@ title: "Big Data and Economics"
 subtitle: "Spatial analysis in R"
 author:
   name: Kyle Coombs (adapted from Grant McDermott)
-  affiliation: Bates College | [ECON/DCS 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)
-# date: Lecture 9  #"10 October 2023"
+  affiliation: Bates College | [ECON/DCS 368](https://github.com/-big-data-and-economics/big-data-class-materials)
+# date: Lecture 9  #"14 February 2024"
 output: 
   html_document:
     theme: flatly
@@ -42,6 +42,18 @@ knit: (function(inputFile, encoding) {
 
 *Note: This lecture will focus only on **vector-based** spatial analysis. We will not cover **raster-based** spatial analysis, although this is an equally important subject. Here is a link to it a lecture on it by [Grant McDermott](https://raw.githack.com/uo-ec607/lectures/master/09a-spatial-rasters/09a-spatial-rasters.html). There are further resources below. Rasters are used to make satellite images, relief maps, etc.*
 
+## Working through interactively
+
+I heavily suggest that you work through this lecture interactively, you'll get the most out of it if you're able to run the code chunks yourself. There are two ways to do this:
+
+1. **GitHub Codespaces:** This is the easiest way to get started. Just click on the green "Code" button on the top right of the repository and select "Open with Codespaces". This will open an RStudio environment in your browser, with all the necessary packages pre-installed. 
+
+2. **Fork the repository and clone it**: If you have not yet forked these materials, you can do so by clicking the "Fork" button on the top right of the repository. Once you have your own fork, you can clone it to your local machine, then navigate within it. 
+
+Once you have access to these notes and your R environment setup, navigate to the directory `lectures/08-spatial-analysis` and open the `08-spatial.Rmd` file. You can then start running the code chunks. 
+
+As a caveat, everything here is self-contained. Any installations are included in the code chunks, so you can run everything from start to finish with copy-and-paste. But it will be a bit slow and tedious. 
+
 ## Requirements
 
 ### External libraries (requirements vary by OS)
@@ -54,8 +66,8 @@ We're going to be doing all our spatial analysis and plotting today in R. Behind
 
 ### R packages 
 
-- New: **sf**, **lwgeom**, **maps**, **mapdata**, **spData**, **tigris**, **tidycensus**, **leaflet**, **mapview**, **tmap**, **tmaptools**, **nngeo**
-- Already used: **tidyverse**, **data.table**, **hrbrthemes**
+- New: **sf**, **lwgeom**, **maps**, **mapdata**, **spData**, **tigris**, **leaflet**, **mapview**, **tmap**, **tmaptools**, **nngeo**
+- Already used: **tidyverse**, **data.table**, **hrbrthemes**, **tidycensus**
 
 Truth be told, you only need a handful of the above libraries to do 95% of the spatial work that you're likely to encounter. But R's spatial ecosystem and support is extremely rich, so I'll try to walk through a number of specific use-cases in this lecture. Run the following code chunk to install (if necessary) and load everything.
 
@@ -67,7 +79,6 @@ pacman::p_load(sf, tidyverse, data.table, hrbrthemes, lwgeom, rnaturalearth, map
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
 ```
-
 
 ### Census API key
 
@@ -84,6 +95,72 @@ so that caching is automatically enabled for future sessions. A quick way to do 
 
 ```r
 options(tigris_use_cache=TRUE)
+```
+
+### Data Downloads
+
+Today we'll be mapping the [Opportunity Atlas datasets](https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html) at the county level. Specifically, we're going to map the average income percentile of children born to parents at different percentiles. 
+
+You can manually download or automate the download using `download.file`. `download.file` has a default "timeout" of 60 seconds, which means it will stop trying to download the file after 60 seconds. If you're downloading a large file, you may need to increase the timeout time. (I've set it to 600 seconds below.)
+
+
+```r
+options(timeout=600) # 600 seconds to download the file -- default is 60
+download.file("https://www2.census.gov/ces/opportunity/county_outcomes.zip", "data/county_outcomes.zip")
+options(timeout=60) # Reset the timeout to the default
+```
+
+On your problem set, you will be using the [Opportunity Atlas datasets](https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html) at the Census tract level. It takes much longer to download and automating it may require your to increase the timeout even more. Alternatively, you can download manually. 
+
+There a couple ways to open up this file. We'll go with a two-step approach of unzipping the file and then reading it in.^[If you're curious about reading in the file directly from the zip file, check the [Data Tips notes](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.html#1).] The code block below shows you how to unzip then read with `readr::read_csv`. 
+
+
+```r
+unzip("data/county_outcomes.zip", exdir = "data")
+op_atlas <- read_csv("data/county_outcomes.csv")
+file.remove("data/county_outcomes.csv") # Remove the CSV
+```
+
+That read-in took a minute, huh? That's because the file is pretty big. Let's shrink it down to just the necessary variables and rows to save space. Today we're only mapping the mean household income percentile rank of children born to parents at the 25th and 75th percentile for a few race groups in Maine. So let's select and filter. 
+
+If you checkout the [codebook](https://www2.census.gov/ces/opportunity/Codebook-for-Table-5.pdf), you can see that variables have the form `[outcome]_[race]_[gender]_p[pctile]`. We want the outcome of average household income for children born to parents at the 25th percentile and 75th percentile. Per the codebook:
+
+- `kfr`: Average household income percentile rank of children
+- `p25`: Raised at the 25th percentile
+- `pooled`: Pooled across all races/genders
+- `state` : State fips code
+- `county` : County fips code
+
+Also, a quick Google search confirms that Maine's FIPS code is 23. 
+
+#### Quick comprehension test: 
+
+- [How do I select a variable for mean percentile rank of white people born in the 25th percentile?](https://www.mentimeter.com/app/presentation/blkhnym4ou7ejzod9b1gc6b24id49nr5/6mksdbuegpmm)
+- [Is the variable kfr_p25 a valid variable?](https://www.mentimeter.com/app/presentation/blkhnym4ou7ejzod9b1gc6b24id49nr5/hrp9wk5vka8z)
+
+Armed with that knowledge, we can carefully select the groups we want and rename to simplify the variable names. 
+
+
+```r
+op_atlas <- select(op_atlas, czname, state, county, 
+  kfr_p25  = kfr_pooled_pooled_p25, 
+  kfr_p75  = kfr_pooled_pooled_p75) %>%
+  filter(state==23) # Maine's fips code is 23! 
+write_csv(op_atlas, "data/county_outcomes_p25_p75.csv") # Save the file
+```
+
+
+
+By shrinking down the file, we've made it much easier to work with. This is a good practice in general then you only have to get the big data open once.
+
+The last thing we'll need to do is to create a 5-digit FIPS code for each county by combining the state and county codes. This is a common practice in the US for uniquely identifying counties. 
+
+We'll use this to `join` the Opportunity Atlas data with Maine county shapefiles on the variable, `GEOID`, which is the FIPS code as a character variable. Below I create a character variable called `GEOID` that contains the 5-digit FIPS code.
+
+
+```r
+op_atlas <- op_atlas %>% 
+  mutate(GEOID= as.character(state*1000+county)) # Create a 5-digit FIPS code as a string
 ```
 
 ## Introduction: CRS and map projections
@@ -112,36 +189,26 @@ R has long provided excellent support for spatial analysis and plotting (primari
 
 The "sf" stands for [**s**imple **f**eatures](https://en.wikipedia.org/wiki/Simple_Features), which is a simple (ahem) standard for representing the spatial geometries of real-world objects on a computer.^[See the [first](https://r-spatial.github.io/sf/articles/sf1.html) of the excellent **sf** vignettes for more details.] These objects --- i.e. "features" --- could include a tree, a building, a country's border, or the entire globe. The point is that they are characterised by a common set of rules, defining everything from how they are stored on our computer to which geometrical operations can be applied them. Of greater importance for our purposes, however, is the fact that **sf** represents these features in R as *data frames*. This means that all of our data wrangling skills from previous lectures can be applied to spatial data; say nothing of the specialized spatial functions that we'll cover next.
 
+Somewhat confusingly, most of the functions in the **sf** package start with the prefix `st_`. This stands for *<b>s</b>patial and <b>t</b>emporal* and a basic command of this package is easy enough once you remember that you're probably looking for `st_SOMETHING()`.^[I rather wish they'd gone with a `sf_` prefix myself --- or at least created aliases for it --- but the package developers are apparently following [standard naming conventions from PostGIS](https://github.com/r-spatial/sf/issues/140#issuecomment-270029715).] 
+
 ### Reading in spatial data
 
-Somewhat confusingly, most of the functions in the **sf** package start with the prefix `st_`. This stands for *<b>s</b>patial and <b>t</b>emporal* and a basic command of this package is easy enough once you remember that you're probably looking for `st_SOMETHING()`.^[I rather wish they'd gone with a `sf_` prefix myself --- or at least created aliases for it --- but the package developers are apparently following [standard naming conventions from PostGIS](https://github.com/r-spatial/sf/issues/140#issuecomment-270029715).]
+Vector-based spatial data is often stored in a shapefile, which is a file format for storing the geometric location and attribute information of geographic features. Rather than explain a shapefile, let's just read one in and see what it looks like. Where can we get shapefiles? Why from the Census! 
 
-Let's demonstrate by reading in a shapefile for Maine.^[**sf** includes the North Carolina county shapefile, but we're in Maine.] As you might have guessed, we're going to use the `st_read()` command and **sf** package will handle all the heavy lifting behind the scenes. Shapefile are a "geospatial vector data format" that is widely used in GIS software that typically have the file ending `.shp`.^[See [here](https://en.wikipedia.org/wiki/Shapefile) for more details.] Basically, it contains the shape of each feature (e.g. county) represented as coordinates, along with a bunch of other information about the feature (e.g. county name, population, etc.). 
+The Census Bureau maintains a database of shapefiles for all kinds of geographic entities, from states to counties to census tracts. You can download these shapefiles from the [TIGER](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html) (Topologically Integrated Geographic Encoding and Referencing) website. Alternatively, you can use the **tidycensus** (or **tigris** explained below) package to download them for you by setting `geometry=TRUE` as an argument in functions like `tidycensus::get_acs()`. 
 
-How do we get the shapefile? Well the Census has loads that cover all kinds of different geographies at [TIGER](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html), which stands for Topologically Integrated Geographic Encoding and Referencing. You could go in and download any shapefile you want OR you could use a package like **tidycensus** or **tigris** to download it for you. You're already familiar with **tidycensus**, which you may have noticed you can get it to return `geometry` as a variable if you specify `geometry=TRUE`. This is a vector that **sf** can use. 
+Let's demonstrate by reading in a shapefile for Maine. As you might have guessed, we're going to use the `st_read()` command and **sf** package will handle all the heavy lifting behind the scenes. Shapefile are a "geospatial vector data format" that is widely used in GIS software that typically have the file ending `.shp`.^[See [here](https://en.wikipedia.org/wiki/Shapefile) for more details.] Basically, it contains the shape of each feature (e.g. county) represented as coordinates, along with a bunch of other information about the feature (e.g. county name, population, etc.). 
 
 
 ```r
 me = tidycensus::get_acs(
   geography = "county", 
-  variables = "B01001_001", 
+  variables = "B01001_001", # Population size variable
   state = "ME", 
-  geometry = TRUE
+  geometry = TRUE,
+  year=2010 # Opp Atlas data uses 2010 county boundaries
   )
 ```
-
-```
-
-[**tigris**](https://github.com/walkerke/tigris) is explained in greater detail below, but it contains just about every TIGER shapefile that you could want, which come with more spatial info than **tidycensus** will give. For example, here's how we can download the Maine counties shapefile:
-
-
-```r
-# library(tigris) ## Already loaded
-me = tigris::counties(state='ME',
-  year=2010)
-```
-
-*Note: We are using the year 2010 to link it to the Opportunity Atlas.*
 
 ### Simple Features as data frames
 
@@ -205,7 +272,11 @@ me
 ## 3016 MULTIPOLYGON (((-70.76779 4...      031      23
 ```
 
-Now we can see the explicit data frame structure. The object has the familiar tibble-style output that we're used to (e.g. it only prints the first 10 rows of the data). However, it also has some additional information in the header, like a description of the geometry type ("MULTIPOLYGON") and CRS (e.g. EPSG ID 4267). One thing I want to note in particular is the `geometry` column right at the end of the data frame. This geometry column is how **sf** package achieves much of its magic: It stores the geometries of each row element in its own list column.^[For example, we could print out the coordinates needed to plot the first element in our data frame, Ashe county, by typing `me$geometry[[1]]`. In contrast, I invite you to see how complicated the structure of a traditional spatial object is by running, say, `str(as(me, "Spatial"))`.] Since all we really care about are the key feature attributes --- county name, FIPS code, population size, etc. --- we can focus on those instead of getting bogged down by hundreds (or thousands or even millions) of coordinate points. In turn, this all means that our favourite **tidyverse** operations and syntax (including the pipe operator `%>%`) can be applied to spatial data. Let's review some examples, starting with plotting.
+Now we can see the explicit data frame structure. The object has the familiar tibble-style output that we're used to (e.g. it only prints the first 10 rows of the data). However, it also has some additional information in the header, like a description of the geometry type ("MULTIPOLYGON") and CRS (e.g. EPSG ID 4267). One thing I want to note in particular is the `geometry` column right at the end of the data frame. This geometry column is how **sf** package achieves much of its magic: It stores the geometries of each row element in its own list column.^[For example, we could print out the coordinates needed to plot the first element in our data frame, Lincoln county, by typing `me$geometry[[1]]`. In contrast, I invite you to see how complicated the structure of a traditional spatial object is by running, say, `str(as(me, "Spatial"))`.] Since all we really care about are the key feature attributes --- county name, FIPS code, population size, etc. --- we can focus on those instead of getting bogged down by hundreds (or thousands or even millions) of coordinate points. In turn, this all means that our favourite **tidyverse** operations and syntax (including the pipe operator `%>%`) can be applied to spatial data. Let's review some examples, starting with plotting.
+
+#### Concept check:
+
+[What clean code principle is the **sf** package following by storing the geometries in their own list column?](https://www.mentimeter.com/app/presentation/blkhnym4ou7ejzod9b1gc6b24id49nr5/a55sgiyrhuom)
 
 ### Plotting and projection with **ggplot2**
 
@@ -217,8 +288,8 @@ Plotting **sf** objects is incredibly easy thanks to the package's integration w
 
 me_plot = 
   ggplot(me) +
-  geom_sf(aes(fill = ALAND10), alpha=0.8, col="white") +
-  scale_fill_viridis_c(name = "Area") +
+  geom_sf(aes(fill = estimate), alpha=0.8, col="white") +
+  scale_fill_viridis_c(name = "Population estimate") +
   ggtitle("Counties of Maine")
 
 me_plot
@@ -255,7 +326,7 @@ me %>%
 ## 231      23
 ```
 
-Or, we can specify a common projection directly in the ggplot call using `coord_sf()`. This is often the most convenient approach when you are combining multiple **sf** data frames in the same plot.
+Or, we can specify a common projection directly in the ggplot call using `coord_sf()`. This is often the most convenient approach when you are combining multiple **sf** data frames in the same plot.^[Note that we used a PROJ string to define the CRS reprojection below. But we could easily use an EPSG code instead. For example, here's the [ME west plane](https://epsg.io/26984) projection, which we could use by setting `crs=26984`.]
 
 
 ```r
@@ -266,102 +337,92 @@ me_plot +
 
 ![](08-spatial_files/figure-html/me_mollweide_plot-1.png)<!-- -->
 
-Note that we used a PROJ string to define the CRS reprojection above. But we could easily use an EPSG code instead. For example, here's the [me state plane](https://epsg.io/32119) projection.
-
-
-```r
-me_plot +
-  coord_sf(crs = 32119) +
-  labs(subtitle = "ME state plane") 
-```
-
-![](08-spatial_files/figure-html/me_stateline_plot-1.png)<!-- -->
-
 ### Data wrangling with **dplyr** and **tidyr**
 
-As I keep saying, the tidyverse approach to data wrangling carries over very smoothly to **sf** objects. For example, the standard **dplyr** verbs like `filter()`, `mutate()` and `select()` all work:
+As I keep saying, the tidyverse approach to data wrangling carries over very smoothly to **sf** objects. For example, the standard **dplyr** verbs like `filter()`, `mutate()` and `select()` all work.
+
+**Be sure to run the code in this block to split NAME into the COUNTY and STATE components.**
 
 
 ```r
-me %>%
-  filter(NAME10 %in% c("Sagadahoc", "Androscoggin", "Cumberland")) %>%
-  mutate(ALAND_div_1000 = ALAND10/1000) %>%
-  select(NAME10, contains("ALAND"), everything())
+me %>% 
+  separate(NAME,c('COUNTY','STATE'),sep = ", ") %>% 
+  filter(COUNTY %in% c("Sagadahoc County", "Androscoggin County", "Cumberland County")) %>%
+  mutate(estimate_div_1000 = estimate/1000) %>% # Estimate in 1000s
+  select(-variable,-moe) # Drop the variable and margin of error columns
 ```
 
 ```
-## Simple feature collection with 3 features and 20 fields
+## Simple feature collection with 3 features and 5 fields
 ## Geometry type: MULTIPOLYGON
 ## Dimension:     XY
-## Bounding box:  xmin: -70.86662 ymin: 43.46688 xmax: -69.66474 ymax: 44.48722
+## Bounding box:  xmin: -70.86658 ymin: 43.52726 xmax: -69.6888 ymax: 44.48722
 ## Geodetic CRS:  NAD83
-##         NAME10    ALAND10 ALAND_div_1000 STATEFP10 COUNTYFP10 COUNTYNS10
-## 1    Sagadahoc  657066836       657066.8        23        023   00581297
-## 2 Androscoggin 1211926439      1211926.4        23        001   00581286
-## 3   Cumberland 2163263369      2163263.4        23        005   00581288
-##   GEOID10          NAMELSAD10 LSAD10 CLASSFP10 MTFCC10 CSAFP10 CBSAFP10
-## 1   23023    Sagadahoc County     06        H1   G4020     438    38860
-## 2   23001 Androscoggin County     06        H1   G4020     438    30340
-## 3   23005   Cumberland County     06        H1   G4020     438    38860
-##   METDIVFP10 FUNCSTAT10  AWATER10  INTPTLAT10   INTPTLON10 COUNTYFP STATEFP
-## 1       <NA>          A 301332007 +43.9166939 -069.8439936      023      23
-## 2       <NA>          A  75610678 +44.1676811 -070.2074347      001      23
-## 3       <NA>          A 989949911 +43.8083479 -070.3303753      005      23
+##   GEOID              COUNTY STATE estimate estimate_div_1000
+## 1 23001 Androscoggin County Maine   107882           107.882
+## 2 23005   Cumberland County Maine   279994           279.994
+## 3 23023    Sagadahoc County Maine    35688            35.688
 ##                         geometry
-## 1 MULTIPOLYGON (((-69.78507 4...
-## 2 MULTIPOLYGON (((-70.07575 4...
-## 3 MULTIPOLYGON (((-69.89595 4...
+## 1 MULTIPOLYGON (((-70.16011 4...
+## 2 MULTIPOLYGON (((-70.10624 4...
+## 3 MULTIPOLYGON (((-69.86599 4...
 ```
 
-You can also perform `group_by()` and `summarise()` operations as per normal (see [here](http://strimas.com/r/tidy-sf/) for a nice example). Furthermore, the **dplyr** family of [join functions](https://dplyr.tidyverse.org/reference/join.html) also work, which can be especially handy when combining different datasets by (say) FIPS code or some other *attribute*. However, this presumes that only one of the objects has a specialized geometry column. In other words, it works when you are joining an **sf** object with a normal data frame. In cases where you want to join two **sf** objects based on their *geometries*, there's a specialized `st_join()` function. I provide an example of this latter operation in the section on [geometric operations](#geometric) below.
+```r
+me <- me %>% separate(NAME,c('COUNTY','STATE'),sep = ", ") # Keeping this one
+```
 
-Let's try this by joining on the Opportunity Atlas county level data, which we can get from [Opportunity Insights](https://opportunityinsights.org/data/) or the [Census](https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html).
+You can also perform `group_by()` and `summarise()` operations as per normal (see [here](http://strimas.com/r/tidy-sf/) for a nice example). Furthermore, the **dplyr** family of [join functions](https://dplyr.tidyverse.org/reference/join.html) also work, which can be especially handy when combining different datasets by FIPS code or some other *attribute*. **However, this presumes that only one of the objects has a specialized geometry column.** In other words, it works when you are joining an **sf** object with a normal data frame. In cases where you want to join two **sf** objects based on their *geometries*, there's a specialized `st_join()` function. I provide an example of this latter operation in the section on [geometric operations](#geometric) below.
+
+Let's try this by joining on Maine's Opportunity Atlas county level data, which we read in and processed earlier.
 
 
 ```r
-op_atlas <- read_csv(
-    file='https://www2.census.gov/ces/opportunity/county_outcomes_simple.csv',
-    show_col_types = FALSE
-) %>% 
-  mutate(county_fips=state*1000+county,
-  #Make character and add leading zero to county_fips
-        GEOID10=ifelse(county_fips<10000,paste0("0",county_fips),as.character(county_fips))) %>%
-  select(GEOID10,matches('kfr_.*_pooled_p25$')) %>%
-  #Rename columns to remove _pooled_p25
-  rename_with(~str_remove(.,'_pooled_p25'),matches('_pooled_p25$'))
-
-me_join <- me %>% inner_join(op_atlas, by="GEOID10")
+me_join <- inner_join(me,op_atlas, by="GEOID")
 ```
 
-And, just to show that we've got the bases covered, you can also implement your favourite **tidyr** verbs. For example, we can `tidyr::gather()` the data to long format, which is useful for facetted plotting.^[In case you're wondering: the newer `tidyr::pivot_*` functions [do not](https://github.com/r-spatial/sf/pull/1151) yet work with **sf** objects.] Here I demonstrate using the "BIR74" and "BIR79" columns (i.e. the number of births in each county in 1974 and 1979, respectively).
+
+```r
+ggplot(me_join) +
+  geom_sf(aes(fill = kfr_p25), alpha=0.8, col="white") +
+  scale_fill_viridis_c(name = "Average income percentile") +
+  ggtitle("Average income percentile for children raised at 25th percentile")
+```
+
+![](08-spatial_files/figure-html/join_plot-1.png)<!-- -->
+
+And, just to show that we've got the bases covered, you can also implement your favourite **tidyr** verbs. For example, we can `tidyr::gather()` the data to long format, which is useful for facetted plotting.^[In case you're wondering: the newer `tidyr::pivot_*` functions [do not](https://github.com/r-spatial/sf/pull/1151) yet work with **sf** objects.] Here I demonstrate this by plotting the average income percentile of children born to parents at the 25th percentile and 75th percentile. 
 
 
 ```r
 me_join %>% 
-  select(county = NAME10, matches('kfr'), geometry) %>% 
-  # Gather reshapes the data. 
-  # The key (where the variable names go) is "race." The values of each variable go into a variable named kfr indexed by variable name
-  gather(key=race, value=kfr, kfr_pooled, kfr_black, kfr_hisp, kfr_white) %>% 
-  mutate(race = str_to_title(gsub("kfr_", "", race)),
-    kfr=kfr*100) %>% # put in percent terms
+  select(GEOID, kfr_p25, kfr_p75, geometry) %>% 
+  pivot_longer(cols=c(kfr_p25,kfr_p75), names_to='parent_ptile',names_prefix = 'kfr_p',values_to='kfr') %>%
+  mutate(kfr=kfr*100, # put in percent terms
+    parent_ptile=paste0('Raised at ',parent_ptile,'th percentile')) %>%  # Make the parent_ptile variable more descriptive
   ggplot() +
   geom_sf(aes(fill = kfr), alpha=0.8, col="white") +
-  scale_fill_viridis_c(name = "Average income percentile") +
-  facet_wrap(~race, ncol = 2) +
-  labs(title = "Mean income percentile of children born to parents at the 25th percentile") 
+  scale_fill_viridis_c(name = "Average income percentile rank") +
+  facet_wrap(~parent_ptile, ncol = 2) +
+  labs(title = "Mean income percentile of children born to parents at the 25th percentile") +
+  theme(legend.position="bottom")
 ```
 
 ![](08-spatial_files/figure-html/me_tidyr-1.png)<!-- -->
 
-*On your problem set, you'll have to do something similar at the Census tract level, so take note.*
+*On your problem set, you'll have to do something similar at the Census tract level and by race, so take note.*
 
 ### Specialized geometric operations {#geometric}
 
-Alongside all the tidyverse functionality, the **sf** package comes with a full suite of geometrical operations. You should take a look at at the [third **sf** vignette](https://r-spatial.github.io/sf/articles/sf3.html#geometrical-operations) or the [*Geocomputation with R*](https://geocompr.robinlovelace.net/geometric-operations.html#geo-vec) book to get a complete overview. However, here are a few examples to get you started:
+Alongside all the tidyverse functionality, the **sf** package comes with a full suite of geometrical operations. You should take a look at at the [third **sf** vignette](https://r-spatial.github.io/sf/articles/sf3.html#geometrical-operations) or the [*Geocomputation with R*](https://geocompr.robinlovelace.net/geometric-operations.html#geo-vec) book to get a complete overview. 
+
+There are two types of operations: **unary** and **binary** shown below. These categories are helpful to keep in mind when you're trying to find a function to do something new, but you can still get pretty far without memorizing them. 
+
+Here are a few examples to get you started:
 
 #### Unary operations
 
-So-called *unary* operations are applied to a single object. For instance, you can "melt" sub-elements of an **sf** object (e.g. counties) into larger elements (e.g. states) using `sf::st_union()`:
+So-called *unary* operations are applied to a single object. For instance, you can unite sub-elements of an **sf** object (e.g. counties) into larger elements (e.g. states) using `sf::st_union()`:
 
 
 ```r
@@ -405,24 +466,24 @@ ggplot(me) +
 
 #### Binary operations
 
-Another set of so-called *binary* operations can be applied to multiple objects. So, we can get things like the distance between two spatial objects using `sf::st_distance()`. In the below example, I'm going to get the distance from Ashe county to Brunswick county, as well as itself. The latter is just a silly addition to show that we can easily make multiple pairwise comparisons, even when the distance from one element to another is zero.
+Another set of so-called *binary* operations can be applied to multiple objects. So, we can get things like the distance between two spatial objects using `sf::st_distance()`. In the below example, I'm going to get the distance from Androscoggin county to  York county, as well as itself. The latter is just a silly addition to show that we can easily make multiple pairwise comparisons, even when the distance from one element to another is zero.
 
 
 ```r
-andro_cumby = me %>% filter(NAME10 %in% c("Androscoggin", "Cumberland")) 
-cumby = me %>% filter(NAME10 %in% c("Cumberland"))
+andro_york = me %>% filter(COUNTY %in% c("Androscoggin County", "York County")) 
+andro = me %>% filter(COUNTY %in% c("Androscoggin County"))
 
-ac_dist = st_distance(andro_cumby, cumby)
+ay_dist = st_distance(andro_york, andro)
 
 ## We can use the `units` package (already installed as sf dependency) to convert to kilometres 
-ac_dist = ac_dist %>% units::set_units(km) %>% round()
+ay_dist = ay_dist %>% units::set_units(km) %>% round()
 
 ggplot(me) +
   geom_sf(fill = "black", alpha = 0.8, col = "white") +
-  geom_sf(data = me %>% filter(NAME10 %in% c("Androscoggin", "Cumberland")), aes(fill = NAME10), col = "white") +  
+  geom_sf(data = andro_york, aes(fill = COUNTY), col = "white") +  
   labs(
     title = "Calculating distances",
-    subtitle = paste0("The distance between Androscoggin and Cumberland is ", ac_dist[1], " km")
+    subtitle = paste0("The distance between Androscoggin and Cumberland is ", ay_dist[1], " km")
     ) +
   theme(legend.title = element_blank())
 ```
@@ -433,20 +494,23 @@ ggplot(me) +
 
 A sub-genre of binary geometric operations falls into the category of logic rules --- typically characterising the way that geometries relate in space. (Do they overlap, are they nearby, etc.) 
 
-For example, we can calculate the intersection of different spatial objects using `sf::st_intersection()`. For this next example, I'm going to use two new spatial objects: 1) A state map of the USA from the **maps** package and 2) the primary roads from the **tigris** package. Don't worry too much about the process used for loading these datasets; I'll cover that in more depth shortly. For the moment, just focus on the idea that we want to see which adminstrative regions are intersected by the river network. Start by plotting all of the data to get a visual sense of the overlap:
+For example, we can calculate the intersection of different spatial objects using `sf::st_intersection()`. For this next example, I'm going to use the primary roads spatial object from the **tigris** package. Don't worry too much about the process used for loading these datasets; I'll cover that in more depth shortly. For the moment, just focus on the idea that we want to see which counties are intersected by the river network. 
+
+First, I want to make sure the roads have the same projection as maine using the `st_crs()` package.
 
 
 ```r
-## Get the data
-usa = st_as_sf(map('state', plot = FALSE, fill = TRUE))
 road = tigris::primary_roads()
-```
 ## Make sure they have the same projection
-road = st_transform(road, crs = st_crs(usa))
+road = st_transform(road, crs = st_crs(me))
+```
+
+Second, let me plot all the data to see what we're working with. 
+
 
 ```r
 ggplot() + 
-  geom_sf(data = usa, alpha = 0.8, fill = "white", col = "black") + 
+  geom_sf(data = me, alpha = 0.8, fill = "white", col = "black") + 
   geom_sf(data = road, col = "red", lwd = 1) + 
   labs(
     title = "States of the US",
@@ -454,73 +518,48 @@ ggplot() +
     )
 ```
 
-![](08-spatial_files/figure-html/usa_plot-1.png)<!-- -->
+![](08-spatial_files/figure-html/road_plot-1.png)<!-- -->
 
-Uh oh, it looks like we don't have Alaska in our USA map and yet the roads went up there anyway. Also, why don't we just look at Maine? 
+Uh oh, it looks like we mapped all of the roads in the USA! 
 
 
 ```r
 # Turn off spherical geometry see: https://r-spatial.org/r/2020/06/17/s2.html
-sf_use_s2(FALSE)
-road = st_transform(road, crs = st_crs(me))
+road = st_transform(road, crs = st_crs(me)) 
 me_intersected = st_intersection(road, me)
 me_intersected
 ```
 
 ```
-## Simple feature collection with 103 features and 23 fields
+## Simple feature collection with 84 features and 10 fields
 ## Geometry type: GEOMETRY
 ## Dimension:     XY
-## Bounding box:  xmin: -70.76643 ymin: 43.09272 xmax: -67.78126 ymax: 46.14542
+## Bounding box:  xmin: -70.76654 ymin: 43.09266 xmax: -67.78124 ymax: 46.14542
 ## Geodetic CRS:  NAD83
 ## First 10 features:
-##            LINEARID     FULLNAME RTTYP MTFCC STATEFP10 COUNTYFP10 COUNTYNS10
-## 131   1105598252807 State Rte 15     S S1100        23        019   00581295
-## 136   1104470316493 State Rte 15     S S1100        23        019   00581295
-## 11246  110170156233        I- 95     I S1100        23        019   00581295
-## 11247  110170156234        I- 95     I S1100        23        019   00581295
-## 11298  110184905347        I- 95     I S1100        23        019   00581295
-## 11421 1104470496492        I- 95     I S1100        23        019   00581295
-## 11425 1104470495048        I- 95     I S1100        23        019   00581295
-## 11457  110469245634        I- 95     I S1100        23        019   00581295
-## 12595  110184905876       I- 395     I S1100        23        019   00581295
-## 12614 1104469410451       I- 395     I S1100        23        019   00581295
-##       GEOID10    NAME10       NAMELSAD10 LSAD10 CLASSFP10 MTFCC10 CSAFP10
-## 131     23019 Penobscot Penobscot County     06        H1   G4020    <NA>
-## 136     23019 Penobscot Penobscot County     06        H1   G4020    <NA>
-## 11246   23019 Penobscot Penobscot County     06        H1   G4020    <NA>
-## 11247   23019 Penobscot Penobscot County     06        H1   G4020    <NA>
-## 11298   23019 Penobscot Penobscot County     06        H1   G4020    <NA>
-## 11421   23019 Penobscot Penobscot County     06        H1   G4020    <NA>
-## 11425   23019 Penobscot Penobscot County     06        H1   G4020    <NA>
-## 11457   23019 Penobscot Penobscot County     06        H1   G4020    <NA>
-## 12595   23019 Penobscot Penobscot County     06        H1   G4020    <NA>
-## 12614   23019 Penobscot Penobscot County     06        H1   G4020    <NA>
-##       CBSAFP10 METDIVFP10 FUNCSTAT10    ALAND10  AWATER10  INTPTLAT10
-## 131      12620       <NA>          A 8799125852 413670635 +45.3906022
-## 136      12620       <NA>          A 8799125852 413670635 +45.3906022
-## 11246    12620       <NA>          A 8799125852 413670635 +45.3906022
-## 11247    12620       <NA>          A 8799125852 413670635 +45.3906022
-## 11298    12620       <NA>          A 8799125852 413670635 +45.3906022
-## 11421    12620       <NA>          A 8799125852 413670635 +45.3906022
-## 11425    12620       <NA>          A 8799125852 413670635 +45.3906022
-## 11457    12620       <NA>          A 8799125852 413670635 +45.3906022
-## 12595    12620       <NA>          A 8799125852 413670635 +45.3906022
-## 12614    12620       <NA>          A 8799125852 413670635 +45.3906022
-##         INTPTLON10 COUNTYFP STATEFP                       geometry
-## 131   -068.6574869      019      23 LINESTRING (-68.7755 44.819...
-## 136   -068.6574869      019      23 LINESTRING (-68.77229 44.78...
-## 11246 -068.6574869      019      23     POINT (-69.28763 44.83182)
-## 11247 -068.6574869      019      23      POINT (-69.28772 44.8321)
-## 11298 -068.6574869      019      23 LINESTRING (-68.42664 45.85...
-## 11421 -068.6574869      019      23 LINESTRING (-69.28763 44.83...
-## 11425 -068.6574869      019      23 LINESTRING (-68.42663 45.85...
-## 11457 -068.6574869      019      23 LINESTRING (-68.42664 45.85...
-## 12595 -068.6574869      019      23 LINESTRING (-68.81279 44.78...
-## 12614 -068.6574869      019      23 LINESTRING (-68.7216 44.771...
+##            LINEARID   FULLNAME RTTYP MTFCC GEOID              COUNTY STATE
+## 11240 1104470961382      I- 95     I S1100 23001 Androscoggin County Maine
+## 11405 1106087854960      I- 95     I S1100 23001 Androscoggin County Maine
+## 11407 1106087854909      I- 95     I S1100 23001 Androscoggin County Maine
+## 11507 1105084078814      I- 95     I S1100 23001 Androscoggin County Maine
+## 11520 1104471317791      I- 95     I S1100 23001 Androscoggin County Maine
+## 14594 1103681344737 Maine Tpke     M S1100 23001 Androscoggin County Maine
+## 14595 1103681783061 Maine Tpke     M S1100 23001 Androscoggin County Maine
+## 14596 1103681783104 Maine Tpke     M S1100 23001 Androscoggin County Maine
+## 14597 1103681344751 Maine Tpke     M S1100 23001 Androscoggin County Maine
+## 11294  110469245634      I- 95     I S1100 23003    Aroostook County Maine
+##         variable estimate moe                       geometry
+## 11240 B01001_001   107882  NA LINESTRING (-70.00712 44.12...
+## 11405 B01001_001   107882  NA LINESTRING (-70.29294 44.02...
+## 11407 B01001_001   107882  NA LINESTRING (-70.00602 44.12...
+## 11507 B01001_001   107882  NA LINESTRING (-70.29294 44.02...
+## 11520 B01001_001   107882  NA LINESTRING (-70.00602 44.12...
+## 14594 B01001_001   107882  NA LINESTRING (-70.00712 44.12...
+## 14595 B01001_001   107882  NA LINESTRING (-70.00602 44.12...
+## 14596 B01001_001   107882  NA LINESTRING (-70.00602 44.12...
+## 14597 B01001_001   107882  NA LINESTRING (-70.00712 44.12...
+## 11294 B01001_001    72412  NA LINESTRING (-68.42664 45.85...
 ```
-
-I had to set `sf_use_s2()` to false because the `st_intersection()` function is not yet compatible with the new [s2](https://r-spatial.org/r/2020/06/17/s2.html#sf-10-goodbye-flat-earth-welcome-s2-spherical-geometry), which uses spherical geometry. (The curse of open source is things update.)
 
 Note that `st_intersection()` only preserves *exact* points of overlap. As in, this is the exact path that the road follow within these regions. We can see this more explicitly in map form:
 
@@ -543,9 +582,7 @@ If we instead wanted to plot the intersected counties (i.e. keeping their full g
 
 ```r
 # Select only the road variables
-st_join(me, road) %>% 
-  filter(!is.na(LINEARID)) %>% ## Get rid of regions with no overlap
-  #distinct(GEOID10, .keep_all = T) %>% ## Some regions are duplicated b/c two branches of the road network flow through them, this takes a long time.
+st_join(me,road,left=FALSE) %>%  # left=FALSE means we keep only the intersected geometries
   ggplot() + 
   geom_sf(alpha = 0.8, fill = "black", col = "gray50") + 
   geom_sf(data = me_intersected, col = "#05E9FF", lwd = 1) + 
@@ -554,97 +591,145 @@ st_join(me, road) %>%
 
 ![](08-spatial_files/figure-html/me_join-1.png)<!-- -->
 
-One thing you'll often see in spatial analysis is the calculation of nearest neighbors. For example, we might want to know which county is closest to Cumberland. We can do this using the `sf::st_nearest_feature()` function. Note that this function returns the *index* of the nearest feature, not the feature itself. So we'll have to use that index to extract the relevant row from our data frame.
+### Bordering counties
+
+Did you note above that we used `st_join` to find the intersected counties? Let's do that to get bordering counties! 
 
 
 ```r
-nearest_row <- st_nearest_feature(cumby, me %>% filter(NAME10!='Cumberland')) ## Returns the index of the nearest county
-me %>% slice(nearest_row) # Get the nearest row
+st_join(me,andro,left=FALSE) %>% 
+  ggplot() + 
+  geom_sf(alpha = 0.8, fill = "black", col = "gray50") + 
+  labs(title = "Androscoggin County and its Neighbors")
+```
+
+![](08-spatial_files/figure-html/andro_me_join-1.png)<!-- -->
+
+But what if we wanted to leave out Androscoggin? We tell `st_join` that we want to join using the `st_touches` predicate to only show the counties that touch Androscoggin. 
+
+
+```r
+st_join(me,andro,left=FALSE,join=st_touches) %>% # Note the new predicate! 
+  ggplot() + 
+  geom_sf(alpha = 0.8, fill = "black", col = "gray50") + 
+  #geom_sf(data = andro, col = "red",fill='red', lwd = 1) + # Highlight androscoggin
+  labs(title = "Androscoggin County and its Neighbors") 
+```
+
+![](08-spatial_files/figure-html/me_filter-1.png)<!-- -->
+
+Wait, what's going on? How did we drop Androscoggin? `st_touches` is a predicate that returns `TRUE` if the geometries have at least one point in common, but their interiors do not intersect. In other words, it returns `TRUE` if the geometries are adjacent. Let's visualize that:
+
+
+```r
+st_join(me,andro,left=FALSE,join=st_touches)
 ```
 
 ```
-## Simple feature collection with 1 feature and 19 fields
+## Simple feature collection with 5 features and 12 fields
 ## Geometry type: MULTIPOLYGON
 ## Dimension:     XY
-## Bounding box:  xmin: -70.05182 ymin: 43.63647 xmax: -69.66474 ymax: 44.16802
+## Bounding box:  xmin: -71.08433 ymin: 43.52726 xmax: -69.37242 ymax: 45.66783
 ## Geodetic CRS:  NAD83
-##   STATEFP10 COUNTYFP10 COUNTYNS10 GEOID10    NAME10       NAMELSAD10 LSAD10
-## 1        23        023   00581297   23023 Sagadahoc Sagadahoc County     06
-##   CLASSFP10 MTFCC10 CSAFP10 CBSAFP10 METDIVFP10 FUNCSTAT10   ALAND10  AWATER10
-## 1        H1   G4020     438    38860       <NA>          A 657066836 301332007
-##    INTPTLAT10   INTPTLON10 COUNTYFP STATEFP                       geometry
-## 1 +43.9166939 -069.8439936      023      23 MULTIPOLYGON (((-69.78507 4...
+##    GEOID.x          COUNTY.x STATE.x variable.x estimate.x moe.x GEOID.y
+## 3    23005 Cumberland County   Maine B01001_001     279994    NA   23001
+## 4    23007   Franklin County   Maine B01001_001      30657    NA   23001
+## 6    23011   Kennebec County   Maine B01001_001     121925    NA   23001
+## 9    23017     Oxford County   Maine B01001_001      57867    NA   23001
+## 12   23023  Sagadahoc County   Maine B01001_001      35688    NA   23001
+##               COUNTY.y STATE.y variable.y estimate.y moe.y
+## 3  Androscoggin County   Maine B01001_001     107882    NA
+## 4  Androscoggin County   Maine B01001_001     107882    NA
+## 6  Androscoggin County   Maine B01001_001     107882    NA
+## 9  Androscoggin County   Maine B01001_001     107882    NA
+## 12 Androscoggin County   Maine B01001_001     107882    NA
+##                          geometry
+## 3  MULTIPOLYGON (((-70.10624 4...
+## 4  MULTIPOLYGON (((-70.83471 4...
+## 6  MULTIPOLYGON (((-69.74428 4...
+## 9  MULTIPOLYGON (((-71.01489 4...
+## 12 MULTIPOLYGON (((-69.86599 4...
 ```
 
-We can even do this for all of the rows, but it can get a little tedious with `sf::st_nearest_feature()`.
+Note the `.x` and the `.y` because the column names overlapped. R uses `.x` and `.y` to distinguish between the two objects' columns.^[I know it is confusing to keep all these ideas in your head at once. With practice, you'll get experience and greater familiarity with R's syntax, which will make it easier to try new stuff!]
+
+So what if we `st_touches` join Maine to itself? That leaves you with a long dataset where each row is a pair of touching counties. 
 
 
 ```r
-me %>%
-  mutate(nearest_row = st_nearest_feature(.),
-         nearest_county = NAME10[nearest_row]) 
+st_join(me,me,join=st_touches)
 ```
 
 ```
-## Simple feature collection with 16 features and 21 fields
+## Simple feature collection with 66 features and 12 fields
 ## Geometry type: MULTIPOLYGON
 ## Dimension:     XY
-## Bounding box:  xmin: -71.08392 ymin: 42.91713 xmax: -66.88544 ymax: 47.45985
+## Bounding box:  xmin: -71.08433 ymin: 42.97776 xmax: -66.9499 ymax: 47.45969
 ## Geodetic CRS:  NAD83
 ## First 10 features:
-##      STATEFP10 COUNTYFP10 COUNTYNS10 GEOID10     NAME10        NAMELSAD10
-## 45          23        019   00581295   23019  Penobscot  Penobscot County
-## 231         23        029   00581300   23029 Washington Washington County
-## 239         23        003   00581287   23003  Aroostook  Aroostook County
-## 257         23        009   00581290   23009    Hancock    Hancock County
-## 3009        23        007   00581289   23007   Franklin   Franklin County
-## 3010        23        025   00581298   23025   Somerset   Somerset County
-## 3011        23        017   00581294   23017     Oxford     Oxford County
-## 3014        23        027   00581299   23027      Waldo      Waldo County
-## 3015        23        015   00581293   23015    Lincoln    Lincoln County
-## 3016        23        031   00581301   23031       York       York County
-##      LSAD10 CLASSFP10 MTFCC10 CSAFP10 CBSAFP10 METDIVFP10 FUNCSTAT10
-## 45       06        H1   G4020    <NA>    12620       <NA>          A
-## 231      06        H1   G4020    <NA>     <NA>       <NA>          A
-## 239      06        H1   G4020    <NA>     <NA>       <NA>          A
-## 257      06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3009     06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3010     06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3011     06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3014     06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3015     06        H1   G4020    <NA>     <NA>       <NA>          A
-## 3016     06        H1   G4020     438    38860       <NA>          A
-##          ALAND10   AWATER10  INTPTLAT10   INTPTLON10
-## 45    8799125852  413670635 +45.3906022 -068.6574869
-## 231   6637257545 1800019787 +44.9670088 -067.6093542
-## 239  17278664655  404653951 +46.7270567 -068.6494098
-## 257   4110034060 1963321064 +44.5649063 -068.3707034
-## 3009  4394196449  121392907 +44.9730124 -070.4447268
-## 3010 10164156961  438038365 +45.5074824 -069.9760395
-## 3011  5378990983  256086721 +44.4945850 -070.7346875
-## 3014  1890479704  318149622 +44.5053607 -069.1396775
-## 3015  1180563700  631400289 +43.9942645 -069.5140292
-## 3016  2565935077  722608929 +43.4272386 -070.6704023
-##                            geometry COUNTYFP STATEFP nearest_row nearest_county
-## 45   MULTIPOLYGON (((-69.28127 4...      019      23           6       Somerset
-## 231  MULTIPOLYGON (((-67.7543 45...      029      23           4        Hancock
-## 239  MULTIPOLYGON (((-68.43227 4...      003      23           6       Somerset
-## 257  MULTIPOLYGON (((-68.80096 4...      009      23          11           Knox
-## 3009 MULTIPOLYGON (((-70.29383 4...      007      23          13   Androscoggin
-## 3010 MULTIPOLYGON (((-69.85327 4...      025      23          14       Kennebec
-## 3011 MULTIPOLYGON (((-71.05825 4...      017      23          10           York
-## 3014 MULTIPOLYGON (((-69.26888 4...      027      23          14       Kennebec
-## 3015 MULTIPOLYGON (((-69.69056 4...      015      23          14       Kennebec
-## 3016 MULTIPOLYGON (((-70.76779 4...      031      23          15     Cumberland
+##     GEOID.x            COUNTY.x STATE.x variable.x estimate.x moe.x GEOID.y
+## 1     23001 Androscoggin County   Maine B01001_001     107882    NA   23005
+## 1.1   23001 Androscoggin County   Maine B01001_001     107882    NA   23007
+## 1.2   23001 Androscoggin County   Maine B01001_001     107882    NA   23011
+## 1.3   23001 Androscoggin County   Maine B01001_001     107882    NA   23017
+## 1.4   23001 Androscoggin County   Maine B01001_001     107882    NA   23023
+## 2     23003    Aroostook County   Maine B01001_001      72412    NA   23019
+## 2.1   23003    Aroostook County   Maine B01001_001      72412    NA   23021
+## 2.2   23003    Aroostook County   Maine B01001_001      72412    NA   23025
+## 2.3   23003    Aroostook County   Maine B01001_001      72412    NA   23029
+## 3     23005   Cumberland County   Maine B01001_001     279994    NA   23001
+##                COUNTY.y STATE.y variable.y estimate.y moe.y
+## 1     Cumberland County   Maine B01001_001     279994    NA
+## 1.1     Franklin County   Maine B01001_001      30657    NA
+## 1.2     Kennebec County   Maine B01001_001     121925    NA
+## 1.3       Oxford County   Maine B01001_001      57867    NA
+## 1.4    Sagadahoc County   Maine B01001_001      35688    NA
+## 2      Penobscot County   Maine B01001_001     152934    NA
+## 2.1  Piscataquis County   Maine B01001_001      17555    NA
+## 2.2     Somerset County   Maine B01001_001      52261    NA
+## 2.3   Washington County   Maine B01001_001      33154    NA
+## 3   Androscoggin County   Maine B01001_001     107882    NA
+##                           geometry
+## 1   MULTIPOLYGON (((-70.16011 4...
+## 1.1 MULTIPOLYGON (((-70.16011 4...
+## 1.2 MULTIPOLYGON (((-70.16011 4...
+## 1.3 MULTIPOLYGON (((-70.16011 4...
+## 1.4 MULTIPOLYGON (((-70.16011 4...
+## 2   MULTIPOLYGON (((-68.5918 47...
+## 2.1 MULTIPOLYGON (((-68.5918 47...
+## 2.2 MULTIPOLYGON (((-68.5918 47...
+## 2.3 MULTIPOLYGON (((-68.5918 47...
+## 3   MULTIPOLYGON (((-70.10624 4...
 ```
 
-Instead, I recommend using the `nngeo` package, which provides a more intuitive interface for nearest neighbor calculations. This makes it easy to find the k-nearest neighbors. `st_nn` takes an argument `k`, which is the number of nearest neighbors. `sf::st_join` allows you to specify that you want to join by `st_nn`, which means it will join by the nearest neighbor. You can even specify a max distance to look for neighbors with `maxdist`. 
+#### Comprehension check
+
+[Why would you want know the neighboring counties of a given county?](https://www.mentimeter.com/app/presentation/blkhnym4ou7ejzod9b1gc6b24id49nr5/o68k5g2hmmx8)
+
+### Nearest neighbors
+
+Sometimes you'll want to know more than neighbors, you'll want to know the nearest $k$ neighbors, where $k$ is some arbitrary number. Consider this plot:
 
 
 ```r
-#library(nngeo) ## Already loaded
+knitr::include_graphics("../09-oppatlas/pics/spatial_correlation_decay.png")
+```
 
-nngeo::st_nn(cumby, filter(me,NAME10!='Cumberland'), k = 2) 
+<img src="../09-oppatlas/pics/spatial_correlation_decay.png" width="1232" />
+
+This is plots the spatial correlation of income mobility with poverty for neighboring census tracts. The spatial correlation is highest within group, but then decays. 
+
+It is possible to do this using the **sf** package using the `st_nearest_feature()` function to get the nearest feature and then repeating to get the next most nearest and so on. A for loop or some **purrr** magic (covered later) and you're off to the races. But it turns out, there's a package that makes this easier: **nngeo** and its functions `st_nn` for "nearest neighbors."
+
+
+```r
+st_nn(andro, # The object to find the nearest neighbors for
+  me, # The object to find the nearest neighbors in
+  k=3) # The number of nearest neighbors
+```
+
+```
+## lines or polygons
 ```
 
 ```
@@ -657,11 +742,19 @@ nngeo::st_nn(cumby, filter(me,NAME10!='Cumberland'), k = 2)
 
 ```
 ## [[1]]
-## [1]  7 10
+## [1] 1 3 4
 ```
 
+
 ```r
-sf::st_join(cumby, filter(me,NAME10!='Cumberland'), join = st_nn, k = 5,maxdist=1) 
+st_join(me, me, 
+  join = st_nn, # Use st_nn
+  k = 5,# The number of nearest neighbors
+  maxdist=100000) # The max distance in meters to look for neighbors
+```
+
+```
+## lines or polygons
 ```
 
 ```
@@ -669,143 +762,84 @@ sf::st_join(cumby, filter(me,NAME10!='Cumberland'), join = st_nn, k = 5,maxdist=
   |                                                                            
   |                                                                      |   0%
   |                                                                            
+  |====                                                                  |   6%
+  |                                                                            
+  |=========                                                             |  12%
+  |                                                                            
+  |=============                                                         |  19%
+  |                                                                            
+  |==================                                                    |  25%
+  |                                                                            
+  |======================                                                |  31%
+  |                                                                            
+  |==========================                                            |  38%
+  |                                                                            
+  |===============================                                       |  44%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |=======================================                               |  56%
+  |                                                                            
+  |============================================                          |  62%
+  |                                                                            
+  |================================================                      |  69%
+  |                                                                            
+  |====================================================                  |  75%
+  |                                                                            
+  |=========================================================             |  81%
+  |                                                                            
+  |=============================================================         |  88%
+  |                                                                            
+  |==================================================================    |  94%
+  |                                                                            
   |======================================================================| 100%
 ```
 
 ```
-## Simple feature collection with 4 features and 38 fields
+## Simple feature collection with 80 features and 12 fields
 ## Geometry type: MULTIPOLYGON
 ## Dimension:     XY
-## Bounding box:  xmin: -70.86662 ymin: 43.46688 xmax: -69.85703 ymax: 44.17104
+## Bounding box:  xmin: -71.08433 ymin: 42.97776 xmax: -66.9499 ymax: 47.45969
 ## Geodetic CRS:  NAD83
-##     STATEFP10.x COUNTYFP10.x COUNTYNS10.x GEOID10.x   NAME10.x
-## 1            23          005     00581288     23005 Cumberland
-## 1.1          23          005     00581288     23005 Cumberland
-## 1.2          23          005     00581288     23005 Cumberland
-## 1.3          23          005     00581288     23005 Cumberland
-##          NAMELSAD10.x LSAD10.x CLASSFP10.x MTFCC10.x CSAFP10.x CBSAFP10.x
-## 1   Cumberland County       06          H1     G4020       438      38860
-## 1.1 Cumberland County       06          H1     G4020       438      38860
-## 1.2 Cumberland County       06          H1     G4020       438      38860
-## 1.3 Cumberland County       06          H1     G4020       438      38860
-##     METDIVFP10.x FUNCSTAT10.x  ALAND10.x AWATER10.x INTPTLAT10.x INTPTLON10.x
-## 1           <NA>            A 2163263369  989949911  +43.8083479 -070.3303753
-## 1.1         <NA>            A 2163263369  989949911  +43.8083479 -070.3303753
-## 1.2         <NA>            A 2163263369  989949911  +43.8083479 -070.3303753
-## 1.3         <NA>            A 2163263369  989949911  +43.8083479 -070.3303753
-##     COUNTYFP.x STATEFP.x STATEFP10.y COUNTYFP10.y COUNTYNS10.y GEOID10.y
-## 1          005        23          23          017     00581294     23017
-## 1.1        005        23          23          031     00581301     23031
-## 1.2        005        23          23          023     00581297     23023
-## 1.3        005        23          23          001     00581286     23001
-##         NAME10.y        NAMELSAD10.y LSAD10.y CLASSFP10.y MTFCC10.y CSAFP10.y
-## 1         Oxford       Oxford County       06          H1     G4020      <NA>
-## 1.1         York         York County       06          H1     G4020       438
-## 1.2    Sagadahoc    Sagadahoc County       06          H1     G4020       438
-## 1.3 Androscoggin Androscoggin County       06          H1     G4020       438
-##     CBSAFP10.y METDIVFP10.y FUNCSTAT10.y  ALAND10.y AWATER10.y INTPTLAT10.y
-## 1         <NA>         <NA>            A 5378990983  256086721  +44.4945850
-## 1.1      38860         <NA>            A 2565935077  722608929  +43.4272386
-## 1.2      38860         <NA>            A  657066836  301332007  +43.9166939
-## 1.3      30340         <NA>            A 1211926439   75610678  +44.1676811
-##     INTPTLON10.y COUNTYFP.y STATEFP.y                       geometry
-## 1   -070.7346875        017        23 MULTIPOLYGON (((-69.89595 4...
-## 1.1 -070.6704023        031        23 MULTIPOLYGON (((-69.89595 4...
-## 1.2 -069.8439936        023        23 MULTIPOLYGON (((-69.89595 4...
-## 1.3 -070.2074347        001        23 MULTIPOLYGON (((-69.89595 4...
+## First 10 features:
+##     GEOID.x            COUNTY.x STATE.x variable.x estimate.x moe.x GEOID.y
+## 1     23001 Androscoggin County   Maine B01001_001     107882    NA   23001
+## 1.1   23001 Androscoggin County   Maine B01001_001     107882    NA   23005
+## 1.2   23001 Androscoggin County   Maine B01001_001     107882    NA   23007
+## 1.3   23001 Androscoggin County   Maine B01001_001     107882    NA   23011
+## 1.4   23001 Androscoggin County   Maine B01001_001     107882    NA   23017
+## 2     23003    Aroostook County   Maine B01001_001      72412    NA   23003
+## 2.1   23003    Aroostook County   Maine B01001_001      72412    NA   23019
+## 2.2   23003    Aroostook County   Maine B01001_001      72412    NA   23021
+## 2.3   23003    Aroostook County   Maine B01001_001      72412    NA   23025
+## 2.4   23003    Aroostook County   Maine B01001_001      72412    NA   23029
+##                COUNTY.y STATE.y variable.y estimate.y moe.y
+## 1   Androscoggin County   Maine B01001_001     107882    NA
+## 1.1   Cumberland County   Maine B01001_001     279994    NA
+## 1.2     Franklin County   Maine B01001_001      30657    NA
+## 1.3     Kennebec County   Maine B01001_001     121925    NA
+## 1.4       Oxford County   Maine B01001_001      57867    NA
+## 2      Aroostook County   Maine B01001_001      72412    NA
+## 2.1    Penobscot County   Maine B01001_001     152934    NA
+## 2.2  Piscataquis County   Maine B01001_001      17555    NA
+## 2.3     Somerset County   Maine B01001_001      52261    NA
+## 2.4   Washington County   Maine B01001_001      33154    NA
+##                           geometry
+## 1   MULTIPOLYGON (((-70.16011 4...
+## 1.1 MULTIPOLYGON (((-70.16011 4...
+## 1.2 MULTIPOLYGON (((-70.16011 4...
+## 1.3 MULTIPOLYGON (((-70.16011 4...
+## 1.4 MULTIPOLYGON (((-70.16011 4...
+## 2   MULTIPOLYGON (((-68.5918 47...
+## 2.1 MULTIPOLYGON (((-68.5918 47...
+## 2.2 MULTIPOLYGON (((-68.5918 47...
+## 2.3 MULTIPOLYGON (((-68.5918 47...
+## 2.4 MULTIPOLYGON (((-68.5918 47...
 ```
+
+This returns the five nearest neighbors to each county including itself. 
 
 That's about as much **sf** functionality as I can show you for today. The remaining part of this lecture will cover some additional mapping considerations and some bonus spatial R "swag". However, I'll try to slip in a few more **sf**-specific operations along the way.
-
-### Aside: **sf** and **data.table**
-
-**sf** objects are designed to integrate with a **tidyverse** workflow. They can also be made to work a **data.table** workflow too, but the integration is not as slick. This is a [known issue](https://github.com/Rdatatable/data.table/issues/2273) and I'll only just highlight a few very brief considerations.
-
-You can convert an **sf** object into a data.table. But note that the key geometry column appears to lose its attributes.
-
-
-```r
-# library(data.table) ## Already loaded
-
-me_dt = as.data.table(me)
-head(me_dt)
-```
-
-```
-##    STATEFP10 COUNTYFP10 COUNTYNS10 GEOID10     NAME10        NAMELSAD10 LSAD10
-## 1:        23        019   00581295   23019  Penobscot  Penobscot County     06
-## 2:        23        029   00581300   23029 Washington Washington County     06
-## 3:        23        003   00581287   23003  Aroostook  Aroostook County     06
-## 4:        23        009   00581290   23009    Hancock    Hancock County     06
-## 5:        23        007   00581289   23007   Franklin   Franklin County     06
-## 6:        23        025   00581298   23025   Somerset   Somerset County     06
-##    CLASSFP10 MTFCC10 CSAFP10 CBSAFP10 METDIVFP10 FUNCSTAT10     ALAND10
-## 1:        H1   G4020    <NA>    12620       <NA>          A  8799125852
-## 2:        H1   G4020    <NA>     <NA>       <NA>          A  6637257545
-## 3:        H1   G4020    <NA>     <NA>       <NA>          A 17278664655
-## 4:        H1   G4020    <NA>     <NA>       <NA>          A  4110034060
-## 5:        H1   G4020    <NA>     <NA>       <NA>          A  4394196449
-## 6:        H1   G4020    <NA>     <NA>       <NA>          A 10164156961
-##      AWATER10  INTPTLAT10   INTPTLON10 geometry COUNTYFP STATEFP
-## 1:  413670635 +45.3906022 -068.6574869  <XY[1]>      019      23
-## 2: 1800019787 +44.9670088 -067.6093542  <XY[1]>      029      23
-## 3:  404653951 +46.7270567 -068.6494098  <XY[1]>      003      23
-## 4: 1963321064 +44.5649063 -068.3707034  <XY[1]>      009      23
-## 5:  121392907 +44.9730124 -070.4447268  <XY[1]>      007      23
-## 6:  438038365 +45.5074824 -069.9760395  <XY[1]>      025      23
-```
-
-The good news is that all of this information is still there. It's just hidden from display.
-
-
-```r
-me_dt$geometry
-```
-
-```
-## Geometry set for 16 features 
-## Geometry type: MULTIPOLYGON
-## Dimension:     XY
-## Bounding box:  xmin: -71.08392 ymin: 42.91713 xmax: -66.88544 ymax: 47.45985
-## Geodetic CRS:  NAD83
-## First 5 geometries:
-```
-
-```
-## MULTIPOLYGON (((-69.28127 44.80866, -69.28143 4...
-```
-
-```
-## MULTIPOLYGON (((-67.7543 45.66757, -67.75186 45...
-```
-
-```
-## MULTIPOLYGON (((-68.43227 46.03557, -68.43285 4...
-```
-
-```
-## MULTIPOLYGON (((-68.80096 44.46203, -68.80007 4...
-```
-
-```
-## MULTIPOLYGON (((-70.29383 45.1099, -70.29348 45...
-```
-
-What's the upshot? Well, basically it means that you have to refer to this "geometry" column explicitly whenever you implement a spatial operation. For example, here's a repeat of the `st_union()` operation that we saw earlier. Note that I explicitly refer to the "geometry" column both for the `st_union()` operation (which, moreover, takes place in the
-"j" data.table slot) and when assigning the aesthetics for the `ggplot()` call.
-
-
-```r
-me_dt[, .(geometry = st_union(geometry))] %>% ## Explicitly refer to 'geometry' col
-    ggplot(aes(geometry = geometry)) +        ## And here again for the aes()
-    geom_sf(fill=NA, col="black") +
-    labs(title = "Outline of Maine", 
-         subtitle = "This time brought to you by data.table") 
-```
-
-![](08-spatial_files/figure-html/ncd_dt3-1.png)<!-- -->
-
-Of course, it's also possible to efficiently convert between the two classes --- e.g. with `as.data.table()` and `st_as_sf()` --- depending on what a particular section of code does (data wrangling or spatial operation). I find that often use this approach in my own work.
 
 ## Bonus 1: Where to get map data
 
@@ -1291,6 +1325,96 @@ tm_shape(land_eck4) +
 ```
 
 ![](08-spatial_files/figure-html/tmap-1.png)<!-- -->
+
+## Aside: **sf** and **data.table**
+
+**sf** objects are designed to integrate with a **tidyverse** workflow. They can also be made to work a **data.table** workflow too, but the integration is not as slick. This is a [known issue](https://github.com/Rdatatable/data.table/issues/2273) and I'll only just highlight a few very brief considerations.
+
+You can convert an **sf** object into a data.table. But note that the key geometry column appears to lose its attributes.
+
+
+```r
+# library(data.table) ## Already loaded
+
+me_dt = as.data.table(me)
+head(me_dt)
+```
+
+```
+##    STATEFP10 COUNTYFP10 COUNTYNS10 GEOID10     NAME10        NAMELSAD10 LSAD10
+## 1:        23        019   00581295   23019  Penobscot  Penobscot County     06
+## 2:        23        029   00581300   23029 Washington Washington County     06
+## 3:        23        003   00581287   23003  Aroostook  Aroostook County     06
+## 4:        23        009   00581290   23009    Hancock    Hancock County     06
+## 5:        23        007   00581289   23007   Franklin   Franklin County     06
+## 6:        23        025   00581298   23025   Somerset   Somerset County     06
+##    CLASSFP10 MTFCC10 CSAFP10 CBSAFP10 METDIVFP10 FUNCSTAT10     ALAND10
+## 1:        H1   G4020    <NA>    12620       <NA>          A  8799125852
+## 2:        H1   G4020    <NA>     <NA>       <NA>          A  6637257545
+## 3:        H1   G4020    <NA>     <NA>       <NA>          A 17278664655
+## 4:        H1   G4020    <NA>     <NA>       <NA>          A  4110034060
+## 5:        H1   G4020    <NA>     <NA>       <NA>          A  4394196449
+## 6:        H1   G4020    <NA>     <NA>       <NA>          A 10164156961
+##      AWATER10  INTPTLAT10   INTPTLON10 geometry COUNTYFP STATEFP
+## 1:  413670635 +45.3906022 -068.6574869  <XY[1]>      019      23
+## 2: 1800019787 +44.9670088 -067.6093542  <XY[1]>      029      23
+## 3:  404653951 +46.7270567 -068.6494098  <XY[1]>      003      23
+## 4: 1963321064 +44.5649063 -068.3707034  <XY[1]>      009      23
+## 5:  121392907 +44.9730124 -070.4447268  <XY[1]>      007      23
+## 6:  438038365 +45.5074824 -069.9760395  <XY[1]>      025      23
+```
+
+The good news is that all of this information is still there. It's just hidden from display.
+
+
+```r
+me_dt$geometry
+```
+
+```
+## Geometry set for 16 features 
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -71.08392 ymin: 42.91713 xmax: -66.88544 ymax: 47.45985
+## Geodetic CRS:  NAD83
+## First 5 geometries:
+```
+
+```
+## MULTIPOLYGON (((-69.28127 44.80866, -69.28143 4...
+```
+
+```
+## MULTIPOLYGON (((-67.7543 45.66757, -67.75186 45...
+```
+
+```
+## MULTIPOLYGON (((-68.43227 46.03557, -68.43285 4...
+```
+
+```
+## MULTIPOLYGON (((-68.80096 44.46203, -68.80007 4...
+```
+
+```
+## MULTIPOLYGON (((-70.29383 45.1099, -70.29348 45...
+```
+
+What's the upshot? Well, basically it means that you have to refer to this "geometry" column explicitly whenever you implement a spatial operation. For example, here's a repeat of the `st_union()` operation that we saw earlier. Note that I explicitly refer to the "geometry" column both for the `st_union()` operation (which, moreover, takes place in the
+"j" data.table slot) and when assigning the aesthetics for the `ggplot()` call.
+
+
+```r
+me_dt[, .(geometry = st_union(geometry))] %>% ## Explicitly refer to 'geometry' col
+    ggplot(aes(geometry = geometry)) +        ## And here again for the aes()
+    geom_sf(fill=NA, col="black") +
+    labs(title = "Outline of Maine", 
+         subtitle = "This time brought to you by data.table") 
+```
+
+![](08-spatial_files/figure-html/ncd_dt3-1.png)<!-- -->
+
+Of course, it's also possible to efficiently convert between the two classes --- e.g. with `as.data.table()` and `st_as_sf()` --- depending on what a particular section of code does (data wrangling or spatial operation). I find that often use this approach in my own work.
 
 ## Further reading
 

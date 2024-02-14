@@ -44,6 +44,18 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300)
 
 *Note: This lecture will focus only on **vector-based** spatial analysis. We will not cover **raster-based** spatial analysis, although this is an equally important subject. Here is a link to it a lecture on it by [Grant McDermott](https://raw.githack.com/uo-ec607/lectures/master/09a-spatial-rasters/09a-spatial-rasters.html). There are further resources below. Rasters are used to make satellite images, relief maps, etc.*
 
+## Working through interactively
+
+I heavily suggest that you work through this lecture interactively, you'll get the most out of it if you're able to run the code chunks yourself. There are two ways to do this:
+
+1. **GitHub Codespaces:** This is the easiest way to get started. Just click on the green "Code" button on the top right of the repository and select "Open with Codespaces". This will open an RStudio environment in your browser, with all the necessary packages pre-installed. 
+
+2. **Fork the repository and clone it**: If you have not yet forked these materials, you can do so by clicking the "Fork" button on the top right of the repository. Once you have your own fork, you can clone it to your local machine, then navigate within it. 
+
+Once you have access to these notes and your R environment setup, navigate to the directory `lectures/08-spatial-analysis` and open the `08-spatial.Rmd` file. You can then start running the code chunks. 
+
+As a caveat, everything here is self-contained. Any installations are included in the code chunks, so you can run everything from start to finish with copy-and-paste. But it will be a bit slow and tedious. 
+
 ## Requirements
 
 ### External libraries (requirements vary by OS)
@@ -56,8 +68,8 @@ We're going to be doing all our spatial analysis and plotting today in R. Behind
 
 ### R packages 
 
-- New: **sf**, **lwgeom**, **maps**, **mapdata**, **spData**, **tigris**, **tidycensus**, **leaflet**, **mapview**, **tmap**, **tmaptools**, **nngeo**
-- Already used: **tidyverse**, **data.table**, **hrbrthemes**
+- New: **sf**, **lwgeom**, **maps**, **mapdata**, **spData**, **tigris**, **leaflet**, **mapview**, **tmap**, **tmaptools**, **nngeo**
+- Already used: **tidyverse**, **data.table**, **hrbrthemes**, **tidycensus**
 
 Truth be told, you only need a handful of the above libraries to do 95% of the spatial work that you're likely to encounter. But R's spatial ecosystem and support is extremely rich, so I'll try to walk through a number of specific use-cases in this lecture. Run the following code chunk to install (if necessary) and load everything.
 
@@ -68,7 +80,6 @@ pacman::p_load(sf, tidyverse, data.table, hrbrthemes, lwgeom, rnaturalearth, map
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
 ```
-
 
 ### Census API key
 
@@ -83,6 +94,71 @@ so that caching is automatically enabled for future sessions. A quick way to do 
 
 ```{r,eval=FALSE}
 options(tigris_use_cache=TRUE)
+```
+
+### Data Downloads
+
+Today we'll be mapping the [Opportunity Atlas datasets](https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html) at the county level. Specifically, we're going to map the average income percentile of children born to parents at different percentiles. 
+
+You can manually download or automate the download using `download.file`. `download.file` has a default "timeout" of 60 seconds, which means it will stop trying to download the file after 60 seconds. If you're downloading a large file, you may need to increase the timeout time. (I've set it to 600 seconds below.)
+
+```{r download,warning=FALSE,eval=FALSE}
+options(timeout=600) # 600 seconds to download the file -- default is 60
+download.file("https://www2.census.gov/ces/opportunity/county_outcomes.zip", "data/county_outcomes.zip")
+options(timeout=60) # Reset the timeout to the default
+```
+
+On your problem set, you will be using the [Opportunity Atlas datasets](https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html) at the Census tract level. It takes much longer to download and automating it may require your to increase the timeout even more. Alternatively, you can download manually. 
+
+There a couple ways to open up this file. We'll go with a two-step approach of unzipping the file and then reading it in.^[If you're curious about reading in the file directly from the zip file, check the [Data Tips notes](https://raw.githack.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.html#1).] The code block below shows you how to unzip then read with `readr::read_csv`. 
+
+```{r unzip_read,eval=FALSE}
+unzip("data/county_outcomes.zip", exdir = "data")
+op_atlas <- read_csv("data/county_outcomes.csv")
+file.remove("data/county_outcomes.csv") # Remove the CSV
+```
+
+That read-in took a minute, huh? That's because the file is pretty big. Let's shrink it down to just the necessary variables and rows to save space. Today we're only mapping the mean household income percentile rank of children born to parents at the 25th and 75th percentile for a few race groups in Maine. So let's select and filter. 
+
+If you checkout the [codebook](https://www2.census.gov/ces/opportunity/Codebook-for-Table-5.pdf), you can see that variables have the form `[outcome]_[race]_[gender]_p[pctile]`. We want the outcome of average household income for children born to parents at the 25th percentile and 75th percentile. Per the codebook:
+
+- `kfr`: Average household income percentile rank of children
+- `p25`: Raised at the 25th percentile
+- `pooled`: Pooled across all races/genders
+- `state` : State fips code
+- `county` : County fips code
+
+Also, a quick Google search confirms that Maine's FIPS code is 23. 
+
+#### Quick comprehension test: 
+
+- [How do I select a variable for mean percentile rank of white people born in the 25th percentile?](https://www.mentimeter.com/app/presentation/blkhnym4ou7ejzod9b1gc6b24id49nr5/6mksdbuegpmm)
+- [Is the variable kfr_p25 a valid variable?](https://www.mentimeter.com/app/presentation/blkhnym4ou7ejzod9b1gc6b24id49nr5/hrp9wk5vka8z)
+
+Armed with that knowledge, we can carefully select the groups we want and rename to simplify the variable names. 
+
+```{r op_atlas_shrink,eval=FALSE}
+op_atlas <- select(op_atlas, czname, state, county, 
+  kfr_p25  = kfr_pooled_pooled_p25, 
+  kfr_p75  = kfr_pooled_pooled_p75) %>%
+  filter(state==23) # Maine's fips code is 23! 
+write_csv(op_atlas, "data/county_outcomes_p25_p75.csv") # Save the file
+```
+
+```{r unzipp_read_skip,include=FALSE}
+# To make my life easier (less waiting), I'm going to skip the unzipping and reading in
+op_atlas <- read_csv("data/county_outcomes_p25_p75.csv")
+```
+
+By shrinking down the file, we've made it much easier to work with. This is a good practice in general then you only have to get the big data open once.
+
+The last thing we'll need to do is to create a 5-digit FIPS code for each county by combining the state and county codes. This is a common practice in the US for uniquely identifying counties. 
+
+We'll use this to `join` the Opportunity Atlas data with Maine county shapefiles on the variable, `GEOID`, which is the FIPS code as a character variable. Below I create a character variable called `GEOID` that contains the 5-digit FIPS code.
+
+```{r fips}
+op_atlas <- op_atlas %>% 
+  mutate(GEOID= as.character(state*1000+county)) # Create a 5-digit FIPS code as a string
 ```
 
 ## Introduction: CRS and map projections
@@ -117,34 +193,25 @@ R has long provided excellent support for spatial analysis and plotting (primari
 
 The "sf" stands for [**s**imple **f**eatures](https://en.wikipedia.org/wiki/Simple_Features), which is a simple (ahem) standard for representing the spatial geometries of real-world objects on a computer.^[See the [first](https://r-spatial.github.io/sf/articles/sf1.html) of the excellent **sf** vignettes for more details.] These objects --- i.e. "features" --- could include a tree, a building, a country's border, or the entire globe. The point is that they are characterised by a common set of rules, defining everything from how they are stored on our computer to which geometrical operations can be applied them. Of greater importance for our purposes, however, is the fact that **sf** represents these features in R as *data frames*. This means that all of our data wrangling skills from previous lectures can be applied to spatial data; say nothing of the specialized spatial functions that we'll cover next.
 
+Somewhat confusingly, most of the functions in the **sf** package start with the prefix `st_`. This stands for *<b>s</b>patial and <b>t</b>emporal* and a basic command of this package is easy enough once you remember that you're probably looking for `st_SOMETHING()`.^[I rather wish they'd gone with a `sf_` prefix myself --- or at least created aliases for it --- but the package developers are apparently following [standard naming conventions from PostGIS](https://github.com/r-spatial/sf/issues/140#issuecomment-270029715).] 
+
 ### Reading in spatial data
 
-Somewhat confusingly, most of the functions in the **sf** package start with the prefix `st_`. This stands for *<b>s</b>patial and <b>t</b>emporal* and a basic command of this package is easy enough once you remember that you're probably looking for `st_SOMETHING()`.^[I rather wish they'd gone with a `sf_` prefix myself --- or at least created aliases for it --- but the package developers are apparently following [standard naming conventions from PostGIS](https://github.com/r-spatial/sf/issues/140#issuecomment-270029715).]
+Vector-based spatial data is often stored in a shapefile, which is a file format for storing the geometric location and attribute information of geographic features. Rather than explain a shapefile, let's just read one in and see what it looks like. Where can we get shapefiles? Why from the Census! 
 
-Let's demonstrate by reading in a shapefile for Maine.^[**sf** includes the North Carolina county shapefile, but we're in Maine.] As you might have guessed, we're going to use the `st_read()` command and **sf** package will handle all the heavy lifting behind the scenes. Shapefile are a "geospatial vector data format" that is widely used in GIS software that typically have the file ending `.shp`.^[See [here](https://en.wikipedia.org/wiki/Shapefile) for more details.] Basically, it contains the shape of each feature (e.g. county) represented as coordinates, along with a bunch of other information about the feature (e.g. county name, population, etc.). 
+The Census Bureau maintains a database of shapefiles for all kinds of geographic entities, from states to counties to census tracts. You can download these shapefiles from the [TIGER](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html) (Topologically Integrated Geographic Encoding and Referencing) website. Alternatively, you can use the **tidycensus** (or **tigris** explained below) package to download them for you by setting `geometry=TRUE` as an argument in functions like `tidycensus::get_acs()`. 
 
-How do we get the shapefile? Well the Census has loads that cover all kinds of different geographies at [TIGER](https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html), which stands for Topologically Integrated Geographic Encoding and Referencing. You could go in and download any shapefile you want OR you could use a package like **tidycensus** or **tigris** to download it for you. You're already familiar with **tidycensus**, which you may have noticed you can get it to return `geometry` as a variable if you specify `geometry=TRUE`. This is a vector that **sf** can use. 
+Let's demonstrate by reading in a shapefile for Maine. As you might have guessed, we're going to use the `st_read()` command and **sf** package will handle all the heavy lifting behind the scenes. Shapefile are a "geospatial vector data format" that is widely used in GIS software that typically have the file ending `.shp`.^[See [here](https://en.wikipedia.org/wiki/Shapefile) for more details.] Basically, it contains the shape of each feature (e.g. county) represented as coordinates, along with a bunch of other information about the feature (e.g. county name, population, etc.). 
 
-```{r tidycensus, eval=FALSE}
+```{r tidycensus, message=F, results = FALSE,warning=F}
 me = tidycensus::get_acs(
   geography = "county", 
-  variables = "B01001_001", 
+  variables = "B01001_001", # Population size variable
   state = "ME", 
-  geometry = TRUE
+  geometry = TRUE,
+  year=2010 # Opp Atlas data uses 2010 county boundaries
   )
 ```
-
-```
-
-[**tigris**](https://github.com/walkerke/tigris) is explained in greater detail below, but it contains just about every TIGER shapefile that you could want, which come with more spatial info than **tidycensus** will give. For example, here's how we can download the Maine counties shapefile:
-
-```{r maine, message=F, results = FALSE}
-# library(tigris) ## Already loaded
-me = tigris::counties(state='ME',
-  year=2010)
-```
-
-*Note: We are using the year 2010 to link it to the Opportunity Atlas.*
 
 ### Simple Features as data frames
 
@@ -154,7 +221,11 @@ Let's print out the `me` object that we just created and take a look at its stru
 me
 ```
 
-Now we can see the explicit data frame structure. The object has the familiar tibble-style output that we're used to (e.g. it only prints the first 10 rows of the data). However, it also has some additional information in the header, like a description of the geometry type ("MULTIPOLYGON") and CRS (e.g. EPSG ID 4267). One thing I want to note in particular is the `geometry` column right at the end of the data frame. This geometry column is how **sf** package achieves much of its magic: It stores the geometries of each row element in its own list column.^[For example, we could print out the coordinates needed to plot the first element in our data frame, Ashe county, by typing `me$geometry[[1]]`. In contrast, I invite you to see how complicated the structure of a traditional spatial object is by running, say, `str(as(me, "Spatial"))`.] Since all we really care about are the key feature attributes --- county name, FIPS code, population size, etc. --- we can focus on those instead of getting bogged down by hundreds (or thousands or even millions) of coordinate points. In turn, this all means that our favourite **tidyverse** operations and syntax (including the pipe operator `%>%`) can be applied to spatial data. Let's review some examples, starting with plotting.
+Now we can see the explicit data frame structure. The object has the familiar tibble-style output that we're used to (e.g. it only prints the first 10 rows of the data). However, it also has some additional information in the header, like a description of the geometry type ("MULTIPOLYGON") and CRS (e.g. EPSG ID 4267). One thing I want to note in particular is the `geometry` column right at the end of the data frame. This geometry column is how **sf** package achieves much of its magic: It stores the geometries of each row element in its own list column.^[For example, we could print out the coordinates needed to plot the first element in our data frame, Lincoln county, by typing `me$geometry[[1]]`. In contrast, I invite you to see how complicated the structure of a traditional spatial object is by running, say, `str(as(me, "Spatial"))`.] Since all we really care about are the key feature attributes --- county name, FIPS code, population size, etc. --- we can focus on those instead of getting bogged down by hundreds (or thousands or even millions) of coordinate points. In turn, this all means that our favourite **tidyverse** operations and syntax (including the pipe operator `%>%`) can be applied to spatial data. Let's review some examples, starting with plotting.
+
+#### Concept check:
+
+[What clean code principle is the **sf** package following by storing the geometries in their own list column?](https://www.mentimeter.com/app/presentation/blkhnym4ou7ejzod9b1gc6b24id49nr5/a55sgiyrhuom)
 
 ### Plotting and projection with **ggplot2**
 
@@ -165,8 +236,8 @@ Plotting **sf** objects is incredibly easy thanks to the package's integration w
 
 me_plot = 
   ggplot(me) +
-  geom_sf(aes(fill = ALAND10), alpha=0.8, col="white") +
-  scale_fill_viridis_c(name = "Area") +
+  geom_sf(aes(fill = estimate), alpha=0.8, col="white") +
+  scale_fill_viridis_c(name = "Population estimate") +
   ggtitle("Counties of Maine")
 
 me_plot
@@ -180,7 +251,7 @@ me %>%
   head(2) ## Saving vertical space
 ```
 
-Or, we can specify a common projection directly in the ggplot call using `coord_sf()`. This is often the most convenient approach when you are combining multiple **sf** data frames in the same plot.
+Or, we can specify a common projection directly in the ggplot call using `coord_sf()`. This is often the most convenient approach when you are combining multiple **sf** data frames in the same plot.^[Note that we used a PROJ string to define the CRS reprojection below. But we could easily use an EPSG code instead. For example, here's the [ME west plane](https://epsg.io/26984) projection, which we could use by setting `crs=26984`.]
 
 ```{r me_mollweide_plot}
 me_plot +
@@ -188,70 +259,66 @@ me_plot +
   labs(subtitle = "Mollweide projection") 
 ```
 
-Note that we used a PROJ string to define the CRS reprojection above. But we could easily use an EPSG code instead. For example, here's the [me state plane](https://epsg.io/32119) projection.
-
-```{r me_stateline_plot}
-me_plot +
-  coord_sf(crs = 32119) +
-  labs(subtitle = "ME state plane") 
-```
-
 ### Data wrangling with **dplyr** and **tidyr**
 
-As I keep saying, the tidyverse approach to data wrangling carries over very smoothly to **sf** objects. For example, the standard **dplyr** verbs like `filter()`, `mutate()` and `select()` all work:
+As I keep saying, the tidyverse approach to data wrangling carries over very smoothly to **sf** objects. For example, the standard **dplyr** verbs like `filter()`, `mutate()` and `select()` all work.
 
-```{r me_dplyr}
-me %>%
-  filter(NAME10 %in% c("Sagadahoc", "Androscoggin", "Cumberland")) %>%
-  mutate(ALAND_div_1000 = ALAND10/1000) %>%
-  select(NAME10, contains("ALAND"), everything())
+**Be sure to run the code in this block to split NAME into the COUNTY and STATE components.**
+
+```{r me_dplyr} 
+me %>% 
+  separate(NAME,c('COUNTY','STATE'),sep = ", ") %>% 
+  filter(COUNTY %in% c("Sagadahoc County", "Androscoggin County", "Cumberland County")) %>%
+  mutate(estimate_div_1000 = estimate/1000) %>% # Estimate in 1000s
+  select(-variable,-moe) # Drop the variable and margin of error columns
+
+me <- me %>% separate(NAME,c('COUNTY','STATE'),sep = ", ") # Keeping this one
 ```
 
-You can also perform `group_by()` and `summarise()` operations as per normal (see [here](http://strimas.com/r/tidy-sf/) for a nice example). Furthermore, the **dplyr** family of [join functions](https://dplyr.tidyverse.org/reference/join.html) also work, which can be especially handy when combining different datasets by (say) FIPS code or some other *attribute*. However, this presumes that only one of the objects has a specialized geometry column. In other words, it works when you are joining an **sf** object with a normal data frame. In cases where you want to join two **sf** objects based on their *geometries*, there's a specialized `st_join()` function. I provide an example of this latter operation in the section on [geometric operations](#geometric) below.
+You can also perform `group_by()` and `summarise()` operations as per normal (see [here](http://strimas.com/r/tidy-sf/) for a nice example). Furthermore, the **dplyr** family of [join functions](https://dplyr.tidyverse.org/reference/join.html) also work, which can be especially handy when combining different datasets by FIPS code or some other *attribute*. **However, this presumes that only one of the objects has a specialized geometry column.** In other words, it works when you are joining an **sf** object with a normal data frame. In cases where you want to join two **sf** objects based on their *geometries*, there's a specialized `st_join()` function. I provide an example of this latter operation in the section on [geometric operations](#geometric) below.
 
-Let's try this by joining on the Opportunity Atlas county level data, which we can get from [Opportunity Insights](https://opportunityinsights.org/data/) or the [Census](https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html).
+Let's try this by joining on Maine's Opportunity Atlas county level data, which we read in and processed earlier.
 
-```{r join,message=FALSE}
-op_atlas <- read_csv(
-    file='https://www2.census.gov/ces/opportunity/county_outcomes_simple.csv',
-    show_col_types = FALSE
-) %>% 
-  mutate(county_fips=state*1000+county,
-  #Make character and add leading zero to county_fips
-        GEOID10=ifelse(county_fips<10000,paste0("0",county_fips),as.character(county_fips))) %>%
-  select(GEOID10,matches('kfr_.*_pooled_p25$')) %>%
-  #Rename columns to remove _pooled_p25
-  rename_with(~str_remove(.,'_pooled_p25'),matches('_pooled_p25$'))
-
-me_join <- me %>% inner_join(op_atlas, by="GEOID10")
+```{r join}
+me_join <- inner_join(me,op_atlas, by="GEOID")
 ```
 
-And, just to show that we've got the bases covered, you can also implement your favourite **tidyr** verbs. For example, we can `tidyr::gather()` the data to long format, which is useful for facetted plotting.^[In case you're wondering: the newer `tidyr::pivot_*` functions [do not](https://github.com/r-spatial/sf/pull/1151) yet work with **sf** objects.] Here I demonstrate using the "BIR74" and "BIR79" columns (i.e. the number of births in each county in 1974 and 1979, respectively).
+```{r join_plot}
+ggplot(me_join) +
+  geom_sf(aes(fill = kfr_p25), alpha=0.8, col="white") +
+  scale_fill_viridis_c(name = "Average income percentile") +
+  ggtitle("Average income percentile for children raised at 25th percentile")
+```
+
+And, just to show that we've got the bases covered, you can also implement your favourite **tidyr** verbs. For example, we can `tidyr::gather()` the data to long format, which is useful for facetted plotting.^[In case you're wondering: the newer `tidyr::pivot_*` functions [do not](https://github.com/r-spatial/sf/pull/1151) yet work with **sf** objects.] Here I demonstrate this by plotting the average income percentile of children born to parents at the 25th percentile and 75th percentile. 
 
 ```{r me_tidyr}
 me_join %>% 
-  select(county = NAME10, matches('kfr'), geometry) %>% 
-  # Gather reshapes the data. 
-  # The key (where the variable names go) is "race." The values of each variable go into a variable named kfr indexed by variable name
-  gather(key=race, value=kfr, kfr_pooled, kfr_black, kfr_hisp, kfr_white) %>% 
-  mutate(race = str_to_title(gsub("kfr_", "", race)),
-    kfr=kfr*100) %>% # put in percent terms
+  select(GEOID, kfr_p25, kfr_p75, geometry) %>% 
+  pivot_longer(cols=c(kfr_p25,kfr_p75), names_to='parent_ptile',names_prefix = 'kfr_p',values_to='kfr') %>%
+  mutate(kfr=kfr*100, # put in percent terms
+    parent_ptile=paste0('Raised at ',parent_ptile,'th percentile')) %>%  # Make the parent_ptile variable more descriptive
   ggplot() +
   geom_sf(aes(fill = kfr), alpha=0.8, col="white") +
-  scale_fill_viridis_c(name = "Average income percentile") +
-  facet_wrap(~race, ncol = 2) +
-  labs(title = "Mean income percentile of children born to parents at the 25th percentile") 
+  scale_fill_viridis_c(name = "Average income percentile rank") +
+  facet_wrap(~parent_ptile, ncol = 2) +
+  labs(title = "Mean income percentile of children born to parents at the 25th percentile") +
+  theme(legend.position="bottom")
 ```
 
-*On your problem set, you'll have to do something similar at the Census tract level, so take note.*
+*On your problem set, you'll have to do something similar at the Census tract level and by race, so take note.*
 
 ### Specialized geometric operations {#geometric}
 
-Alongside all the tidyverse functionality, the **sf** package comes with a full suite of geometrical operations. You should take a look at at the [third **sf** vignette](https://r-spatial.github.io/sf/articles/sf3.html#geometrical-operations) or the [*Geocomputation with R*](https://geocompr.robinlovelace.net/geometric-operations.html#geo-vec) book to get a complete overview. However, here are a few examples to get you started:
+Alongside all the tidyverse functionality, the **sf** package comes with a full suite of geometrical operations. You should take a look at at the [third **sf** vignette](https://r-spatial.github.io/sf/articles/sf3.html#geometrical-operations) or the [*Geocomputation with R*](https://geocompr.robinlovelace.net/geometric-operations.html#geo-vec) book to get a complete overview. 
+
+There are two types of operations: **unary** and **binary** shown below. These categories are helpful to keep in mind when you're trying to find a function to do something new, but you can still get pretty far without memorizing them. 
+
+Here are a few examples to get you started:
 
 #### Unary operations
 
-So-called *unary* operations are applied to a single object. For instance, you can "melt" sub-elements of an **sf** object (e.g. counties) into larger elements (e.g. states) using `sf::st_union()`:
+So-called *unary* operations are applied to a single object. For instance, you can unite sub-elements of an **sf** object (e.g. counties) into larger elements (e.g. states) using `sf::st_union()`:
 
 ```{r me_union}
 me %>% 
@@ -283,23 +350,23 @@ ggplot(me) +
 
 #### Binary operations
 
-Another set of so-called *binary* operations can be applied to multiple objects. So, we can get things like the distance between two spatial objects using `sf::st_distance()`. In the below example, I'm going to get the distance from Ashe county to Brunswick county, as well as itself. The latter is just a silly addition to show that we can easily make multiple pairwise comparisons, even when the distance from one element to another is zero.
+Another set of so-called *binary* operations can be applied to multiple objects. So, we can get things like the distance between two spatial objects using `sf::st_distance()`. In the below example, I'm going to get the distance from Androscoggin county to  York county, as well as itself. The latter is just a silly addition to show that we can easily make multiple pairwise comparisons, even when the distance from one element to another is zero.
 
 ```{r me_distance}
-andro_cumby = me %>% filter(NAME10 %in% c("Androscoggin", "Cumberland")) 
-cumby = me %>% filter(NAME10 %in% c("Cumberland"))
+andro_york = me %>% filter(COUNTY %in% c("Androscoggin County", "York County")) 
+andro = me %>% filter(COUNTY %in% c("Androscoggin County"))
 
-ac_dist = st_distance(andro_cumby, cumby)
+ay_dist = st_distance(andro_york, andro)
 
 ## We can use the `units` package (already installed as sf dependency) to convert to kilometres 
-ac_dist = ac_dist %>% units::set_units(km) %>% round()
+ay_dist = ay_dist %>% units::set_units(km) %>% round()
 
 ggplot(me) +
   geom_sf(fill = "black", alpha = 0.8, col = "white") +
-  geom_sf(data = me %>% filter(NAME10 %in% c("Androscoggin", "Cumberland")), aes(fill = NAME10), col = "white") +  
+  geom_sf(data = andro_york, aes(fill = COUNTY), col = "white") +  
   labs(
     title = "Calculating distances",
-    subtitle = paste0("The distance between Androscoggin and Cumberland is ", ac_dist[1], " km")
+    subtitle = paste0("The distance between Androscoggin and Cumberland is ", ay_dist[1], " km")
     ) +
   theme(legend.title = element_blank())
 ```
@@ -308,18 +375,21 @@ ggplot(me) +
 
 A sub-genre of binary geometric operations falls into the category of logic rules --- typically characterising the way that geometries relate in space. (Do they overlap, are they nearby, etc.) 
 
-For example, we can calculate the intersection of different spatial objects using `sf::st_intersection()`. For this next example, I'm going to use two new spatial objects: 1) A state map of the USA from the **maps** package and 2) the primary roads from the **tigris** package. Don't worry too much about the process used for loading these datasets; I'll cover that in more depth shortly. For the moment, just focus on the idea that we want to see which adminstrative regions are intersected by the river network. Start by plotting all of the data to get a visual sense of the overlap:
+For example, we can calculate the intersection of different spatial objects using `sf::st_intersection()`. For this next example, I'm going to use the primary roads spatial object from the **tigris** package. Don't worry too much about the process used for loading these datasets; I'll cover that in more depth shortly. For the moment, just focus on the idea that we want to see which counties are intersected by the river network. 
 
-```{r usa, message=F, results = FALSE}
-## Get the data
-usa = st_as_sf(map('state', plot = FALSE, fill = TRUE))
+First, I want to make sure the roads have the same projection as maine using the `st_crs()` package.
+
+```{r road, message=F, results = FALSE}
 road = tigris::primary_roads()
-```
 ## Make sure they have the same projection
-road = st_transform(road, crs = st_crs(usa))
-```{r usa_plot}
+road = st_transform(road, crs = st_crs(me))
+```
+
+Second, let me plot all the data to see what we're working with. 
+
+```{r road_plot}
 ggplot() + 
-  geom_sf(data = usa, alpha = 0.8, fill = "white", col = "black") + 
+  geom_sf(data = me, alpha = 0.8, fill = "white", col = "black") + 
   geom_sf(data = road, col = "red", lwd = 1) + 
   labs(
     title = "States of the US",
@@ -327,17 +397,14 @@ ggplot() +
     )
 ```
 
-Uh oh, it looks like we don't have Alaska in our USA map and yet the roads went up there anyway. Also, why don't we just look at Maine? 
+Uh oh, it looks like we mapped all of the roads in the USA! 
 
-```{r me_intersected, warning=F, message=F, dependson="usa"}
+```{r me_intersected, warning=F, message=F, dependson="road"}
 # Turn off spherical geometry see: https://r-spatial.org/r/2020/06/17/s2.html
-sf_use_s2(FALSE)
-road = st_transform(road, crs = st_crs(me))
+road = st_transform(road, crs = st_crs(me)) 
 me_intersected = st_intersection(road, me)
 me_intersected
 ```
-
-I had to set `sf_use_s2()` to false because the `st_intersection()` function is not yet compatible with the new [s2](https://r-spatial.org/r/2020/06/17/s2.html#sf-10-goodbye-flat-earth-welcome-s2-spherical-geometry), which uses spherical geometry. (The curse of open source is things update.)
 
 Note that `st_intersection()` only preserves *exact* points of overlap. As in, this is the exact path that the road follow within these regions. We can see this more explicitly in map form:
 
@@ -355,76 +422,81 @@ me_intersected %>%
 If we instead wanted to plot the intersected counties (i.e. keeping their full geometries), we have a couple options. We could filter the `me` object by matching its region IDs with the `me_intersected` object. However, a more direct option is to use the `sf::st_join()` function which matches objects based on overlapping (i.e. intersecting) geometries:
 
 ```{r me_join, message=F}
-
-
 # Select only the road variables
-st_join(me, road) %>% 
-  filter(!is.na(LINEARID)) %>% ## Get rid of regions with no overlap
-  #distinct(GEOID10, .keep_all = T) %>% ## Some regions are duplicated b/c two branches of the road network flow through them, this takes a long time.
+st_join(me,road,left=FALSE) %>%  # left=FALSE means we keep only the intersected geometries
   ggplot() + 
   geom_sf(alpha = 0.8, fill = "black", col = "gray50") + 
   geom_sf(data = me_intersected, col = "#05E9FF", lwd = 1) + 
   labs(title = "Counties with primary roads only") 
 ```
 
-One thing you'll often see in spatial analysis is the calculation of nearest neighbors. For example, we might want to know which county is closest to Cumberland. We can do this using the `sf::st_nearest_feature()` function. Note that this function returns the *index* of the nearest feature, not the feature itself. So we'll have to use that index to extract the relevant row from our data frame.
+### Bordering counties
 
-```{r me_nearest,message=FALSE,warning=FALSE}
-nearest_row <- st_nearest_feature(cumby, me %>% filter(NAME10!='Cumberland')) ## Returns the index of the nearest county
-me %>% slice(nearest_row) # Get the nearest row
+Did you note above that we used `st_join` to find the intersected counties? Let's do that to get bordering counties! 
+
+```{r andro_me_join}
+st_join(me,andro,left=FALSE) %>% 
+  ggplot() + 
+  geom_sf(alpha = 0.8, fill = "black", col = "gray50") + 
+  labs(title = "Androscoggin County and its Neighbors")
 ```
 
-We can even do this for all of the rows, but it can get a little tedious with `sf::st_nearest_feature()`.
+But what if we wanted to leave out Androscoggin? We tell `st_join` that we want to join using the `st_touches` predicate to only show the counties that touch Androscoggin. 
 
-```{r me_nearest_all,message=FALSE,warning=FALSE}
-me %>%
-  mutate(nearest_row = st_nearest_feature(.),
-         nearest_county = NAME10[nearest_row]) 
+```{r me_filter}
+st_join(me,andro,left=FALSE,join=st_touches) %>% # Note the new predicate! 
+  ggplot() + 
+  geom_sf(alpha = 0.8, fill = "black", col = "gray50") + 
+  #geom_sf(data = andro, col = "red",fill='red', lwd = 1) + # Highlight androscoggin
+  labs(title = "Androscoggin County and its Neighbors") 
 ```
 
-Instead, I recommend using the `nngeo` package, which provides a more intuitive interface for nearest neighbor calculations. This makes it easy to find the k-nearest neighbors. `st_nn` takes an argument `k`, which is the number of nearest neighbors. `sf::st_join` allows you to specify that you want to join by `st_nn`, which means it will join by the nearest neighbor. You can even specify a max distance to look for neighbors with `maxdist`. 
+Wait, what's going on? How did we drop Androscoggin? `st_touches` is a predicate that returns `TRUE` if the geometries have at least one point in common, but their interiors do not intersect. In other words, it returns `TRUE` if the geometries are adjacent. Let's visualize that:
 
-```{r me_nearest_all2,message=FALSE,warning=FALSE}
-#library(nngeo) ## Already loaded
-
-nngeo::st_nn(cumby, filter(me,NAME10!='Cumberland'), k = 2) 
-
-sf::st_join(cumby, filter(me,NAME10!='Cumberland'), join = st_nn, k = 5,maxdist=1) 
+```{r me_filter_df}
+st_join(me,andro,left=FALSE,join=st_touches)
 ```
+
+Note the `.x` and the `.y` because the column names overlapped. R uses `.x` and `.y` to distinguish between the two objects' columns.^[I know it is confusing to keep all these ideas in your head at once. With practice, you'll get experience and greater familiarity with R's syntax, which will make it easier to try new stuff!]
+
+So what if we `st_touches` join Maine to itself? That leaves you with a long dataset where each row is a pair of touching counties. 
+
+```{r me_self_join}
+st_join(me,me,join=st_touches)
+```
+
+#### Comprehension check
+
+[Why would you want know the neighboring counties of a given county?](https://www.mentimeter.com/app/presentation/blkhnym4ou7ejzod9b1gc6b24id49nr5/o68k5g2hmmx8)
+
+### Nearest neighbors
+
+Sometimes you'll want to know more than neighbors, you'll want to know the nearest $k$ neighbors, where $k$ is some arbitrary number. Consider this plot:
+
+```{r oppatlas}
+knitr::include_graphics("../09-oppatlas/pics/spatial_correlation_decay.png")
+```
+
+This is plots the spatial correlation of income mobility with poverty for neighboring census tracts. The spatial correlation is highest within group, but then decays. 
+
+It is possible to do this using the **sf** package using the `st_nearest_feature()` function to get the nearest feature and then repeating to get the next most nearest and so on. A for loop or some **purrr** magic (covered later) and you're off to the races. But it turns out, there's a package that makes this easier: **nngeo** and its functions `st_nn` for "nearest neighbors."
+
+```{r st_nn}
+st_nn(andro, # The object to find the nearest neighbors for
+  me, # The object to find the nearest neighbors in
+  k=3) # The number of nearest neighbors
+```
+
+```{r nearest_neighbors}
+st_join(me, me, 
+  join = st_nn, # Use st_nn
+  k = 5,# The number of nearest neighbors
+  maxdist=100000) # The max distance in meters to look for neighbors
+```
+
+This returns the five nearest neighbors to each county including itself. 
 
 That's about as much **sf** functionality as I can show you for today. The remaining part of this lecture will cover some additional mapping considerations and some bonus spatial R "swag". However, I'll try to slip in a few more **sf**-specific operations along the way.
-
-### Aside: **sf** and **data.table**
-
-**sf** objects are designed to integrate with a **tidyverse** workflow. They can also be made to work a **data.table** workflow too, but the integration is not as slick. This is a [known issue](https://github.com/Rdatatable/data.table/issues/2273) and I'll only just highlight a few very brief considerations.
-
-You can convert an **sf** object into a data.table. But note that the key geometry column appears to lose its attributes.
-
-```{r me_dt1}
-# library(data.table) ## Already loaded
-
-me_dt = as.data.table(me)
-head(me_dt)
-```
-
-The good news is that all of this information is still there. It's just hidden from display.
-
-```{r me_dt2}
-me_dt$geometry
-```
-
-What's the upshot? Well, basically it means that you have to refer to this "geometry" column explicitly whenever you implement a spatial operation. For example, here's a repeat of the `st_union()` operation that we saw earlier. Note that I explicitly refer to the "geometry" column both for the `st_union()` operation (which, moreover, takes place in the
-"j" data.table slot) and when assigning the aesthetics for the `ggplot()` call.
-
-```{r ncd_dt3}
-me_dt[, .(geometry = st_union(geometry))] %>% ## Explicitly refer to 'geometry' col
-    ggplot(aes(geometry = geometry)) +        ## And here again for the aes()
-    geom_sf(fill=NA, col="black") +
-    labs(title = "Outline of Maine", 
-         subtitle = "This time brought to you by data.table") 
-```
-
-Of course, it's also possible to efficiently convert between the two classes --- e.g. with `as.data.table()` and `st_as_sf()` --- depending on what a particular section of code does (data wrangling or spatial operation). I find that often use this approach in my own work.
 
 ## Bonus 1: Where to get map data
 
@@ -799,6 +871,38 @@ tm_shape(land_eck4) +
     space.color="grey90"
     ) 
 ```
+
+## Aside: **sf** and **data.table**
+
+**sf** objects are designed to integrate with a **tidyverse** workflow. They can also be made to work a **data.table** workflow too, but the integration is not as slick. This is a [known issue](https://github.com/Rdatatable/data.table/issues/2273) and I'll only just highlight a few very brief considerations.
+
+You can convert an **sf** object into a data.table. But note that the key geometry column appears to lose its attributes.
+
+```{r me_dt1}
+# library(data.table) ## Already loaded
+
+me_dt = as.data.table(me)
+head(me_dt)
+```
+
+The good news is that all of this information is still there. It's just hidden from display.
+
+```{r me_dt2}
+me_dt$geometry
+```
+
+What's the upshot? Well, basically it means that you have to refer to this "geometry" column explicitly whenever you implement a spatial operation. For example, here's a repeat of the `st_union()` operation that we saw earlier. Note that I explicitly refer to the "geometry" column both for the `st_union()` operation (which, moreover, takes place in the
+"j" data.table slot) and when assigning the aesthetics for the `ggplot()` call.
+
+```{r ncd_dt3}
+me_dt[, .(geometry = st_union(geometry))] %>% ## Explicitly refer to 'geometry' col
+    ggplot(aes(geometry = geometry)) +        ## And here again for the aes()
+    geom_sf(fill=NA, col="black") +
+    labs(title = "Outline of Maine", 
+         subtitle = "This time brought to you by data.table") 
+```
+
+Of course, it's also possible to efficiently convert between the two classes --- e.g. with `as.data.table()` and `st_as_sf()` --- depending on what a particular section of code does (data wrangling or spatial operation). I find that often use this approach in my own work.
 
 ## Further reading
 
