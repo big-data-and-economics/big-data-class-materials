@@ -136,14 +136,22 @@ This course is taught in R, but the goal is not for students to learn individual
 
 ### On R
 
+#### Demos
+
+- [learnr package](https://rstudio.github.io/learnr/) developed by Garrick Aden-Buie, Barret Schloerke, JJ Allaire, and Alexander Rossell Hayes is a great way to Learn R by making interactive demos in RMarkdown
+- [Awesome R Learning Resources](https://github.com/iamericfletcher/awesome-r-learning-resources) provides all kinds of resources and is maintained by Eric Fletcher
+- [Bates Alumni Eli Mokas and Ian Ramsay's RStudio Tutorial](https://www.youtube.com/watch?v=Ih84O1vfH8Y&t=3391s)
+
+#### Textbooks
 - [_R_ For Data Science](https://r4ds.hadley.nz/) by Hadley Wickham and Garrett Grolemund
 - [Advanced _R_](https://adv-r.hadley.nz/) by Hadley Wickham
 - [Geocomputation with _R_ by Robin Lovelace](https://geocompr.robinlovelace.net/) by Jakub Nowosad, and Jannes Muenchow
-- [_Posit_ Cheatsheets](https://rstudio.com/resources/cheatsheets/)
 - [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/) by Roger D. Peng
-- [Bates Alumni Eli Mokas and Ian Ramsay's RStudio Tutorial](https://www.youtube.com/watch?v=Ih84O1vfH8Y&t=3391s)
 
-### On R Markdown
+#### Cheatsheets
+- [_Posit_ Cheatsheets](https://rstudio.com/resources/cheatsheets/)
+
+#### On R Markdown
 
 - [_RStudio_ Gallery](https://rmarkdown.rstudio.com/gallery.html)
 - [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) by Yihui Xie, J. J. Allaire, and Garrett Grolemund
