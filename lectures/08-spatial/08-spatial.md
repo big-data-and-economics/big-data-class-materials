@@ -4,7 +4,7 @@ subtitle: "Spatial analysis in R"
 author:
   name: Kyle Coombs (adapted from Grant McDermott)
   affiliation: Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics/big-data-class-materials)
-# date: Lecture 9  #"14 February 2024"
+# date: Lecture 9  #"15 February 2024"
 output: 
   html_document:
     theme: flatly
@@ -549,7 +549,7 @@ me_intersected %>%
 
 ![](08-spatial_files/figure-html/me_intersected_plot-1.png)<!-- -->
 
-If we instead wanted to plot the intersected counties (i.e. keeping their full geometries), we have a couple options. We could filter the `me` object by matching its region IDs with the `me_intersected` object. However, a more direct option is to use the `sf::st_join()` function which matches objects based on overlapping (i.e. intersecting) geometries:
+If we instead wanted to plot the intersected counties (i.e. keeping their full geometries), we have a couple options. We could filter the `me` object by matching its region IDs with the `me_intersected` object. However, a more direct option is to use the `sf::st_join()` function which matches objects based on overlapping (i.e. intersecting) geometries^[The function `st_filter()` is more efficient, but has less functionality. So I am teaching you `st_join`.]:
 
 
 ```r
@@ -565,7 +565,7 @@ st_join(me,road,left=FALSE) %>%  # left=FALSE means we keep only the intersected
 
 ### Bordering counties
 
-Did you note above that we used `st_join` to find the intersected counties? Let's do that to get bordering counties! 
+Did you note above that we used `st_join` to find the intersected counties? Let's do that to get bordering counties!
 
 
 ```r
@@ -624,6 +624,33 @@ st_join(me,andro,left=FALSE,join=st_touches)
 ```
 
 Note the `.x` and the `.y` because the column names overlapped. R uses `.x` and `.y` to distinguish between the two objects' columns.^[I know it is confusing to keep all these ideas in your head at once. With practice, you'll get experience and greater familiarity with R's syntax, which will make it easier to try new stuff!]
+
+If you just wan to subset down, you can use `st_filter()` to accomplish the same task. By default `st_filter()` returns the intersection, but the argument `.predicate` can be used to specify a different operation like `st_touches` like `join` in `st_join`. 
+
+
+```r
+st_filter(me,andro, .predicate = st_touches)
+```
+
+```
+## Simple feature collection with 5 features and 6 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -71.08433 ymin: 43.52726 xmax: -69.37242 ymax: 45.66783
+## Geodetic CRS:  NAD83
+##   GEOID            COUNTY STATE   variable estimate moe
+## 1 23005 Cumberland County Maine B01001_001   279994  NA
+## 2 23007   Franklin County Maine B01001_001    30657  NA
+## 3 23011   Kennebec County Maine B01001_001   121925  NA
+## 4 23017     Oxford County Maine B01001_001    57867  NA
+## 5 23023  Sagadahoc County Maine B01001_001    35688  NA
+##                         geometry
+## 1 MULTIPOLYGON (((-70.10624 4...
+## 2 MULTIPOLYGON (((-70.83471 4...
+## 3 MULTIPOLYGON (((-69.74428 4...
+## 4 MULTIPOLYGON (((-71.01489 4...
+## 5 MULTIPOLYGON (((-69.86599 4...
+```
 
 So what if we `st_touches` join Maine to itself? That leaves you with a long dataset where each row is a pair of touching counties. 
 

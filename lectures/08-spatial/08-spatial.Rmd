@@ -419,7 +419,7 @@ me_intersected %>%
   theme(legend.title = element_blank())
 ```
 
-If we instead wanted to plot the intersected counties (i.e. keeping their full geometries), we have a couple options. We could filter the `me` object by matching its region IDs with the `me_intersected` object. However, a more direct option is to use the `sf::st_join()` function which matches objects based on overlapping (i.e. intersecting) geometries:
+If we instead wanted to plot the intersected counties (i.e. keeping their full geometries), we have a couple options. We could filter the `me` object by matching its region IDs with the `me_intersected` object. However, a more direct option is to use the `sf::st_join()` function which matches objects based on overlapping (i.e. intersecting) geometries^[The function `st_filter()` is more efficient, but has less functionality. So I am teaching you `st_join`.]:
 
 ```{r me_join, message=F}
 # Select only the road variables
@@ -432,7 +432,7 @@ st_join(me,road,left=FALSE) %>%  # left=FALSE means we keep only the intersected
 
 ### Bordering counties
 
-Did you note above that we used `st_join` to find the intersected counties? Let's do that to get bordering counties! 
+Did you note above that we used `st_join` to find the intersected counties? Let's do that to get bordering counties!
 
 ```{r andro_me_join}
 st_join(me,andro,left=FALSE) %>% 
@@ -458,6 +458,12 @@ st_join(me,andro,left=FALSE,join=st_touches)
 ```
 
 Note the `.x` and the `.y` because the column names overlapped. R uses `.x` and `.y` to distinguish between the two objects' columns.^[I know it is confusing to keep all these ideas in your head at once. With practice, you'll get experience and greater familiarity with R's syntax, which will make it easier to try new stuff!]
+
+If you just wan to subset down, you can use `st_filter()` to accomplish the same task. By default `st_filter()` returns the intersection, but the argument `.predicate` can be used to specify a different operation like `st_touches` like `join` in `st_join`. 
+
+```{r me_filter_df2}
+st_filter(me,andro, .predicate = st_touches)
+```
 
 So what if we `st_touches` join Maine to itself? That leaves you with a long dataset where each row is a pair of touching counties. 
 
