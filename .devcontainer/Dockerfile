@@ -6,7 +6,10 @@ FROM ghcr.io/rocker-org/devcontainer/tidyverse:${VARIANT}
 RUN install2.r --error --skipinstalled -n -1 \
         here \
         markdown \
+        sf \
+        nngeo \
+        tidycensus \
     && rm -rf /tmp/downloaded_packages \
     && apt-get update \
     && apt update \
-    && apt-get install -y --no-install-recommends libxt6 
+    && apt-get install -y --no-install-recommends libxt6 libudunits2-dev libgdal-dev libgeos-dev libproj-dev
