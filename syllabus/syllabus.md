@@ -47,11 +47,11 @@ Economics is at the forefront of developing statistical methods for analyzing da
 
 ## Course Objectives
 After this course is done, you should know how to:
-1. Organize empirical projects that are replicable, reproducible, and collaborative using good programming practices
-2. Collect and clean big or novel datasets using APIs, web scraping, and other methods
-3. Use Big Data to generate key insights about economic opportunity, inequality, and racial discrimination
+1. Organize empirical projects that are replicable, reproducible, and collaborative using Clean Code principles
+2. Collect and clean novel datasets using automated file downloads, APIs, web scraping, and other methods
+3. Use data to generate key insights about economic opportunity, inequality, and racial discrimination
 4. Understand the differences between prediction, causality, and description, and when to apply each
-5. Explain what data science is, and how Big Data differs from other types of data 
+5. Demonstrate facility with R, RStudio, GitHub, and computer file management
 
 ---
 
