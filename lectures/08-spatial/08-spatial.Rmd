@@ -366,7 +366,7 @@ ggplot(me) +
   geom_sf(data = andro_york, aes(fill = COUNTY), col = "white") +  
   labs(
     title = "Calculating distances",
-    subtitle = paste0("The distance between Androscoggin and Cumberland is ", ay_dist[1], " km")
+    subtitle = paste0("The distance between Androscoggin and Cumberland is ", ay_dist[2], " km")
     ) +
   theme(legend.title = element_blank())
 ```

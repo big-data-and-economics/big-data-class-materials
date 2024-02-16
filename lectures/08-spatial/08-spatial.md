@@ -4,7 +4,7 @@ subtitle: "Spatial analysis in R"
 author:
   name: Kyle Coombs (adapted from Grant McDermott)
   affiliation: Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics/big-data-class-materials)
-# date: Lecture 9  #"15 February 2024"
+# date: Lecture 9  #"16 February 2024"
 output: 
   html_document:
     theme: flatly
@@ -455,7 +455,7 @@ ggplot(me) +
   geom_sf(data = andro_york, aes(fill = COUNTY), col = "white") +  
   labs(
     title = "Calculating distances",
-    subtitle = paste0("The distance between Androscoggin and Cumberland is ", ay_dist[1], " km")
+    subtitle = paste0("The distance between Androscoggin and Cumberland is ", ay_dist[2], " km")
     ) +
   theme(legend.title = element_blank())
 ```
