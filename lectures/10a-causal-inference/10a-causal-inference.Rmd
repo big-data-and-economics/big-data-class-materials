@@ -166,7 +166,26 @@ class: inverse, center, middle
 
 - If so, we should be able to .pink[change] neighborhood characteristics to .pink[change] outcomes
 
-### Goals today
+- Problem set 3 has been posted to the course website, get started early! 
+
+---
+# Hack-a-thon update
+
+- Lewiston's Department of Economic Development has been in touch about the hack-a-thon
+
+- We'll be helping the city with a project to understand where to put street lights to help reduce crime
+
+- Two options for scheduling hack-a-thon
+
+  - Last week of class - kick off Tuesday (4/9), team presentations Thursday (4/11), participation optional
+
+  - Last two weeks of class - kick off Tuesday (4/2), team presentations Thursday (4/11) and converted to your last problem set, so no longer optional
+
+- I'll poll Thursday to see what works best for everyone
+
+---
+
+# Goals today
 
 1. Separate causality and correlation
 2. Discuss common challenges to establishing causality
@@ -1260,7 +1279,7 @@ class: inverse, center, middle
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
 #print(infile)
-#pagedown::chrome_print(input = infile, timeout = 100)
+pagedown::chrome_print(input = infile, timeout = 100)
 ```
 
 
