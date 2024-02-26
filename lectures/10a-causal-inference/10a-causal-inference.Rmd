@@ -475,7 +475,11 @@ class: inverse, center, middle
 # Causation
 
 ---
-# Effect of education on mobility
+layout: true
+# Causality
+## Some examples
+---
+name: examples
 
 - Let's explore the three causal inference approaches with two simple examples
 
@@ -484,10 +488,12 @@ class: inverse, center, middle
 2. What is the effect of education on income mobility of those born at the 25th percentile of the income distribution?
 
 ---
-<!-- TK: Switch this to look at internet?. -->
-name: education
+layout: true
+# Causality
+---
+name: fertilizer
 
-# Example: The causal effect of fertilizer.super[.pink[†]]
+## Example: The causal effect of fertilizer.super[.pink[†]]
 
 Suppose we want to know the causal effect of fertilizer on crop yield.
 
@@ -506,8 +512,6 @@ Suppose we want to know the causal effect of fertilizer on crop yield.
 --
  💩
 ---
-
-# Example: The causal effect of fertilizer
 
 Randomized experiments help us maintain *all else equal* (exogeneity).
 
@@ -788,8 +792,6 @@ coord_equal()
 ```
 ---
 
-# Example: The causal effect of fertilizer
-
 We can estimate the .hi[causal effect] of fertilizer on crop yield by comparing the average yield in the treatment group (💩) with the control group (no 💩).
 
 $$
@@ -817,13 +819,14 @@ where $\text{Trt}_i$ is a binary variable (=1 if plot $i$ received the fertilize
 **Q:** Should we expect $(1)$ to satisfy exogeneity? Why?
 --
 <br>**A:** On average, .hi[randomly assigning treatment should balance] trt. and control across the other dimensions that affect yield (soil, slope, water).
-
+ 
 ---
 layout: true
 # Causality
-## Example: Returns to education
 ---
 name: returns
+
+## Example: Returns to education
 
 Labor economists, policy makers, parents, and students are all interested in the (monetary) *return to education.*
 
@@ -878,9 +881,11 @@ Many important variables have the same challenge—gender, race, income.
 
 - Let's try controlling for every variable that affects both education and earnings, under CIA it should work!
 
-$$ 
-\begin{align} \text{Earnings} = \beta_0 + \beta_1 \text{Educ} + \beta_2 \text{Race} + \beta_3 \text{Gender} + \beta_4 \text{Job Exp} + \\\
-  \beta_5 \text{Ability} + \cdots + u 
+
+$$
+\begin{align}
+  Earnings &= \beta_0 + \beta_1 Edu + \beta_2 Ability + \cdots + \\
+  &\beta_{k-1} Race + \beta_k Gender + u 
 \end{align}
 $$
 
@@ -892,23 +897,23 @@ $$
 
 - How do we measure ability? Specialized tests? Do those tests capture everything? 
 
+- Should we control for experience in a job?
+
 - Uh oh, this is getting complicated and I'm not even sure we learn much
 
 ---
 
-- Let's revisit a natural experiment approach
-
-- What policies arbitrarily increase education for a subset of people? 
+- Natural experiment approach: what policies arbitrarily increase education for a subset of people? 
 
 --
 
-- Admissions .purple[cutoffs]: people just above and below the cutoff are similar, but one group gets more education
+- Admissions .purple[cutoffs]: people around the cutoff are similar, but above gets more education
   - .purple[Regression discontinuity]
 
-- .purple[Lottery] enrollment and/or capacity .purple[constraints]: people who win the lottery get more education
-  - .purple[Instrumental variables] or .purple[Two-stage least squares]
+- .purple[Lottery] enrollment and/or capacity .purple[constraints]: people who get in get more education
+  - .purple[Instrumental variables]
 
-- .purple[New] school built: people who live near the new school get more education
+- .purple[New] school built: people near school get more education
   - .purple[Difference-in-differences]
 
 ---
@@ -951,9 +956,10 @@ coord_equal()
 ---
 layout: true
 # Causality
-## The ideal experiment
 ---
 name: ideal
+
+## The ideal experiment
 
 The .hi[ideal experiment] would be subtly different.
 
@@ -1004,11 +1010,13 @@ ideal_df
 
 .pull-right[
 Calculate the causal effect of trt.
+
 $$
 \begin{align}
   \tau_i = y_{1,i} -  y_{0,i}
 \end{align}
 $$
+
 for each individual $i$.
 ]
 
@@ -1024,11 +1032,13 @@ ideal_df %>% mutate(effect_i = y1i - y0i)
 
 .pull-right[
 Calculate the causal effect of trt.
+
 $$
 \begin{align}
   \tau_i = y_{1,i} -  y_{0,i}
 \end{align}
 $$
+
 for each individual $i$.
 ]
 
@@ -1044,11 +1054,13 @@ ideal_df %>% mutate(effect_i = y1i - y0i)
 
 .pull-right[
 Calculate the causal effect of trt.
+
 $$
 \begin{align}
   \tau_i = y_{1,i} -  y_{0,i}
 \end{align}
 $$
+
 for each individual $i$.
 
 The mean of $\tau_i$ is the<br>.hi[average treatment effect] (.pink[ATE]).
@@ -1059,6 +1071,7 @@ Thus, $\color{#e64173}{\overline{\tau} = `r transmute(ideal_df, effect_i = y1i -
 ---
 
 This model highlights the fundamental problem of causal inference.
+
 $$
 \begin{align}
   \tau_i = \color{#e64173}{y_{1,i}} &- \color{#6A5ACD}{y_{0,i}}
@@ -1101,9 +1114,10 @@ But, we do observe
 ---
 layout: true
 # Causality
-## Causally estimating the treatment effect
 ---
 name: estimation
+
+## Causally estimating the treatment effect
 
 .hi-slate[Notation:] Let $D_i$ be a binary indicator variable such that
 
@@ -1196,7 +1210,7 @@ Difference in groups' means
 So our proposed group-difference estimator give us the sum of
 
 1. $\tau$, the .hi-slate[causal, average treatment effect] that we want
-2. .hi-orange[Selection bias:] How much trt. and control groups differ (on average).
+2. .hi-orange[Selection bias:] How much trt. and control groups differ (on average). 
 
 ---
 class: inverse, center, middle
@@ -1223,14 +1237,14 @@ name: inference
 # Types of inference
 
 1. **Asymptotic** inference: what you saw in econometrics
-  - Under a few assumptions, you can make inferences about the true average treatment effect
+  - Under a few assumptions, you can make inferences
 
 2. **Randomization**: maybe you saw it?
-  - Assign many placebo treatments to see if your results are that unique
+  - Assign placebo treatments to see if results are unique
   - Are your results are driven by something about the treated group?
 
 3. **Bootstrapping**: maybe you saw it?
-  - Resample your data to see if your results are sensitive to the sample you have
+  - Resample data to see if your results are sensitive to the sample
   - Are your results are driven by something about the sample? 
 
 4. **Bayesian**: I doubt you've seen this
@@ -1246,7 +1260,7 @@ class: inverse, center, middle
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
 #print(infile)
-pagedown::chrome_print(input = infile, timeout = 100)
+#pagedown::chrome_print(input = infile, timeout = 100)
 ```
 
 
