@@ -247,7 +247,7 @@ Economics is at the forefront of developing statistical methods for analyzing da
 
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
-| 6 × problem sets (10% each)               | 50%    | Top 5  |
+| 6 × problem sets (12.5% each, drop two lowest) | 50%    | Top 5  |
 | 1 × 5-minute presentation                 | 5%     | Top 1   |
 | 1 × GitHub participation                  | 5%     | Overall   |
 | 1 × group final project                   | 30%-40%    | [In parts](https://github.com/big-data-and-economics/final-project) |
@@ -264,6 +264,7 @@ Throughout the course you will engage in problem sets that deal with actual data
 - With rare exceptions: You will not be given code to copy and paste to accomplish these data cleaning tasks, but instead given a set of instructions and asked to figure out how to write code yourself
 - You are encouraged to work together on problem sets, but you must write up your own answers (unless it is a group assignment)
 - All problem sets will be completed and turned in as GitHub repositories
+- I will drop the two lowest problem set grades
 
 #### What you will turn in:
 
@@ -334,7 +335,7 @@ On occasions, you may disagree with the grade you received on a problem set. Her
 
 - **Deadline for requests**: All requests for reconsideration must be submitted within one week of the solutions being posted.
 - **Full regrade**: Any request for reconsideration will result in a full regrade of your problem set. This means that your grade can go up or down.
-- **Regrading high scores**: If you scored a 90 percent or above on a problem set, I will not change your grade. This is not because I do not want to help you, but because we both have limited time and I want to focus my efforts on cases where an incorrectly graded problem set could significantly impact your grade in the course. 
+- **Regrading high scores**: If you scored a 90 percent or above on a problem set, I will not change your grade. This is not because I do not want to help you, but because we both have limited time and I want to focus my efforts on cases where an incorrectly graded problem set could significantly impact your grade in the course. **This does not apply to re-submissions. This only applies to the cases where you want me to review your score in full separate from corrections and re-submissions.**
 
 If you would like reconsideration, please raise an `Issue` in your private problem set repository. Title the issue "Reconsideration request for Problem Set X". Briefly describe your request in the body of the issue and tag my username, @kgcsport. 
 
