@@ -20,9 +20,15 @@ You can make an appointment at [here](https://calendar.google.com/calendar/u/0/a
 
 In this course, I ask that you use GitHub Discussions and `Issues` to ask questions about the problem sets, final projects, presentation clarifications, and other class specifics. This is so that everyone can benefit from the answer. Also, it will encourage collaboration (and declutter my inbox). A portion of the grade is based on participation in GitHub Issues.
 
+### Course Organization Page
+
+Every repository will be linked in the [organization page](https://github.com/big-data-and-economics). This is where you will find all the repositories for the problem sets, final projects, and other class materials. It also hosts discussions. 
+
 ### GitHub Discussions
 
 The [GitHub Discussions](https://github.com/orgs/big-data-and-economics/discussions) page is hosted on the overall Classroom Organization (details on Organization vs. Repository in [FAQ](#faq)). It is private and can be used like any traditional online forum. You can use it to ask questions, answer questions, and discuss topics related to the course. I will be monitoring the discussions and will answer questions as they come up. I encourage you to answer each other's questions as well.
+
+I will also make announcements for the benefit of the course here. 
 
 ### GitHub Issues
 
