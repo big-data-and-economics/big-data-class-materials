@@ -1035,15 +1035,15 @@ A variety of summary tables --- balance, correlation, etc. --- can be produced b
 ```r
 datasummary_balance(~ in_south,
                     data = opp_atlas %>% 
-                    select(kfr_p25:ann_avg_job_growth_2004_2013,in_south))
+                    dplyr::select(kfr_p25:ann_avg_job_growth_2004_2013,in_south))
 ```
 
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
  <thead>
 <tr>
 <th style="empty-cells: hide;border-bottom:hidden;" colspan="1"></th>
-<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">North (N=1744)</div></th>
-<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">South (N=1392)</div></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">North (N=1581)</div></th>
+<th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">South (N=1255)</div></th>
 <th style="empty-cells: hide;border-bottom:hidden;" colspan="2"></th>
 </tr>
   <tr>
@@ -1100,7 +1100,7 @@ otype = ifelse(knitr::is_latex_output(), 'return', 'kable')
 
 ## vtable::st() is an alias for sumtable()
 vtable::st(opp_atlas %>% 
-  select(kfr_p25:ann_avg_job_growth_2004_2013, in_south),
+  dplyr::select(kfr_p25:ann_avg_job_growth_2004_2013, in_south),
    group = 'in_south', 
    out = otype)
 ```
@@ -1126,28 +1126,28 @@ vtable::st(opp_atlas %>%
 <tbody>
   <tr>
    <td style="text-align:left;"> kfr_p25 </td>
-   <td style="text-align:left;"> 1744 </td>
+   <td style="text-align:left;"> 1581 </td>
    <td style="text-align:left;"> 0.46 </td>
-   <td style="text-align:left;"> 0.062 </td>
-   <td style="text-align:left;"> 1392 </td>
+   <td style="text-align:left;"> 0.061 </td>
+   <td style="text-align:left;"> 1255 </td>
    <td style="text-align:left;"> 0.4 </td>
    <td style="text-align:left;"> 0.044 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> poor_share1990 </td>
-   <td style="text-align:left;"> 1744 </td>
+   <td style="text-align:left;"> 1581 </td>
    <td style="text-align:left;"> 0.14 </td>
-   <td style="text-align:left;"> 0.062 </td>
-   <td style="text-align:left;"> 1392 </td>
+   <td style="text-align:left;"> 0.061 </td>
+   <td style="text-align:left;"> 1255 </td>
    <td style="text-align:left;"> 0.2 </td>
    <td style="text-align:left;"> 0.085 </td>
   </tr>
   <tr>
    <td style="text-align:left;"> ann_avg_job_growth_2004_2013 </td>
-   <td style="text-align:left;"> 1739 </td>
-   <td style="text-align:left;"> -0.0028 </td>
+   <td style="text-align:left;"> 1576 </td>
+   <td style="text-align:left;"> -0.0029 </td>
    <td style="text-align:left;"> 0.014 </td>
-   <td style="text-align:left;"> 1392 </td>
+   <td style="text-align:left;"> 1255 </td>
    <td style="text-align:left;"> -0.0022 </td>
    <td style="text-align:left;"> 0.016 </td>
   </tr>

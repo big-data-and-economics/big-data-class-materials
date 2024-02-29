@@ -486,7 +486,7 @@ A variety of summary tables --- balance, correlation, etc. --- can be produced b
 ```{r datsum}
 datasummary_balance(~ in_south,
                     data = opp_atlas %>% 
-                    select(kfr_p25:ann_avg_job_growth_2004_2013,in_south))
+                    dplyr::select(kfr_p25:ann_avg_job_growth_2004_2013,in_south))
 ```
 
 </br>
@@ -501,7 +501,7 @@ otype = ifelse(knitr::is_latex_output(), 'return', 'kable')
 
 ## vtable::st() is an alias for sumtable()
 vtable::st(opp_atlas %>% 
-  select(kfr_p25:ann_avg_job_growth_2004_2013, in_south),
+  dplyr::select(kfr_p25:ann_avg_job_growth_2004_2013, in_south),
    group = 'in_south', 
    out = otype)
 ```

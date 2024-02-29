@@ -4779,7 +4779,7 @@ to see all of the options. But here’s an example of a very simple
 balance table using a subset of our “humans” data frame.</p>
 <div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a><span class="fu">datasummary_balance</span>(<span class="sc">~</span> in_south,</span>
 <span id="cb64-2"><a href="#cb64-2" tabindex="-1"></a>                    <span class="at">data =</span> opp_atlas <span class="sc">%&gt;%</span> </span>
-<span id="cb64-3"><a href="#cb64-3" tabindex="-1"></a>                    <span class="fu">select</span>(kfr_p25<span class="sc">:</span>ann_avg_job_growth_2004_2013,in_south))</span></code></pre></div>
+<span id="cb64-3"><a href="#cb64-3" tabindex="-1"></a>                    dplyr<span class="sc">::</span><span class="fu">select</span>(kfr_p25<span class="sc">:</span>ann_avg_job_growth_2004_2013,in_south))</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -4787,12 +4787,12 @@ balance table using a subset of our “humans” data frame.</p>
 </th>
 <th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
 <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
-North (N=1744)
+North (N=1581)
 </div>
 </th>
 <th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2">
 <div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
-South (N=1392)
+South (N=1255)
 </div>
 </th>
 <th style="empty-cells: hide;border-bottom:hidden;" colspan="2">
@@ -4907,7 +4907,7 @@ equivalent version of the above balance table.</p>
 <span id="cb65-6"><a href="#cb65-6" tabindex="-1"></a></span>
 <span id="cb65-7"><a href="#cb65-7" tabindex="-1"></a><span class="do">## vtable::st() is an alias for sumtable()</span></span>
 <span id="cb65-8"><a href="#cb65-8" tabindex="-1"></a>vtable<span class="sc">::</span><span class="fu">st</span>(opp_atlas <span class="sc">%&gt;%</span> </span>
-<span id="cb65-9"><a href="#cb65-9" tabindex="-1"></a>  <span class="fu">select</span>(kfr_p25<span class="sc">:</span>ann_avg_job_growth_2004_2013, in_south),</span>
+<span id="cb65-9"><a href="#cb65-9" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(kfr_p25<span class="sc">:</span>ann_avg_job_growth_2004_2013, in_south),</span>
 <span id="cb65-10"><a href="#cb65-10" tabindex="-1"></a>   <span class="at">group =</span> <span class="st">&#39;in_south&#39;</span>, </span>
 <span id="cb65-11"><a href="#cb65-11" tabindex="-1"></a>   <span class="at">out =</span> otype)</span></code></pre></div>
 <table>
@@ -4962,16 +4962,16 @@ SD
 kfr_p25
 </td>
 <td style="text-align:left;">
-1744
+1581
 </td>
 <td style="text-align:left;">
 0.46
 </td>
 <td style="text-align:left;">
-0.062
+0.061
 </td>
 <td style="text-align:left;">
-1392
+1255
 </td>
 <td style="text-align:left;">
 0.4
@@ -4985,16 +4985,16 @@ kfr_p25
 poor_share1990
 </td>
 <td style="text-align:left;">
-1744
+1581
 </td>
 <td style="text-align:left;">
 0.14
 </td>
 <td style="text-align:left;">
-0.062
+0.061
 </td>
 <td style="text-align:left;">
-1392
+1255
 </td>
 <td style="text-align:left;">
 0.2
@@ -5008,16 +5008,16 @@ poor_share1990
 ann_avg_job_growth_2004_2013
 </td>
 <td style="text-align:left;">
-1739
+1576
 </td>
 <td style="text-align:left;">
--0.0028
+-0.0029
 </td>
 <td style="text-align:left;">
 0.014
 </td>
 <td style="text-align:left;">
-1392
+1255
 </td>
 <td style="text-align:left;">
 -0.0022
