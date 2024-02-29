@@ -138,7 +138,13 @@ Most classes will (hopefully) be divided into a "lecture" and an "interactive" c
 
 ## Resources to use for class
 
-This course is taught in R, but the goal is not for students to learn individual R functions and packages. That is something a person could do using generative AI, existing R vignettes and demos, and other online resources. With that in mind, I expect students in this course to make ample use of the countless free resources on the internet to learn R. Here are a few that I recommend:
+This course is taught in R, but the goal is not for students to become experts in individual R functions and packages. That is something a person could do using generative AI, existing R vignettes and demos, and other online resources. 
+
+Still, any programming language is tough to learn and R has a few quirks that make it challenging when you're coming from Stata. Those quirks are worth learning because they buy you a lot more functionality, but they can be frustrating. As shown in [Ten simple rules for teaching yourself R](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9436135/) (Lawlor et al. 2022), this is the nonlinear process of developing comfort in R:
+
+![Taken from Lawlor et al. (2022) NIH.](img/r-challenges-lawlor-et-al-2022.jpg)
+
+With that in mind, I expect students in this course to make ample use of the countless free resources on the internet to learn R. Here are a few that I recommend:
 
 ### On R
 
@@ -157,6 +163,7 @@ This course is taught in R, but the goal is not for students to learn individual
 
 #### Cheatsheets
 - [_Posit_ Cheatsheets](https://rstudio.com/resources/cheatsheets/)
+- [Ten Simple Rules for Teaching Yourself R](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9436135/) by Lawlor et al. (2022)
 
 #### On R Markdown
 
