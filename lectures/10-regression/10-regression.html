@@ -3700,26 +3700,20 @@ several additional packages today, because they will make our lives
 easier and offer increased power for some more sophisticated
 analyses.</p>
 <ul>
-<li>New: <strong>fixest</strong>, <strong>estimatr</strong>,
-<strong>ivreg</strong>, <strong>sandwich</strong>,
-<strong>lmtest</strong>, <strong>mfx</strong>, <strong>margins</strong>,
-<strong>broom</strong>, <strong>modelsummary</strong>,
-<strong>vtable</strong></li>
+<li>New: <strong>fixest</strong>, <strong>broom</strong>,
+<strong>modelsummary</strong>, <strong>vtable</strong></li>
 <li>Already used: <strong>tidyverse</strong>,
 <strong>hrbrthemes</strong>, <strong>listviewer</strong>,
-<strong>tidycensus</strong>, <strong>tigris</strong></li>
+<strong>tidycensus</strong></li>
 </ul>
 <p>A convenient way to install (if necessary) and load everything is by
 running the below code chunk.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="do">## Load and install the packages that we&#39;ll be using today</span></span>
 <span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;pacman&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;pacman&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, </span>
-<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>               lmtest, margins, vtable, broom, modelsummary,tidycensus,tigris)</span>
-<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="do">## Make sure we have at least version 0.6.0 of ivreg</span></span>
-<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">numeric_version</span>(<span class="fu">packageVersion</span>(<span class="st">&quot;ivreg&quot;</span>)) <span class="sc">&lt;</span> <span class="fu">numeric_version</span>(<span class="st">&quot;0.6.0&quot;</span>)) <span class="fu">install.packages</span>(<span class="st">&quot;ivreg&quot;</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="do">## My preferred ggplot2 plotting theme (optional)</span></span>
-<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>())</span></code></pre></div>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(tidyverse, fixest, vtable, broom, modelsummary,tidycensus)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="do">## My preferred ggplot2 plotting theme (optional)</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_minimal</span>())</span></code></pre></div>
 <p>While we’ve already loaded all of the required packages for today,
 I’ll try to be as explicit about where a particular function is coming
 from, whenever I use it below.</p>
@@ -3987,11 +3981,11 @@ your standard errors?”, and it would likely draw approving nods from
 audience members.</p>
 <p>The good news is that there are <em>lots</em> of ways to get
 nonstandard errors in R. For many years, these have been based on the
-excellent <strong>sandwich</strong> package (<a href="http://sandwich.r-forge.r-project.org/articles/sandwich.html">link</a>).
-However, here I’ll demonstrate using the <strong>estimatr</strong>
-package (<a href="https://declaredesign.org/r/estimatr/articles/getting-started.html">link</a>),
-which is both fast and provides convenient aliases for the standard
-regression functions. Some examples follow below.</p>
+excellent <strong>sandwich</strong> package (<a href="http://sandwich.r-forge.r-project.org/articles/sandwich.html">link</a>)
+and <strong>estimatr</strong> package (<a href="https://declaredesign.org/r/estimatr/articles/getting-started.html">link</a>).
+However, I’ll demonstrate using the <strong>fixest</strong> package,
+which has a built-in <code>vcov</code> argument that allows you to
+easily specify different types of standard errors.</p>
 <div id="robust-standard-errors" class="section level3">
 <h3>Robust standard errors</h3>
 <p>One of the primary reasons that you might want to use robust standard
@@ -4404,8 +4398,8 @@ variable names.</p>
 <p>There are tons of other tools to use too!</p>
 <p>As a note, here’s what you need to do in Rmarkdown to get it to work
 in a PDF format. You must specify to output as a latex file, then you
-can report “asis” and ask <code>etable()</code> to output a tex
-file.</p>
+can report “asis” and ask <code>etable()</code> to output a tex file.
+(See PDF for that.)</p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" tabindex="-1"></a><span class="fu">etable</span>(ols_fixest,ols_fixest_filter,ols_robust,fixest_cluster,fixest_corr, <span class="at">dict =</span> dict, <span class="at">tex=</span><span class="cn">TRUE</span>)</span></code></pre></div>
 <p>Alternatively, you can save this file to a tex file and then include
 it in your LaTeX document using <code>input()</code> or
@@ -5110,39 +5104,6 @@ Practical Guide</em></a>. Not only will learn how to produce beautiful
 and effective model visualizations, but you’ll also pick up a variety of
 technical tips.</li>
 </ul>
-<!-- 
-# Set seed for reproducibility
-set.seed(123)
-
-# Number of observations
-n <- 100
-
-# Generate random numbers of quarters, dimes, nickels, and pennies
-quarters <- sample(0:10, n, replace = TRUE)
-dimes <- sample(0:10, n, replace = TRUE)
-nickels <- sample(0:10, n, replace = TRUE)
-pennies <- sample(0:10, n, replace = TRUE)
-
-# Calculate the total amount of dollars for each observation
-amounts <- quarters * 0.25 + dimes * 0.10 + nickels * 0.05 + pennies * 0.01
-
-# Calculate total number of coins and total number of small coins
-total_coins <- quarters + dimes + nickels + pennies
-total_small_coins <- dimes + nickels + pennies
-
-# Create a data frame with the generated data
-data <- tibble(
-  Quarters = quarters,
-  Dimes = dimes,
-  Nickels = nickels,
-  Pennies = pennies,
-  TotalCoins = total_coins,
-  TotalSmallCoins = total_small_coins,
-  Amount = amounts
-)
-
-# Display the first few rows of the data frame
-head(data) -->
 </div>
 <div class="footnotes footnotes-end-of-document">
 <hr />

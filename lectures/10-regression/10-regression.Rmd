@@ -53,18 +53,15 @@ There are also many R packages I'm leaving out! There are tons of ways to do reg
 
 It's important to note that "base" R already provides all of the tools we need for basic regression analysis. However, we'll be using several additional packages today, because they will make our lives easier and offer increased power for some more sophisticated analyses.
 
-- New: **fixest**, **estimatr**, **ivreg**, **sandwich**, **lmtest**,  **mfx**, **margins**, **broom**, **modelsummary**, **vtable**
-- Already used: **tidyverse**, **hrbrthemes**, **listviewer**, **tidycensus**,  **tigris**
+- New: **fixest**, **broom**, **modelsummary**, **vtable**
+- Already used: **tidyverse**, **hrbrthemes**, **listviewer**, **tidycensus**
 
 A convenient way to install (if necessary) and load everything is by running the below code chunk.
 
 ```{r libs_print, cache=FALSE, eval=FALSE}
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, 
-               lmtest, margins, vtable, broom, modelsummary,tidycensus,tigris)
-## Make sure we have at least version 0.6.0 of ivreg
-if (numeric_version(packageVersion("ivreg")) < numeric_version("0.6.0")) install.packages("ivreg")
+pacman::p_load(tidyverse, fixest, vtable, broom, modelsummary,tidycensus)
 
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
@@ -72,8 +69,7 @@ theme_set(theme_minimal())
 ```{r libs, cache=FALSE, message=FALSE, echo=FALSE}
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(mfx, tidyverse, hrbrthemes, estimatr, ivreg, fixest, sandwich, 
-               lmtest, margins, vtable, broom, modelsummary,tidycensus,tigris,kableExtra)
+pacman::p_load(tidyverse, fixest, vtable, broom, modelsummary,tidycensus,kableExtra)
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
 ```
@@ -241,7 +237,7 @@ The overall model fit is much improved by the exclusion of this outlier, with R<
 
 Dealing with statistical irregularities (heteroskedasticity, clustering, etc.) is a fact of life for empirical researchers. However, it says something about the economics profession that a random stranger could walk uninvited into a live seminar and ask, "How did you cluster your standard errors?", and it would likely draw approving nods from audience members. 
 
-The good news is that there are *lots* of ways to get nonstandard errors in R. For many years, these have been based on the excellent **sandwich** package ([link](http://sandwich.r-forge.r-project.org/articles/sandwich.html)). However, here I'll demonstrate using the **estimatr** package ([link](https://declaredesign.org/r/estimatr/articles/getting-started.html)), which is both fast and provides convenient aliases for the standard regression functions. Some examples follow below. 
+The good news is that there are *lots* of ways to get nonstandard errors in R. For many years, these have been based on the excellent **sandwich** package ([link](http://sandwich.r-forge.r-project.org/articles/sandwich.html)) and **estimatr** package ([link](https://declaredesign.org/r/estimatr/articles/getting-started.html)). However, I'll demonstrate using the **fixest** package, which has a built-in `vcov` argument that allows you to easily specify different types of standard errors.
 
 ### Robust standard errors
 
@@ -554,37 +550,3 @@ modelplot(ie_mods, coef_map = c("in_southSouth:poor_share1990" = "South x Povert
 - [Itamar Caspi](https://twitter.com/itamarcaspi) has written a neat unofficial appendix to this lecture, [*recipes for Dummies*](https://itamarcaspi.rbind.io/post/recipes-for-dummies/). The title might be a little inscrutable if you haven't heard of the `recipes` package before, but basically it handles "tidy" data preprocessing, which is an especially important topic for machine learning methods. We'll get to that later in course, but check out Itamar's post for a good introduction.
 - I promised to provide some links to time series analysis. The good news is that R's support for time series is very, very good. The [Time Series Analysis](https://cran.r-project.org/web/views/TimeSeries.html) task view on CRAN offers an excellent overview of available packages and their functionality.
 - Lastly, for more on visualizing regression output, I highly encourage you to look over Chapter 6 of Kieran Healy's [*Data Visualization: A Practical Guide*](https://socviz.co/modeling.html). Not only will learn how to produce beautiful and effective model visualizations, but you'll also pick up a variety of technical tips.
-
-<!-- 
-# Set seed for reproducibility
-set.seed(123)
-
-# Number of observations
-n <- 100
-
-# Generate random numbers of quarters, dimes, nickels, and pennies
-quarters <- sample(0:10, n, replace = TRUE)
-dimes <- sample(0:10, n, replace = TRUE)
-nickels <- sample(0:10, n, replace = TRUE)
-pennies <- sample(0:10, n, replace = TRUE)
-
-# Calculate the total amount of dollars for each observation
-amounts <- quarters * 0.25 + dimes * 0.10 + nickels * 0.05 + pennies * 0.01
-
-# Calculate total number of coins and total number of small coins
-total_coins <- quarters + dimes + nickels + pennies
-total_small_coins <- dimes + nickels + pennies
-
-# Create a data frame with the generated data
-data <- tibble(
-  Quarters = quarters,
-  Dimes = dimes,
-  Nickels = nickels,
-  Pennies = pennies,
-  TotalCoins = total_coins,
-  TotalSmallCoins = total_small_coins,
-  Amount = amounts
-)
-
-# Display the first few rows of the data frame
-head(data) -->
