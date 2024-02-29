@@ -101,7 +101,8 @@ View(opp_atlas)
 ```{r opp_atlas2}
 opp_atlas <- opp_atlas %>%
   left_join(fips) %>% # Join together the data
-  rename(kfr_p25=kfr_pooled_pooled_p25)  # Rename so you have to type less later.
+  rename(kfr_p25=kfr_pooled_pooled_p25,
+    kfr_white_p25=kfr_white_pooled_p25)  # Rename so you have to type less later.
 ```
 
 ## Regression basics
@@ -113,7 +114,6 @@ R's base workhorse command for running regression models is the built-in `lm()` 
 ```r
 lm(y ~ x1 + x2 + x3 + ..., data = df)
 ```
-
 
 Where `y` is the dependent variable, `x1`, `x2`, `x3`, etc. are the independent variables, and `df` is the data frame that contains these variables. You'll note that the `lm()` call includes a reference to the data source. We [covered this](https://raw.githack.com/uo-ec607/lectures/master/04-rlang/04-rlang.html#global_env) in our earlier lecture on R language basics and object-orientated programming, but the reason is that many objects (e.g. data frames) can exist in your R environment at the same time. So we need to be specific about where our regression variables are coming from --- even if `opp_atlas` is the only data frame in our global environment at the time. 
 
@@ -162,6 +162,24 @@ We can then dig down further by extracting a summary of the regression coefficie
 ```{r ols1_coefs}
 summary(ols_fixest)$coefficients
 ```
+
+#### Multiple regression 
+
+The `feols()` function can handle multiple regression models unlike `lm()`. It can split regressions by different dependent variables, independent variables, fixed effects, and subsets all in one. I need to briefly create an indicator for region to show you multiple subset regression.
+
+```{r ols1_multi}
+# Indicator for south created.
+opp_atlas <- opp_atlas %>% 
+  mutate(insouth= ifelse(state_abb %in% c("AL", "AR", "FL", "GA", "KY", "LA", "MS", "NC", "OK", "SC", "TN", "TX", "VA", "WV"), "South", "North"))
+
+ols_multi <- feols(c(kfr_p25, kfr_white_p25) ~  
+  sw(poor_share1990,ann_avg_job_growth_2004_2013),
+  fsplit=~insouth, # split by region
+  data = opp_atlas)
+etable(ols_multi) # explained below
+```
+
+One function call produced 12 regressions and you could technically do thousands or even millions at once. This is a very powerful tool for running many regressions at once. Use it wisely.
 
 ### Get "tidy" regression coefficients with the `broom` package
 
