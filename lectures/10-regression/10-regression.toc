@@ -24,4 +24,4 @@
 \contentsline {paragraph}{Summary tables}{17}{section*.25}%
 \contentsline {subsubsection}{Figures}{18}{section*.26}%
 \contentsline {paragraph}{Coefficient plots}{18}{section*.27}%
-\contentsline {subsection}{Further resources}{19}{section*.28}%
+\contentsline {subsection}{Further resources}{18}{section*.28}%

@@ -529,19 +529,6 @@ modelplot(mods) +
     )
 ```
 
-Or, here's another example where we compare the (partial) In South × Poverty Share coefficient from our earlier interaction model, with the (full) marginal effect that we obtained later on.
-
-```{r modplot2}
-ie_mods = list('Partial effect' = ols_ie, 'Marginal effect' = ols_ie_marg2)
-
-modelplot(ie_mods, coef_map = c("in_southSouth:poor_share1990" = "South x Poverty Rate (1990)")) +
-  coord_flip() + 
-  labs(
-    title = "Relationship between Pov Rate (1990) on Income Mobility",
-    subtitle = "Comparing partial vs marginal effects"
-    )
-```
-
 ## Further resources
 
 - [Ed Rubin](https://twitter.com/edrubin) has outstanding [teaching notes](http://edrub.in/teaching.html) for econometrics with R on his website. This includes both [undergrad-](https://github.com/edrubin/EC421S19) and [graduate-](https://github.com/edrubin/EC525S19)level courses. Seriously, check them out.
