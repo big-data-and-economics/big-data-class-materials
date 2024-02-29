@@ -419,3 +419,141 @@ has over 200,000 fixed effects!
 - Why can't we use individual-person fixed effects to study the impact of race on traffic stops?
 - The within $R^2$ from is .3, and the overall $R^2$ is .5. Interpret these two numbers in sentences
 - In a sentence, interpret the slope coefficient in the estimated model $(Y_{it} - \bar{Y}_i) = 1 + .5(X_{it} - \bar{X}_i)$ where $Y$ is "school funding per child" and $X$ is "population growth", and $i$ is city
+
+
+
+## Dummy variables and interaction terms
+
+For the next section, we'll need to create a dummy variable. We'll create two: one for whether a county is in the South and one for all major regions of the US. 
+
+```{r in_south,message=F,warning=F}
+# Get the regions and do minor cleaning
+opp_atlas <- mutate(opp_atlas,
+  in_south = ifelse(state_abb %in% c("AL", "AR", 
+    "FL", "GA", "KY", "LA", "MS", "NC", "OK",
+     "SC", "TN", "TX", "VA", "WV"), "South", "North"),
+     positive_job_growth = ann_avg_job_growth_2004_2013>0) 
+```
+
+### Dummy variables as *factors*
+
+Dummy variables are a core component of many regression models. However, these can be a pain to create in some statistical languages, since you first have to tabulate a whole new matrix of binary variables and then append it to the original data frame. In contrast, R has a very convenient framework for creating and evaluating dummy variables in a regression: Simply specify the variable of interest as a [factor](https://r4ds.had.co.nz/factors.html).^[Factors are variables that have distinct qualitative levels, e.g. "male", "female", "non-binary", etc.]
+
+Here's an example where we explicitly tell R that "in_south" is a factor. Since I don't plan on reusing this model, I'm just going to print the results to screen rather than saving it to my global environment.
+
+```{r ols_dv}
+summary(feols(kfr_p25 ~ poor_share1990 + as.factor(in_south), data = opp_atlas))
+```
+
+Okay, I should tell you that I'm actually making things more complicated than they need to be with the heavy-handed emphasis on factors. R is "friendly" and tries to help whenever it thinks you have misspecified a function or variable. While this is something to be [aware of](https://rawgit.com/grantmcdermott/R-intro/master/rIntro.html#r_tries_to_guess_what_you_meant), normally It Just Works^TM^. A case in point is that we don't actually *need* to specify a string (i.e. character) variable as a factor in a regression. R will automatically do this for you regardless, since it's the only sensible way to include string variables in a regression.
+
+```{r ols_dv2}
+## Use the non-factored version of "in_south" instead; R knows it must be ordered
+## for it to be included as a regression variable
+summary(feols(kfr_p25 ~ poor_share1990 + in_south, data = opp_atlas))
+```
+
+What happens if I use region? It thinks region is a numeric variable and so it does not create dummy variables for it. 
+
+```{r ols_dv3}
+summary(feols(kfr_p25 ~ poor_share1990 + positive_job_growth, data = opp_atlas))
+```
+
+We can fix this by telling R that region is a factor.
+
+```{r ols_dv4}
+summary(feols(kfr_p25 ~ poor_share1990 + as.factor(region), data = opp_atlas))
+```
+
+### Interaction effects
+
+Like dummy variables, R provides a convenient syntax for specifying interaction terms directly in the regression model without having to create them manually beforehand.^[Although there are very good reasons that you might want to modify your parent variables before doing so (e.g. centering them). As it happens, Grant McDermott [has strong feelings](https://twitter.com/grant_mcdermott/status/903691491414917122) that interaction effects are most widely misunderstood and misapplied concept in econometrics. However, that's a topic for another day.] You can use any of the following expansion operators:
+
+- `x1:x2` "crosses" the variables (equivalent to including only the x1 × x2 interaction term)
+- `x1/x2` "nests" the second variable within the first (equivalent to `x1 + x1:x2`; more on this [later](#nestedmarg))
+- `x1*x2` includes all parent and interaction terms (equivalent to `x1 + x2 + x1:x2`) 
+
+As a rule of thumb, if [not always](#nestedmarg), it is generally advisable to include all of the parent terms alongside their interactions. This makes the `*` option a good default. 
+
+For example, we might wonder whether the relationship between a location's income mobility for children in the 25th percentile and its 1990 poverty rate differs by region. That is, we want to run a regression of the form,
+
+$$KFR_{P25} = \beta_0 + \beta_1 D_{South} + \beta_2  + \beta_3 D_{South} \times 1990 Poverty Share$$
+
+To implement this in R, we simply run the following,
+
+```{r ols_ie}
+ols_ie = feols(kfr_p25 ~ in_south * poor_share1990, data = opp_atlas)
+summary(ols_ie)
+```
+
+## Marginal effects
+
+Calculating marginal effects in a linear regression model like OLS is perfectly straightforward... just look at the coefficient values. But that quickly goes out the window when you have interaction terms or non-linear models like probit, logit, etc. Luckily, there are various ways to obtain these from R models. For example, we already saw the **mfx** package above for obtaining marginal effects from GLM models. I want to briefly focus on two of my favourite methods for obtaining marginal effects across different model classes: 1) The **margins** package and 2) a shortcut that works particularly well for models with interaction terms.
+
+### The **margins** package
+
+The **margins** package ([link](https://cran.r-project.org/web/packages/margins)), which is modeled on its namesake in Stata, is great for obtaining marginal effects across an entire range of models.^[I do, however, want to flag that it does [not yet support](https://github.com/leeper/margins/issues/128) **fixest** (or **lfe**) models. But there are [workarounds](https://github.com/leeper/margins/issues/128#issuecomment-636372023) in the meantime.] You can read more in the package [vignette](https://cran.r-project.org/web/packages/margins/vignettes/Introduction.html), but here's a very simple example to illustrate. 
+
+Consider our interaction effects regression [from earlier](#interaction-effects), where we were interested in how income mobility varied by 1990 poverty rate and region. To get the average marginal effect (AME) of these dependent variables, we can just use the `margins::margins()` function.
+
+```{r margins0, dependson="ols_ie"}
+# library(margins) ## Already loaded
+
+ols_ie_marg = margins(ols_ie)
+```
+
+Like a normal regression object, we can get a nice print-out display of the above object by summarising or tidying it.
+
+```{r margins1, dependson="ols_ie"}
+# summary(ols_ie_marg) ## Same effect
+tidy(ols_ie_marg, conf.int = TRUE)
+```
+
+If we want to compare marginal effects at specific values --- e.g. how the AME of 1990 poverty rate on income mobility differs across north and south --- then that's easily done too.
+
+```{r margins2, dependson="ols_ie"}
+ols_ie %>% 
+  margins(
+    variables = "poor_share1990", ## The main variable we're interested in
+    at = list(in_south = c("North","South")) ## How the main variable is modulated by at specific values of a second variable
+    ) %>% 
+  tidy(conf.int = TRUE) ## Tidy it (optional)
+```
+
+If you're the type of person who prefers visualizations (like me), then you should consider `margins::cplot()`, which is the package's in-built method for constructing *conditional* effect plots.
+
+```{r margins3, dependson="ols_ie", dependson="opp_atlas"}
+cplot(ols_ie, x = "in_south", dx = "poor_share1990", what = "effect", 
+      data = opp_atlas)
+```
+
+In this case,it doesn't make much sense to read a lot into the larger standard errors on the female group; that's being driven by a very small sub-sample size.
+
+Finally, you can also use `cplot()` to plot the predicted values of your outcome variable (here: "kfr_p25"), conditional on one of your dependent variables. For example:
+
+```{r margins4, dependson="ols_ie", dependson="opp_atlas"}
+par(mfrow=c(1, 2)) ## Just to plot these next two (base) figures side-by-side
+cplot(ols_ie, x = "in_south", what = "prediction", data = opp_atlas)
+cplot(ols_ie, x = "poor_share1990", what = "prediction", data = opp_atlas)
+par(mfrow=c(1, 1)) ## Reset plot defaults
+```
+
+Note that `cplot()` uses the base R plotting method. If you'd prefer **ggplot2** equivalents, take a look at the **marginsplot** package ([link](https://github.com/vincentarelbundock/marginsplot)).
+
+Finally, I also want to draw your attention to the **emmeans** package ([link](https://cran.r-project.org/web/packages/emmeans/index.html)), which provides very similar functionality to **margins**. I'm not as familiar with it myself, but I know that it has many fans.
+
+### Special case: `/` shortcut for interaction terms {#nestedmarg}
+
+I'll keep this one brief, but I wanted to mention one of my favourite R shortcuts: Obtaining the full marginal effects for interaction terms by using the `/` expansion operator. Grant [tweeted](https://twitter.com/grant_mcdermott/status/1202084676439085056?s=20) about this and even wrote an [whole blog post](https://grantmcdermott.com/2019/12/16/interaction-effects/) about it too (which you should totally read). But the very short version is that you can switch out the normal `f1 * x2` interaction terms syntax for `f1 / x2` and it automatically returns the full marginal effects. (The formal way to describe it is that the model variables have been "nested".)
+
+Here's a super simple example, using the same interaction effects model from before.
+
+```{r nested, dependson="opp_atlas"}
+# ols_ie = lm(kfr_p25 ~ in_south * poor_share1990, data = opp_atlas) ## Original model
+ols_ie_marg2 = lm(kfr_p25 ~ in_south / poor_share1990, data = opp_atlas)
+tidy(ols_ie_marg2, conf.int = TRUE)
+```
+
+Note that the marginal effects on the two south × poverty rate interactions (i.e. `r round(ols_ie_marg2$coefficients[['in_southNorth:poor_share1990']], 3)` and `r round(ols_ie_marg2$coefficients[['in_southSouth:poor_share1990']], 3)`) are the same as we got with the `margins::margins()` function [above](#the-margins-package). 
+
+Where this approach really shines is when you are estimating interaction terms in large models. The **margins** package relies on a numerical delta method which can be very computationally intensive, whereas using `/` adds no additional overhead beyond calculating the model itself. Still, that's about as much as say it here. Read the aforementioned [blog post](https://grantmcdermott.com/2019/12/16/interaction-effects/) if you'd like to learn more.
