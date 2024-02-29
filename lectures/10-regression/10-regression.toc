@@ -1,0 +1,27 @@
+\contentsline {subsection}{Software requirements}{1}{section*.2}%
+\contentsline {subsubsection}{R packages}{1}{section*.3}%
+\contentsline {subsection}{Regression basics}{2}{section*.4}%
+\contentsline {subsubsection}{The \texttt {lm()} function}{2}{section*.5}%
+\contentsline {subsubsection}{The \textbf {fixest} package and \texttt {feols()} function}{3}{section*.6}%
+\contentsline {paragraph}{What's in these objects?}{3}{section*.7}%
+\contentsline {subsubsection}{Get ``tidy'' regression coefficients with the \texttt {broom} package}{4}{section*.8}%
+\contentsline {subsubsection}{Regressing on subsetted data}{4}{section*.9}%
+\contentsline {paragraph}{1) Subset directly in the \texttt {lm()} call}{5}{section*.10}%
+\contentsline {paragraph}{2) Create a new data frame}{5}{section*.11}%
+\contentsline {subsection}{Nonstandard errors}{6}{section*.12}%
+\contentsline {subsubsection}{Robust standard errors}{6}{section*.13}%
+\contentsline {subsubsection}{Clustered standard errors}{8}{section*.14}%
+\contentsline {subsubsection}{Manipulating variables}{9}{section*.15}%
+\contentsline {paragraph}{Standardize variables}{9}{section*.16}%
+\contentsline {paragraph}{Convert variables to logs}{9}{section*.17}%
+\contentsline {subsection}{Dummy variables and interaction terms}{10}{section*.18}%
+\contentsline {subsubsection}{Dummy variables as \emph {factors}}{10}{section*.19}%
+\contentsline {subsubsection}{Interaction effects}{11}{section*.20}%
+\contentsline {subsection}{Presentation}{12}{section*.21}%
+\contentsline {subsubsection}{Tables}{12}{section*.22}%
+\contentsline {paragraph}{Regression tables}{12}{section*.23}%
+\contentsline {paragraph}{Other tools}{16}{section*.24}%
+\contentsline {paragraph}{Summary tables}{17}{section*.25}%
+\contentsline {subsubsection}{Figures}{18}{section*.26}%
+\contentsline {paragraph}{Coefficient plots}{18}{section*.27}%
+\contentsline {subsection}{Further resources}{19}{section*.28}%
