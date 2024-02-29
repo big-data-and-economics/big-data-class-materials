@@ -557,3 +557,38 @@ tidy(ols_ie_marg2, conf.int = TRUE)
 Note that the marginal effects on the two south × poverty rate interactions (i.e. `r round(ols_ie_marg2$coefficients[['in_southNorth:poor_share1990']], 3)` and `r round(ols_ie_marg2$coefficients[['in_southSouth:poor_share1990']], 3)`) are the same as we got with the `margins::margins()` function [above](#the-margins-package). 
 
 Where this approach really shines is when you are estimating interaction terms in large models. The **margins** package relies on a numerical delta method which can be very computationally intensive, whereas using `/` adds no additional overhead beyond calculating the model itself. Still, that's about as much as say it here. Read the aforementioned [blog post](https://grantmcdermott.com/2019/12/16/interaction-effects/) if you'd like to learn more.
+
+
+<!-- 
+# Set seed for reproducibility
+set.seed(123)
+
+# Number of observations
+n <- 100
+
+# Generate random numbers of quarters, dimes, nickels, and pennies
+quarters <- sample(0:10, n, replace = TRUE)
+dimes <- sample(0:10, n, replace = TRUE)
+nickels <- sample(0:10, n, replace = TRUE)
+pennies <- sample(0:10, n, replace = TRUE)
+
+# Calculate the total amount of dollars for each observation
+amounts <- quarters * 0.25 + dimes * 0.10 + nickels * 0.05 + pennies * 0.01
+
+# Calculate total number of coins and total number of small coins
+total_coins <- quarters + dimes + nickels + pennies
+total_small_coins <- dimes + nickels + pennies
+
+# Create a data frame with the generated data
+data <- tibble(
+  Quarters = quarters,
+  Dimes = dimes,
+  Nickels = nickels,
+  Pennies = pennies,
+  TotalCoins = total_coins,
+  TotalSmallCoins = total_small_coins,
+  Amount = amounts
+)
+
+# Display the first few rows of the data frame
+head(data) -->
