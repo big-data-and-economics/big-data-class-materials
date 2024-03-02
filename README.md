@@ -262,7 +262,7 @@ Economics is at the forefront of developing statistical methods for analyzing da
 
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
-| 6 × problem sets (12.5% each, drop two lowest) | 50%    | Top 5  |
+| 6 × problem sets (12.5% each, drop two lowest) | 50%    | Top 4  |
 | 1 × 5-minute presentation                 | 5%     | Top 1   |
 | 1 × GitHub participation                  | 5%     | Overall   |
 | 1 × group final project                   | 30%-40%    | [In parts](https://github.com/big-data-and-economics/final-project) |
