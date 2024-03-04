@@ -229,7 +229,7 @@ plot+
 ---
 # Between and Within
 
--Seriously, Only look at those means! The individual child variation within families does not matter
+- Seriously, only look at those means! The individual child variation within families does not matter
 
 ```{r between-only,echo=FALSE}
 df %>% 

@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Big Data and Economics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kyle Coombs" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/my-css.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Big Data and Economics
+]
+.subtitle[
+## Fixed Effects - control for what you can’t see
+]
+.author[
+### Kyle Coombs
+]
+.date[
+### Bates College | <a href="https://github.com/big-data-and-economics">ECON/DCS 368</a>
+]
+
+---
+
+name: toc
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+
+# Table of contents
+
+- [Prologue](#prologue)
+
+- [Causal Inference Review](#causal-inference-review)
+
+- [Fixed Effects](#fixed-effects)
+  - [Panel Data](#panel-data)
+  - [Crime and Arrests](#crime-and-arrests)
+
+- [Implementation](#implementation)
+  - [Demeaning](#demeaning)
+  - [Least Squares Dummy Variable](#lsdv)
+
+---
+name: prologue
+class: inverse, center, middle
+# Prologue
+
+---
+
+# Prologue
+
+- We see in the Opportunity Atlas that neighborhood income mobility is correlated with many outcomes 
+
+- But are any of these correlations .pink[causal]?
+
+- If so, we should be able to .pink[change] neighborhood characteristics to .pink[change] outcomes
+
+- Problem set 3 has been posted to the course website, get started early! 
+
+---
+
+# Goals today
+
+1. Review causal inference
+2. Introduce fixed effects
+3. Go over an example
+4. Play with fixed effects in R
+
+---
+# Attribution
+
+- These slides are adapted from work by Nick Huntington-Klein and Ed Rubin
+
+- They're both superb econometric instructors and I highly recommend their work
+
+---
+class: inverse, center, middle
+name: causal-inference-review
+
+# Causal Inference Review
+
+---
+# Causal Inference Review
+
+Last week, we discussed .hi[causality].
+
+--
+
+We worked through the *Rubin causal model*, in which we defined
+
+- `\(\color{#e64173}{y_{1i}:}\)` the outcome for individual `\(i\)` if she had received treatment
+
+--
+- `\(\color{#6A5ACD}{y_{0i}:}\)` the outcome for individual `\(i\)` if she had not received treatment
+
+--
+
+and we referred to individuals who did not receive treatment as *control*.
+
+--
+
+***If*** we were able to know both `\(\color{#e64173}{y_{1i}}\)` ***and*** `\(\color{#6A5ACD}{y_{0i}}\)`, we could calculate the causal effect of treatment for individual `\(i\)`, _i.e._,
+
+--
+
+$$
+`\begin{align}
+  \tau_i = \color{#e64173}{y_{1i}} - \color{#6A5ACD}{y_{0i}}
+\end{align}`
+$$
+
+---
+# Fund. problem of causal inference
+
+&lt;br&gt;We cannot simultaneously know `\(\color{#e64173}{y_{1i}}\)` and `\(\color{#6A5ACD}{y_{0i}}\)`.
+
+--
+
+Either we observe individual `\(i\)` in the treatment group, _i.e._,
+$$
+`\begin{align}
+  \tau_i = \color{#e64173}{y_{1i}} - \color{#6A5ACD}{?}
+\end{align}`
+$$
+
+--
+
+or we observe `\(i\)` in the control group, _i.e._,
+$$
+`\begin{align}
+  \tau_i = \color{#e64173}{?} - \color{#6A5ACD}{y_{0i}}
+\end{align}`
+$$
+
+--
+
+but never both at the same time.
+
+---
+# So what do we do?
+
+If we want to know `\(\tau_i\)` (or at least `\(\overline{\tau}\)`), what can we do?
+
+--
+
+**Idea:** Estimate the .hi-slate[average treatment effect] as the difference between the average outcomes in the treatment group and the control group, _i.e._,
+
+$$
+`\begin{align}
+  \color{#e64173}{\mathop{E}\left( y_i\mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_i\mid D_i =0 \right)}
+\end{align}`
+$$
+where `\(D_i=1\)` if `\(i\)` received treatment, and `\(D_i=0\)` if `\(i\)` is in the control group.
+
+---
+# Constant treatment effect
+**Result:** Even when treatment effect is constant (meaning `\(\tau_i=\tau\)` for all `\(i\)`),
+
+$$
+`\begin{align}
+  &amp;\color{#e64173}{\mathop{E}\left( y_i\mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_i\mid D_i =0 \right)} \\
+  &amp;\quad\quad = \tau + \underbrace{\color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}}_{\color{#FFA500}{\text{Selection bias}}}
+\end{align}`
+$$
+
+which says that the difference in the groups' means will give us a **biased estimate** for the causal effect of treatment .hi-orange[if we have selection bias.]
+
+---
+# Selection bias 
+
+**Q:** What is this .hi-orange[selection bias]?
+
+--
+
+**A:** **(Informal)** We have selection bias when our control group doesn't offer a good comparison for our treatment group.
+
+--
+
+Specifically, the control group doesn't give us a good .hi-orange[counterfactual] for .orange[what our treatment group would have looked like if the members had not received treatment.]
+--
+ Basically, the groups are different.
+
+--
+
+**A:** **(Formal)** The .pink[average *untreated* outcome for a member of our **treatment group**] (which we cannot observe) differs from the .purple[average *untreated* outcome for a member of our **control group**], _i.e._,
+$$
+`\begin{align}
+  \color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}
+\end{align}`
+$$
+
+---
+# Observing selection bias?
+
+.hi-slate[Practical problem:] Selection bias is also difficult to observe
+
+$$
+`\begin{align}
+  \underbrace{\color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)}}_{\color{#e64173}{\text{Unobservable}}} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}
+\end{align}`
+$$
+
+(back to the *fundamental problem of causal inference*)
+
+--
+
+.hi-slate[Bigger problem:] If selection bias is present, our estimate for `\(\tau\)` is biased, preventing us from understanding the causal effect of treatment.
+
+--
+
+Sounds a bit like omitted-variable bias, right? That's cause they're all forms of .hi[endogeneity!]
+
+--
+ Our .pink[treatment] variable is correlated with something that makese the two groups different.
+
+---
+# Hypothetical example
+
+**Example:** Imagine we have two people—Al and Bri—and a single binary treatment, college. We interested in the effect of college on earnings.
+
+.pull-left[.center[
+.pink[Earn.sub[1,Al]] = .pink[$60K]
+&lt;br&gt;.purple[Earn.sub[0,Al]] = .purple[$30K]
+]]
+.pull-right[
+.pink[Earn.sub[1,Bri]] = .pink[$140K]
+&lt;br&gt;.purple[Earn.sub[0,Bri]] = .purple[$110K]
+]
+
+--
+
+They both have the same treatment effect (return to college)
+--
+&lt;br&gt; `\(\quad\quad\tau\)`.sub[Al] = .pink[Earn.sub[1,Al]] - .purple[Earn.sub[0,Al]] = .pink[$60K] - .purple[$30K] = $30K
+--
+&lt;br&gt; `\(\quad\quad\tau\)`.sub[Bri] = .pink[Earn.sub[1,Bri]] - .purple[Earn.sub[0,Bri]] = .pink[$140K] - .purple[$100K] = $30K
+
+--
+
+but any real-world estimate would have serious selection issues since .purple[Earn.sub[0,Al]] ≠ .purple[Earn.sub[0,Bri].]
+---
+# Hypothetical example
+
+**Example:** Imagine we have two people—Al and Bri—and a single binary treatment, college. We interested in the effect of college on earnings.
+
+.pull-left[.center[
+.pink[Earn.sub[1,Al]] = .pink[$60K]
+&lt;br&gt;.purple[Earn.sub[0,Al]] = .purple[$30K]
+]]
+.pull-right[
+.pink[Earn.sub[1,Bri]] = .pink[$140K]
+&lt;br&gt;.purple[Earn.sub[0,Bri]] = .purple[$110K]
+]
+
+The selection bias...
+
+--
+
+If Bri attended college (D.sub[Bri]=1) and Al did not (D.sub[Al]=0):
+&lt;br&gt;
+`\(\quad\quad\hat{\tau}\)` = .pink[Earn.sub[1,Bri]] - .purple[Earn.sub[0,Al]] = .pink[$140K] - .purple[$30K] = $110K
+
+--
+
+If Al attended college (D.sub[Al]=1) and Bri did not (D.sub[Bri]=0):
+&lt;br&gt;
+`\(\quad\quad\hat{\tau}\)` = .pink[Earn.sub[1,Al]] - .purple[Earn.sub[0,Bri]] = .pink[$60K] - .purple[$110K] = -$50K
+
+
+
+---
+# Problems and solutions
+
+We have (at least) two problems...
+
+1. Selection bias is difficult to observe
+
+2. If selection bias is present, our estimate for `\(\tau\)` is biased, preventing us from understanding the causal effect of treatment.
+
+--
+
+.hi-slate[Solution:] Eliminate/minimize selection bias.
+
+--
+
+- .hi-slate[Option 1:] .hi-pink[Distribute treatment] in a way such that the treatment and control groups are essentially identical
+--
+ (experiments).
+
+--
+
+- .hi-slate[Option 2:] .hi-purple[Control] for what makes the treatment and control groups different
+--
+&lt;br&gt;(life with observational data).
+
+---
+# Control approach
+
+- Last week we also talked about control variables approaches
+
+- We can control for variables that are correlated with both the treatment and the outcome
+
+- This is a way to minimize selection bias/omitted variable bias
+
+- But what if we miss a variable in our model?
+
+- What if we know a variable, but we cannot measure it?
+
+- Any guesses? 
+
+---
+
+# Causal Inference Unit
+
+- Much of causal inference is focused on *finding ways to control for stuff that we can't measure*
+
+- Seems impossible! But it is possible, at least in some circumstances
+
+- Today, we will be talking about *within variation* and *between variation*, and the ability to control for all *between variation* using *fixed effects*
+
+
+---
+name: fixed-effects
+class: inverse, center, middle
+# Fixed Effects
+
+---
+# Fixed effects
+
+- Fixed effects are a way to control for .hi[endogeneity]
+
+- Effectively, these remove within-group averages from the data
+
+- In the case of Bri and Al, this would be like subtracting their hypothetical average earnings from actual earnings
+
+.pull-left[.center[
+.pink[Earn.sub[1,Al]] = .pink[$60K]-.blue[$45K] = .pink[$15K]
+&lt;br&gt;.purple[Earn.sub[0,Al]] = .purple[$30K] - .blue[$45K] = .purple[-$15K]
+]]
+.pull-right[
+.pink[Earn.sub[1,Bri]] = .pink[$140K] - .blue[$125K] = .pink[$15K]
+&lt;br&gt;.purple[Earn.sub[0,Bri]] = .purple[$110K] - .blue[$125K] = .purple[-$15K]
+]
+
+- Then if we subtract Bri's college earnings from Al's, we get $30K -- the actual treatment effect
+
+- Why is that impossible though?
+
+--
+
+- We only have one unit for each person! So let's think what we can do with multiple units
+
+---
+name: panel-data
+# Panel Data
+
+- We are working in the domain of *panel data*
+
+- Panel data is when you observe the same individual over multiple periods
+
+- "Individual" could be a person, or a company, or a state, or a country, etc. There are `\(N\)` individuals in the panel data
+
+- "Time period" could be a year, a month, a day, etc.. There are `\(T\)` time periods in the data
+
+- For now we'll assume we observe each individual the same number of times, i.e. a *balanced* panel (so we have `\(N\times T\)` observations)
+
+- This works with unbalanced panels too, but it's more complicated
+
+---
+# Panel Data
+
+- Here's what (a few rows from) a panel data set looks like - a variable for individual (county), a variable for time (year), and then the data
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; County &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Year &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; CrimeRate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; ProbofArrest &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 81 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0398849 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.289696 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0383449 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.338111 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 83 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0303048 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.330449 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 84 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0347259 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.362525 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 85 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0365730 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.325395 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 86 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0347524 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.326062 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 87 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0356036 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.298270 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 81 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0163921 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.202899 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0190651 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.162218 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;tfoot&gt;
+&lt;tr&gt;
+&lt;td style = 'padding: 0; border:0;' colspan='100%'&gt;&lt;sup&gt;&lt;/sup&gt; 9 rows out of 630. &amp;quot;Prob. of Arrest&amp;quot; is estimated probability of being arrested when you commit a crime&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tfoot&gt;
+&lt;/table&gt;
+
+---
+name: crime-and-arrests
+# Crime and Arrests
+
+- Let's ask how increased probability of arrest affects crime
+
+- Certainly we'd expect there to be correlation between the two!
+
+- Why can't we just estimate this regression?
+
+`$$\text{Crime Rate} = \beta_0 + \beta_1 \text{Prob. of Arrest} + \epsilon$$`
+
+--
+
+1. Reverse causality -- more crime leads to more arrests
+
+2. Selection bias -- counties with more crime might institute 
+
+3. Omitted variable bias -- counties with higher property values may have higher crime rates, but also more tax revenue to spend on police
+
+Do you notice that these problems have overlap? That's cause they're all forms of .hi[endogeneity!]
+
+---
+# Between and Within
+
+- Let's pick a few counties and graph this out
+
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Between and Within
+
+- If we look at the overall variation, just pretending this is all together, we get this
+
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Between and Within
+
+- BETWEEN variation is what we get if we look at the relationship between the *means of each county*
+
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Between and Within
+
+- And I mean it! Only look at those means! Individual year-to-year variation within county doesn't matter.
+
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Between and Within
+
+- Within variation treats the orange crosses as individualized axes for the variation *within* county from year-to-year only!
+
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-7-1.gif" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Between and Within
+
+- We can clearly see that *between counties* there's a strong positive relationship
+
+- But if you look *within* counties, the relationship seems weakly negative
+
+- Which would make sense - if you think your chances of getting arrested are high, that should be a deterrent to crime
+
+- But what are we actually doing here? Let's think about the data-generating process!
+
+- What goes into the probability of arrest and the crime rate? Lots of stuff!
+
+---
+
+# Between and Within
+
+- For each of these variables we can ask if they vary *between counties* and/or *within counties*
+
+- Lots of stuff like geography, landmarks, the quality of the schools only varies *between counties*, but not that much over the years
+
+- The number of police on the streets, the poverty rate, and the probability of arrest, vary both *between* and *within* counties from year to year
+
+- So county fixed effects sucks up all the variation for things that do not vary within counties
+
+- That means even if we cannot measure some variable, if it only varies between counties, we can control for it!
+
+---
+
+# Between and Within
+
+- Now the task of identifying ProbArrest `\(\rightarrow\)` CrimeRate becomes much simpler!
+
+- If we control for County, that cuts out tons of omitted variables
+
+- Conveniently, we can control for County just like it was any other variable!
+
+- And when we do, we automatically *control for all variables that only have between variation*, whatever they are, even if we can't measure them directly or didn't think about them
+
+- *All that's left is the within variation*
+
+---
+
+# Concept Checks
+
+- For each of these variables, would we expect them to have within variation, between variation, or both?
+
+- Individual = person
+  - How a child's height changes as they age.
+  - In a data set tracking many people over many years, the variation in the number of children a person has over their lifetime.
+
+- Individual = city
+  -  Overall, Paris, France has more restaurants than Paris, Texas.
+
+- Individual = genre
+  - The average pop music album sells more copies than the average jazz album
+  - Miles Davis' *Kind of Blue* sold very well *for a jazz album*.
+  - Michael Jackson's *Thriller*, a pop album, sold many more copies than *Kind of Blue*, a jazz album.
+
+---
+name: implementation
+class: inverse, center, middle
+
+# Implementation
+
+---
+
+# Removing Between Variation
+
+- Okay so that's the concept
+
+- Remove all the between variation so that all that's left is within variation
+
+- And in the process control for any variables that are made up only of between variation
+
+- How can we actually do this? And what's really going on?
+
+- Let's first talk about the regression model itself that this implies
+
+- Then let's actually do the thing. There are two main ways: *de-meaning* and *binary variables* (they give the same result, for balanced panels anyway)
+
+---
+
+# Estimation vs. Design
+
+- To be clear, this is *exactly 0% different* from what we've done before in terms of controlling for stuff
+
+- And in fact we're about to do the *exact same thing we did before* by just adding a categorical control variable for `county` or whatever
+
+- (and in fact the "within" thing holds with other categorical controls - a categorical control for education isolates variation "within education levels")
+
+- The difference is the *reason we're doing it*. It's fixed effects because *a categorical control for individual controls for a lot of stuff*, and we think closes a *lot* of back doors for us, not just one, and not just ones we can measure
+
+---
+# The Model
+
+
+The `\(it\)` subscript says this variable varies over individual `\(i\)` and time `\(t\)`
+
+`$$Y_{it} = \beta_0 + \beta_1 X_{it} + \varepsilon_{it}$$`
+
+- What if there are individual-level components in the error term causing omitted variable bias? 
+- `\(X_{it}\)` is related to LocalStuff which is not in the model and thus in the error term!
+- Regular ol' omitted variable bias. If we don't adjust for the individual effect, we get a biased `\(\hat{\beta}_1\)` 
+- (this bias is called "pooling bias" although it's really just a form of omitted variable bias)
+- We really have this then:
+
+`$$Y_{it} = \beta_0 + \beta_1 X_{it} + (\alpha_i + \varepsilon_{it})$$`
+
+---
+name: demeaning
+# De-meaning
+
+- Let's do de-meaning first, since it's most closely and obviously related to the "removing between variation" explanation we've been going for
+- The process here is simple!
+
+1. For each variable `\(X_{it}\)`, `\(Y_{it}\)`, etc., get the mean value of that variable for each individual `\(\bar{X}_i, \bar{Y}_i\)`
+2. Subtract out that mean to get residuals `\((X_{it} - \bar{X}_i), (Y_{it} - \bar{Y}_i)\)`
+3. Work with those residuals
+
+- That's it!
+
+---
+
+# How does this work?
+
+- That `\(\alpha_i\)` term gets absorbed
+- The residuals are, by construction, no longer related to the `\(\alpha_i\)`, so it no longer goes in the residuals!
+
+`$$(Y_{it} - \bar{Y}_i) = \beta_0 + \beta_1(X_{it} - \bar{X}_i) + \varepsilon_{it}$$`
+
+---
+
+# Let's do it!
+
+- We can use `group_by` to get means-within-groups and subtract them out
+
+
+```r
+data(crime4, package = 'wooldridge')
+crime4 &lt;- crime4 %&gt;%
+  # Filter to the data points from our graph
+  filter(county %in% c(1,3,7, 23),
+         prbarr &lt; .5) %&gt;%
+  group_by(county) %&gt;%
+  mutate(mean_crime = mean(crmrte),
+         mean_prob = mean(prbarr)) %&gt;%
+  mutate(demeaned_crime = crmrte - mean_crime,
+         demeaned_prob = prbarr - mean_prob)
+```
+
+---
+
+# And Regress!
+
+
+```r
+orig_data &lt;- feols(crmrte ~ prbarr, data = crime4)
+de_mean &lt;- feols(demeaned_crime ~ demeaned_prob, data = crime4)
+etable(orig_data, de_mean)
+```
+
+```
+##                         orig_data           de_mean
+## Dependent Var.:            crmrte    demeaned_crime
+##                                                    
+## Constant         0.0118* (0.0050) 1.41e-18 (0.0004)
+## prbarr          0.0486** (0.0167)                  
+## demeaned_prob                     -0.0305* (0.0117)
+## _______________ _________________ _________________
+## S.E. type                     IID               IID
+## Observations                   27                27
+## R2                        0.25308           0.21445
+## Adj. R2                   0.22321           0.18303
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+
+# Interpreting a Within Relationship
+
+- How can we interpret that slope of `-0.03`?
+
+- This is all *within variation* so our interpretation must be *within-county*
+
+- So, "comparing a county in year A where its arrest probability is 1 (100 percentage points) higher than it is in year B, we expect the number of crimes per person to drop by .03"
+
+- Or if we think we've causally identified it (and want to work on a more realistic scale), "raising the arrest probability by 1 percentage point in a county reduces the number of crimes per person in that county by .0003".
+
+- We're basically "controlling for county" (and will do that explicitly in a moment)
+
+- So your interpretation should think of it in that way - *holding county constant* i.e. *comparing two observations with the same value of county* i.e. *comparing a county to itself at a different point in time*
+
+
+---
+
+# Concept Checks
+
+- Why does subtracting the within-individual mean of each variable "control for individual"?
+
+- In a sentence, interpret the slope coefficient in the estimated model `\((Y_{it} - \bar{Y}_i) = 2 + 3(X_{it} - \bar{X}_i)\)` where `\(Y\)` is "blood pressure", `\(X\)` is "stress at work", and `\(i\)` is an individual person
+
+---
+name: lsdv
+# Least Squares Dummy Variables
+
+- De-meaning the data isn't the only way to do it!
+
+- You can also use the least squares dummy variable (LSDV) method
+
+- We just treat "individual" like the categorical variable it is and add it as a control! 
+
+- Again, the regression approach is exactly the same as with any categorical control, but the *research design* reason for doing it is different
+
+---
+
+# Let's do it!
+
+
+```r
+lsdv &lt;- feols(crmrte ~ prbarr + factor(county), data = crime4)
+etable(orig_data, de_mean, lsdv, keep = c('prbarr', 'demeaned_prob'))
+```
+
+```
+##                         orig_data           de_mean              lsdv
+## Dependent Var.:            crmrte    demeaned_crime            crmrte
+##                                                                      
+## prbarr          0.0486** (0.0167)                   -0.0305* (0.0124)
+## demeaned_prob                     -0.0305* (0.0117)                  
+## _______________ _________________ _________________ _________________
+## S.E. type                     IID               IID               IID
+## Observations                   27                27                27
+## R2                        0.25308           0.21445           0.94114
+## Adj. R2                   0.22321           0.18303           0.93044
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+
+# The same!
+
+- The result is the same, as it should be
+
+- Except for that `\(R^2\)` - What is that "within R2"?
+
+- Because de-meaning takes out the part explained by the fixed effects ( `\(\alpha_i\)` ) *before* running the regression, while LSDV does it *in* the regression
+
+- So the .94 is the portion of `crmrte` explained by `prbarr` *and* `county`, whereas the .21 is the "within - `\(R^2\)` " - the portion of *the within variation* that's explained by `prbarr`
+
+- Neither is wrong (and the .94 isn't "better"), they're just measuring different things
+
+---
+
+# Why LSDV?
+
+- A benefit of the LSDV approach is that it calculates the fixed effects `\(\alpha_i\)` for you
+- We left those out of the table with the `coefs` argument of `export_summs` (we rarely want them) but here they are:
+
+
+```r
+lsdv
+```
+
+```
+## OLS estimation, Dep. Var.: crmrte
+## Observations: 27 
+## Standard-errors: IID 
+##                   Estimate Std. Error   t value   Pr(&gt;|t|)    
+## (Intercept)       0.045631   0.004116  11.08640 1.7906e-10 ***
+## prbarr           -0.030491   0.012442  -2.45068 2.2674e-02 *  
+## factor(county)3  -0.025308   0.002165 -11.68996 6.5614e-11 ***
+## factor(county)7  -0.009870   0.001418  -6.96313 5.4542e-07 ***
+## factor(county)23 -0.008587   0.001258  -6.82651 7.3887e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## RMSE: 0.001933   Adj. R2: 0.930441
+```
+
+- Interpretation is exactly the same as with a categorical variable - we have an omitted county, and these show the difference relative to that omitted county
+
+---
+
+# Why LSDV?
+
+- LSDV makes clear what's happening by creating a separate intercept for each county
+- Graphically, de-meaning moves all the points together, while LSDV moves the line up and down to meet the points
+
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Why Not LSDV?
+
+- LSDV is computationally expensive
+
+- If there are a lot of individuals, or big data, or if you have many sets of fixed effects (yes you can do more than just individual - we'll get to that next time!), it can be very slow
+
+- Most professionally made fixed-effects commands use de-meaning, but then adjust the standard errors properly
+
+- (They also leave the fixed effects coefficients off the regression table by default)
+
+---
+
+# Going Professional
+
+- Applied researchers rarely do either of these, and rather will use a command specifically designed for fixed effects
+
+- Like good ol' `feols()`! (what did you think the "fe" part stood for?)
+
+- Note there are also functions in **fixest** that do fixed effects in non-linear models like logit, probit, or poisson regression (`feglm()` and `fepois()`)
+
+- Plus, it clusters the standard errors by the first fixed effect by default, which we usually want!
+
+---
+
+# Going Professional
+
+
+```r
+library(fixest)
+pro &lt;- feols(crmrte ~ prbarr | county, data = crime4)
+etable(de_mean, pro)
+```
+
+```
+##                           de_mean               pro
+## Dependent Var.:    demeaned_crime            crmrte
+##                                                    
+## Constant        1.41e-18 (0.0004)                  
+## demeaned_prob   -0.0305* (0.0117)                  
+## prbarr                            -0.0305* (0.0064)
+## Fixed-Effects:  ----------------- -----------------
+## county                         No               Yes
+## _______________ _________________ _________________
+## S.E. type                     IID        by: county
+## Observations                   27                27
+## R2                        0.21445           0.94114
+## Within R2                      --           0.21445
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+
+# Limits to Fixed Effects
+
+- Okay! At this point we have the concept behind fixed effects, can execute them, and know what they're good for
+
+- What aren't they good for?
+
+1. They don't control for anything that has within variation
+2. They control away *everything* that's between-only, so we can't see the effect of anything that's between-only ("effect of geography on crime rate?" Nope!)
+3. Anything with only a *little* within variation will have most of its variation washed out too ("effect of population density on crime rate?" probably not)
+4. The estimate pays the most attention to individuals with *lots of variation in treatment*
+
+- 2 and 3 can be addressed by using "random effects" instead but we aren't covering that in this class (see the The Effect chapter on Fixed Effects for more)
+
+---
+# Is this causal?
+
+- After controlling for everything within county, is this causal?
+
+--
+
+- Probably not! Why not?
+
+--
+
+#### Within variation persists
+
+1. Within-county time variation: maybe crime and arrest probability moved together (e.g. a crime wave)
+
+2. Reverse causality: maybe officers respond to crime rates by changing their arrest effort
+
+3. Omitted variable bias: maybe poverty or population density is driving both crime and arrest probability and changes over time
+
+---
+
+# Concept Checks
+
+- Why can't we use individual-person fixed effects to study the impact of race on traffic stops?
+
+- The within `\(R^2\)` from is .3, and the overall `\(R^2\)` is .5. Interpret these two numbers in sentences
+
+- In a sentence, interpret the slope coefficient in the estimated model `\((Y_{it} - \bar{Y}_i) = 1 + .5(X_{it} - \bar{X}_i)\)` where `\(Y\)` is "school funding per child" and `\(X\)` is "population growth", and `\(i\)` is city
+
+
+---
+class: inverse, center, middle
+
+# Next lecture: Difference-in-differences
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
