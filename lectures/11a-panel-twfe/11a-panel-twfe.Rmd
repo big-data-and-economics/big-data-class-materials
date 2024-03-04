@@ -78,14 +78,6 @@ theme_set(theme_minimal())
 
 I'll be using fixest and feols throughout these notes. The fixest package is a new package that is very fast and has a lot of functionality. It has several bits of funtionality like `feols()` and `etable()`, which are powerful functions for making regressions and putting the output into tables that work well together. `feols()` works very much like `lm()` in base R, but with a few added bonuses. 
 
-### Review of last lecture 
-
-Last lecture we covered how fixed effects are extremely useful for removing variation between units. That means any of the average differences between groups of the fixed effect are removed. We can then look at underlying variation within these groups to see if there is a relationship between our variables of interest.
-
-This is extremely useful for dealing with omitted variable bias. If we have an omitted variable that is correlated with our independent variable, we can't tell if the relationship we see is due to the independent variable or the omitted variable. But if we have a fixed effect for the omitted variable, we can remove the variation between units and then look at the variation within units.
-
-In practice, fixed effects amount to de-meaning our variables of interest. There are a handful of ways to do this. 
-
 ## Panel models 
 
 A panel dataset is one in which we view a single unit over multiple periods of time, so a balanced panel has the same number of observations for each unit. For example, we might have data on 100 countries over 10 years, or 50 US states over 20 years. We can then take unit fixed effects, which lets us compare between years within a single unit. Similarly, we can take time fixed effects to compare between units within a given point in time. If our dataset has other dimensions that vary in a way that is not collinear with unit or time, we can also take a fixed effect for that -- though again, you want to be careful about throwing in fixed effects. 
@@ -146,8 +138,8 @@ crime4 <- crime4 %>%
 ### And Regress!
 
 ```{r demean_ols, echo = TRUE}
-orig_data <- lm(crmrte ~ prbarr, data = crime4)
-de_mean <- lm(demeaned_crime ~ demeaned_prbarr, data = crime4)
+orig_data <- feols(crmrte ~ prbarr, data = crime4)
+de_mean <- feols(demeaned_crime ~ demeaned_prbarr, data = crime4)
 msummary(list(orig_data, de_mean))
 ```
 
@@ -172,7 +164,7 @@ De-meaning takes some steps which could get tedious to write out. Another way is
 You end up with the same results as if we de-meaned. 
 
 ```{r lsdv, echo = TRUE}
-lsdv <- lm(crmrte ~ prbarr + factor(county), data = crime4)
+lsdv <- feols(crmrte ~ prbarr + factor(county), data = crime4)
 msummary(list(orig_data, de_mean, lsdv), keep = c('prbarr', 'demeaned_prob'))
 ```
 
@@ -192,7 +184,7 @@ THe interpretation is exactly the same as with a categorical variable - we have 
 **NOTE: See how I put `factor()` around county?** That is to ensure it reads county, which is the county fips code as a categorical variable instead of as a numerical variable. If you don't do that, it will read it as a numerical variable and you'll get a different result:
 
 ```{r not-lsdv,echo=TRUE}
-lm(crmrte ~ prbarr + county, data = crime4)
+feols(crmrte ~ prbarr + county, data = crime4)
 ```
 
 This is saying that as FIPS code increases by one, the crime rate increases by 0.000011... that's nonsense. There's an urban legend of an economist who took the log of the NAICS industry classification code for quite some time before realizing they meant to use a categorical variable. Correcting that mistake completely changed their results.
@@ -207,7 +199,7 @@ crime4_small <- crime4 %>%
          prbarr < .5) %>%
   ungroup() 
 # Make lsdv for this small dataframe
-lsdv_small <- lm(crmrte ~ prbarr + factor(county), 
+lsdv_small <- feols(crmrte ~ prbarr + factor(county), 
   data = crime4_small)
 
 crime4_small %>%
