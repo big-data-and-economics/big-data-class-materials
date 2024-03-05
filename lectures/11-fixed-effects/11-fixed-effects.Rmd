@@ -148,7 +148,7 @@ color_values <- c('black','blue','red','purple','green','cyan')
   - [Crime and Arrests](#crime-and-arrests)
 
 - [Implementation](#implementation)
-  - [Demeaning](#demeaning)
+  - [De-meaning](#demeaning)
   - [Least Squares Dummy Variable](#lsdv)
 
 ---
@@ -287,7 +287,7 @@ $$
 # Control John Cena
 
 ```{r, out.width="800px",fig.cap="John Cena cannot hide from fixed effects.",echo=FALSE}
-knitr::include_graphics("https://media.tenor.com/k49vfo-Wo48AAAAM/abell46s-reface.gif")
+knitr::include_graphics("https://media1.tenor.com/m/IQ5zuNhltCEAAAAC/john-cena-you-cant-see-me.gif")
 ```
 
 ---
@@ -880,7 +880,7 @@ class: inverse, center, middle
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
 #print(infile)
-#pagedown::chrome_print(input = infile, timeout = 100)
+pagedown::chrome_print(input = infile, timeout = 100)
 ```
 
 
