@@ -98,6 +98,226 @@ class: inverse, center, middle
 And then there's a middle ground...
 
 ---
+class: inverse, center, middle
+name: causal-inference-review
+
+# Causal Inference Review
+
+---
+# Causal Inference Review
+
+Last week, we discussed .hi[causality].
+
+--
+
+We worked through the *Rubin causal model*, in which we defined
+
+- `\(\color{#e64173}{y_{1i}:}\)` the outcome for individual `\(i\)` if she had received treatment
+
+--
+- `\(\color{#6A5ACD}{y_{0i}:}\)` the outcome for individual `\(i\)` if she had not received treatment
+
+--
+
+and we referred to individuals who did not receive treatment as *control*.
+
+--
+
+***If*** we were able to know both `\(\color{#e64173}{y_{1i}}\)` ***and*** `\(\color{#6A5ACD}{y_{0i}}\)`, we could calculate the causal effect of treatment for individual `\(i\)`, _i.e._,
+
+--
+
+$$
+`\begin{align}
+  \tau_i = \color{#e64173}{y_{1i}} - \color{#6A5ACD}{y_{0i}}
+\end{align}`
+$$
+
+---
+# Fund. problem of causal inference
+
+<br>We cannot simultaneously know `\(\color{#e64173}{y_{1i}}\)` and `\(\color{#6A5ACD}{y_{0i}}\)`.
+
+--
+
+Either we observe individual `\(i\)` in the treatment group, _i.e._,
+$$
+`\begin{align}
+  \tau_i = \color{#e64173}{y_{1i}} - \color{#6A5ACD}{?}
+\end{align}`
+$$
+
+--
+
+or we observe `\(i\)` in the control group, _i.e._,
+$$
+`\begin{align}
+  \tau_i = \color{#e64173}{?} - \color{#6A5ACD}{y_{0i}}
+\end{align}`
+$$
+
+--
+
+but never both at the same time.
+
+---
+# So what do we do?
+
+If we want to know `\(\tau_i\)` (or at least `\(\overline{\tau}\)`), what can we do?
+
+--
+
+**Idea:** Estimate the .hi-slate[average treatment effect] as the difference between the average outcomes in the treatment group and the control group, _i.e._,
+
+$$
+`\begin{align}
+  \color{#e64173}{\mathop{E}\left( y_i\mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_i\mid D_i =0 \right)}
+\end{align}`
+$$
+where `\(D_i=1\)` if `\(i\)` received treatment, and `\(D_i=0\)` if `\(i\)` is in the control group.
+
+---
+# Constant treatment effect
+**Result:** Even when treatment effect is constant (meaning $\tau_i=\tau$ for all $i$),
+
+$$
+`\begin{align}
+  &\color{#e64173}{\mathop{E}\left( y_i\mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_i\mid D_i =0 \right)} \\
+  &\quad\quad = \tau + \underbrace{\color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}}_{\color{#FFA500}{\text{Selection bias}}}
+\end{align}`
+$$
+
+which says that the difference in the groups' means will give us a **biased estimate** for the causal effect of treatment .hi-orange[if we have selection bias.]
+
+---
+# Selection bias 
+
+**Q:** What is this .hi-orange[selection bias]?
+
+--
+
+**A:** **(Informal)** We have selection bias when our control group doesn't offer a good comparison for our treatment group.
+
+--
+
+Specifically, the control group doesn't give us a good .hi-orange[counterfactual] for .orange[what our treatment group would have looked like if the members had not received treatment.]
+--
+ Basically, the groups are different.
+
+--
+
+**A:** **(Formal)** The .pink[average *untreated* outcome for a member of our **treatment group**] (which we cannot observe) differs from the .purple[average *untreated* outcome for a member of our **control group**], _i.e._,
+$$
+`\begin{align}
+  \color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}
+\end{align}`
+$$
+
+---
+# Observing selection bias?
+
+.hi-slate[Practical problem:] Selection bias is also difficult to observe
+
+$$
+`\begin{align}
+  \underbrace{\color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)}}_{\color{#e64173}{\text{Unobservable}}} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}
+\end{align}`
+$$
+
+(back to the *fundamental problem of causal inference*)
+
+--
+
+.hi-slate[Bigger problem:] If selection bias is present, our estimate for `\(\tau\)` is biased, preventing us from understanding the causal effect of treatment.
+
+--
+
+Sounds a bit like omitted-variable bias, right? That's cause they're all forms of .hi[endogeneity!]
+
+--
+ Our .pink[treatment] variable is correlated with something that makese the two groups different.
+
+---
+# Hypothetical example
+
+**Example:** Imagine we have two people—Al and Bri—and a single binary treatment, college. We interested in the effect of college on earnings.
+
+.pull-left[.center[
+.pink[Earn.sub[1,Al]] = .pink[$60K]
+<br>.purple[Earn.sub[0,Al]] = .purple[$30K]
+]]
+.pull-right[
+.pink[Earn.sub[1,Bri]] = .pink[$140K]
+<br>.purple[Earn.sub[0,Bri]] = .purple[$110K]
+]
+
+--
+
+They both have the same treatment effect (return to college)
+--
+<br> `\(\quad\quad\tau\)`.sub[Al] = .pink[Earn.sub[1,Al]] - .purple[Earn.sub[0,Al]] = .pink[$60K] - .purple[$30K] = $30K
+--
+<br> `\(\quad\quad\tau\)`.sub[Bri] = .pink[Earn.sub[1,Bri]] - .purple[Earn.sub[0,Bri]] = .pink[$140K] - .purple[$100K] = $30K
+
+--
+
+but any real-world estimate would have serious selection issues since .purple[Earn.sub[0,Al]] ≠ .purple[Earn.sub[0,Bri].]
+---
+# Hypothetical example
+
+**Example:** Imagine we have two people—Al and Bri—and a single binary treatment, college. We interested in the effect of college on earnings.
+
+.pull-left[.center[
+.pink[Earn.sub[1,Al]] = .pink[$60K]
+<br>.purple[Earn.sub[0,Al]] = .purple[$30K]
+]]
+.pull-right[
+.pink[Earn.sub[1,Bri]] = .pink[$140K]
+<br>.purple[Earn.sub[0,Bri]] = .purple[$110K]
+]
+
+The selection bias...
+
+--
+
+If Bri attended college (D.sub[Bri]=1) and Al did not (D.sub[Al]=0):
+<br>
+`\(\quad\quad\hat{\tau}\)` = .pink[Earn.sub[1,Bri]] - .purple[Earn.sub[0,Al]] = .pink[$140K] - .purple[$30K] = $110K
+
+--
+
+If Al attended college (D.sub[Al]=1) and Bri did not (D.sub[Bri]=0):
+<br>
+`\(\quad\quad\hat{\tau}\)` = .pink[Earn.sub[1,Al]] - .purple[Earn.sub[0,Bri]] = .pink[$60K] - .purple[$110K] = -$50K
+
+
+
+---
+# Problems and solutions
+
+We have (at least) two problems...
+
+1. Selection bias is difficult to observe
+
+2. If selection bias is present, our estimate for `\(\tau\)` is biased, preventing us from understanding the causal effect of treatment.
+
+--
+
+.hi-slate[Solution:] Eliminate/minimize selection bias.
+
+--
+
+- .hi-slate[Option 1:] .hi-pink[Distribute treatment] in a way such that the treatment and control groups are essentially identical
+--
+ (experiments).
+
+--
+
+- .hi-slate[Option 2:] .hi-purple[Control] for what makes the treatment and control groups different
+--
+<br>(life with observational data).
+
+---
 # Bridge from fixed effects
 
 - Fixed effects let us control for everything that varies between groups

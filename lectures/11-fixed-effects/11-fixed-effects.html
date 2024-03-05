@@ -76,7 +76,7 @@ class: inverse, center, middle
 
 # Goals today
 
-1. Review causal inference
+1. Review omitted variable bias
 2. Introduce fixed effects
 3. Go over an example
 4. Play with fixed effects in R
@@ -89,231 +89,56 @@ class: inverse, center, middle
 - They're both superb econometric instructors and I highly recommend their work
 
 ---
+# Questions?
+
+- Problem set issues?
+
+- Clarifications on final project?
+
+- Clarifications on hack-a-thon?
+
+- Anything else? 
+
+---
 class: inverse, center, middle
-name: causal-inference-review
+name: omitted-variable-bias
 
+# Omitted Variable Bias
+
+---
 # Causal Inference Review
 
----
-# Causal Inference Review
+- Last week, we discussed .hi[omitted variable bias].
 
-Last week, we discussed .hi[causality].
+- We worked through using control variables to isolate the relation between our treatment and our outcome.
 
---
-
-We worked through the *Rubin causal model*, in which we defined
-
-- `\(\color{#e64173}{y_{1i}:}\)` the outcome for individual `\(i\)` if she had received treatment
-
---
-- `\(\color{#6A5ACD}{y_{0i}:}\)` the outcome for individual `\(i\)` if she had not received treatment
+- [Can anyone define endogeneity for me?](https://www.mentimeter.com/app/presentation/bly9ptimf8urion84gscyfad8xz76mje/38559f6owyaf)
 
 --
 
-and we referred to individuals who did not receive treatment as *control*.
+- `\(cov(X,\varepsilon) = 0\)`
 
---
-
-***If*** we were able to know both `\(\color{#e64173}{y_{1i}}\)` ***and*** `\(\color{#6A5ACD}{y_{0i}}\)`, we could calculate the causal effect of treatment for individual `\(i\)`, _i.e._,
-
---
-
-$$
-`\begin{align}
-  \tau_i = \color{#e64173}{y_{1i}} - \color{#6A5ACD}{y_{0i}}
-\end{align}`
-$$
+- No relationship between the error term and the independent variable
 
 ---
-# Fund. problem of causal inference
+# Forms of endogeneity
 
-&lt;br&gt;We cannot simultaneously know `\(\color{#e64173}{y_{1i}}\)` and `\(\color{#6A5ACD}{y_{0i}}\)`.
+1. Reverse causality: `\(X \rightarrow Y\)` but also `\(Y \rightarrow X\)`
 
---
+2. Selection bias: `\(X \rightarrow Y\)` but also `\(Z \rightarrow X\)` and `\(Z \rightarrow Y\)`
 
-Either we observe individual `\(i\)` in the treatment group, _i.e._,
-$$
-`\begin{align}
-  \tau_i = \color{#e64173}{y_{1i}} - \color{#6A5ACD}{?}
-\end{align}`
-$$
+3. Omitted variable bias: `\(X \rightarrow Y\)` but also `\(Z \rightarrow Y\)`
 
---
-
-or we observe `\(i\)` in the control group, _i.e._,
-$$
-`\begin{align}
-  \tau_i = \color{#e64173}{?} - \color{#6A5ACD}{y_{0i}}
-\end{align}`
-$$
-
---
-
-but never both at the same time.
+4. Measurement error: `\(X \rightarrow Y\)` but also `\(X \rightarrow \hat{X}\)` (this one is a little different, but it's still a form of endogeneity)
 
 ---
-# So what do we do?
+# Conditional Independence Assumption
 
-If we want to know `\(\tau_i\)` (or at least `\(\overline{\tau}\)`), what can we do?
-
---
-
-**Idea:** Estimate the .hi-slate[average treatment effect] as the difference between the average outcomes in the treatment group and the control group, _i.e._,
-
-$$
-`\begin{align}
-  \color{#e64173}{\mathop{E}\left( y_i\mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_i\mid D_i =0 \right)}
-\end{align}`
-$$
-where `\(D_i=1\)` if `\(i\)` received treatment, and `\(D_i=0\)` if `\(i\)` is in the control group.
-
----
-# Constant treatment effect
-**Result:** Even when treatment effect is constant (meaning `\(\tau_i=\tau\)` for all `\(i\)`),
-
-$$
-`\begin{align}
-  &amp;\color{#e64173}{\mathop{E}\left( y_i\mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_i\mid D_i =0 \right)} \\
-  &amp;\quad\quad = \tau + \underbrace{\color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}}_{\color{#FFA500}{\text{Selection bias}}}
-\end{align}`
-$$
-
-which says that the difference in the groups' means will give us a **biased estimate** for the causal effect of treatment .hi-orange[if we have selection bias.]
-
----
-# Selection bias 
-
-**Q:** What is this .hi-orange[selection bias]?
+- Last week we also talked about conditional independence assumption
 
 --
 
-**A:** **(Informal)** We have selection bias when our control group doesn't offer a good comparison for our treatment group.
-
---
-
-Specifically, the control group doesn't give us a good .hi-orange[counterfactual] for .orange[what our treatment group would have looked like if the members had not received treatment.]
---
- Basically, the groups are different.
-
---
-
-**A:** **(Formal)** The .pink[average *untreated* outcome for a member of our **treatment group**] (which we cannot observe) differs from the .purple[average *untreated* outcome for a member of our **control group**], _i.e._,
-$$
-`\begin{align}
-  \color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}
-\end{align}`
-$$
-
----
-# Observing selection bias?
-
-.hi-slate[Practical problem:] Selection bias is also difficult to observe
-
-$$
-`\begin{align}
-  \underbrace{\color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)}}_{\color{#e64173}{\text{Unobservable}}} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}
-\end{align}`
-$$
-
-(back to the *fundamental problem of causal inference*)
-
---
-
-.hi-slate[Bigger problem:] If selection bias is present, our estimate for `\(\tau\)` is biased, preventing us from understanding the causal effect of treatment.
-
---
-
-Sounds a bit like omitted-variable bias, right? That's cause they're all forms of .hi[endogeneity!]
-
---
- Our .pink[treatment] variable is correlated with something that makese the two groups different.
-
----
-# Hypothetical example
-
-**Example:** Imagine we have two people—Al and Bri—and a single binary treatment, college. We interested in the effect of college on earnings.
-
-.pull-left[.center[
-.pink[Earn.sub[1,Al]] = .pink[$60K]
-&lt;br&gt;.purple[Earn.sub[0,Al]] = .purple[$30K]
-]]
-.pull-right[
-.pink[Earn.sub[1,Bri]] = .pink[$140K]
-&lt;br&gt;.purple[Earn.sub[0,Bri]] = .purple[$110K]
-]
-
---
-
-They both have the same treatment effect (return to college)
---
-&lt;br&gt; `\(\quad\quad\tau\)`.sub[Al] = .pink[Earn.sub[1,Al]] - .purple[Earn.sub[0,Al]] = .pink[$60K] - .purple[$30K] = $30K
---
-&lt;br&gt; `\(\quad\quad\tau\)`.sub[Bri] = .pink[Earn.sub[1,Bri]] - .purple[Earn.sub[0,Bri]] = .pink[$140K] - .purple[$100K] = $30K
-
---
-
-but any real-world estimate would have serious selection issues since .purple[Earn.sub[0,Al]] ≠ .purple[Earn.sub[0,Bri].]
----
-# Hypothetical example
-
-**Example:** Imagine we have two people—Al and Bri—and a single binary treatment, college. We interested in the effect of college on earnings.
-
-.pull-left[.center[
-.pink[Earn.sub[1,Al]] = .pink[$60K]
-&lt;br&gt;.purple[Earn.sub[0,Al]] = .purple[$30K]
-]]
-.pull-right[
-.pink[Earn.sub[1,Bri]] = .pink[$140K]
-&lt;br&gt;.purple[Earn.sub[0,Bri]] = .purple[$110K]
-]
-
-The selection bias...
-
---
-
-If Bri attended college (D.sub[Bri]=1) and Al did not (D.sub[Al]=0):
-&lt;br&gt;
-`\(\quad\quad\hat{\tau}\)` = .pink[Earn.sub[1,Bri]] - .purple[Earn.sub[0,Al]] = .pink[$140K] - .purple[$30K] = $110K
-
---
-
-If Al attended college (D.sub[Al]=1) and Bri did not (D.sub[Bri]=0):
-&lt;br&gt;
-`\(\quad\quad\hat{\tau}\)` = .pink[Earn.sub[1,Al]] - .purple[Earn.sub[0,Bri]] = .pink[$60K] - .purple[$110K] = -$50K
-
-
-
----
-# Problems and solutions
-
-We have (at least) two problems...
-
-1. Selection bias is difficult to observe
-
-2. If selection bias is present, our estimate for `\(\tau\)` is biased, preventing us from understanding the causal effect of treatment.
-
---
-
-.hi-slate[Solution:] Eliminate/minimize selection bias.
-
---
-
-- .hi-slate[Option 1:] .hi-pink[Distribute treatment] in a way such that the treatment and control groups are essentially identical
---
- (experiments).
-
---
-
-- .hi-slate[Option 2:] .hi-purple[Control] for what makes the treatment and control groups different
---
-&lt;br&gt;(life with observational data).
-
----
-# Control approach
-
-- Last week we also talked about control variables approaches
-
-- We can control for variables that are correlated with both the treatment and the outcome
+- After controlling for all the variables that are correlated with both the treatment and the outcome, the treatment is independent of the error term
 
 - This is a way to minimize selection bias/omitted variable bias
 
@@ -322,6 +147,35 @@ We have (at least) two problems...
 - What if we know a variable, but we cannot measure it?
 
 - Any guesses? 
+
+---
+# You cannot measure what you cannot see
+
+- What if our data vary by time and individual and our regression model is:
+
+$$
+`\begin{align}
+  Earnings &amp;= \beta_0 + \beta_1 Edu + \beta_2 Ability + \beta_3 Experience + \cdots + \\
+  &amp;\beta_{k-2} ParentAttentive + \beta_{k-1} Race + \beta_k Gender + u 
+\end{align}`
+$$
+
+- ParentAttentive captures how attentive a child's parents are, which definitely matters to upbringing
+
+- We probably do not have data on parental attention or ability, but we know they matter
+
+- So the regression we run is
+
+$$
+`\begin{align}
+  Earnings &amp;= \beta_0 + \beta_1 Edu + \beta_2 Race + \beta_3 Experience \cdots + \\
+  &amp; + \beta_k Gender +(\beta_{k-1} Ability + \beta_k ParentAttentive + u)
+\end{align}`
+$$
+
+- But after childhood, parental attention is fixed and ability is slow to change
+
+- How can we control for them? 
 
 ---
 
@@ -333,6 +187,18 @@ We have (at least) two problems...
 
 - Today, we will be talking about *within variation* and *between variation*, and the ability to control for all *between variation* using *fixed effects*
 
+---
+# Control John Cena
+
+
+```r
+knitr::include_graphics("https://i.pinimg.com/originals/a9/27/be/a927be8b743d8de22c308d18f42cd733.gif")
+```
+
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="https://i.pinimg.com/originals/a9/27/be/a927be8b743d8de22c308d18f42cd733.gif" alt="John Cena cannot hide from fixed effects." width="800px" /&gt;
+&lt;p class="caption"&gt;John Cena cannot hide from fixed effects.&lt;/p&gt;
+&lt;/div&gt;
 
 ---
 name: fixed-effects
@@ -344,26 +210,15 @@ class: inverse, center, middle
 
 - Fixed effects are a way to control for .hi[endogeneity]
 
-- Effectively, these remove within-group averages from the data
+- Within a **group of observations**, or **dimension**, we remove the within-group averages from the data
 
-- In the case of Bri and Al, this would be like subtracting their hypothetical average earnings from actual earnings
+- A group could be a person, a company, a state, a country, a time period, etc. -- you just need multiple observations within the group
 
-.pull-left[.center[
-.pink[Earn.sub[1,Al]] = .pink[$60K]-.blue[$45K] = .pink[$15K]
-&lt;br&gt;.purple[Earn.sub[0,Al]] = .purple[$30K] - .blue[$45K] = .purple[-$15K]
-]]
-.pull-right[
-.pink[Earn.sub[1,Bri]] = .pink[$140K] - .blue[$125K] = .pink[$15K]
-&lt;br&gt;.purple[Earn.sub[0,Bri]] = .purple[$110K] - .blue[$125K] = .purple[-$15K]
-]
+- Any leftover variation in the data is not related to difference between groups
 
-- Then if we subtract Bri's college earnings from Al's, we get $30K -- the actual treatment effect
+- This is all based on the Frisch-Waugh-Lovell theorem, which we won't cover in this class -- but it is neat! 
 
-- Why is that impossible though?
-
---
-
-- We only have one unit for each person! So let's think what we can do with multiple units
+- They are incredibly powerful for taking big steps towards causal inference and for simplifying big, multi-dimensional data
 
 ---
 name: panel-data
@@ -485,7 +340,7 @@ Do you notice that these problems have overlap? That's cause they're all forms o
 
 - Let's pick a few counties and graph this out
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -493,7 +348,7 @@ Do you notice that these problems have overlap? That's cause they're all forms o
 
 - If we look at the overall variation, just pretending this is all together, we get this
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -501,7 +356,7 @@ Do you notice that these problems have overlap? That's cause they're all forms o
 
 - BETWEEN variation is what we get if we look at the relationship between the *means of each county*
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -509,7 +364,7 @@ Do you notice that these problems have overlap? That's cause they're all forms o
 
 - And I mean it! Only look at those means! Individual year-to-year variation within county doesn't matter.
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -517,7 +372,7 @@ Do you notice that these problems have overlap? That's cause they're all forms o
 
 - Within variation treats the orange crosses as individualized axes for the variation *within* county from year-to-year only!
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-7-1.gif" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-8-1.gif" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -810,7 +665,7 @@ lsdv
 - LSDV makes clear what's happening by creating a separate intercept for each county
 - Graphically, de-meaning moves all the points together, while LSDV moves the line up and down to meet the points
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
