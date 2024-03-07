@@ -24,9 +24,9 @@ name: toc
 ```
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, cache=TRUE, fig.width = 8, fig.height = 6)
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, cache=TRUE, fig.width = 8, fig.height = 6,fig.align='center')
 library(pacman)
-p_load(tidyverse, gganimate, estimatr, magick, dagitty, ggthemes, directlabels, fixest, jtools, scales, Cairo)
+p_load(tidyverse, gganimate, magick, ggthemes, fixest, scales, Cairo,causaldata,directlabels)
 
 theme_metro <- function(x) {
   theme_classic() + 
@@ -69,30 +69,64 @@ class: inverse, center, middle
 # Prologue
 
 ---
+# Announcement
+
+- Talk on Friday March 15 at 11am by my friend and colleague, Dr. Szymon Sacher
+
+- The talk is entitled "Inference for Regression with Variables Generated from Unstructured Data"
+
+- It is in Pettengill Hall G50 and concerns matters of data science, economics, and machine learning methods
+
+- I'll announce an incentive to attend after I decide on the appropriate incentive
+
+---
 # Plan for the day
 
-- Computers closed: Work through the intuition of difference-in-differences
-- Computers open: Work through practical examples
-
 - By the end of the day you will:
+
   - Understand how difference-in-differences uses variation in time and treatment to identify causal effects
-  - Be able to implement fixed effects models in R
+  
   - Be able to implement difference-in-differences models in R
+  
   - Create pretty event study plots of your results
+
+---
+# Attribution
+
+- These slides are adapted from work by Nick Huntington-Klein, Ed Rubin, and Scott Cunningham
+
+- They're both superb econometric instructors and I highly recommend their work
+
+---
+# Questions
+
+- Any questions?
+
+- Anything you want to talk through? 
+
+- There are some sneaky data tricks to the problem set that a few of you have started to uncover
+
+- It is due Monday, so get on it if you're behind
 
 ---
 # Check-in on causality
 
 - We've been talking about causality for a bit now
+
 - Popcorn style: what do we need for causality?
 
 --
 
 - We need to account for everything that is correlated with treatment
-- There are two extreme startegies:
+
+- There are two extreme strategies:
+
 1. Control variables for everything! 
+
   - Did we control for it all? How do we know?
-2. Get rid of everything correlated with treatment!
+
+2. Get a treatment that is uncorrelated with everything else
+
   - How do we know we got rid of all the correlation?
 
 And then there's a middle ground...
@@ -235,7 +269,7 @@ $$
 Sounds a bit like omitted-variable bias, right? That's cause they're all forms of .hi[endogeneity!]
 
 --
- Our .pink[treatment] variable is correlated with something that makese the two groups different.
+ Our .purple[treatment] variable is correlated with something that makese the two groups different.
 
 ---
 # Hypothetical example
@@ -243,37 +277,37 @@ Sounds a bit like omitted-variable bias, right? That's cause they're all forms o
 **Example:** Imagine we have two people—Al and Bri—and a single binary treatment, college. We interested in the effect of college on earnings.
 
 .pull-left[.center[
-.pink[Earn.sub[1,Al]] = .pink[$60K]
-<br>.purple[Earn.sub[0,Al]] = .purple[$30K]
+.purple[Earn.sub[1,Al]] = .purple[$60]
+<br>.blue[Earn.sub[0,Al]] = .blue[$30K]
 ]]
 .pull-right[
-.pink[Earn.sub[1,Bri]] = .pink[$140K]
-<br>.purple[Earn.sub[0,Bri]] = .purple[$110K]
+.purple[Earn.sub[1,Bri]] = .purple[$80K]
+<br>.blue[Earn.sub[0,Bri]] = .blue[$50K]
 ]
 
 --
 
-They both have the same treatment effect (return to college)
+The change in earnings is $30K for both of them
 --
-<br> `\(\quad\quad\tau\)`.sub[Al] = .pink[Earn.sub[1,Al]] - .purple[Earn.sub[0,Al]] = .pink[$60K] - .purple[$30K] = $30K
+<br> `\(\quad\quad\tau\)`.sub[Al] = .purple[Earn.sub[1,Al]] - .blue[Earn.sub[0,Al]] = .purple[$60K] - .blue[$30K] = $30K
 --
-<br> `\(\quad\quad\tau\)`.sub[Bri] = .pink[Earn.sub[1,Bri]] - .purple[Earn.sub[0,Bri]] = .pink[$140K] - .purple[$100K] = $30K
+<br> `\(\quad\quad\tau\)`.sub[Bri] = .purple[Earn.sub[1,Bri]] - .blue[Earn.sub[0,Bri]] = .purple[$80K] - .blue[$50K] = $30K
 
 --
 
-but any real-world estimate would have serious selection issues since .purple[Earn.sub[0,Al]] ≠ .purple[Earn.sub[0,Bri].]
+but any real-world estimate would have serious selection issues since .blue[Earn.sub[0,Al]] ≠ .blue[Earn.sub[0,Bri].]
 ---
 # Hypothetical example
 
 **Example:** Imagine we have two people—Al and Bri—and a single binary treatment, college. We interested in the effect of college on earnings.
 
 .pull-left[.center[
-.pink[Earn.sub[1,Al]] = .pink[$60K]
-<br>.purple[Earn.sub[0,Al]] = .purple[$30K]
+.purple[Earn.sub[1,Al]] = .purple[$60]
+<br>.blue[Earn.sub[0,Al]] = .blue[$30K]
 ]]
 .pull-right[
-.pink[Earn.sub[1,Bri]] = .pink[$140K]
-<br>.purple[Earn.sub[0,Bri]] = .purple[$110K]
+.purple[Earn.sub[1,Bri]] = .purple[$80K]
+<br>.blue[Earn.sub[0,Bri]] = .blue[$50K]
 ]
 
 The selection bias...
@@ -282,86 +316,69 @@ The selection bias...
 
 If Bri attended college (D.sub[Bri]=1) and Al did not (D.sub[Al]=0):
 <br>
-`\(\quad\quad\hat{\tau}\)` = .pink[Earn.sub[1,Bri]] - .purple[Earn.sub[0,Al]] = .pink[$140K] - .purple[$30K] = $110K
+`\(\quad\quad\hat{\tau}\)` = .purple[Earn.sub[1,Bri]] - .blue[Earn.sub[0,Al]] = .purple[$80K] - .blue[$30K] = $50K
 
 --
 
 If Al attended college (D.sub[Al]=1) and Bri did not (D.sub[Bri]=0):
 <br>
-`\(\quad\quad\hat{\tau}\)` = .pink[Earn.sub[1,Al]] - .purple[Earn.sub[0,Bri]] = .pink[$60K] - .purple[$110K] = -$50K
-
-
+`\(\quad\quad\hat{\tau}\)` = .purple[Earn.sub[1,Al]] - .blue[Earn.sub[0,Bri]] = .purple[$60K] - .blue[$50K] = $10K
 
 ---
-# Problems and solutions
+# What if we saw pre-treatment
 
-We have (at least) two problems...
+- Think in the case of Bri and Al, but we now observe pre-college earnings
 
-1. Selection bias is difficult to observe
-
-2. If selection bias is present, our estimate for `\(\tau\)` is biased, preventing us from understanding the causal effect of treatment.
-
---
-
-.hi-slate[Solution:] Eliminate/minimize selection bias.
-
---
-
-- .hi-slate[Option 1:] .hi-pink[Distribute treatment] in a way such that the treatment and control groups are essentially identical
---
- (experiments).
-
---
-
-- .hi-slate[Option 2:] .hi-purple[Control] for what makes the treatment and control groups different
---
-<br>(life with observational data).
+.pull-left[.center[
+.purple[Earn.sub[1,Al].super[Post]] = .purple[$60K]
+<br>.red[Earn.sub[0,Al].super[Pre]] = .red[$20K]
+]]
+.pull-right[
+.blue[Earn.sub[0,Bri].super[Post]] = .blue[$50K]
+<br>.red[Earn.sub[0,Bri].super[Pre]] = .red[$40K]
+]
 
 ---
 # Bridge from fixed effects
 
-- Fixed effects let us control for everything that varies between groups
-  - If we have fixed effects for an individual, we account for how much one individual differs from another **on average**
-  - Effectively, we control for their hometown, family, education, race, etc. without including those variables in the model
+- If we have individual fixed effects, we adjust for **average** differences between individuals (hometown, family, education, race, etc.)
 
-- If treatment is randomly assigned within the fixed effect, we're done!
-  - We've controlled for everything correlated with the treatment
-  - Pro: control for a bunch of stuff
-  - Con: washes out a lot of variation! Result can be noisier if there's not much within-variation to work with
+- If treatment is randomly assigned within the fixed effect, i.e. over time within an individual, we're done! 
 
----
-# What if things change over time?
-
-- Causal identification with fixed effects requires no endogenous variation within groups over time
-  - If there is, we need to do something else
-- What does "endogenous" variation mean?
+- But what if Al graduated during a recession? Is the timing of college .hi-slate[exogenous]? 
 
 --
 
-- That might be a tricky assumption! 
+- No! Recessions drive down earnings and his education is correlated with recession timing
 
----
-# Well what if something changes?
+- Can I just use a fixed effect for time to wash out the effect of the recession **on average**?
 
-- Let's say something within fixed effects changes over time
-  - e.g. The government increases the Earned Income Tax Credit (EITC) for a group of people who start to work less
-  - Does that mean the increased EITC caused them to work less? 
 --
 
-  - No! We don't know what would have happened if the EITC wasn't increased
-  - Maybe this group was already unable to work and that's why the EITC was increased
+- Again, no! That would wash out all the variation in the treatment effect
 
 ---
-# What about that other group? 
+# Compare to Bri
 
-- But what about people who didn't get the EITC increase?
-  - We can compare them to the people who did get the EITC increase
-  
-- Can we compare them after the EITC increase? No, because they're different groups
-  - Employment levels might have always differed between these two groups
+- Let's say Bri did not go to college like Al, we've already seen we cannot just use .purple[Earn.sub[1,Al]]-.purple[Earn.sub[0,Bri]] due to selection bias
 
-- So we need to account for variation between the groups **and** time
-  - This is the idea behind difference-in-differences
+- But we know that before college, their earnings differ by $20K
+
+- Let's adjust for that difference and see what happens
+
+--
+
+.purple[Earn.sub[1,Al].super[Post]] - .blue[Earn.sub[0,Bri].super[Post]] - (.red[Earn.sub[0,Al].super[Pre]] - .red[Earn.sub[0,Bri].super[Pre]]) = $60K-$50K - ($20K-$40K) = $30K
+
+--
+
+- The actual effect was $30K! (I forced it to work that way, life is more complicated -- sorry.)
+
+- This is a method called difference-in-differences
+
+1. Difference in the groups' means before treatment
+2. Difference in the groups' means after treatment
+3. Difference in these differences
 
 ---
 name: what-it-did
@@ -370,92 +387,98 @@ class: inverse, center, middle
 # Difference what with who?
 
 ---
-# Difference-in-differences
+# Difference-in-Differences
 
 - Today we will talk about difference-in-differences (DiD), which is a way of using within variation in a more deliberate way in order to identify the effect we want
-- All we need is a treatment that *goes into effect* at a particular time, and we need a group that is *treated* and a group that is *not*
-- Then, we compare the within-variation for the treated group vs. the within-variation for the untreated group 
+
+- At its simplest, we need a treatment that *goes into effect* at a particular time, and we need a group that is *treated* and a group that is *not*
+
+- The untreated group, or control group, is our .hi-slate[counterfactual]
+
+- Then, we compare the within-variation for the treated group vs. the within-variation for the untreated group
+
 - Voila, we have an effect!
 
 ---
-
 # Difference-in-Differences
 
 - Because the requirements to use it are so low, DiD is used a *lot*
+
 - Any time a policy is enacted but isn't enacted everywhere at once? DiD!
+
 - Plus, the logic is pretty straightforward
-
----
-
-# Difference-in-Differences
 
 - The question DiD tries to answer is "what was the effect of (some policy) on the people who were affected by it?"
 
 - We have some data on the people who were affected both before the policy went into effect and after
 
-- However, we can't just compare before and after, because things change over Time for reasons unrelated to Treatment
+- However, we can't just compare before and after, because things usually change over time for other reasons
+
+- So we compare to people who weren't affected by the policy
 
 ---
-name: effect-of-time
-# Difference-in-Differences
+# An old method
 
-- Why not just control for Time? 
-  - We can certainly measure that and we can just add a fixed effect
-- What happens if we add a fixed effect for Time?
+- DiD is an old method with its first documented use by John Snow in 1854 to identify that cholera was transmitted through water<sup>1</sup>
 
---
+- Cholera was a big problem in London in the 1800s. It causes severe diarrhea and vomiting, and eventually death
+  - It was spread due to victims' waste finding its way into the Thames, the main water supply
 
-- It would wash out all the variation!
-- You're either Before and Untreated, or After and Treated. 
-- If you control for Time, you're comparing people with the same values of Time 
-- But that means they have the same values of Treatment!
-- We need to compare Treated and Untreated to get the effect
+- There were two water companies, Lambeth and Southwark and Vauxhall (SV)
 
----
+- Lambeth moved its water pump higher upstream, while SV did not
 
-# Difference-in-Difference
+- John Snow went door-to-door collecting info where people got their water in 1849 and counted cholera cases in 1849 and 1854
 
-- We control for Group by isolating within variation (comparing After to Before)
-
-- Then we control for Time by comparing two sources of Within variation
-
-- We ask *how much more increase* was there in Treatment than control?
-
-- The Control change is _probably_ the change you would expect without Treatment
-
-- So anything on *top of that* is the effect of Treatment
-
-- Now we've controlled for Group and Time, identifying the effect!
+.footnote[<sup>1</sup> Unlike Jon Snow, who knows nothing, John Snow knew quite a lot.]
 
 ---
+# Cholera spread
 
-# Extremely bizarre example
+- The analysis was not perfect, but it was convincing
 
-- Let's say we have a pill that's supposed to make you taller
-- Give it to a kid Adelaide who is 48 inches tall
-- Next year they're 54 inches tall - a six inch increase! But they probably would have grown some anyway without the pill. Surely the pill doesn't make you six inches taller.
-- SO we compare them to their twin Bella, who started at 47 inches but we DON'T give a pill to
-- Next year that twin is 51 inches tall - a four inch increase. So Adelaide probably would have grown about 4 inches without the pill. So the pill boosted her by $(54 - 48) - (51 - 47) = 6 - 4 = 2$ additional inches
-- "Adelaide, who was Treated, grew by two *more inches* than Bella, who was Untreated, did over the same period of time, so the pill made Adelaide grow by two inches"
-- That's DiD!
+```{r cholera, echo=FALSE}
+data(snow)
+snow %>% select(year,supplier,deathrate) %>%
+  pivot_wider(names_from = year, values_from = deathrate) %>%
+  mutate(diff = round(`1854` - `1849`,1)) %>%
+  knitr::kable()
+```
+
+- Resulting difference was `r round(snow$deathrate[4]-snow$deathrate[3]-(snow$deathrate[2]-snow$deathrate[1]),1)` per 10K
+
+- He did not calculate it, but he used it to argue that the water was the cause of the cholera
 
 ---
+# Check back on Bri and Al
 
-# Example
 
-```{r aidelaide}
-df <- data.frame(Person = c('Adelaide','Adelaide','Bella','Bella'),
+.pull-left[.center[
+.purple[Earn.sub[1,Al].super[Post]] = .purple[$60K]
+<br>.red[Earn.sub[0,Al].super[Pre]] = .red[$20K]
+]]
+.pull-right[
+.blue[Earn.sub[0,Bri].super[Post]] = .blue[$50K]
+<br>.red[Earn.sub[0,Bri].super[Pre]] = .red[$40K]
+]
+
+```{r aidelaide,echo=FALSE}
+Earnings <- c(20, 30, 40, 80)
+dfab <- data.frame(Person = c('Al','Al','Bri','Bri'),
                  Time = factor(c('Before','After','Before','After'), levels = c('Before','After')),
-                 Height = c(48, 54, 47, 51))
-ggplot(df, aes(x = Time, y = Height, group = Person, label = Person)) +
+                 Earnings = Earnings)
+before_avg <- mean(dfab$Earnings[dfab$Time == 'Before'])
+after_avg <- mean(dfab$Earnings[dfab$Time == 'After'])
+diff_in_diff <- Earnings[4] - Earnings[2] - (Earnings[3] - Earnings[1])
+ggplot(dfab, aes(x = Time, y = Earnings, group = Person, label = Person)) +
   geom_line(color = 'black', size = 1) + 
   geom_point(color = 'red', size = 3) + 
   geom_dl(method = list('last.points','bumpup'), position = position_nudge(x = .05)) + 
   theme_metro() + 
-  annotate(geom = 'text', label = 'Before Difference', x = .65, y = 47.5, color = 'red') +
-  annotate(geom = 'text', label = 'After Difference', x = 2.35, y = 52.5, color = 'blue') + 
-  geom_segment(aes(x = 1, y = 47, xend = 1, yend = 48), color = 'red', size = 1.5) + 
-  geom_segment(aes(x = 2, y = 51, xend = 2, yend = 54), color = 'blue', size = 1.5)
+  annotate(geom = 'text', label = 'Before Difference', x = .65, y = before_avg, color = 'red') +
+  annotate(geom = 'text', label = 'After Difference', x = 2.35, y = after_avg, color = 'blue') + 
+  geom_segment(aes(x = 1, y = Earnings[1], xend = 1, yend = Earnings[3]), color = 'red', size = 1.5) + 
+  geom_segment(aes(x = 2, y = Earnings[2], xend = 2, yend = Earnings[4]), color = 'blue', size = 1.5)
 
 ```
 
@@ -464,22 +487,19 @@ ggplot(df, aes(x = Time, y = Height, group = Person, label = Person)) +
 # Example
 
 ```{r aidelaide-diff}
-df <- data.frame(Person = c('Adelaide','Adelaide','Bella','Bella'),
-                 Time = factor(c('Before','After','Before','After'), levels = c('Before','After')),
-                 Height = c(48, 54, 47, 51))
-ggplot(df, aes(x = Time, y = Height, group = Person, label = Person)) +
+ggplot(dfab, aes(x = Time, y = Earnings, group = Person, label = Person)) +
   geom_line(color = 'black', size = 1, alpha = .6) + 
   geom_point(color = 'red', size = 3) + 
   geom_dl(method = list('last.points','bumpup'), position = position_nudge(x = .05)) + 
   theme_metro() + 
-  annotate(geom = 'text', label = 'Before Difference', x = .65, y = 47.5, color = 'red') +
-  annotate(geom = 'text', label = 'After Difference', x = 2.35, y = 52.5, color = 'blue') + 
-  annotate(geom = 'text', label = 'Before Difference', x = 1.65, y = 51.5, color = 'red') +
-  annotate(geom = 'text', label = 'Difference-in-Difference', x = 1.6, y = 53, color = 'purple') + 
-  geom_segment(aes(x = 1, y = 47, xend = 1, yend = 48), color = 'red', size = 1.5) + 
-  geom_segment(aes(x = 2, y = 51, xend = 2, yend = 54), color = 'blue', size = 1.5) + 
-  geom_segment(aes(x = 1.9, y = 51, xend = 1.9, yend = 52), color = 'red', size = 1.5) + 
-  geom_segment(aes(x = 1.9, y = 52, xend = 1.9, yend = 54), color = 'purple', size = 1.5)  
+  annotate(geom = 'text', label = 'Before Difference', x = .65, y = before_avg, color = 'red') +
+  annotate(geom = 'text', label = 'After Difference', x = 2.35, y = after_avg, color = 'blue') + 
+  annotate(geom = 'text', label = 'Before Difference', x = 1.65, y = Earnings[1]+diff_in_diff/2, color = 'red') +
+  annotate(geom = 'text', label = 'Difference-in-Difference', x = 1.6, y = Earnings[4]-diff_in_diff/2, color = 'purple') + 
+  geom_segment(aes(x = 1, y = Earnings[1], xend = 1, yend = Earnings[3]), color = 'red', size = 1.5) + 
+  geom_segment(aes(x = 2, y = Earnings[2], xend = 2, yend = Earnings[4]), color = 'blue', size = 1.5) +
+  geom_segment(aes(x = 1.9, y = Earnings[2], xend = 1.9, yend = Earnings[4]-diff_in_diff), color = 'red', size = 1.5) + 
+  geom_segment(aes(x = 1.9, y = Earnings[4]-diff_in_diff, xend = 1.9, yend = Earnings[4]), color = 'purple', size = 1.5)
 
 ```
 
@@ -502,37 +522,38 @@ DiD = (.blue[**TA**] - .red[**TB**]) - (.blue[UA] - .red[UB]) = .hi-purple[Treat
 
 ---
 
-# Concept Checks
+# Concept Checks: 
 
-- Why do we need a control group? What does this let us do?
-- What do we need to assume is true about our control group?
+## menti.com, code 9338 7492
+
+- [Why do we need a control group? What does this let us do?](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/izpyfh3gzj9b)
+
+- [What do we need to assume is true about our control group?](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/qhr82ocgn4mj)
+
 - In 2015, a new, higher minimum wage went into effect in Seattle, but this increase did not occur in some of the areas surrounding Seattle. 
-  - How might you use DiD to estimate the effect of this minimum wage change on employment levels?
+
+  - [How might you use DiD to estimate the effect of this minimum wage change on employment levels?](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/rqip3f758v7w)
 
 ---
 
 # Difference-in-Difference
 
 - What if there are more than four data points?
+
 - Usually these four points would be four means from lots of observations, not just two people in two time periods
+
 - How can we do this and get things like standard errors, and perhaps include controls?
-- Why, use OLS regression of course!
 
----
-
-# Difference-in-Differences
-
-- We can use what we know about binary variables and interaction terms to get our DiD
+- Why, use OLS regression of course, just use binary variables and interaction terms to get a DiD
 
 $$Y_{it} = \beta_0 + \beta_1After_t + \beta_2Treated_i + \beta_3After_tTreated_i + \varepsilon_{it}$$
+
 where $After_t$ is a binary variable for being in the post-treatment period, and $Treated_t$ is a binary variable for being in the treated group
 
 ```{r aidelaide-df}
-data.frame(Person = c('Adelaide','Adelaide','Bella','Bella'),
-                 Time = factor(c('Before','After','Before','After'), levels = c('Before','After')),
-                 Height = c(48, 54, 47, 51)) %>%
+dfab %>%
   mutate(After = Time == 'After', 
-         Treated = Person == 'Adelaide')
+         Treated = Person == 'Bri')
 ```
 
 ---
@@ -544,8 +565,11 @@ data.frame(Person = c('Adelaide','Adelaide','Bella','Bella'),
 $$Y_{it} = \beta_0 + \beta_1After_t + \beta_2Treated_i + \beta_3After_t \times Treated_i + \varepsilon_{it}$$
 
 - $\beta_0$ is the prediction when $Treated_i = 0$ and $After_t = 0$ $\rightarrow$ the .red[Untreated Before] mean!
-- $\beta_1$ is the *difference between* Before and After for $Treated_i = 0$ $\rightarrow$ Untreated (.blue[After] - .red[Before])
-- $\beta_2$ is the *difference between* Treated and Untreated for $After_t = 0$ $\rightarrow$ .red[Before (**Treated** - Untreated)]
+
+- $\beta_1$ is the *time difference* for $Treated_i = 0$ $\rightarrow$ .blue[UA] - .red[UB]
+
+- $\beta_2$ is the *treatment difference* for $After_t = 0$ $\rightarrow$ .red[BT-BU]
+
 - $\beta_3$ is *how much bigger the Before-After difference* is for $Treated_i = 1$ than for $Treated_i = 0$ $\rightarrow$ (.blue[**TA**] - .red[**TB**]) - (.blue[UA] - .red[UB]) = DID!
 
 ---
@@ -588,8 +612,6 @@ dffull <- rbind(
   df %>% mutate(Y = mean_Y 
                 - (Time=='After')*diff,
                 state='6. The remaining Before/After Treatment difference is DID.'))
-
-
 
 p <- ggplot(dffull,aes(y=Y,x=xaxisTime,color=as.factor(Control)))+geom_point()+
   guides(color=guide_legend(title="Group"))+
@@ -643,11 +665,17 @@ animate(p,nframes=150)
 
 - There is a distinction between *regression model* and *research design* 
   - This is also true for fixed effects
+
 - We have a model with an interaction term
+
 - Not all models with interaction terms are DID!
+
 - It's DID because it's an interaction between treated/control and before/after
+
 - If you don't have a before/after, or you don't have a control group, that same setup may tell you something interesting but it won't be DID!
 
+<!-- minimum wages? mariel boatlift? -->
+<!-- discrim in wooldridge has minimum wage. but it is all screwed about for some reason. -->
 ---
 name: EITC
 class: inverse, center, middle
@@ -658,32 +686,37 @@ class: inverse, center, middle
 # Earned Income Tax Credit
 
 - The Earned Income Tax Credit (EITC) is a refundable tax credit for low-income workers
+
+- Many argue it is the most effective anti-poverty program in the US at it increases the incentive to work
+
 - Key features:  
   - Initially increases as earned income increases before leveling off at a threshold, at next threshold it declines as income increases further
   - Increases with number of children
   - Phaseout differs by filing status (single vs. married)
+
 - It was introduced in 1975 and expanded in 1986, 1990, and 1993 (we'll focus on 1993)
+
 - Policy details vary, so we're gonna focus on single mothers vs. single women without kids to keep it simple
-  - Very common to zoom in on groups where we expect the effect to exist
-  - Helps you get a sense of what's going on before you try to explain everything
 
 ---
-
+class: white-slide
 ```{r eitc_pic, echo = FALSE}
 knitr::include_graphics('img/eitc.jpg')
 ```
 
 ---
+
 # Earned Income Tax Credit
 
 - EITC was increased in 1993. This may increase chances single mothers (treated) return to work, but likely not affect single non-moms (control)
+
 - Does this program incentivize single mothers to work more? 
 
 ```{r eitc, echo = TRUE}
-df <- read.csv('http://nickchk.com/eitc.csv') %>%
+eitc <- read_csv('http://nickchk.com/eitc.csv') %>%
   mutate(after = year >= 1994,
          treated = children > 0)
-df %>% 
+eitc %>% 
   group_by(after, treated) %>%
   summarize(proportion_working = mean(work))
 ```
@@ -692,12 +725,14 @@ df %>%
 
 # Example
 
-- We can do it by just comparing the points, like we did with Adelaide and Bella
+- We can do it by just comparing the points, like we did with Al and Bri
+
 - This will give us the DID estimate: The EITC increase increases the probability of working by 4.7 percentage points
+
 - But not standard errors, or the ability to include controls easily
 
 ```{r means, echo = TRUE}
-means <- df %>% 
+means <- eitc %>% 
   group_by(after, treated) %>%
   summarize(proportion_working = mean(work)) %>%
   pull(proportion_working)
@@ -708,20 +743,26 @@ means <- df %>%
 
 # Let's try OLS!
 ```{r ols, echo = TRUE}
-etable(feols(work ~ after*treated, data = df), digits = 3,fitstat=c('n','r2'))
+etable(feols(work ~ after*treated, data = eitc), digits = 3,fitstat=c('n','r2'))
 ```
-##### Concept Checks
-- There are four coefficients. Interpret them carefully in a sentence each.
-- Why can the $After \times Treated$ interaction stand in for $Treated$?
+##### Concept Checks: menti.com, code 9338 7492
+
+- [Interpret the coefficients in a sentence each.](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/bh6cx73mmcb4)
+
+- [Why can the $After \times Treated$ interaction stand in for $Treated$?](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/o6ani5b9p4o3)
 
 ---
 
 # What if there are more groups?
 
 - You can recognize $After_t$ and $Treated_i$ as *fixed effects*
+
 - $Treated_i$ is a fixed effect for group - we only need one coefficient for it since there are only two groups
+
 - And $After_t$ is a fixed effect for *time* - one coefficient for two time periods
+
 - You can have more than one set of fixed effects like this! Our interpretation is now within-group *and* within-time
+
 - (i.e. comparing the within-group variation across groups)
 
 ---
@@ -734,8 +775,11 @@ class: inverse, center, middle
 # Multiple Treated and Control Groups
 
 - We can extend DID to having more than two groups, some of which get treated and some of which don't
+
 - And more than two time periods! Multiple before and/or multiple after
+
 - We don't have a full set of interaction terms, we still only need the one, which we can now call $CurrentlyTreated_{it}$
+
 - **If you have more than two groups and/or more than two time periods, then this is what you should be doing**
 
 ---
@@ -770,8 +814,11 @@ etable(many_periods_did)
 # Two-way fixed effects model
 
 - We just ran a two-way fixed effects model
+
 - We have a fixed effect for group and a fixed effect for time
+
 - This is often done when we have a panel dataset with individuals over time
+
 - The generic formula is:
 
 $$
@@ -780,42 +827,58 @@ $$
 \end{align}
 $$
 
+- Where did the treatment and pre-post indicator go?
+
+--
+
+- They're in the fixed effects! We don't need to include them separately
+
 ---
 # Downers and Assumptions
 
 - So... does this all work?
-- That example got pretty close to the truth of 3 but who knows in other cases!
+
+- That example got pretty close to the truth of 3 but who knows in other cases!<sup>1</sup>
+
 - What needs to be true for this to work?
 
----
+--
 
-# Does it Work?
+- DID and TWFE give a causal effect as long as *the only reason the gap changed* was the treatment
+  - e.g. If Al's earnings were going up $40K *anyway*, then we'd mistakenly attribute $30K of that to college
 
-- This gives us a causal effect as long as *the only reason the gap changed* was the treatment
-- If Adelaide would have grown six inches *anyway*, then the gap would have grown by 2, pill or not. 
-  - But we don't know that and mistakenly say it helped her grow by 2
-- For fixed effects to have a causal effect with panel data, we assume no uncontrolled endogenous variation across time
-- In DID, we need to assume that there's no uncontrolled endogenous variation *across this particular before/after time change*
+- For TWFE to have a causal effect with panel data, we assume no endogenous variation across time within unit
+  - It gets even messier if we have staggered rollout of treatment
+
+- In DID, we need to assume that there's no endogenous variation *across this particular before/after time change*
+
 - An easier assumption to justify but still an assumption!
+
+.footnote[<sup>1</sup> We do know. It fails a lot.]
 
 ---
 
 # Parallel Trends
 
 - This assumption - that nothing else changes at the same time, is the poorly-named "parallel trends"
+
 - Again, this assumes that, *if the Treatment hadn't happened to anyone*, the gap between the two would have stayed the same
-- Sometimes people check whether this assumption is plausible by seeing if *prior trends* are the same for Treated and Untreated - if we have multiple pre-treatment periods, was the gap changing a lot during that period?
-- Sometimes people also "adjust for prior trends" to fix parallel trends violations, or use related methods like Synthetic Control
+
+- You can if *prior trends* are the same - if we have multiple pre-treatment periods, was the gap changing a lot during that period?
+
+- There are methods to "adjust for prior trends" to fix parallel trends violations, or use related methods like Synthetic Control
+  - These are beyond the scope of this class and also often snake oil
 
 ---
 
 # Prior Trends
 
 - Let's see how that EITC example looks in the leadup to 1994
+
 - They look like the gap between them is pretty constant before 1994! They move up and down but the *gap* stays the same. That's good.
 
 ```{r prior-trends, echo = FALSE, dev = 'CairoPNG'}
-df %>%
+eitc %>%
   mutate(tlabel = factor(treated, labels = c('Untreated','Treated'))) %>%
   group_by(year, treated, tlabel) %>%
   summarize(proportion_working = mean(work)) %>%
@@ -836,21 +899,21 @@ df %>%
 # Prior Trends
 
 - Formally, prior trends being the same tells us nothing about parallel trends
-- But it can be suggestive. 
-  - Going back to the height pill example, what if instead of comparing Adelaide and Bella, child twins, we compared Adelaide to *me*? 
-- Seeing the gap close *anyway* in previous years is a clue: it's not just the pill
+
+- But it can be suggestive if the gap was closing *anyway*
+  - For example, what if you compare earnings to Bri's boss
 
 ```{r prior-trends-df}
-df <- data.frame(Person = c('Adelaide','Adelaide','Adelaide','Me','Me','Me'),
+df2 <- data.frame(Person = c('Bri','Bri','Bri','Boss','Boss','Boss'),
                  Time = factor(c('Before 1','Before 2','After','Before 1','Before 2','After'), levels = c('Before 1','Before 2','After')),
-                 Height = c(43, 48, 54, 70, 70, 70))
-ggplot(df, aes(x = Time, y = Height, group = Person, label = Person)) +
+                 Earnings = c(30, 40, 80, 150, 150, 150))
+ggplot(df2, aes(x = Time, y = Earnings, group = Person, label = Person)) +
   geom_line(color = 'black', size = 1) + 
   geom_point(color = 'red', size = 3) + 
   geom_dl(method = list('last.points','bumpup'), position = position_nudge(x = .05)) + 
   theme_metro() +
-  annotate(geom = 'text', x = 1.5, y = 60, hjust = .5, label = 'The gap was already\nclosing before\nany Treatment...') +
-  annotate(geom = 'text', x = 2.5, y = 60, hjust = .5, label = 'telling us that\nnot all of this change\n is just Treatment')
+  annotate(geom = 'text', x = 1.5, y = 110, hjust = .5, label = 'The gap was already\nclosing before\nany Treatment...') +
+  annotate(geom = 'text', x = 2.5, y = 110, hjust = .5, label = 'telling us that\nnot all of this change\n is just Treatment')
 
 ```
 
@@ -859,143 +922,79 @@ ggplot(df, aes(x = Time, y = Height, group = Person, label = Person)) +
 # Parallel Trends
 
 - Just because *prior trends* are equal doesn't mean that *parallel trends* holds. 
+
 - *Parallel trends* is about what the before-after change *would have been* - we can't see that!
 
 --
 
 - For example, let's say we want to see the effect of online teaching on student test scores, using COVID school shutdowns to get a Before/After
+
 - As of March/April 2020, some schools had gone online (Treated) and others hadn't (Untreated)
+
 - Test score trends were probably pretty similar in the Before periods (Jan/Feb 2020), so prior trends are likely the same
+
 - But LOTS of stuff changed between Jan/Feb and Mar/Apr, like, uh, Coronavirus, lockdowns, etc. not just online teaching! SO *parallel trends* likely wouldn't hold
 
 ---
 
 # Concept Checks
 
-- Go back to the Seattle minimum wage effect example from the first Concept Check slide. Clearly state what the parallel trends assumption means in this context.
+## menti.com 9338 7492
 
-- It's possible (although perhaps unlikely) that parallel trends can hold even if it looks like the treatment and control groups were trending apart before treatment went into effect. How is this possible?
+- [Go back to the Seattle minimum wage effect example from the first Concept Check slide. Clearly state what the parallel trends assumption means in this context.](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/ge23j87q8w3t)
 
----
-name: pua
-class: inverse, center, middle
-
-# Example: Pandemic Unemployment Assistance
-
----
-# Pandemic Unemployment Assistance
-
-- During the pandemic the federal government expanded unemployment insurance with the CARES Act set to expire in September 2021
-- Starting in May 2021, governors started announcing that they would end the expanded benefits early
-- This created a natural experiment where some states ended the benefits early and some did not
-- We can use this to estimate the effect of the benefits on employment
-  - My co-authors and I did this in [Coombs (2021)](https://www.aeaweb.org/articles?id=10.1257/pandp.20221009)
-
-- Sadly, we used restricted data, but I will walk you through how to do it
-  - You can do your own version with public data! (I almost made this a problem set)
-
----
-# Data
-
-- The data come from Earnin, a fintech company that provides early access to wages
-
-- Have data on bank transactions, earnings, bank account balances, location, gender, and more
-
-- Users are predominantly low-income and liquidity-constrained 
-  - Critical group to study to learn about effects of unemployment insurance
-  - .hi[Big Data point:] Big Data sometimes means you get a non-random sample, but it could be of critical interest for your study
-
-- There are over 3M users, but we sample down
-
----
-# Defining Treatment and Control
-
-- Announcements started in May 2021
-- Expirations started in June 2021
-
-- **Treatment**: Live in states that end benefits early
-- **Control**: Live in state that does end benefits early
-
-  - Multiple groups (each state)
-  - Multiple time periods (each month)
-
-- We define our analysis sample as people who were unemployed and insured at the end of April 2021
-  - Why April instead of May? 
-  - We want to account for people responding to the announcement by going back to work before the expiration
-
-- .hi[Key point]: Expectations can muddy difference-in-difference, so keep an eye out for them
-
-
----
-# Regression model
-
-$$
-\begin{align}
-y_{it} = \alpha_i + \week_{t} + \sum_{t \neq \text{April 30}} \beta_t \text{Week}_t \times \text{Withdrawal State} + \varepsilon_{it}
-\end{align}
-$$
-
-- Interact each week with the treatment indicator
-- Then write that out using the summation term to be more parsimonious
-- Wait, why did you omit April 30? 
-  - Due to multicollinearity, we can't estimate all the week effects and the interaction terms at the same time
-  - Have to omit one, practice is to omit the period of or just before the treatment
-  - (This gets more complicated if you have multiple treatments at different times)
-
----
-# Insured rate vs. employment
-
-<figure>
-    <img src="./img/Event Study - Shares-1.png" height="66%"
-         alt="Rate insured vs. employed">
-    <figcaption>Coombs (2021).</figcaption>
-</figure>
-
----
-# UI inflows, spending, earnings
-
-<figure>
-    <img src="./img/Event Study - Dollars-1.png" height="66%"
-         alt="Dollars difference from April 30, 2021">
-    <figcaption>Coombs (2021).</figcaption>
-</figure>
-
----
-# Other studies
-
-- Other studies have looked at this question using Current Population Survey data (e.g. [Ganong et al. (2022)](https://www.nber.org/papers/w30315), [Holzer et al. (2023)](https://onlinelibrary.wiley.com/doi/abs/10.1111/ecin.13180), )
-
-- They find larger employment effects
-  - Reasons: different samples
-  - We have a younger, poorer sample
-    - Job rationing effects may keep this group out of the labor force longer
-    - Younger people may have looked to switch careers
-    - Younger people may have younger children
-
-- All that to say, no one study has all the answers! 
+- [It's possible (although perhaps unlikely) that parallel trends can hold even if it looks like the treatment and control groups were trending apart before treatment went into effect. How is this possible?](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/2xe6yspgyyow)
 
 ---
 
 # Before we finish, a warning!
 
 - DID is so nice and simple that it feels like you can get real flexible with it
-- But the stuff we're covering in this class - up to TWFE, *relies very strongly* on the assumptions we made. If you break them, the *research design* may hold up, *but the estimator really doesn't* and you need a different estimator
+
+- But the stuff we're covering in this class - up to TWFE, *relies very strongly* on the assumptions we made. 
+
+- If you break them, the *research design* may hold up, *but the estimator really doesn't* and you may need a different estimator
 
 ---
+# Context
 
-# And a Warning! 
+- TWFE *quickly falls apart* if you have different groups getting treated at different times, called "staggered treatment"
 
-- TWFE *does not work if different groups get treated at different times* (try: Callaway & Sant'anna (R **did**) or Wooldridge (R **etwfe**))
-- If you need to control for stuff to support parallel trends, *just tossing controls in a TWFE doesn't work* (try **did** again, or Sant'anna and Zhao **DRDID**)
-- If the outcome is binary, you can't just run TWFE but with logit/probit (just do LPM)
-- If the effect gets stronger or weaker over time, the TWFE effect will be weird (do "dynamic DID", see the textbook)
-- For now, stick to DID designs where all the Treated groups are treated in the same period
+  1. **Forbidden comparison**: Your early treated group becomes a control for your later treated group
+  
+  2. If the effect increases/decreases in relative time, your early treated group gives a "bad comparison"
+
+  3. See slides by [Andrew Baker](https://andrewcbaker.netlify.app/did#1) for an example explanation of the problem
+
+- If you need to control for stuff to support parallel trends, *just tossing in controls doesn't work quite so well with TWFE*
+
+
+---
+# Fixes
+
+- There are tons of fixes -- it is a bit of a cottage industry in econometrics and there's often package implementations in R, Stata, etc.
+  - A few are even implemented in **fixest**, the package we're using for fixed effects
+
+- The open source implementations are amazing and you can do a lot with them
+
+- That way you just need to get the data and understand the research design
+
+- You can leave the nuanced programming and linear algebra to the original authors
+
+- Asjad Naqvi hosts a [list of tons of these packages](https://asjadnaqvi.github.io/DiD/docs/02_R/)
 
 ---
 # What next?
 
+## menti.com, code 9338 7492
+
+- [List up to three things you learned today](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/o56f9vmboiv2)
+
 - Now I want you to go try to implement fixed effects and difference-in-differences models in R
-- Navigate to the lecture activity [11a-panel-twfe]()
+
+- There are tons of examples given to practice implementing the various R packages used to estimate these models
+
+- Navigate to the lecture activity [11a-panel-twfe](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/11a-panel-twfe/11a-panel-twfe.html)
 
 ---
 class: inverse, center, middle
