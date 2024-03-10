@@ -442,7 +442,7 @@ There are several opportunities for bonus points during the semester:
 2. A 2.5% participation bonus on your final grade that I will award at my discretion.
 3. I will ofefer a 2.5% participation bonus to the person with most "good faith" posts to GitHub. "good faith" means:
     - The posts are made to actually ask about a problem you are having with a problem set/your final project or to answer someone else's question
-    - Posts can be made in GitHub Issues (for problem sets) or GitHub Discussions
+    - Posts can be made in GitHub Issues (for problem sets) or GitHub Discussions (Pull Request typo corrections are not counted for this bonus)
     - The posts are not duplicates of existing posts -- you have to search before you post to see if folks are already working on this problem.
     - The posts are not spam -- I'm a child of the 90s. I can spot spam from a mile away.
     - The posts are respectful and constructive.
