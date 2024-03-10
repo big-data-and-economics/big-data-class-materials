@@ -269,6 +269,9 @@ Economics is at the forefront of developing statistical methods for analyzing da
 | 1 x Lewiston Hackathon                    | 0%-10%    | Optional  |
 | Classroom participation                   | Bonus up to 2.5%    | Discretion  |
 | Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
+| Most "good-faith" posts to GitHub           | Bonus 2.5% | Posts/answers in course organization |
+
+Finalized grades on each component will be posted to Lyceum. Where possible to give feedback privately, it will be posted to GitHub. 
 
 ### Problem sets
 
@@ -437,7 +440,14 @@ There are several opportunities for bonus points during the semester:
 
 1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material. This can be to fix a typo or to fix a bug in the code.
 2. A 2.5% participation bonus on your final grade that I will award at my discretion.
-3. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
+3. I will ofefer a 2.5% participation bonus to the person with most "good faith" posts to GitHub. "good faith" means:
+    - The posts are made to actually ask about a problem you are having with a problem set/your final project or to answer someone else's question
+    - Posts can be made in GitHub Issues (for problem sets) or GitHub Discussions
+    - The posts are not duplicates of existing posts -- you have to search before you post to see if folks are already working on this problem.
+    - The posts are not spam -- I'm a child of the 90s. I can spot spam from a mile away.
+    - The posts are respectful and constructive.
+The intent of this bonus is to encourage you to work together to solve technical problems in a way that resembles professional software development and data analysis on this platform. This is one of the most important skills you can take away from this, and really any, course.
+4. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
 
 I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
 
