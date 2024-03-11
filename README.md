@@ -399,7 +399,9 @@ Your solution may include a variety of things, including:
 
 Participation on GitHub is 5 percent of your grade. Please use [GitHub Discussions](https://github.com/orgs/big-data-and-economics/discussions) and `Issues` to ask questions about the course materials and problem sets. You can also suggest improvements to the course materials. Here are the guidelines:
 
-- When starting a discussion, posting an issue, or suggesting a pull request, please use a clear title (e.g. Problem Set 1: Question about Question 2) and description ("What does term X mean?")- If posting about an error you are encountering, follow these steps:
+- When starting a discussion, posting an issue, or suggesting a pull request, please use a clear title (e.g. Problem Set 1: Question about Question 2) and description ("What does term X mean?")
+
+- If posting about an error you are encountering, follow these steps:
     - Briefly state the expected behavior
     - Write the minimal code needed to reproduce the error (a minimally reproducible example)
     - Write the full error message you are receiving
@@ -440,12 +442,13 @@ There are several opportunities for bonus points during the semester:
 
 1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material. This can be to fix a typo or to fix a bug in the code.
 2. A 2.5% participation bonus on your final grade that I will award at my discretion.
-3. I will ofefer a 2.5% participation bonus to the person with most "good faith" posts to GitHub. "good faith" means:
+3. I will offer a 2.5% participation bonus to the person with most "good faith" posts/answers in GitHub Issues and Discussions within this organization. "Good faith" means:
     - The posts are made to actually ask about a problem you are having with a problem set/your final project or to answer someone else's question
-    - Posts can be made in GitHub Issues (for problem sets) or GitHub Discussions (Pull Request typo corrections are not counted for this bonus)
+    - The posts/answers follow the guidelines above
     - The posts are not duplicates of existing posts -- you have to search before you post to see if folks are already working on this problem.
-    - The posts are not spam -- I'm a child of the 90s. I can spot spam from a mile away.
-    - The posts are respectful and constructive.
+    - The posts and answers are not spam -- I'm a child of the 90s. I can spot spam from a mile away.
+    - The posts and answers are respectful and constructive.
+    - An improvement on existing answer is fine, if it actually improves on the existing answer.
 The intent of this bonus is to encourage you to work together to solve technical problems in a way that resembles professional software development and data analysis on this platform. This is one of the most important skills you can take away from this, and really any, course.
 4. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
 
