@@ -454,6 +454,15 @@ The intent of this bonus is to encourage you to work together to solve technical
 
 I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
 
+### Extensions
+
+I offer extensions for two things:
+
+1. Major health issues
+2. Major family emergencies
+
+Please flag either with Bates Reach and email me with the subject "[ECON 368] _subject here_", so I can be aware of the situation. Together we'll figure out an appropriate extension.
+
 # FAQ
 
 ## How is this all structured? What's a repository? What's an organization? 

@@ -375,11 +375,30 @@ Furthermore, I want you to take ownership over your learning. You get more out o
 
 There are several opportunities for bonus points during the semester:
 
+
 1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material. This can be to fix a typo or to fix a bug in the code.
 2. A 2.5% participation bonus on your final grade that I will award at my discretion.
-3. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
+3. I will offer a 2.5% participation bonus to the person with most "good faith" posts/answers in GitHub Issues and Discussions within this organization. "Good faith" means:
+    - The posts are made to actually ask about a problem you are having with a problem set/your final project or to answer someone else's question
+    - The posts/answers follow the guidelines above
+    - The posts are not duplicates of existing posts -- you have to search before you post to see if folks are already working on this problem.
+    - The posts and answers are not spam -- I'm a child of the 90s. I can spot spam from a mile away.
+    - The posts and answers are respectful and constructive.
+    - An improvement on existing answer is fine, if it actually improves on the existing answer.
+The intent of this bonus is to encourage you to work together to solve technical problems in a way that resembles professional software development and data analysis on this platform. This is one of the most important skills you can take away from this, and really any, course.
+4. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
 
 I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
+
+
+### Extensions
+
+I offer extensions for two things:
+
+1. Major health issues
+2. Major family emergencies
+
+Please flag either with Bates Reach and email me with the subject "[ECON 368] _subject here_", so I can be aware of the situation. Together we'll figure out an appropriate extension.
 
 ## Rough schedule
 
@@ -464,7 +483,7 @@ I encourage each of you to make use of artificial intelligence-driven digital as
 
 Throughout the course, I will provide you feedback on your work. It is your responsibility to turn in your work on time. 
 
-**End of course:** If an extension beyond the "grace period" is not authorized by the instructor, department, or college, an unfinished incomplete grade will automatically change to an F after either (a) the end of the next regular semester in which the student is enrolled (not including short-term), or (b) the end of 12 months if the student is not enrolled, whichever is shorter.
+**End of course:** If an extension is not authorized by the instructor, department, or college, an unfinished incomplete grade will automatically change to an F after either (a) the end of the next regular semester in which the student is enrolled (not including short-term), or (b) the end of 12 months if the student is not enrolled, whichever is shorter.
 
 Incompletes that change to F will count as an attempted course on transcripts. The burden of fulfilling an incomplete grade is the responsibility of the student.
 
