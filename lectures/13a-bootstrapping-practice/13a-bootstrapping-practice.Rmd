@@ -153,16 +153,16 @@ Now test yourself by amending the function to run a regression of callback on et
 
 ```{r basic-function-2}
 set.seed(1000) # replication
-random_sample_lm <- function(data) {
+random_sample_ols <- function(data) {
   # Get the number of observations
   n <- nrow(data)
   # Sample the data
-  m1 <- lm(call ~ afam, data[sample(1:n, n, replace = TRUE), ])
+  m1 <- feols(call ~ afam, data[sample(1:n, n, replace = TRUE), ])
   # Return the coefficients
   return(coef(m1)[2])
 }
 
-random_sample_lm(cleaned_resumes)
+random_sample_ols(cleaned_resumes)
 
 ```
 
@@ -190,7 +190,7 @@ wrapper_function <- function(i,x) {
 }
 ```
 
-Can you write a wrapper for the `random_sample_lm()` function above?
+Can you write a wrapper for the `random_sample_ols()` function above?
 
 ## Iteration
 
@@ -239,7 +239,7 @@ for (i in 1:iterations) {
 deposit
 ```
 
-Let's write a for loop that iterates through the `random_sample_lm()` function 10 times. Make sure to create a list to store the results in. Before you commit to running it 10 times, check that it runs through one iteration. 
+Let's write a for loop that iterates through the `random_sample_ols()` function 10 times. Make sure to create a list to store the results in. Before you commit to running it 10 times, check that it runs through one iteration. 
 .
 .
 .
@@ -270,7 +270,7 @@ Let's write a for loop that iterates through the `random_sample_lm()` function 1
 results <- vector("list",10)
 set.seed(1000) # replication
 for (i in 1:10) {
-  results[[i]] <- random_sample_lm(cleaned_resumes)
+  results[[i]] <- random_sample_ols(cleaned_resumes)
 }
 ```
 
@@ -280,7 +280,7 @@ You can do the same thing using the `*apply` family. Here it is with `lapply()`:
 
 ```{r apply}
 set.seed(1000) # replication
-results <- lapply(1:10, function(x) random_sample_lm(cleaned_resumes))
+results <- lapply(1:10, function(x) random_sample_ols(cleaned_resumes))
 ```
 
 **Challenge**: Try writing a lapply that iterates over the odd numbers from 1 to 10 or a vector of strings like we did for the loop above.
@@ -293,7 +293,7 @@ Also, the `pbapply` package has a progress bar, which is nice for long simulatio
 
 ```{r pbapply}
 set.seed(1000) # replication
-results <- pbapply::pblapply(1:10, function(x) random_sample_lm(cleaned_resumes))
+results <- pbapply::pblapply(1:10, function(x) random_sample_ols(cleaned_resumes))
 ```
 
 ### Map
@@ -302,7 +302,7 @@ The `map()` function from the **purrr** package is a great way to iterate over a
 
 ```{r map_df}
 set.seed(1000)
-results <- map_df(1:10, function(x) random_sample_lm(cleaned_resumes))
+results <- map_df(1:10, function(x) random_sample_ols(cleaned_resumes))
 ```
 
 ## Parallel Programming 
@@ -326,7 +326,7 @@ I'll show several different approaches.
 set.seed(123L)
 tic()
 future_lapply(1:1e3, 
-  function(i) random_sample_lm(cleaned_resumes)) %>%
+  function(i) random_sample_ols(cleaned_resumes)) %>%
   bind_rows()
 toc(log=TRUE)
 ```
@@ -336,7 +336,7 @@ toc(log=TRUE)
 ```{r pbapply-parallel}
 set.seed(123L)
 tic()
-sim_pblapply = pblapply(1:1e3, function(i) random_sample_lm(cleaned_resumes), cl = parallel::detectCores())
+sim_pblapply = pblapply(1:1e3, function(i) random_sample_ols(cleaned_resumes), cl = parallel::detectCores())
 toc(log=TRUE)
 ```
 
@@ -345,7 +345,7 @@ toc(log=TRUE)
 ```{r furrr}
 tic()
 future_map_dfr(1:1e3, 
-  function(i) random_sample_lm(cleaned_resumes), 
+  function(i) random_sample_ols(cleaned_resumes), 
   .options = furrr_options(seed=123L)) %>%
   bind_rows()
 toc(log=TRUE)
@@ -399,7 +399,7 @@ set.seed(1000) # replication
 est_model <- function(d, index) {
     # Run our model
     # Use index to pick the bootstrap sample
-    m <- lm(call ~ afam, data = d[index,])
+    m <- feols(call ~ afam, data = d[index,])
     # Return the estimate(s) we want to bootstrap
     return(c(coef(m)[2]))
 }
@@ -490,7 +490,7 @@ plot(boot_results)
 tidy_results <- tidy(boot_results)
 
 #library(stargazer) # already loaded
-m1 <- lm(call~afam, data = cleaned_resumes)
+m1 <- feols(call~afam, data = cleaned_resumes)
 stargazer(m1, se = list(tidy_results$std.error), type = 'text')
 ```
 

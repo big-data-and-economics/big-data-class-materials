@@ -3,7 +3,7 @@ title: Big Data and Economics
 subtitle: Bootstrapping, Functions, and Parallel Programming
 author:
   name: Kyle Coombs
-  affiliation: Bates College | [DCS/ECON 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)  
+  affiliation: Bates College | [DCS/ECON 368](https://github.com/big-data-and-economics/big-data-class-materials)  
 output:
   html_document:
     theme: journal
@@ -179,16 +179,16 @@ Now test yourself by amending the function to run a regression of callback on et
 
 ```r
 set.seed(1000) # replication
-random_sample_lm <- function(data) {
+random_sample_ols <- function(data) {
   # Get the number of observations
   n <- nrow(data)
   # Sample the data
-  m1 <- lm(call ~ afam, data[sample(1:n, n, replace = TRUE), ])
+  m1 <- feols(call ~ afam, data[sample(1:n, n, replace = TRUE), ])
   # Return the coefficients
   return(coef(m1)[2])
 }
 
-random_sample_lm(cleaned_resumes)
+random_sample_ols(cleaned_resumes)
 ```
 
 ```
@@ -221,7 +221,7 @@ wrapper_function <- function(i,x) {
 }
 ```
 
-Can you write a wrapper for the `random_sample_lm()` function above?
+Can you write a wrapper for the `random_sample_ols()` function above?
 
 ## Iteration
 
@@ -300,7 +300,7 @@ for (i in 1:iterations) {
 deposit
 ```
 
-Let's write a for loop that iterates through the `random_sample_lm()` function 10 times. Make sure to create a list to store the results in. Before you commit to running it 10 times, check that it runs through one iteration. 
+Let's write a for loop that iterates through the `random_sample_ols()` function 10 times. Make sure to create a list to store the results in. Before you commit to running it 10 times, check that it runs through one iteration. 
 .
 .
 .
@@ -332,7 +332,7 @@ Let's write a for loop that iterates through the `random_sample_lm()` function 1
 results <- vector("list",10)
 set.seed(1000) # replication
 for (i in 1:10) {
-  results[[i]] <- random_sample_lm(cleaned_resumes)
+  results[[i]] <- random_sample_ols(cleaned_resumes)
 }
 ```
 
@@ -343,7 +343,7 @@ You can do the same thing using the `*apply` family. Here it is with `lapply()`:
 
 ```r
 set.seed(1000) # replication
-results <- lapply(1:10, function(x) random_sample_lm(cleaned_resumes))
+results <- lapply(1:10, function(x) random_sample_ols(cleaned_resumes))
 ```
 
 **Challenge**: Try writing a lapply that iterates over the odd numbers from 1 to 10 or a vector of strings like we did for the loop above.
@@ -357,7 +357,7 @@ Also, the `pbapply` package has a progress bar, which is nice for long simulatio
 
 ```r
 set.seed(1000) # replication
-results <- pbapply::pblapply(1:10, function(x) random_sample_lm(cleaned_resumes))
+results <- pbapply::pblapply(1:10, function(x) random_sample_ols(cleaned_resumes))
 ```
 
 ### Map
@@ -367,7 +367,7 @@ The `map()` function from the **purrr** package is a great way to iterate over a
 
 ```r
 set.seed(1000)
-results <- map_df(1:10, function(x) random_sample_lm(cleaned_resumes))
+results <- map_df(1:10, function(x) random_sample_ols(cleaned_resumes))
 ```
 
 ## Parallel Programming 
@@ -397,7 +397,7 @@ I'll show several different approaches.
 set.seed(123L)
 tic()
 future_lapply(1:1e3, 
-  function(i) random_sample_lm(cleaned_resumes)) %>%
+  function(i) random_sample_ols(cleaned_resumes)) %>%
   bind_rows()
 ```
 
@@ -405,16 +405,16 @@ future_lapply(1:1e3,
 ## # A tibble: 1,000 × 1
 ##    afamTRUE
 ##       <dbl>
-##  1  -0.0339
-##  2  -0.0425
-##  3  -0.0380
-##  4  -0.0347
-##  5  -0.0318
-##  6  -0.0261
-##  7  -0.0316
+##  1  -0.0482
+##  2  -0.0487
+##  3  -0.0272
+##  4  -0.0315
+##  5  -0.0369
+##  6  -0.0260
+##  7  -0.0259
 ##  8  -0.0358
-##  9  -0.0329
-## 10  -0.0230
+##  9  -0.0233
+## 10  -0.0364
 ## # ℹ 990 more rows
 ```
 
@@ -423,7 +423,7 @@ toc(log=TRUE)
 ```
 
 ```
-## 7.3 sec elapsed
+## 10.93 sec elapsed
 ```
 
 #### pbapply
@@ -432,12 +432,12 @@ toc(log=TRUE)
 ```r
 set.seed(123L)
 tic()
-sim_pblapply = pblapply(1:1e3, function(i) random_sample_lm(cleaned_resumes), cl = parallel::detectCores())
+sim_pblapply = pblapply(1:1e3, function(i) random_sample_ols(cleaned_resumes), cl = parallel::detectCores())
 toc(log=TRUE)
 ```
 
 ```
-## 12.61 sec elapsed
+## 17.88 sec elapsed
 ```
 
 ### furrr
@@ -446,7 +446,7 @@ toc(log=TRUE)
 ```r
 tic()
 future_map_dfr(1:1e3, 
-  function(i) random_sample_lm(cleaned_resumes), 
+  function(i) random_sample_ols(cleaned_resumes), 
   .options = furrr_options(seed=123L)) %>%
   bind_rows()
 ```
@@ -473,7 +473,7 @@ toc(log=TRUE)
 ```
 
 ```
-## 6.03 sec elapsed
+## 12.59 sec elapsed
 ```
 
 This is the best way to make sure you understand the bootstrapping process. 
@@ -525,8 +525,8 @@ coeftest(m, vcov = vcovBS(m,
 ## t test of coefficients:
 ## 
 ##               Estimate Std. Error t value  Pr(>|t|)    
-## (Intercept)  0.0965092  0.0056755 17.0045 < 2.2e-16 ***
-## afamTRUE    -0.0320329  0.0074471 -4.3014 1.731e-05 ***
+## (Intercept)  0.0965092  0.0060567 15.9342 < 2.2e-16 ***
+## afamTRUE    -0.0320329  0.0077137 -4.1527 3.341e-05 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -549,7 +549,7 @@ set.seed(1000) # replication
 est_model <- function(d, index) {
     # Run our model
     # Use index to pick the bootstrap sample
-    m <- lm(call ~ afam, data = d[index,])
+    m <- feols(call ~ afam, data = d[index,])
     # Return the estimate(s) we want to bootstrap
     return(c(coef(m)[2]))
 }
@@ -690,31 +690,13 @@ plot(boot_results)
 tidy_results <- tidy(boot_results)
 
 #library(stargazer) # already loaded
-m1 <- lm(call~afam, data = cleaned_resumes)
+m1 <- feols(call~afam, data = cleaned_resumes)
 stargazer(m1, se = list(tidy_results$std.error), type = 'text')
 ```
 
 ```
 ## 
-## ===============================================
-##                         Dependent variable:    
-##                     ---------------------------
-##                                call            
-## -----------------------------------------------
-## afam                          -0.032           
-##                                                
-##                                                
-## Constant                     0.097***          
-##                               (0.008)          
-##                                                
-## -----------------------------------------------
-## Observations                   4,870           
-## R2                             0.003           
-## Adjusted R2                    0.003           
-## Residual Std. Error      0.272 (df = 4868)     
-## F Statistic          16.931*** (df = 1; 4868)  
-## ===============================================
-## Note:               *p<0.1; **p<0.05; ***p<0.01
+## % Error: Unrecognized object type.
 ```
 
 That said, it can be a bit cumbersome to use. For example, if you want to bootstrap a function that takes more than two arguments, you need to use the `...` argument and define `extraPar` and `numCenter`. This can be a bit confusing and easy to screw up.
@@ -734,14 +716,6 @@ cleaned_resume_freq <- cleaned_resumes %>%
   group_by(name,female,afam) %>%
   summarise(frequency=n(),
     call=mean(call))
-```
-
-```
-## `summarise()` has grouped output by 'name', 'female'. You can override using
-## the `.groups` argument.
-```
-
-```r
 # The weighted mean of calls:
 weighted.mean(x=cleaned_resume_freq$call, # variable to average
   w=cleaned_resume_freq$frequency # the weight
