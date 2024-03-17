@@ -24,7 +24,7 @@ class: center, middle, inverse, title-slide
 ### Kyle Coombs
 ]
 .date[
-### Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics">ECON/DCS 368</a>
+### Bates College | <a href="https://github.com/big-data-and-economics">ECON/DCS 368</a>
 ]
 
 ---
@@ -45,13 +45,9 @@ name: toc
 
 - [Prologue](#prologue)
 
+- [Review statistical inference](#statistical-inference)
+
 - [Bootstrapping](#bootstrapping)
-
-- [Functions](#functions)
-
-- [Iteration](#iteration)
-
-- [Parallel Programming](#parallel-processing)
 
 ---
 class: inverse, center, middle
@@ -61,16 +57,189 @@ name: prologue
 # Prologue
 
 ---
-# Plan for the week
+# Prologue
 
-- Computers closed: Explanation of bootstrapping, basics of functions, iteration, and Parallel Programming
-- Computers open: Work through practical examples
-
-- By the end of the week you will:
+- By the end of class you will:
+  - Appreciate statistical uncertainty and the role of statistical inference
   - Understand the intuition of bootstrapping
-  - Be able to write basic functions in R
-  - Be able to iterate tasks serially and in parallel in R
   - Be able to bootstrap in R
+
+---
+# Hack-a-thon update
+
+Sign-up for the hack-a-thon by April 2nd!
+
+- Sign ups posted in [GitHub discussions](https://github.com/orgs/big-data-and-economics/discussions/22)
+
+- It will run from April 9 to April 11
+
+- You can sign up as a team or as an individual
+
+---
+# Questions
+
+---
+# Attribution
+
+I pull most of this lecture from the textbook Data Science in R by [James Scott](https://bookdown.org/jgscott/DSGI/)
+
+---
+class: center, middle
+name: statistical-inference
+
+# Review of statistical inference
+
+---
+# Review of statistical inference
+
+- A key, but often overlooked part of causal inference is "inference"
+
+- In most analysis, the data make up a small (though it can get pretty big) sample of the population
+
+  - We implement the perfect causal identification strategy perfectly: `\(y_{it} = \beta_0 + \beta_1 x_{it} + \epsilon_{it}\)`
+  - We get a point estimate of `\(\hat{\beta}_1\)` from our sample that is unbiased and consistent
+  - Are we certain that the population's true `\(\beta_1=\hat{\beta}_1\)`? 
+
+--
+
+- No, we need to make a statistical inference
+
+- How do we make these inferences? (Hint: Think 95%) 
+
+---
+# Confidence Intervals
+
+- We typically make some standard assumptions about the sampling distribution of our estimates that allow us to leverage the central limit theorem (CLT)
+  - CLT means that as the sample size ($N$) approaches infinity, the sampling distribution of a mean (ie. OLS coefficients) approaches a normal distribution
+  - Typically the necessary `\(N\)` is not that large, but it is not always clear how large it needs to be
+
+- [What is a confidence interval?](https://www.mentimeter.com/app/presentation/blyb73b93krvwcthjayd3pt1wr6q6kq6/a6ie47n12fgf)
+
+--
+
+- A 95% confidence interval for `\(\hat{\beta}_1\)` is an interval that contains the true value of `\(\beta_1\)` in 95% of repeated samples. ([Neyman 1937](https://royalsocietypublishing.org/doi/10.1098/rsta.1937.0005))
+
+- It is **NOT** the probability that `\(\beta_1\)` is in the interval
+  - People get this wrong all the time
+  - ChatGPT will get this wrong all the time -- cause it is trained on people's wrong answers
+  - Bayesian "credible intervals" are the probability that `\(\beta_1\)` is in the interval
+
+- I know that sounds pedantic but it is important to understand the difference especially when you are interpreting your results
+
+---
+# Example
+
+Imagine a simple example:
+
+1. There are 1,000,000 people in the population of interest 
+2. 50 percent randomly receive $10K loan forgiveness
+3. You're curious how many people saved money after the forgiveness (as opposed to spending it)
+4. You randomly sample 1,000 people, stratified by forgiveness receipt, and run the following regression
+
+`$$\text{Savings}_i = \beta_0 + \beta_1 \text{Forgiveness}_i + \epsilon_i$$`
+
+
+
+
+```r
+savings &lt;- feols(savings ~ forgiveness, data = samp) 
+etable(savings,se.below=TRUE,fitstat=c('n')) %&gt;% kable() # Make it prettier
+```
+
+
+
+|                |savings    |
+|:---------------|:----------|
+|Dependent Var.: |savings    |
+|                |           |
+|Constant        |-33.99     |
+|                |(79.11)    |
+|forgiveness     |1,115.3*** |
+|                |(111.9)    |
+|_______________ |__________ |
+|S.E. type       |IID        |
+|Observations    |1,000      |
+
+Any concerns? 
+
+---
+# New information
+
+You take two new samples and get:
+
+
+
+--
+
+
+```r
+savings_new1 &lt;- feols(savings ~ forgiveness, data = samp1) 
+savings_new2 &lt;- feols(savings ~ forgiveness, data = samp2) 
+etable(savings,savings_new1,savings_new2, se.below=TRUE,fitstat=c('n')) %&gt;% kable() # Make it prettier
+```
+
+
+
+|                |savings    |savin..1 |savings..2 |
+|:---------------|:----------|:--------|:----------|
+|Dependent Var.: |savings    |savings  |savings    |
+|                |           |         |           |
+|Constant        |-33.99     |11.00    |12.99      |
+|                |(79.11)    |(43.88)  |(44.27)    |
+|forgiveness     |1,115.3*** |-12.39   |5,023.1*** |
+|                |(111.9)    |(62.06)  |(62.61)    |
+|_______________ |__________ |________ |__________ |
+|S.E. type       |IID        |IID      |IID        |
+|Observations    |1,000      |1,000    |1,000      |
+
+---
+# What the heck?
+
+- You learn that 80% of the people in your sample had no loans and 20% had over 10K in loans
+  - Might that change your estimate?
+
+- You get a grant to survey for loan history of the people in your sample
+
+- You discover the following breakdown: 
+
+
+```
+## Warning: There were 3 warnings in `summarise()`.
+## The first warning was:
+## ℹ In argument: `share_with_loan = mean(had_loan)`.
+## ℹ In group 1: `sample = "1"`.
+## Caused by warning in `mean.default()`:
+## ! argument is not numeric or logical: returning NA
+## ℹ Run `dplyr::last_dplyr_warnings()` to see the 2 remaining warnings.
+```
+
+
+
+|sample | share_with_loan| (Intercept)| forgiveness|
+|:------|---------------:|-----------:|-----------:|
+|1      |              NA|   -33.99083|  1115.28902|
+|2      |              NA|    11.00434|   -12.39388|
+|3      |              NA|    12.99163|  5023.06071|
+
+The share treated changed in each sample and the point estimate of `\(\beta_1\)` changed accordingly
+
+- And it looks like $5K of the $10K forgiveness was saved, the rest was spent
+
+---
+# Lesson: Sampling uncertainty
+
+- The sample you get is just one random sample from the population of interest
+
+- If there's something special about your sample, then your estimates may be a bit odd
+
+- I explicitly guaranteed the last two samples were not representative of the population by design
+  - I also presented a world in which two binary variables were the only things that mattered beyond random noise
+
+- In general, we assume (and take precautions) to have a representative sample of our population, but sampling uncertainty remains^&lt;sup&gt;1&lt;/sup&gt;
+
+- Today is about **bootstrapping**: a way to understand the variability of your estimates across samples assuming it is representative
+
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Sometimes that means we change the scope of our research question to be about a specific population for which the sample is representative, e.g. focus on low-income populations if your sample is biased towards low-income people]
 
 ---
 class: inverse, center, middle
@@ -81,7 +250,7 @@ name: Bootstrapping
 ---
 # Bootstrapping: Motivating example
 
-- Imagine you gain powers to view every parallel, distinct universe where the world&lt;sup&gt;1&lt;/sup&gt;
+- Imagine you gain powers to view every parallel, distinct universe&lt;sup&gt;1&lt;/sup&gt;
 
 - With these powers, you **obviously** decide to replicate critical results in economics
   - You collect equivalent sample sizes
@@ -150,7 +319,7 @@ It depends. Intuively:
 - Arguably, you should do 1000s, if not more times! 
   - In this lecture, I did not do that because it would take too long to generate my slides
 
-- See Parallel Programming before for speed ups! 
+- See Parallel Programming for speed ups! 
 
 
 ---
@@ -175,8 +344,12 @@ It depends. Intuively:
 # What does bootstrapping show? 
 
 - Bootstrapping shows how much your estimates vary across samples
+
 - It shows the **sampling distribution** of your estimates
+
 - The 95% confidence interval is the 2.5th and 97.5th percentile of the sampling distribution
+  - Technically, there are a variety of ways to calculate the confidence interval, this is the most intuitive
+  - The "Basic bootstrap" or "Reverse percentile" method is the most common: `\(2\hat{\theta} - \theta^*_{1-\alpha/2}, 2 \hat{\theta} - \theta^*_{\alpha/2}\)`, but as you get started, use professionally-developed packages
 
 --
 
@@ -185,14 +358,13 @@ It depends. Intuively:
   - Your own sample is itself a random sample generated from some other random sample
 
 ---
-# A "simple" example
+# Back to loan forgiveness
 
-- Imagine you have an RCT, and you want to estimate the effect of a treatment on some outcome
-- There are two groups of treated users:
-  - Those for whom treatment effect is zero
-  - Those for whom treatment effect is one
+- Let's go back to that loan forgiveness example take use our initial sample of 1000 people, but without knowledge of who has loans
 
-On average the treatment effect is 0.5, but there is a lot of variation!
+- We'll use bootstrapping to estimate the variability of our estimates
+
+On average the treatment effect is 1000, but that varies a lot as the subsample shifts
 
 ---
 # Visualizing simple example
@@ -205,6 +377,11 @@ On average the treatment effect is 0.5, but there is a lot of variation!
 - Let's take a bunch of random samples and see how the average treatment effect varies
 
 &lt;img src="13-bootstrapping_files/figure-html/bootstrap-example-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Fewer bootstraps
+
+&lt;img src="13-bootstrapping_files/figure-html/bootstrap-example-few-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Now with a bigger sample
@@ -236,10 +413,15 @@ On average the treatment effect is 0.5, but there is a lot of variation!
 
 1. Calculate the standard error of your estimates 
   - Especially when you can't use analytical formulas (e.g. the median)
+
 2. Look for bias in your estimate: is the average of your bootstraps far off from your actual estimate? 
+
 3. Do power simulations on pilot data
+
 4. Generate "training data sets" for machine learning models
+
 5. Explore variation in model predictions as the sample changes
+
 6. Other robustness checks and more
 
 ---
@@ -281,660 +463,15 @@ Both are powerful ways to do bootstrapping when your data are in a format that m
 - Bootstrapping cannot save you if your sample is not representative
 
 ---
-# Limitations of packages
+# Packages
 
-- I used the boot package above! 
+- The **boot** package in one of many dedicated to bootstrapping
 
-- That handles many cases, but it can get a little slow for big data
+- It handles many cases, but it can get a little slow for big data
 
-- And it has built-in Parallel Programming, but it may not work on different systems
+- It has built-in Parallel Programming, but it may not work on different systems
 
 - Best to know how to do it yourself as well cause it is pretty easy once you get the hang of it!
-
----
-class: inverse, center, middle
-name: functions
-
-# Functions
-
----
-# What is a function?
-
-- In math, a function is a mapping from domain to range
-
-$$
-`\begin{align}
-f(x) = x^2 \quad \text{Takes a number from the domain and returns its square in the range} \\
-f(2) = 4 \quad \text{The function applied to 2 returns 4}
-\end{align}`
-$$
-
-- In programming, a function is a mapping from input to output
-
-
-```r
-square &lt;- function(x) {
-  x^2
-}
-
-square(2) # Returns 4
-```
-
-```
-## [1] 4
-```
-
----
-# Why use functions?
-
-- **Abstraction**
-  - They allow you to summarize complex details into a single line of code, so you only need to understand them once (instead of repeating yourself)
-
-- **Automation**
-  - Automate a task to happen many times without having to write the same code over and over
-
-- **Documentation**
-  - Well-written functions codify the steps you take to do something, so you can easily remember what you did
-
----
-# How do I write a function?
-
-In R, functions are defined using the `function` keyword
-
-
-```r
-some_function &lt;- function(positional_input1=1,positional_input2="two",keyword_inputs) {
-  # Do something with these inputs
-  # Create output or ouputs
-  return(output) # Return the output
-  # If you do not specify return, it returns the last object
-}
-```
-
-`function` takes keyword inputs and positional inputs. It does not require a specific order for these unlike in Python. But generally, position comes first.
-
----
-# Control flow: If/else logic
-
-Functions make great use of if/else logic
-
-
-```r
-square = 
-  function(x = NULL) {
-    
-    if (is.null(x)) { ## Start multi-line IF statement with `{`
-      x = 1
-      ## Message to users:
-      message("No input value provided. Using default value of 1.")
-      }               ## Close multi-line if statement with `}`
-    
-    x_sq = x^2 
-    d = data.frame(value = x, value_squared = x_sq)
-    
-    return(d)
-  }
-square()
-```
-
-```
-## No input value provided. Using default value of 1.
-```
-
-```
-##   value value_squared
-## 1     1             1
-```
-
-This function has a default value of 1 for when you fail to provide a value. 
-
----
-# Each step of bootstrap
-
-
-```r
-# library(tidyverse) # Already loaded
-set.seed(1)
-df &lt;- tibble(x = rnorm(1000, mean = 0, sd = 1),
-  y= x+rnorm(1000, mean = 0, sd = 1))
-
-bootstrap_sample &lt;- function(df) {
-  # 1. Draw a random sample with replacement of size N from your sample.
-  sample &lt;- df %&gt;% slice_sample(n = nrow(df), replace = TRUE)
-  # 2. Perform the same analysis, here a median, on the new sample.
-  return(coef(lm(y ~ x, data = sample))[2])
-}
-
-bootstrap_sample(df)
-```
-
-```
-##         x 
-## 0.9671832
-```
-
----
-# Wrapping up a function
-
-- You can wrap functions inside of other functions
-- This is a great way to make your code more readable and modular
-- Also useful for various iteration tasks that need to take an iterated input
-
-
-```r
-wrapper_bootstrap &lt;- function(i,df) {
-  # print(i) # if you want to visualize the i.
-  bootstrap_sample(df)
-}
-wrapper_bootstrap(1,df)
-```
-
-```
-##         x 
-## 0.9824952
-```
-
-
----
-# More on functions
-
-- There is a lot more to functions than we can cover today
-- Check out Grant McDermott's [Introudctory](https://grantmcdermott.com/ds4e/funcs-intro.htm) and [Advanced](https://grantmcdermott.com/ds4e/funcs-adv.html) chapters on functions
-- There are some incredible tips on how to:
-  - Debug functions
-  - Write functions that are easy to read
-  - Catch errors
-  - Cache or `memoise` big functions
-
----
-class: inverse, center, middle
-name: Iteration
-
-# Iteration
-
----
-# Iteration: For loops
-
-- You've likely heard of for loops before! 
-- They're the most common way to iterate across programming languages 
-- In R, the syntax is fairly simple: you iterative over a vector or list of values, and do stuff with those values
-
-
-```r
-for(i in 1:10) {
-  square(i)
-}
-```
-
----
-# Bootstrapping for loop
-
-To save output, you have to pre-define a list where you deposit the output
-
-
-```r
-deposit &lt;- vector("list",10) # preallocate list of 10 values
-set.seed(1)
-for (i in 1:10) {
-  # perform bootstrap
-  deposit[[i]] &lt;- bootstrap_sample(df)
-}
-
-bootstrapped_for &lt;- bind_rows(deposit)
-head(bootstrapped_for)
-```
-
-```
-## # A tibble: 6 × 1
-##       x
-##   &lt;dbl&gt;
-## 1 1.02 
-## 2 0.987
-## 3 0.997
-## 4 0.987
-## 5 0.947
-## 6 0.999
-```
-
----
-# Binding output
-
-- Did you notice the `bind_rows()` function I called?
-- After any iteration that leaves you a bunch of dataframes in a list, you'll want to put them together
-- The `bind_rows` function is a great way to bind together a list of data frames
-- Other options include: 
-  - `do.call(rbind, list_of_dataframes)`
-  - `data.table::rbindlist()`
-
----
-# Issues with for loops
-
-- For loops are slow in R
-- They clutter up your environment with extra variables (like the `i` indexer)
-- They can also be an absolute headache to debug if they get too nested
-- Look at the example below: this is a nested for loop that is hard to read and debug
-- In some languages, this is all you have, but not in R!
-
-
-```r
-for (i in 1:5) {
-  for (k in 1:5) {
-    if (i &gt; k) {
-      print(i*k)
-    }
-    else {
-      for (j in 1:5) {
-        print(i*j*k)
-      }
-    }
-  }
-}
-```
-
----
-# Tips on iterating
-
-- Start small! Set your iteration to 1 or 2 and make sure it works
-- Why?
-  - You'll know faster if it broke
-- Print where it is in the iteration (or use a progress bar with something like `pbapply`)
-
-
-```r
-for (i in 1:2) {
-  print(i)
-  # complex function
-}
-```
-
-```
-## [1] 1
-## [1] 2
-```
-
-
----
-# While loops
-
-- I'm largely skipping while loops, but they're also important! 
-
-- While loops iterate until one or more conditions are met
-  - Typically one condition is a max number of iterations
-  - Another conditions is that the some value of the loop is within a small amount of a target value
-
-- These are critical for numerical solvers, which are common in computational economics and machine learning
-
----
-# Iteration: apply family
-
-- R has a much more commonly used approach to iteration: the `*apply` family of functions: `apply`, `sapply`, `vapply`, `lapply`, `mapply`
-- The `*apply` family takes a function and applies it to each element of a list or vector
-- `lapply` is the most commonly used and returns a list back
-
-
-```r
-lapply(1:10, square)
-```
-
-```
-## [[1]]
-##   value value_squared
-## 1     1             1
-## 
-## [[2]]
-##   value value_squared
-## 1     2             4
-## 
-## [[3]]
-##   value value_squared
-## 1     3             9
-## 
-## [[4]]
-##   value value_squared
-## 1     4            16
-## 
-## [[5]]
-##   value value_squared
-## 1     5            25
-## 
-## [[6]]
-##   value value_squared
-## 1     6            36
-## 
-## [[7]]
-##   value value_squared
-## 1     7            49
-## 
-## [[8]]
-##   value value_squared
-## 1     8            64
-## 
-## [[9]]
-##   value value_squared
-## 1     9            81
-## 
-## [[10]]
-##   value value_squared
-## 1    10           100
-```
-
----
-# `*apply` syntax
-
-- The `*apply` family is a little confusing at first, but it's very powerful
-- The syntax is `*apply(list_or_vector, function, other_arguments)`
-- The `function` is a function that takes arguments like any other
-  - The first argument will be the element of the list or vector
-- The `other_arguments` are arguments that are passed to the function
-
----
-# Bootstrapping lapply
-
-- One trick: `*apply` insists on iterating over some sequence indexed `i` like a for-loop
-- But you can ignore it by using `function(i)` and then not using `i` in the function
-
-
-```r
-set.seed(1)
-lapply(1:10, function(i) bootstrap_sample(df=df)) %&gt;%
-  bind_rows()
-```
-
-```
-## # A tibble: 10 × 1
-##        x
-##    &lt;dbl&gt;
-##  1 1.02 
-##  2 0.987
-##  3 0.997
-##  4 0.987
-##  5 0.947
-##  6 0.999
-##  7 0.966
-##  8 0.983
-##  9 0.987
-## 10 0.987
-```
-
----
-# Wrapper functions to get around `*apply`
-
-- Maybe you don't like the ugly syntax of `function(i)` and then not using `i` in the function
-- Well you can write a wrapper function to get around that
-
-
-```r
-set.seed(1)
-lapply(1:10, wrapper_bootstrap, df=df) %&gt;%
-  bind_rows()
-```
-
-```
-## # A tibble: 10 × 1
-##        x
-##    &lt;dbl&gt;
-##  1 1.02 
-##  2 0.987
-##  3 0.997
-##  4 0.987
-##  5 0.947
-##  6 0.999
-##  7 0.966
-##  8 0.983
-##  9 0.987
-## 10 0.987
-```
-
----
-# Iteration: map
-
-- Sometimes the `*apply` syntax is a little confusing
-- The **purrr** package in the tidyverse has more intuitive syntax for iteration: `map`
-- The variant `map_df` is especially useful beause it automatically binds the output into a data frame
-  - The same iteration syntax applies here too. 
-
-
-```r
-set.seed(1)
-map_df(1:10, function(i) bootstrap_sample(df=df))
-```
-
-```
-## # A tibble: 10 × 1
-##        x
-##    &lt;dbl&gt;
-##  1 1.02 
-##  2 0.987
-##  3 0.997
-##  4 0.987
-##  5 0.947
-##  6 0.999
-##  7 0.966
-##  8 0.983
-##  9 0.987
-## 10 0.987
-```
-
----
-class: inverse, center, middle
-name: parallel
-
-# Parallel Programming
-
----
-# Motivating example: Parallel Programming
-
-- Imagine you get home from the grocery store with 100 bags of groceries
-- You have to bring them all inside, but you can only carry 2 at a time
-- That's 50 trips back and forth
-- How can you speed things up?
-
---
-
-  - Ask friends to carry to at a time with you (Parallel Programming)
-  - Get a cart and carry 10 at a time (more RAM and a better processor)
-
----
-# A warning
-
-- Parallel Programming is an incredibly powerful tool, but it is full of pitfalls
-
-- A friend of mine from the PhD said that he did not understand it until the 4th year of his PhD
-
-- Many economists understand the intuition, but not the details and only do it if absolutely necessary
-
-- That used to be me until I started teaching this class!
-
-- So if it is hard, that's normal. But it is worth learning!
-
----
-# "One trip?" okay
-
-&lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="imgs/maxresdefault.jpg" alt="One trip? Okay ,sure" width="75%" /&gt;
-&lt;p class="caption"&gt;One trip? Okay ,sure&lt;/p&gt;
-&lt;/div&gt;
-
----
-# Parallel Programming: What?
-
-- Your computer has multiple cores, which are like multiple brains
-- Each of these is capable of doing the same tasks
-- Parallel Programming is the act of using multiple cores to do the same task at the same time
-
---
-- Many coding tasks are "embarassingly parallel"
-  - That means they can be broken up into many small tasks that can be done at the same time
-  - Bootstrapping is one such example
-
-- Some tasks are not embarrassingly parallel
-  - These are called "serial" tasks
-  - Parts of these tasks may be possible to do in parallel
-
----
-# Parallel Programming vocab
-
-The vocab for Parallel Programming can get a little confusing:
-
-- **Socket**: A socket is a physical connection between a processor and the motherboard
-- **Core**: A core is a physical processor that can do computations
-- **Process**: A process is a task that is being done by a core (Windows users may know this from Task Manager)
-- **Thread**: A thread is a subtask of a process that can be done in parallel and share memory with other threads
-- **Cluster**: A cluster is a group of computers that can be used to do Parallel Programming
-- **Node**: One computer within a cluster
-
----
-# Parallel Programming in R
-
-- In R, there are many ways to parallel process, I'll introduce you to the **future.apply** package
-- There are many Parallel Programming packages in R, but **future.apply** follows the `*apply` family syntax
-
----
-# Trivial example: square numbers
-
-- Let's start with some trivial to understand examples
-
-- Here is a function called `slow_square`, which takes a number and squares it, but after a pause.
-
-
-```r
-## Emulate slow function
-slow_square = 
-  function(x = 1) {
-    x_sq = x^2 
-    d = data.frame(value = x, value_squared = x_sq)
-    Sys.sleep(2) # literally do nothing for two seconds
-    return(d)
-    }
-```
-
-Let's time that quickly.
-
-
-```r
-# library(tictoc) ## Already loaded
-
-tic()
-serial_ex = lapply(1:12, slow_square)
-toc(log = TRUE)
-```
-
-```
-## 24.82 sec elapsed
-```
-
----
-# Now in parallel
-
-
-```r
-# library(future.apply)  ## Already loaded
-# plan(multisession)     ## Already set above
-
-tic()
-future_ex = future_lapply(1:12, slow_square)
-toc(log = TRUE)
-```
-
-```
-## 5.64 sec elapsed
-```
-
-```r
-all.equal(serial_ex, future_ex)
-```
-
-```
-## [1] TRUE
-```
-
----
-# Example: bootstrapping in parallel
-
-- The future_lapply works the same, but now I have to set the seed inside the function
-
-
-```r
-set.seed(1)
-tic()
-serial_boot &lt;- lapply(1:1e4, function(i) bootstrap_sample(df)) %&gt;%
-  bind_rows()
-toc(log = TRUE)
-```
-
-```
-## 34.5 sec elapsed
-```
-
-```r
-tic()
-parallel_boot &lt;- future_lapply(1:1e4, 
-  function(i) bootstrap_sample(df), 
-  future.seed=1) %&gt;%
-  bind_rows()
-toc(log = TRUE)
-```
-
-```
-## 19.06 sec elapsed
-```
-
----
-# Want to use `map`? Try **furrr**
-
-The **furrr** package, i.e. future **purrrr** is a Parallel Programming version of **purrr**
-
-- Again, the syntax is the same, but you have to set the seed inside the function with `.options`.
-
-
-```r
-tic()
-furrr_boot = future_map_dfr(1:1e4, 
-  function(i) bootstrap_sample(df), 
-  .options = furrr_options(seed=1))
-toc(log = TRUE)
-```
-
-```
-## 15.91 sec elapsed
-```
-
----
-# Get standard errors from results
-
-- Now that we have a bunch of estimates, we can get the standard error of our estimates
-- The 95% confidence interval is just the 2.5th and 97.5th percentile of the sampling distribution
-
-&lt;img src="13-bootstrapping_files/figure-html/bootstrapping-density-1.png" style="display: block; margin: auto;" /&gt;
-
----
-# R packages that use Parallel Programming
-
-- Many R packages already use Parallel Programming
-- `feols()` from **fixest** uses Parallel Programming to speed up OLS estimation
-  - You can control how using the `nthreads` argument
-- **data.table** uses Parallel Programming to speed up data wrangling
-- **boot** and **sandwich** can use Parallel Programming to speed up bootstrapping
-- And many others do the same
-
----
-# Parallel Programming: Why?
-
-- Parallel Programming is a great way to speed up your code and often there are straight-forward ways to do it
-- It is not always worth doing:
-  - Theoretically, the gain should be linear: each additional node should speed up your code by the same amount
-  - In practice, there are "overhead" costs to Parallel Programming that can slow things down
-  - **Overhead costs**: reading in and subsetting data, tracking each node 
-
----
-# Across computer clusters
-
-- Parallel Programming is also a way to speed up your code across multiple computers
-- This is called "distributed computing"
-- It is a way to speed up your code when you have a lot of data and a lot of computers
-- Imagine you have 1000 computers, each with 1/1000th of your data
-- You can run the same code on each computer, and then combine the results
-- Same logic, but the "overhead" costs are higher
 
 ---
 # What next?
@@ -943,12 +480,12 @@ toc(log = TRUE)
 
 - Better yet, learn to do it in parallel
 
-- Navigate to the lecture activity [13a-bootstrapping-functions-practice](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials/blob/main/lectures/12a-rdd-class-sizes/13a-bootstrapping-practice.Rmd)
+- Navigate to the lecture activity [13a-bootstrapping-functions-practice](https://github.com/big-data-and-economics/big-data-class-materials/blob/main/lectures/12a-rdd-class-sizes/13a-bootstrapping-practice.Rmd)
 
 ---
 class: inverse, center, middle
 
-# Next lecture: Decision Trees
+# Next lecture: Functions
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
 
 
