@@ -139,12 +139,13 @@ set.seed(1)
 pop <- tibble(forgiveness = sample(c(0,1), 1e6, replace = TRUE),
   had_loan = factor(sample(c(0,1), 1e6, replace = TRUE, prob=c(0.8,0.2)),labels=c("No loan","Had loan"),levels=c(0,1)),
   savings  = rnorm(1e6, mean = 0, sd = 1)*1000 + 5000*forgiveness*(as.integer(had_loan)-1))
+true_regression <- feols(savings ~ forgiveness, data = pop)
 samp <- pop %>% slice_sample(n = 500, by="forgiveness")
 ```
 
 ```{r fixest,echo=TRUE}
 savings <- feols(savings ~ forgiveness, data = samp) 
-etable(savings,se.below=TRUE,fitstat=c('n')) %>% kable() # Make it prettier
+etable(list('Truth'=true_regression, 'Sample'=savings),se.below=TRUE,fitstat=c('n')) %>% kable() # Make it prettier
 ```
 
 Any concerns? 
@@ -155,16 +156,16 @@ Any concerns?
 You take two new samples and get:
 
 ```{r new-samples,echo=FALSE}
-samp1 <- pop %>% filter(had_loan == "No loan") %>% slice_sample(n = 500, by="forgiveness")
-samp2 <- pop %>% filter(had_loan=="Had loan") %>% slice_sample(n = 500, by="forgiveness")
+samp2 <- pop %>% filter(had_loan == "No loan") %>% slice_sample(n = 500, by="forgiveness")
+samp3 <- pop %>% filter(had_loan=="Had loan") %>% slice_sample(n = 500, by="forgiveness")
 ```
 
 --
 
 ```{r savings-samples}
-savings_new1 <- feols(savings ~ forgiveness, data = samp1) 
 savings_new2 <- feols(savings ~ forgiveness, data = samp2) 
-etable(savings,savings_new1,savings_new2, se.below=TRUE,fitstat=c('n')) %>% kable() # Make it prettier
+savings_new3 <- feols(savings ~ forgiveness, data = samp3) 
+etable(list('Truth'=true_regression, 'Sample 1'=savings, 'Sample 2'=savings_new2, 'Sample 3'=savings_new3), se.below=TRUE,fitstat=c('n')) %>% kable() # Make it prettier
 ```
 
 ---
@@ -178,10 +179,10 @@ etable(savings,savings_new1,savings_new2, se.below=TRUE,fitstat=c('n')) %>% kabl
 - You discover the following breakdown: 
 
 ```{r new-samples-df,echo=FALSE}
-coefficients <- bind_rows(savings$coefficients,savings_new1$coefficients,savings_new2$coefficients)
-bind_rows(samp,samp1,samp2,.id="sample") %>% 
+coefficients <- bind_rows(savings$coefficients,savings_new2$coefficients,savings_new3$coefficients)
+bind_rows(samp,samp2,samp3,.id="sample") %>% 
   group_by(sample) %>% 
-  summarise(share_with_loan = mean(had_loan)) %>%
+  summarise(share_with_loan = mean(had_loan=='Has Loan')) %>%
   bind_cols(coefficients) %>% kable()
 ```
 
@@ -356,15 +357,18 @@ boot_reg <- function(df1=samp) {
   return(coefficients(result)[2])
 }
 bootstrap_results <- future_map_dfr(1:1000,function(i) boot_reg(df1=samp),.options=furrr_options(seed=1)) 
+```
 
-bootstrap_results %>%
+```{r bootstrap-example-plot,echo=FALSE,warning=FALSE}
+plot_results <- bootstrap_results %>%
   ggplot(aes(x = forgiveness)) +
   geom_histogram(bins = 40) +
   geom_vline(xintercept = samp_effect, color = "red", size = 1) +
-  geom_text(x=samp_effect-30, y=60, label="Sample estimate", hjust=0, angle=90, col="red",size=12) +
+  geom_text(x=samp_effect-30, y=30, label="Sample estimate", hjust=0, angle=90, col="red") +
   geom_vline(xintercept = true_effect, color = "blue", size = 1) +
-  geom_text(x=true_effect-30, y=60, label="True effect", hjust=0, angle=90, col="blue",size=12) +
-  labs(x = "Average treatment effect", y = "Frequency", title = "Distribution of ATE across bootstramp samples")
+  geom_text(x=true_effect-30, y=30, label="True effect", hjust=0, angle=90, col="blue") +
+  labs(x = "Average treatment effect", y = "Frequency", title = "Distribution of ATE")
+plot_results
 ```
 
 ---
@@ -375,10 +379,10 @@ head(bootstrap_results,100) %>%
   ggplot(aes(x = forgiveness)) +
   geom_histogram(bins = 40) +
   geom_vline(xintercept = samp_effect, color = "red", size = 1) +
-  geom_text(x=samp_effect-30, y=60, label="Sample estimate", hjust=0, angle=90, col="red",size=12) +
+  geom_text(x=samp_effect-10, y=30, label="Sample estimate", hjust=0, angle=90, col="red") +
   geom_vline(xintercept = true_effect, color = "blue", size = 1) +
-  geom_text(x=true_effect-30, y=60, label="True effect", hjust=0, angle=90, col="blue",size=12) +
-  labs(x = "Average treatment effect", y = "Frequency", title = "Distribution of ATE across bootstramp samples")
+  geom_text(x=true_effect-10, y=30, label="True effect", hjust=0, angle=90, col="blue") +
+  labs(x = "Average treatment effect", y = "Frequency", title = "Distribution of ATE with fewer bootstraps")
 ```
 
 ---
@@ -391,16 +395,40 @@ set.seed(1)
 samp_big <- pop %>% slice_sample(n = 5000, replace = TRUE,by="forgiveness")
 samp_big_effect <- coefficients(feols(savings ~ forgiveness, data=samp_big))[2]
 big_bootstrap_results <- future_map_dfr(1:1000,function(i) boot_reg(df1=samp_big),.options=furrr_options(seed=1)) 
+```
 
-big_bootstrap_results %>%
+```{r bootstrap-example-big-plot,echo=FALSE,warning=FALSE,cache=TRUE}
+big_results <- big_bootstrap_results %>%
   ggplot(aes(x = forgiveness)) +
   geom_histogram(bins = 40) +
-  geom_vline(xintercept = samp_effect, color = "red", size = 1) +
-  geom_text(x=samp_effect-30, y=60, label="Sample estimate", hjust=0, angle=90, col="red",size=12) +
+  geom_vline(xintercept = samp_big_effect, color = "red", size = 1) +
+  geom_text(x=samp_big_effect-5, y=30, label="Sample estimate", hjust=0, angle=90, col="red") +
   geom_vline(xintercept = true_effect, color = "blue", size = 1) +
-  geom_text(x=true_effect-30, y=60, label="True effect", hjust=0, angle=90, col="blue",size=12) +
-  labs(x = "Average treatment effect", y = "Frequency", title = "Distribution of ATE across bootstramp samples with bigger sample")
+  geom_text(x=true_effect-5, y=30, label="True effect", hjust=0, angle=90, col="blue") +
+  labs(x = "Average treatment effect", y = "Frequency", title = "Distribution of ATE with bigger sample")
+big_results
 ```
+
+
+---
+# Get standard errors from results
+
+- Now that we have a bunch of estimates, we can get the standard error of our estimates
+- Take the 2.5th and 97.5th percentiles to get one type of 95% Confidence Interval<sup>3</sup>
+
+```{r bootstrapping-density,echo=FALSE,warning=FALSE,fig.size='90%'}
+lwr <- big_bootstrap_results %>% pull(forgiveness) %>% quantile(0.025)
+upr <- big_bootstrap_results %>% pull(forgiveness) %>% quantile(0.975)
+
+big_results +
+    geom_vline(xintercept=lwr, col="purple", linetype="dashed") +
+    geom_text(x=lwr-5, y=60, label="Lower 95% CI", hjust=0,angle=90, col="purple") +
+    geom_vline(xintercept=upr, col="purple", linetype="dashed") +
+    geom_text(x=upr-5, y=60, label="Upper 95% CI", hjust=0,angle=90, col="purple") +
+    labs(x = "Average treatment effect", y = "Frequency", title = "CI of ATE across bootstrap samples")
+```
+
+.footnote[<sup>3</sup> There are a variety of ways to calculate the confidence interval, this is the most intuitive, but it is not the most econometrically sound. See the "Basic bootstrap" or "Reverse percentile" method.]
 
 ---
 # Bootstrapping assumptions

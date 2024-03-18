@@ -143,22 +143,22 @@ Imagine a simple example:
 
 ```r
 savings &lt;- feols(savings ~ forgiveness, data = samp) 
-etable(savings,se.below=TRUE,fitstat=c('n')) %&gt;% kable() # Make it prettier
+etable(list('Truth'=true_regression, 'Sample'=savings),se.below=TRUE,fitstat=c('n')) %&gt;% kable() # Make it prettier
 ```
 
 
 
-|                |savings    |
-|:---------------|:----------|
-|Dependent Var.: |savings    |
-|                |           |
-|Constant        |-33.99     |
-|                |(79.11)    |
-|forgiveness     |1,115.3*** |
-|                |(111.9)    |
-|_______________ |__________ |
-|S.E. type       |IID        |
-|Observations    |1,000      |
+|                |Truth     |Sample     |
+|:---------------|:---------|:----------|
+|Dependent Var.: |savings   |savings    |
+|                |          |           |
+|Constant        |-0.5116   |-33.99     |
+|                |(2.447)   |(79.11)    |
+|forgiveness     |996.4***  |1,115.3*** |
+|                |(3.462)   |(111.9)    |
+|_______________ |________  |__________ |
+|S.E. type       |IID       |IID        |
+|Observations    |1,000,000 |1,000      |
 
 Any concerns? 
 
@@ -173,24 +173,24 @@ You take two new samples and get:
 
 
 ```r
-savings_new1 &lt;- feols(savings ~ forgiveness, data = samp1) 
 savings_new2 &lt;- feols(savings ~ forgiveness, data = samp2) 
-etable(savings,savings_new1,savings_new2, se.below=TRUE,fitstat=c('n')) %&gt;% kable() # Make it prettier
+savings_new3 &lt;- feols(savings ~ forgiveness, data = samp3) 
+etable(list('Truth'=true_regression, 'Sample 1'=savings, 'Sample 2'=savings_new2, 'Sample 3'=savings_new3), se.below=TRUE,fitstat=c('n')) %&gt;% kable() # Make it prettier
 ```
 
 
 
-|                |savings    |savin..1 |savings..2 |
-|:---------------|:----------|:--------|:----------|
-|Dependent Var.: |savings    |savings  |savings    |
-|                |           |         |           |
-|Constant        |-33.99     |11.00    |12.99      |
-|                |(79.11)    |(43.88)  |(44.27)    |
-|forgiveness     |1,115.3*** |-12.39   |5,023.1*** |
-|                |(111.9)    |(62.06)  |(62.61)    |
-|_______________ |__________ |________ |__________ |
-|S.E. type       |IID        |IID      |IID        |
-|Observations    |1,000      |1,000    |1,000      |
+|                |Truth     |Sample 1   |Sample 2 |Sample 3   |
+|:---------------|:---------|:----------|:--------|:----------|
+|Dependent Var.: |savings   |savings    |savings  |savings    |
+|                |          |           |         |           |
+|Constant        |-0.5116   |-33.99     |11.00    |12.99      |
+|                |(2.447)   |(79.11)    |(43.88)  |(44.27)    |
+|forgiveness     |996.4***  |1,115.3*** |-12.39   |5,023.1*** |
+|                |(3.462)   |(111.9)    |(62.06)  |(62.61)    |
+|_______________ |________  |__________ |________ |__________ |
+|S.E. type       |IID       |IID        |IID      |IID        |
+|Observations    |1,000,000 |1,000      |1,000    |1,000      |
 
 ---
 # What the heck?
@@ -203,23 +203,11 @@ etable(savings,savings_new1,savings_new2, se.below=TRUE,fitstat=c('n')) %&gt;% k
 - You discover the following breakdown: 
 
 
-```
-## Warning: There were 3 warnings in `summarise()`.
-## The first warning was:
-## ℹ In argument: `share_with_loan = mean(had_loan)`.
-## ℹ In group 1: `sample = "1"`.
-## Caused by warning in `mean.default()`:
-## ! argument is not numeric or logical: returning NA
-## ℹ Run `dplyr::last_dplyr_warnings()` to see the 2 remaining warnings.
-```
-
-
-
 |sample | share_with_loan| (Intercept)| forgiveness|
 |:------|---------------:|-----------:|-----------:|
-|1      |              NA|   -33.99083|  1115.28902|
-|2      |              NA|    11.00434|   -12.39388|
-|3      |              NA|    12.99163|  5023.06071|
+|1      |               0|   -33.99083|  1115.28902|
+|2      |               0|    11.00434|   -12.39388|
+|3      |               0|    12.99163|  5023.06071|
 
 The share treated changed in each sample and the point estimate of `\(\beta_1\)` changed accordingly
 
@@ -376,7 +364,9 @@ On average the treatment effect is 1000, but that varies a lot as the subsample 
 
 - Let's take a bunch of random samples and see how the average treatment effect varies
 
-&lt;img src="13-bootstrapping_files/figure-html/bootstrap-example-1.png" style="display: block; margin: auto;" /&gt;
+
+
+&lt;img src="13-bootstrapping_files/figure-html/bootstrap-example-plot-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Fewer bootstraps
@@ -388,7 +378,20 @@ On average the treatment effect is 1000, but that varies a lot as the subsample 
 
 - With a larger baseline sample, the distribution of the average treatment effect is tighter
 
-&lt;img src="13-bootstrapping_files/figure-html/bootstrap-example-big-1.png" style="display: block; margin: auto;" /&gt;
+
+
+&lt;img src="13-bootstrapping_files/figure-html/bootstrap-example-big-plot-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Get standard errors from results
+
+- Now that we have a bunch of estimates, we can get the standard error of our estimates
+- Take the 2.5th and 97.5th percentiles to get one type of 95% Confidence Interval&lt;sup&gt;3&lt;/sup&gt;
+
+&lt;img src="13-bootstrapping_files/figure-html/bootstrapping-density-1.png" style="display: block; margin: auto;" /&gt;
+
+.footnote[&lt;sup&gt;3&lt;/sup&gt; There are a variety of ways to calculate the confidence interval, this is the most intuitive, but it is not the most econometrically sound. See the "Basic bootstrap" or "Reverse percentile" method.]
 
 ---
 # Bootstrapping assumptions
