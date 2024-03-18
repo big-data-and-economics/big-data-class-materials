@@ -388,23 +388,23 @@ head(bootstrap_results,100) %>%
 ---
 # Now with a bigger sample
 
-- With a larger baseline sample, the distribution of the average treatment effect is tighter
+- With a larger baseline sample ($N=2500$), the distribution of the average treatment effect is tighter
 
-```{r bootstrap-example-big,echo=FALSE,warning=FALSE,cache=TRUE}
+```{r bootstrap-example-big,echo=FALSE,warning=FALSE}
 set.seed(1)
-samp_big <- pop %>% slice_sample(n = 5000, replace = TRUE,by="forgiveness")
+samp_big <- pop %>% slice_sample(n = 2500, replace = TRUE,by="forgiveness")
 samp_big_effect <- coefficients(feols(savings ~ forgiveness, data=samp_big))[2]
-big_bootstrap_results <- future_map_dfr(1:1000,function(i) boot_reg(df1=samp_big),.options=furrr_options(seed=1)) 
+big_bootstrap_results <- future_map_dfr(1:1000,function(i) boot_reg(df1=samp_big),.options=furrr_options(seed=1))
 ```
 
-```{r bootstrap-example-big-plot,echo=FALSE,warning=FALSE,cache=TRUE}
+```{r bootstrap-example-big-plot,echo=FALSE,warning=FALSE}
 big_results <- big_bootstrap_results %>%
   ggplot(aes(x = forgiveness)) +
   geom_histogram(bins = 40) +
   geom_vline(xintercept = samp_big_effect, color = "red", size = 1) +
-  geom_text(x=samp_big_effect-5, y=30, label="Sample estimate", hjust=0, angle=90, col="red") +
+  geom_text(x=samp_big_effect-8, y=30, label="Sample estimate", hjust=0, angle=90, col="red") +
   geom_vline(xintercept = true_effect, color = "blue", size = 1) +
-  geom_text(x=true_effect-5, y=30, label="True effect", hjust=0, angle=90, col="blue") +
+  geom_text(x=true_effect-8, y=30, label="True effect", hjust=0, angle=90, col="blue") +
   labs(x = "Average treatment effect", y = "Frequency", title = "Distribution of ATE with bigger sample")
 big_results
 ```
@@ -413,18 +413,17 @@ big_results
 ---
 # Get standard errors from results
 
-- Now that we have a bunch of estimates, we can get the standard error of our estimates
-- Take the 2.5th and 97.5th percentiles to get one type of 95% Confidence Interval<sup>3</sup>
+- Now that we have a bunch of estimates, take the 2.5th and 97.5th percentiles to get a type of 95% Confidence Interval<sup>3</sup>
 
-```{r bootstrapping-density,echo=FALSE,warning=FALSE,fig.size='90%'}
+```{r bootstrapping-density,echo=FALSE,warning=FALSE,out.width='80%'}
 lwr <- big_bootstrap_results %>% pull(forgiveness) %>% quantile(0.025)
 upr <- big_bootstrap_results %>% pull(forgiveness) %>% quantile(0.975)
 
 big_results +
     geom_vline(xintercept=lwr, col="purple", linetype="dashed") +
-    geom_text(x=lwr-5, y=60, label="Lower 95% CI", hjust=0,angle=90, col="purple") +
+    geom_text(x=lwr-8, y=30, label="Lower 95% CI", hjust=0,angle=90, col="purple") +
     geom_vline(xintercept=upr, col="purple", linetype="dashed") +
-    geom_text(x=upr-5, y=60, label="Upper 95% CI", hjust=0,angle=90, col="purple") +
+    geom_text(x=upr-8, y=30, label="Upper 95% CI", hjust=0,angle=90, col="purple") +
     labs(x = "Average treatment effect", y = "Frequency", title = "CI of ATE across bootstrap samples")
 ```
 

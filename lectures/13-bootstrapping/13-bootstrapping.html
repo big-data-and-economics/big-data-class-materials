@@ -376,7 +376,7 @@ On average the treatment effect is 1000, but that varies a lot as the subsample 
 ---
 # Now with a bigger sample
 
-- With a larger baseline sample, the distribution of the average treatment effect is tighter
+- With a larger baseline sample ($N=2500$), the distribution of the average treatment effect is tighter
 
 
 
@@ -386,10 +386,9 @@ On average the treatment effect is 1000, but that varies a lot as the subsample 
 ---
 # Get standard errors from results
 
-- Now that we have a bunch of estimates, we can get the standard error of our estimates
-- Take the 2.5th and 97.5th percentiles to get one type of 95% Confidence Interval&lt;sup&gt;3&lt;/sup&gt;
+- Now that we have a bunch of estimates, take the 2.5th and 97.5th percentiles to get a type of 95% Confidence Interval&lt;sup&gt;3&lt;/sup&gt;
 
-&lt;img src="13-bootstrapping_files/figure-html/bootstrapping-density-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="13-bootstrapping_files/figure-html/bootstrapping-density-1.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 .footnote[&lt;sup&gt;3&lt;/sup&gt; There are a variety of ways to calculate the confidence interval, this is the most intuitive, but it is not the most econometrically sound. See the "Basic bootstrap" or "Reverse percentile" method.]
 
