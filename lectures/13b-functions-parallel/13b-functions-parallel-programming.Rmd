@@ -370,6 +370,14 @@ name: parallel
   - Ask friends to carry to at a time with you (Parallel Programming)
   - Get a cart and carry 10 at a time (more RAM and a better processor)
 
+
+---
+# "One trip?" okay
+
+```{r one-trip, echo=FALSE, out.width="75%", fig.cap="One trip? Okay ,sure",cache=FALSE}
+knitr::include_graphics("imgs/maxresdefault.jpg")
+```
+
 ---
 # A warning
 
@@ -382,13 +390,6 @@ name: parallel
 - That used to be me until I started teaching this class!
 
 - So if it is hard, that's normal. But it is worth learning!
-
----
-# "One trip?" okay
-
-```{r one-trip, echo=FALSE, out.width="75%", fig.cap="One trip? Okay ,sure",cache=FALSE}
-knitr::include_graphics("imgs/maxresdefault.jpg")
-```
 
 ---
 # Parallel Programming: What?
