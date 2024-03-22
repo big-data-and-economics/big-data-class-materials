@@ -432,12 +432,13 @@ toc(log=TRUE)
 ```r
 set.seed(123L)
 tic()
-sim_pblapply = pblapply(1:1e3, function(i) random_sample_ols(cleaned_resumes), cl = parallel::detectCores())
+sim_pblapply = pblapply(1:1e3, function(i) 
+  random_sample_ols(cleaned_resumes), cl = parallel::detectCores())
 toc(log=TRUE)
 ```
 
 ```
-## 17.88 sec elapsed
+## 28.42 sec elapsed
 ```
 
 ### furrr

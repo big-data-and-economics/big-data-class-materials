@@ -1860,9 +1860,10 @@ in parallel.</p>
 <h4>pbapply</h4>
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span><span class="dt">L</span>)</span>
 <span id="cb26-2"><a href="#cb26-2" tabindex="-1"></a><span class="fu">tic</span>()</span>
-<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>sim_pblapply <span class="ot">=</span> <span class="fu">pblapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fl">1e3</span>, <span class="cf">function</span>(i) <span class="fu">random_sample_ols</span>(cleaned_resumes), <span class="at">cl =</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>())</span>
-<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a><span class="fu">toc</span>(<span class="at">log=</span><span class="cn">TRUE</span>)</span></code></pre></div>
-<pre><code>## 17.88 sec elapsed</code></pre>
+<span id="cb26-3"><a href="#cb26-3" tabindex="-1"></a>sim_pblapply <span class="ot">=</span> <span class="fu">pblapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="fl">1e3</span>, <span class="cf">function</span>(i) </span>
+<span id="cb26-4"><a href="#cb26-4" tabindex="-1"></a>  <span class="fu">random_sample_ols</span>(cleaned_resumes), <span class="at">cl =</span> parallel<span class="sc">::</span><span class="fu">detectCores</span>())</span>
+<span id="cb26-5"><a href="#cb26-5" tabindex="-1"></a><span class="fu">toc</span>(<span class="at">log=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## 28.42 sec elapsed</code></pre>
 </div>
 </div>
 <div id="furrr" class="section level3">
