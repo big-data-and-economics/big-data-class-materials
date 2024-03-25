@@ -34,7 +34,7 @@ opts_chunk$set(
   )
 
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidymodels,tidyverse)
+pacman::p_load(tidymodels,tidyverse,causaldata,fixest)
 theme_set(theme_minimal())
 ```
 
@@ -63,9 +63,6 @@ name: prologue
 ---
 # Prologue
 
-- .hi[Computers closed:] Introduction to Machine Learning
-- .hi[Computers open:] Application of **tidymodels** in R to train ML models
-
 - We'll discuss the differences between machine learning and econometrics
   - What can each camp learn from the other?
 
@@ -74,6 +71,21 @@ name: prologue
   - What are the goals? How do we measure accuracy?
   - What is the bias-variance tradeoff?
   - How do we tune models?
+
+---
+# Hack-a-thon
+
+---
+# Questions
+
+---
+# Attribution
+
+These slides are largely adapted from [Tyler Ransom's graduate course at the University of Oklahoma])https://raw.githack.com/tyleransom/DScourseS23/master/LectureNotes/19-Intro-ML/19slides.html#1
+
+- He gets more into the weeds than I do here
+
+- Give it a look if you think this stuff is cool!
 
 ---
 class: inverse, center, middle
@@ -150,70 +162,6 @@ name: econometrics-vs-ml
 
     - It helps to lay out exactly what the strengths of limitations of each approach is, so that we know what the comparative advantage is of each
 
-- Why is it important to be aware of so-called "data fallacies"?
-
----
-# Data Fallacies
-Let's briefly discuss the following Data Fallacies (full content available [here](https://www.geckoboard.com/learn/data-literacy/statistical-fallacies/#.Ws0BvOgbNmM), download a [PDF](https://www.geckoboard.com/assets/data-fallacies-to-avoid.pdf) of the image below)
-
-.center[
-```{r echo = FALSE,fig.height=8,fig.retina=.75,cache=FALSE}
-knitr::include_graphics("imgs/dataLiteracy.jpg")
-```
-]
-
----
-# Importance of data
-
-- In social science (and business) settings, we are typically interested in understanding various phenomena
-
-    * Will improving a neighborhood improve people's chances of escaping poverty?
-
-    * Will increasing the minimum wage increase unemployment? 
-      - What about an increase to the Earned Income Tax Credit?
-
-    * How does reducing the price of healthcare change health outcomes?
-
-- We can try to answer these questions using economic theory
-
-- But in many cases theory only predicts a sign, not a magnitude
-
----
-# Types of variables
-
-There are typically three .hi[types of variables] available to us in any kind of data set:
-1. Outcome variable
-    * It is the variable we are trying to explain (earnings, employment, job applications, physical health, etc.)
-2. Treatment variable
-    * It is a variable that can be changed by a policymaker to affect outcomes (minimum wage, class size, insurance, etc.)
-3. Control variables
-    * These are variables that explain outcomes, but that cannot be changed by a policymaker (e.g. demographic variables, longstanding cultural traditions, medical technology etc.)
-
-<!-- ---
-# Types of data sets
-
-Whether your data set is big or small, there are three main .hi[types of data sets]:
-
-1. Observational data
-    * Data is collected without any attempt to modify the treatment variable. We see the world "as it is." All variation in the treatment variable is non-random
-2. Quasi-experimental data
-    * Observational data, but where we observe some additional variables that are randomly (or as-if randomly) assigned, but not by the data collector
-3. Experimental data
-    * Data collected where data collector personally manipulates the treatment variable(s). In a *randomized experiment*, units of observation are randomly assigned to various levels of treatment -->
-
----
-# Scarcity of high-quality data
-
-How ubiquitous are the three types of data?
-
-* .hi[Observational data] is by far the most common type of data. Why? because it's much easier to collect: we simply need to measure the variables we're interested in. And observational data can be used for many different purposes
-
-* .hi[Quasi-experimental data] is the next most common type. This is observational data, but restricted to instances where there are some randomly or quasi-randomly assigned variable(s) available
-
-* .hi[Experimental data] is least common, simply because it costs money to run an experiment, and typically the experiment is used to analyze a specific question, and can't easily be used to answer other questions
-
-Which fallacies is machine learning good at addressing? Which fallacies is econometrics good at addressing?
-
 ---
 name: goals-of-econometrics
 # Goal of econometrics
@@ -226,13 +174,6 @@ The goal of econometrics is to make counterfactual predictions:
 
 - What *would happen* to labor supply if the earned income tax credit were increased?
 
-- Other ideas?
-
----
-# Goal of econometrics (cont'd)
-
-- We don't get to observe the world under these alternative policies, so we can't simply find the answers in the data
-
 - Knowing the counterfactual requires being able to measure a .hi[causal effect]
 
     - i.e. "the goal of econometrics is to find $\hat{\beta}$" where here we mean $\hat{\beta}$ to be the causal impact of $X$ on $y$
@@ -240,32 +181,15 @@ The goal of econometrics is to make counterfactual predictions:
 - Being able to measure a causal effect requires making assumptions. That's what economics is all about!
 
 ---
-# Ways to measure causal effects (cont'd)
-
---
-
-1. Field experiments (i.e. collect experimental data)
-    * Causal effects immediately visible due to experimental design
-
-2. "Reduced form" methods using quasi-experimental or observational data
-    * These methods include instrumental variables, regression discontinuity, and difference-in-differences (among others)
-    * The goal is to separate "good" variation (i.e. randomness in the instrument or randomness in the cutoff) from "bad" variation (non-random variation in treatment)
-
-3. Structural models using observational data
-    * Make assumptions (e.g. profit maximization, rational decision-making)
-    * Estimate primitives of an economic model (e.g. preferences, production fn.)
-    * Use the estimated primitives to predict what would happen under a counterfactual scenario
-
----
 # Primary statistical concern of 'metrics
 
-- The primary statistical concern of econometrics is sampling error
+- A primary _statistical_ concern of econometrics is sampling error
 
     - In other words, the goal is to quantify the uncertainty around $\hat{\beta}$ due to randomness in the sampling of the population 
     
     - This is the infamous standard error that econometricians obsess over
 
-- One wild thing about econometrics is that there is no format attention paid to model misspecification error! 
+- One wild thing about econometrics is that there is (almost) no formal attention paid to model misspecification error! 
 
     - The functional form and specification of the model are assumed to be 100% correct, such that the only error that remains is the sampling error
     
@@ -315,11 +239,6 @@ name: goals-of-ml
 ---
 # Machine learning methods in economics
 
-- .hi[Regression penalization]: which of all these variables do I put in my regression?
-  - .hi[LASSO:] penalizes the sum of the absolute values of coefficients in model
-  - .hi[Ridge:] penalizes the sum of the squared values of coefficients in model
-  - Example: [Derenoncourt (2022)](https://pubs.aeaweb.org/doi/pdfplus/10.1257/aer.20200002) predicts historical Black migration patterns to estimate the effect of the Great Migration on upward mobility in black communities
-
 - .hi[Decision trees]: which variables give me the best prediction?
   - .hi[Random Forests]: (roughly) aggregate your trees to get better predictions
   - Example: [Kleinberg et al. (2018)](https://academic.oup.com/qje/article-abstract/133/1/237/4095198) use trees + qausirandom assignment of judges to predict optimal bail decisions that minimize crime to assess "mistakes" by judges
@@ -329,12 +248,16 @@ name: goals-of-ml
   - Sometimes leverages .hi[bootstrapping]
   - Example: [Jon Davis and Sara Heller (2017)](https://www.aeaweb.org/articles?id=10.1257/aer.p20171000) estimate how treatment effects vary for at-risk youth in a summer job program
 
+- .hi[Regression penalization]: which of all these variables do I put in my regression?
+  - .hi[LASSO:] penalizes the sum of the absolute values of coefficients in model
+  - .hi[Ridge:] penalizes the sum of the squared values of coefficients in model
+  - Example: [Derenoncourt (2022)](https://pubs.aeaweb.org/doi/pdfplus/10.1257/aer.20200002) predicts historical Black migration patterns to estimate the effect of the Great Migration on upward mobility in black communities
+
 ---
 class: inverse, center, middle
 name: fundamentals-of-ml
 
 # Fundamentals of Machine Learning
-
 
 ---
 # Objective of Machine Learning
@@ -344,7 +267,7 @@ The fundamental objective is to maximize out-of-sample "fit"
 
 * The solution is to choose functions that predict well in-sample, but penalize them from being too complex
 
-* .hi[Regularization] is the tool by which in-sample fit is penalized, i.e. regularization prevents overly complex functions from being chosen by the algorithm
+* .hi[Regularization] is the tool by which in-sample fit is penalized, i.e. regularization prevents overly complex functions
 
 * .hi[Overfitting] is when we put too much emphasis on in-sample fit, leading us to make poor out-of-sample fit
 
@@ -372,48 +295,128 @@ The algorithm typically comes with .hi[tuning parameters] which are ways to regu
 .hi[Cross-validation] is how tuning parameters are chosen
 
 ---
+# Typical ML workflow
+
+1. Split a dataset into a train and test set or training, validation, and test set
+  - Do not touch the "test" or "holdout" data until the very end of analysis
+
+2. Train a model on the training set
+
+3. Validate the model on the validation set based by measuring the prediction accuracy
+  - Ideally you find ways to cross-validate
+
+4. Tune model parameters to minimize some "loss" function on the validation set
+  - Could be to minimize out-of-sample MSE, in-sample MSE, or a mix
+
+5. Take the best model and make predictions using the test data
+
+Lots of little deviations to the above! 
+
+---
 # Example
 
-* Suppose you want to predict adulthood earnings 
+* Suppose you want to predict a person's earnings using Current Population Survey data
 
 * You have a large number of relevant variables
 
 * What would you do?
 
-    * You would want to have a model that can detect non-linear relationships (like a USPS handwriting reader)
+    * You would also want to have a model that you can estimate
     
-    * You would also want to have a model that you can tractably estimate
+    * You probably want to have a model that can detect non-linear relationships (like a USPS handwriting reader)
     
     * And a model that will predict well out-of-sample
+
+```{r data,echo=FALSE}
+data('cps_mixtape')
+cps_mixtape <- cps_mixtape %>% mutate(id=row_number()) %>% dplyr::relocate(id) 
+head(cps_mixtape,5)
+```
+
+---
+# Test vs. Train
+
+```{r test-vs-train}
+set.seed(1)
+cps_split <- rsample::initial_split(cps_mixtape, prop = 0.5)
+cps_train <- rsample::training(cps_split)
+cps_test <- rsample::testing(cps_split)
+```
+
+* Above I split the sample into a training and test set using syntax from **rsample**
+
+* The training set is used to estimate the model
+
+* The test set is used to see how well the model predicts out-of-sample
+
+* All these functions do is create two random subsamples and reskins them
 
 ---
 # Option 1: separate dummies for people
 
-* In this scenario, you run `feols(log(earnings) ~ as.factor(person))`
+```{r dummies}
+dummies <- feols(re74 ~ 0 | id, data = cps_train)
+cps_train<-mutate(cps_train,
+    pred_re74_fe = predict(dummies, newdata = cps_train), # predict earnings
+    resid_re74_fe= residuals(dummies, newdata = cps_train)) %>% 
+  dplyr::select(id,educ,re74,pred_re74_fe,resid_re74_fe) 
+head(cps_train)
+```
 
 * What you get is a separate adulthood earnings prediction for every single person
+  * Perfect in-sample prediction! 
+
+---
+# Option 1: new person from test?
+
+```{r new_person}
+cps_test <- mutate(cps_test,
+    pred_re74_fe=predict(dummies,newdata=cps_test),
+    resid_re74_fe=re74-pred_re74_fe) %>%
+  dplyr::select(id,educ,re74,pred_re74_fe,resid_re74_fe) 
+head(cps_test,5)
+```
 
 * But what to do when given a new person that's not in the sample?
 
-    * Which person in the sample is the one you should use for prediction?
-
-* The resulting prediction will have horrible out-of-sample fit, even though it has perfect in-sample fit
+* This prediction will have horrible out-of-sample fit, even though it has perfect in-sample fit
 
 * This is a classic case of .hi[overfitting]
 
-* We say that this prediciton has .hi[high variance] (i.e. the algorithm thinks random noise is something that is important to the model)
-
+* We say that this predictionton has .hi[high variance] (i.e. the algorithm thinks random noise is something that is important to the model)
 
 ---
-# Option 2: as a function of social mobility
+# Option 2: as a function of education
 
-* Let's use the social mobility of those born in 25th percentile! 
+* Let's use education (highest grade completed) as a predictor
 
-* In this scenario, you simply run `lm(log(earnings) ~ kfr_p25)`
+```{r feos_re74}
+education <- feols(re74 ~ educ, data = cps_train)
+cps_train <- mutate(cps_train,
+    pred_re74_educ = predict(education, newdata = cps_train),
+    resid_re75_educ=residuals(education,newdata = cps_train)) %>% 
+  dplyr::select(id,re74,educ,pred_re74_fe,pred_re74_educ) 
+head(cps_train)
+```
 
-* When given a new person with a given `kfr_p25`, you will only look at the mobility of children growing up at 25th percentile
+* The in sample fit is pretty bad -- it returns the average earnings for a person of a given education level
 
-* This algorithm will result in .hi[underfitting] because the functional form and features it uses for prediction are too simplistic
+---
+# Option 2: add a new person
+
+But if we add a new person, then it can make a prediction, just inaccurately
+
+```{r new_person_educ}
+cps_test <- mutate(cps_test,
+    pred_re74_educ = predict(education, newdata = cps_test),
+      resid_re75_educ=residuals(education,newdata = cps_test)) %>% 
+  dplyr::select(id,educ,re74,educ,pred_re74_fe,pred_re74_educ) 
+head(cps_test) 
+```
+
+* Out of sample it can return a value, but it is way off
+
+* This algorithm will result in .hi[underfitting] because the functional form and variables used for prediction are too simple
 
 * We say that this prediction has .hi[high bias] (i.e. the algorithm does not think enough variation is important to the model)
 
@@ -438,9 +441,7 @@ knitr::include_graphics("imgs/biasVarianceHTFp194.png")
 
 ---
 name: measuring-prediction-accuracy
-# Measuring prediction accuracy
-
-#### Measuring prediction accuracy when $y$ is continuous
+# Prediction accuracy of continuous $y$
 
 \begin{align*}
 \text{Mean Squared Error (MSE)} &= \frac{1}{N}\sum_i (y_i - \hat{y}_i)^2 \\
@@ -449,23 +450,20 @@ name: measuring-prediction-accuracy
 \end{align*}
 where $N$ is the sample size
 
---
-
-#### Measuring prediction accuracy when $y$ is binary
-
-The .hi[confusion matrix] which compares how often $y$ and $\hat{y}$ align (i.e. for what fraction of cases $\hat{y} = 0$ when $y = 0$)
-
-Example confusion matrix
-
-|   |  $\hat{y}$ |   | 
-|--|--|--|
-|  $y$ |  0 |  1 | 
-|  0 |  True negative |  False positive | 
-|  1 |  False negative |  True positive | 
-
+```{r mse_example}
+bind_rows(list('In/Train'=cps_train, 'Out/Test'=cps_test),.id='sample') %>%
+  group_by(sample) %>%
+  summarise(`MSE Fixed Effect` = mean((re74 - pred_re74_fe)^2),
+    `MSE Education` = mean((re74 - pred_re74_educ)^2),
+    `Root MSE Fixed Effect` = sqrt(`MSE Fixed Effect`),
+    `Root MSE Education` = sqrt(`MSE Education`)) %>%
+  knitr::kable(digits=2,format.args=list(big.mark=","))
+```
 
 ---
-# Using the confusion matrix
+# Prediction accuracy of binary $y$
+
+The .hi[confusion matrix] which compares how often $y$ and $\hat{y}$ align (i.e. for what fraction of cases $\hat{y} = 0$ when $y = 0$)
 
 |   |  $\hat{y}$ |   | 
 |--|--|--|
@@ -485,22 +483,9 @@ The three most commonly used quantities that are computed from the confusion mat
 2. .hi[specificity:] fraction of $y = 0$ have $\hat{y} = 0$ ? (What is the true negative rate?)
 3. .hi[precision:] fraction of $\hat{y} = 1$ have $y = 1$ ? (What is the rate at which positive predictions are true?)
 
-The goal is to trade off Type I and Type II errors in classification
+The goal is to trade off Type I and Type II errors in classification<sup>1</sup>
 
----
-# F1 score
-The .hi[F1 score] is the most common way to quantify the tradeoff between Type I and Type II errors
-
-\begin{align*}
-F1 &= \frac{2}{\frac{1}{\text{recall}} + \frac{1}{\text{precision}}}
-\end{align*}
-
-- $F1 \in [0,1]$ with 1 being best
-
-- It is the harmonic mean of recall and precision
-
-- There are a bunch of other quantities that one could compute from the confusion matrix, but we won't cover any of those
-
+.footnote[<sup>1</sup> The most common way to quantify this tradeoff is $F1$ score. Check Tyler Ransom's slides for more on different metrics in the confusion matrix.]
 ---
 # Why use the confusion matrix?
 
@@ -510,10 +495,9 @@ F1 &= \frac{2}{\frac{1}{\text{recall}} + \frac{1}{\text{precision}}}
   
   - There are few "spam" messages relative to "ham" messages
   
-  - If only 1% of messages are spam, we don't want to say an algorithm is superior if it always predicts "ham" correctly, but does not pin down the 1% of spam
+  - If only 1% of messages are spam, we don't want to say an algorithm is superior if it always predicts "ham" correctly, but does not pin down the 1% of spam<sup>2</sup>
 
-The F1 measure attempts to quantify the tradeoff between Type I and Type II errors (false negatives and false positives) that would be rampant if we were to always predict "ham" in the email example.
-
+.footnote[<sup>2</sup> The F1 measure attempts to quantify the tradeoff between Type I and Type II errors (false negatives and false positives) that would be rampant if we were to always predict "ham" in the email example.]
 
 ---
 name: cross-validation
@@ -526,16 +510,12 @@ The answer is we choose values of the .hi[tuning parameters] that maximize out-o
 For example:
 
 - .hi[Decision Trees]: the maximum depth of the tree or the min. number of observations within leaves
-- .hi[Regression penalization]: the $\lambda$ that comes in front of LASSO, Ridge, and elastic net regularization<sup>1</sup> 
-  - LASSO:
 
-\begin{align*}
-  &\min_{\beta_1, \dots, \beta_K} \frac{1}{N} \left(\sum_{i=1}^N \left(y_i - \sum_{i=1}^K \beta_k X^k_i\right) \right)^2 + \lambda \sum_{i=1}^K  \left|\beta_k \right|
-\end{align*}
+- .hi[Random Forests]: the same as decision trees plus the number of trees (bootstrap samples) in the forest
+
+- .hi[Regression penalization]: the $\lambda$ that comes in front of LASSO, Ridge, and elastic net regularization
 
 - There are many, many more!
-
-<sup>1</sup> This will make more sense later. 
 
 ---
 # Splitting the sample
@@ -554,8 +534,6 @@ Camp B ("Cross-validation")
 1. Validation data (~20%)
 1. Test data (~20%)
 
-This is related to bootstrapping! 
-
 Sample is split randomly to how it was generated (e.g. if it's panel data, sample *units*, not observations)
 
 It is ideal to follow the "Cross-validation" camp, but in cases where you don't have many observations (training examples), you may have to go the "Holdout" route.
@@ -571,8 +549,10 @@ This shows the way the New York City data were randomly partitioned to do ML pre
 
 ---
 # k-fold cross-validation
-Due to randomness in our data, it may be better to do the cross validation multiple times. To do so, we take the 80% training-plus-validation sample and randomly divide it into the 60/20 components k number of times. Typically k is between 3 and 10. (See graphic below)
 
+- To avoid overfitting one particular sample, it is usually better to do the cross validation multiple times. 
+
+- To do so, we take the 80% training-plus-validation sample and randomly divide it into the 60/20 components k number of times. Typically k is between 3 and 10. (See graphic below)
 
 .center[
 ```{r echo = FALSE, fig.retina=.3,fig.height=6}
@@ -580,12 +560,10 @@ knitr::include_graphics("imgs/k-foldCV.png")
 ```
 ]
 
-In the extreme, one can do *nested* k-fold cross-validation, wherein the test set is shuffled some number of times and the k-fold CV is repeated each time. So we would end up with "3k" fold CV, for example. 
-
 ---
 # Try a demo from ISLR
 
-- Navigate to this website based on activities in [Introduction to Statistical Learning](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/08-tree-based-methods.html)
+- Navigate to this website based on activities in [Introduction to Statistical Learning](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/08-tree-based-methods.html#fitting-regression-trees)
 
 - The demo will help you work through how to use `tidymodels` to estimate different types of decision trees
 
@@ -600,24 +578,6 @@ In the extreme, one can do *nested* k-fold cross-validation, wherein the test se
 - Questions:
   - There's no data dictionary provided in the lab -- how could you find the data dictionary?
   - Go to it and read up on the variables -- any odd ones? (Note: One is old and has some unfortunate language)
-
----
-# Try a demo on schooling data
-
-- Navigate to [kaggle.com](kaggle.com) 
-  - Create an account (should take 30 seconds)
-  - Validate your email
-
-- Then go to this [practice example](https://bcullen.rbind.io/post/2020-06-02-tidymodels-decision-tree-learning-in-r/) of Decision Trees by Brendan Cullen 
-
-- You'll need to download the Oregon School test and train data from [Kaggle](https://www.kaggle.com/competitions/edld-654-spring-2020/data)
-  - Stick them in a working directory for the demo and read them into R
-
-- There may be some bumps to using this tutorial! Power through and learn by doing! 
-  - You may need to install some packages (e.g. `rio`, `skimr`, etc.)
-
-- **Note**: This is challenging; there is deprecated code and some datasets that are not available. 
-  - You can learn by messing around, but it will be more challenging than the ISLR demo
 
 ---
 class: inverse, center, middle
