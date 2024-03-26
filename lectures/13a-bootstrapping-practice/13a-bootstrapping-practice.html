@@ -2124,23 +2124,6 @@ the observations.</p>
 ## Bootstrap Statistics :
 ##       original       bias    std. error
 ## t1* 0.08049281 0.0001722793 0.004021416</code></pre>
-<p>The code below does not work. Can you figure out why?</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a>statFun <span class="ot">&lt;-</span> <span class="cf">function</span>(funData, indices, addPars, centerMean)</span>
-<span id="cb52-2"><a href="#cb52-2" tabindex="-1"></a>    {</span>
-<span id="cb52-3"><a href="#cb52-3" tabindex="-1"></a>      <span class="co"># Check to see if extra parameters</span></span>
-<span id="cb52-4"><a href="#cb52-4" tabindex="-1"></a>      <span class="cf">if</span>(addPars)</span>
-<span id="cb52-5"><a href="#cb52-5" tabindex="-1"></a>      {</span>
-<span id="cb52-6"><a href="#cb52-6" tabindex="-1"></a>        result <span class="ot">&lt;-</span> <span class="fu">mean</span>(funData[indices] <span class="sc">-</span> centerMean)</span>
-<span id="cb52-7"><a href="#cb52-7" tabindex="-1"></a>      }<span class="cf">else</span></span>
-<span id="cb52-8"><a href="#cb52-8" tabindex="-1"></a>      {</span>
-<span id="cb52-9"><a href="#cb52-9" tabindex="-1"></a>        result <span class="ot">&lt;-</span> <span class="fu">mean</span>(funData[indices])</span>
-<span id="cb52-10"><a href="#cb52-10" tabindex="-1"></a>      }</span>
-<span id="cb52-11"><a href="#cb52-11" tabindex="-1"></a></span>
-<span id="cb52-12"><a href="#cb52-12" tabindex="-1"></a>      <span class="co"># Return the value</span></span>
-<span id="cb52-13"><a href="#cb52-13" tabindex="-1"></a>      <span class="fu">return</span>(result)</span>
-<span id="cb52-14"><a href="#cb52-14" tabindex="-1"></a>    }</span>
-<span id="cb52-15"><a href="#cb52-15" tabindex="-1"></a></span>
-<span id="cb52-16"><a href="#cb52-16" tabindex="-1"></a><span class="fu">boot</span>(testData, statFun, <span class="at">R =</span> <span class="dv">100</span>, <span class="at">extraPar =</span> <span class="cn">TRUE</span>, <span class="at">numCenter =</span> <span class="fu">mean</span>(testData)) </span></code></pre></div>
 </div>
 </div>
 </div>

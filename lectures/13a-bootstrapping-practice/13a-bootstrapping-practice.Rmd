@@ -534,27 +534,6 @@ boot(cleaned_resumes$call,
   R = 1000, stype = "w")
 ```
 
-The code below does not work. Can you figure out why?
-
-```{r boot-package-multi, eval=FALSE}
-statFun <- function(funData, indices, addPars, centerMean)
-    {
-      # Check to see if extra parameters
-      if(addPars)
-      {
-        result <- mean(funData[indices] - centerMean)
-      }else
-      {
-        result <- mean(funData[indices])
-      }
-
-      # Return the value
-      return(result)
-    }
-
-boot(testData, statFun, R = 100, extraPar = TRUE, numCenter = mean(testData)) 
-```
-
 ## Other resources
 
 - For more info on functions, check out Grant McDermott and Ed Rubin's [introductory](https://grantmcdermott.com/ds4e/) and [advanced](https://grantmcdermott.com/ds4e/funcs-adv.html) material.

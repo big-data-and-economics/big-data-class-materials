@@ -776,28 +776,6 @@ boot(cleaned_resumes$call,
 ## t1* 0.08049281 0.0001722793 0.004021416
 ```
 
-The code below does not work. Can you figure out why?
-
-
-```r
-statFun <- function(funData, indices, addPars, centerMean)
-    {
-      # Check to see if extra parameters
-      if(addPars)
-      {
-        result <- mean(funData[indices] - centerMean)
-      }else
-      {
-        result <- mean(funData[indices])
-      }
-
-      # Return the value
-      return(result)
-    }
-
-boot(testData, statFun, R = 100, extraPar = TRUE, numCenter = mean(testData)) 
-```
-
 ## Other resources
 
 - For more info on functions, check out Grant McDermott and Ed Rubin's [introductory](https://grantmcdermott.com/ds4e/) and [advanced](https://grantmcdermott.com/ds4e/funcs-adv.html) material.
