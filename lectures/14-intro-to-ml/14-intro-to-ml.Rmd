@@ -34,7 +34,7 @@ opts_chunk$set(
   )
 
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidymodels,tidyverse,causaldata,fixest)
+pacman::p_load(tidymodels,tidyverse,causaldata,fixest,ISLR)
 theme_set(theme_minimal())
 ```
 
@@ -223,6 +223,42 @@ name: goals-of-ml
   - .hi[prediction accuracy] (i.e. how well does the model predict out-of-sample)
   - the .hi[bias-variance tradeoff] (i.e. the tradeoff between overly simple and overly complex models)
   - .hi[cross-validation] (i.e. tuning parameters to maximize out-of-sample fit)
+
+---
+# Example: predicting fit
+
+Should I fit a straight line or curve through this bin scatter of age and earnings? 
+
+```{r model-fit,echo=FALSE,warning=FALSE,message=FALSE,fig.height=4}
+set.seed(1)
+cps_mixtape %>%
+ggplot(aes(x=age,y=re74)) + 
+  stat_summary_bin(fun.y='mean',color='black',size=2,geom='point') +
+  geom_smooth(method='lm',se=FALSE,color=NA) +
+  geom_smooth(method='lm',formula=y~poly(x,2),se=FALSE,color=NA) +
+  #geom_smooth(method='loess',se=FALSE,color=NA) + 
+  #geom_point(alpha=0.2) +
+  labs(title='Binscatter of Age and Earnings',x='Age',y='Earnings',caption='Source: Current Population Survey') 
+```
+
+---
+# Example: Compare fits
+
+Seems like we probably want some sort of curve
+
+```{r compare-fit,echo=FALSE,warning=FALSE,message=FALSE,fig.height=4}
+set.seed(1)
+cps_mixtape %>%
+ggplot(aes(x=age,y=re74)) + 
+  stat_summary_bin(fun.y='mean',color='black',size=2,geom='point') +
+  geom_smooth(method='lm',se=FALSE,color='red') +
+  #geom_text(aes(x=40,y=15000,label='Linear'),color='red',size=12) +
+  geom_smooth(method='lm',formula=y~poly(x,2),se=FALSE,color='blue') +
+  #geom_text(aes(x=25,y=5000,label='Quadratic'),color='blue',size=12) +
+  # geom_smooth(method='loess',se=FALSE,color='purple') + 
+  # geom_text(aes(x=30,y=18000,label='LOESS'),color='purple',size=12) +
+  labs(title='Binscatter of Age and Earnings with fit curves',x='Age',y='Earnings',caption='Source: Current Population Survey') 
+```
 
 ---
 # 'metrics and ML can learn from each other
@@ -561,23 +597,40 @@ knitr::include_graphics("imgs/k-foldCV.png")
 ]
 
 ---
-# Try a demo from ISLR
+# Intro to Statistical Learning Demo
 
-- Navigate to this website based on activities in [Introduction to Statistical Learning](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/08-tree-based-methods.html#fitting-regression-trees)
+- Navigate to [https://tinyurl.com/islrecon368](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html), a website with interactive demos of machine learning resampling from the textbook Introduction to Statistical Learning
+  - Before starting use `install.packages('tidymodels')` and `install.packages('ISLR')` in R to install the necessary packages, then work through the codeblocks
+  - This demo uses simple datasets to use resampling to decide how many polynomials to use in a regression model
+  - It also teaches you how to use the **tidymodels** package, which is a tidyverse-friendly way to do machine learning
 
-- The demo will help you work through how to use `tidymodels` to estimate different types of decision trees
+- Work through implementing different resampling methods in R like test/train, k-fold cross-validation, and bootstrapping
 
-- Some of it will be beyond what we covered
-  - This is okay
-  - You can still learn from trying it out
+---
+# Comprehension questions
 
-- You'll need to install the packages at the top of the demo before you can load them in (as always)
+**Demo**: [https://tinyurl.com/islrecon368](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html)
 
-- The first example uses the Carseats data, which is a simulated dataset of sales of child car seats at 400 different stores
+1. Plot the relationship between mpg and horsepower as shown below. Would a straight-line or curved-line fit better? Why?
+```{r plot-mpg-horsepower, eval=FALSE}
+ggplot(Auto,aes(x=mpg,y=horsepower)) + geom_point()
+```
 
-- Questions:
-  - There's no data dictionary provided in the lab -- how could you find the data dictionary?
-  - Go to it and read up on the variables -- any odd ones? (Note: One is old and has some unfortunate language)
+#### 5.1 (skip 5.2)
+
+2. What is `set.seed()`? Why is it important to use it when splitting the sample?
+3. Why can't you test your model on the training data?
+
+#### 5.3
+
+4. Why did you replace degree with the function `tune()`?
+5. How does k-fold cross-validation allow you to tune your model? 
+6. Why does RSME (R<sup>2</sup>) start to increase (decrease) after two polynomials?
+
+#### 5.4
+
+6. Use `View(broom::tidy(Portfolio_boots$splits[[1]]))` to see the first bootstrap sample. What do you think "Analysis" and "Assessment" can be used for?  
+7. Try using bootstrapping to return standard deviation for the polynomial model of auto. _Hint: Use the `poly_wf`_. 
 
 ---
 class: inverse, center, middle
