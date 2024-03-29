@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Big Data and Economics</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Kyle Coombs" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
+    <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/ou-colors.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Big Data and Economics
+]
+.subtitle[
+## Regression Trees
+]
+.author[
+### Kyle Coombs
+]
+.date[
+### Bates College | <a href="https://github.com/big-data-and-economics">ECON/DCS 368</a>
+]
+
+---
+
+name: toc
+
+&lt;style type="text/css"&gt;
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+&lt;/style&gt;
+
+
+
+# Table of contents
+
+- [Prologue](#prologue)
+
+- [Decision Tree Review](#decision-tree-review)
+
+- [Random Forests](#random-forests)
+
+---
+name: prologue
+class: inverse, center, middle
+
+# Prologue
+
+---
+# Prologue
+
+- Last week we talked about the basics of machine learning
+
+- You take a bunch of data, split it into training and testing sets, fit a model to the training data, then test it on the testing data
+
+- Let's look at a particular type of machine learning model: decision trees
+
+- Decision trees are a type of machine learning model that are easy to interpret
+  - They allow for non-linear relationships between the dependent and independent variables
+  - But the math is a lot more complicated than an OLS regression
+  - The visualizations are more straight-forward
+
+- Trees .hi[stratify], .hi[segment], or .hi[partition] the data into subgroups
+  - Each subgroup predicts a different value of the dependent variable
+  - These lend themselves to flowcharts! 
+
+---
+# Questions
+
+---
+# Hack-a-thon
+
+- Fill out survey please
+
+- Right now we have three participants
+
+---
+# Attribution 
+
+- This lecture is based on the following resources:
+
+- [Introduction to Statistical Learning, Chapter 8](https://www.statlearning.com/)
+
+- Tyler Ransom's lecture notes
+
+---
+name: decision-tree-review
+class: inverse, center, middle
+
+# Decision Trees
+
+---
+# Motivating example
+
+- Imagine you want to predict the income mobility of those raised in the 25th percentile for some county
+  - **Remember we are not making causal inferences here, just predictions**
+
+- You have tons of predictors: job growth, health, education, crime rates, share of each race, median HH income, college degrees, bankruptcies, religiosity, and more
+
+- The correlations between these variables and mobility is likely non-linear
+
+- The correrlations between mobility and median HH income could change depending on the rate of education
+
+- Would a regression capture all of that?
+
+- Probably not...
+
+---
+# Stratifying baseball data
+
+&lt;img src="img/baseball_strata.png" style="display: block; margin: auto; width: 600px; height: 600px;" /&gt;
+
+---
+# Opportunity Atlas data
+
+&lt;embed src="data/documentation/project4/training_data_descrip.pdf" type="application/pdf" width="100%" height="600px" /&gt;
+
+---
+# Stratify opp atlas data
+
+&lt;img src="15-regression-trees_files/figure-html/strata-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Strata lines
+
+&lt;img src="15-regression-trees_files/figure-html/strata-add-lines-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# What is a decision tree? 
+
+- A decision tree organizes variables into tree-like structure
+  - It is essentially, a really fancy flowchart
+
+- At each node, pick the variable that best meets a decision rule
+
+- At node 1, the algorithm cycles through each `\(X\)` variable and finds the split in the data that best meets the decision rule
+  - It picks the best `\(X\)` variable
+  - It follows the branch down and creates nodes by looking at the remaining `\(X\)`'s that best meet the decision rule
+
+- When making a decision about an observation, follow the tree down the branches
+
+---
+# Types of decision trees 
+
+### Regression trees
+
+- The decision rule is what variable `\(X\)` best predicts `\(y\)` when split at some cutoff point `\(\bar{X}\)`
+  - Typically the predicted `\(\hat{y}\)` is the average of `\(y\)` conditional on `\(X\)` being less than or greater than `\(\bar{X}\)`
+  - Alternatively, it could be the mode
+
+- At the terminal node, the prediction `\(\hat{y}\)` is the average of `\(y\)` for all observations in that node
+
+### Classification trees
+
+- Your outcome is now a categorical variable 
+
+- These predict the probability that an observation fits in some category
+
+### Causal Trees 
+
+- Instead of splitting based on prediction of `\(y\)`, split to maximize the difference in the average treatment effect (ATE) between the two branches
+
+- At each node, the `\(X\)` covariate that maximizes the difference in the ATE is selected
+
+- The goal is to see how varied the treatment effect is across different subgroups of the population
+  - This is the heterogeneity of treatment effect (HTE)
+  - We want to find the subgroups that have the largest HTE
+
+- The result gives a conditional average treatment effect (CATE) for each subgroup from a variety of `\(X\)`'s
+
+---
+# Regression Tree of income mobility
+
+- Each node shows the share of observations and the average income mobility for thse observations
+- Each branch shows the decision rule as a cutoff in whatever variable minimizes the residual sum of squares
+
+&lt;img src="15-regression-trees_files/figure-html/boston-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+name: random-forests
+class: inverse, center, middle
+
+# Random Forests
+
+---
+# Many trees make a forest
+
+- Decision trees are fairly easily to interpret once you make one
+
+- But one drawback is that they are very sensitive to the data
+
+  - Too many nodes and you could overfit
+  - Too few nodes and you'll just have noise
+
+- So what if we made many trees and averaged the predictions?
+  - Technically this is just called "bagging" (bootstrap aggregating)
+  - Random forests also randomize the variables available to split the nodes
+  - See more at [Introduction to Statistical Learning, Chapter 8.2](https://www.statlearning.com/)
+
+- But won't we just repeat the same tree over and over?
+  
+---
+# Pull yourself up by your bootstraps
+
+- How could we use bootstrapping?
+
+--
+
+- If you bootstrap the data `\(B\)` times, you create `\(B\)` new samples of the data indexed `\(b\)`
+
+1. For each bootstrap sample `\(b\)`, create a decision tree `\(T_b\)` using the bootstrap sample `\(b\)` 
+2. For each observation `\(i\)` in the original sample, predict the outcome `\(y_i\)` using all `\(B\)` trees
+3. Average the predictions as `\(\hat{y}_i = \frac{1}{B} \sum_{b=1}^B T_b(X_i)\)`
+
+- This is called bagging (bootstrap aggregating)
+
+- **Intuition**: With many trees, you can average out the noise and get a better prediction
+
+- Random forests add a twist to bagging by randomly selecting a subset of `\(X\)` variables to split the nodes in the tree
+  - This ensures the trees are uncorrelated with each other
+  - Minimizes variance
+
+**Intuition**: By randomizing the `\(X\)` variables available to a tree, they are less likely to only use the same variables to split the nodes in the tree. As a result, the algorithm evaluates other variables in the data. 
+
+---
+# Use cases of random forests
+
+- Random forests are a very popular machine learning technique
+
+- They are used for prediction, classification, and causal inference
+
+- Kleinberg et al. (2018) use random forests to predict the judicial bail decisions in NYC
+
+---
+# What next?
+
+- Get your hands dirty! 
+
+- Navigate to the [Generalized Random Forest](https://grf-labs.github.io/grf/articles/grf.html) vignette
+
+
+```r
+#install.packages('grf')
+library(grf)
+```
+
+- This will walk you through how to use the **grf** package to estimate causal forests
+
+- Once you finish, try the **grf** [guided tour](https://grf-labs.github.io/grf/articles/grf_guide.html#a-grf-overview-1)
+  - I recommend you try the [application to school program evaluation](https://grf-labs.github.io/grf/articles/grf_guide.html#application-school-program-evaluation-1) example
+
+- This package is full of vignettes that you could use for the problem set
+
+---
+class: inverse, center, middle
+
+# Next lecture: Least Absolute Shrinkage and Selection Operator (LASSO)
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+
+
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"highlightSpans": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

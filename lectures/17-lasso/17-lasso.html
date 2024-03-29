@@ -24,7 +24,7 @@ class: center, middle, inverse, title-slide
 ### Kyle Coombs
 ]
 .date[
-### Bates College | <a href="https://github.com/ECON368-fall2023-big-data-and-economics">ECON/DCS 368</a>
+### Bates College | <a href="https://github.com/big-data-and-economics">ECON/DCS 368</a>
 ]
 
 ---
@@ -71,7 +71,7 @@ class: inverse, center, middle
 
 - Most of the analysis we have done in this class has focused on the case where we have a small number of variables relative to the number of observations.
 
-- But sometimes you have LONG data
+- But sometimes you have WIDE data
 
 - In this case, you have a large number of variables `\(J\)` relative to the number of observations `\(n\)`.
 
@@ -82,6 +82,165 @@ class: inverse, center, middle
 - The number of variables is larger than the number of observations! 
 
 - Uh oh
+
+---
+# Example of wide data
+
+
+```
+## Warning: The `x` argument of `as_tibble.matrix()` must have unique column names if
+## `.name_repair` is omitted as of tibble 2.0.0.
+## ℹ Using compatibility `.name_repair`.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+```
+## # A tibble: 6 × 1,001
+##        y     P_1     P_2    P_3    P_4     P_5     P_6     P_7    P_8    P_9
+##    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+## 1   8.33 -0.560  -0.710   2.20  -0.715 -0.0736 -0.602   1.07   -0.728  0.356
+## 2 -63.4  -0.230   0.257   1.31  -0.753 -1.17   -0.994  -0.0273 -1.54  -0.658
+## 3  -8.21  1.56   -0.247  -0.265 -0.939 -0.635   1.03   -0.0333 -0.693  0.855
+## 4  11.7   0.0705 -0.348   0.543 -1.05  -0.0288  0.751  -1.52    0.119  1.15 
+## 5  35.9   0.129  -0.952  -0.414 -0.437  0.671  -1.51    0.790  -1.36   0.276
+## 6 -41.4   1.72   -0.0450 -0.476  0.331 -1.65   -0.0951 -0.211   0.590  0.144
+## # ℹ 991 more variables: P_10 &lt;dbl&gt;, P_11 &lt;dbl&gt;, P_12 &lt;dbl&gt;, P_13 &lt;dbl&gt;,
+## #   P_14 &lt;dbl&gt;, P_15 &lt;dbl&gt;, P_16 &lt;dbl&gt;, P_17 &lt;dbl&gt;, P_18 &lt;dbl&gt;, P_19 &lt;dbl&gt;,
+## #   P_20 &lt;dbl&gt;, P_21 &lt;dbl&gt;, P_22 &lt;dbl&gt;, P_23 &lt;dbl&gt;, P_24 &lt;dbl&gt;, P_25 &lt;dbl&gt;,
+## #   P_26 &lt;dbl&gt;, P_27 &lt;dbl&gt;, P_28 &lt;dbl&gt;, P_29 &lt;dbl&gt;, P_30 &lt;dbl&gt;, P_31 &lt;dbl&gt;,
+## #   P_32 &lt;dbl&gt;, P_33 &lt;dbl&gt;, P_34 &lt;dbl&gt;, P_35 &lt;dbl&gt;, P_36 &lt;dbl&gt;, P_37 &lt;dbl&gt;,
+## #   P_38 &lt;dbl&gt;, P_39 &lt;dbl&gt;, P_40 &lt;dbl&gt;, P_41 &lt;dbl&gt;, P_42 &lt;dbl&gt;, P_43 &lt;dbl&gt;,
+## #   P_44 &lt;dbl&gt;, P_45 &lt;dbl&gt;, P_46 &lt;dbl&gt;, P_47 &lt;dbl&gt;, P_48 &lt;dbl&gt;, P_49 &lt;dbl&gt;, …
+```
+
+---
+# What if I run a regression?
+
+A mess to include all variables
+
+
+```r
+etable(feols(y ~ ..('^P'), data = wide_df))
+```
+
+```
+## The variables 'P_100', 'P_101' and 899 others have been removed because of collinearity (see $collin.var).
+```
+
+```
+##                  feols(y ~ ..
+## Dependent Var.:             y
+##                              
+## Constant          357.7 (NaN)
+## P_1               246.0 (NaN)
+## P_2              -58.65 (NaN)
+## P_3              -21.77 (NaN)
+## P_4              -78.74 (NaN)
+## P_5               14.93 (NaN)
+## P_6               280.5 (NaN)
+## P_7              -109.2 (NaN)
+## P_8              -181.9 (NaN)
+## P_9              -393.5 (NaN)
+## P_10              265.5 (NaN)
+## P_11             -3.331 (NaN)
+## P_12             -6.579 (NaN)
+## P_13              202.2 (NaN)
+## P_14              88.59 (NaN)
+## P_15              355.9 (NaN)
+## P_16             -134.5 (NaN)
+## P_17              161.8 (NaN)
+## P_18             -60.64 (NaN)
+## P_19              79.27 (NaN)
+## P_20             -161.0 (NaN)
+## P_21             -271.9 (NaN)
+## P_22             -221.7 (NaN)
+## P_23              104.8 (NaN)
+## P_24             -178.2 (NaN)
+## P_25              88.22 (NaN)
+## P_26             -234.2 (NaN)
+## P_27              339.8 (NaN)
+## P_28             -336.4 (NaN)
+## P_29             -193.4 (NaN)
+## P_30              19.52 (NaN)
+## P_31              398.5 (NaN)
+## P_32              144.3 (NaN)
+## P_33              536.0 (NaN)
+## P_34             -90.05 (NaN)
+## P_35             -218.5 (NaN)
+## P_36              47.30 (NaN)
+## P_37              223.1 (NaN)
+## P_38              181.7 (NaN)
+## P_39             -190.5 (NaN)
+## P_40              8.225 (NaN)
+## P_41             -274.2 (NaN)
+## P_42              449.4 (NaN)
+## P_43              154.0 (NaN)
+## P_44             -64.26 (NaN)
+## P_45              134.4 (NaN)
+## P_46              21.30 (NaN)
+## P_47             -45.43 (NaN)
+## P_48             -93.77 (NaN)
+## P_49             -235.2 (NaN)
+## P_50              349.4 (NaN)
+## P_51             -189.2 (NaN)
+## P_52              287.5 (NaN)
+## P_53             -25.93 (NaN)
+## P_54             -412.8 (NaN)
+## P_55              268.9 (NaN)
+## P_56             -300.3 (NaN)
+## P_57             -36.62 (NaN)
+## P_58             -29.98 (NaN)
+## P_59             -243.6 (NaN)
+## P_60             -248.7 (NaN)
+## P_61              286.9 (NaN)
+## P_62             -63.84 (NaN)
+## P_63             -129.7 (NaN)
+## P_64              184.4 (NaN)
+## P_65             -120.9 (NaN)
+## P_66             -204.7 (NaN)
+## P_67             -59.35 (NaN)
+## P_68             -106.7 (NaN)
+## P_69             -10.99 (NaN)
+## P_70              171.3 (NaN)
+## P_71              73.69 (NaN)
+## P_72             -118.8 (NaN)
+## P_73             -71.04 (NaN)
+## P_74             -338.3 (NaN)
+## P_75              255.1 (NaN)
+## P_76             -172.9 (NaN)
+## P_77             -41.91 (NaN)
+## P_78              88.62 (NaN)
+## P_79              33.83 (NaN)
+## P_80              246.0 (NaN)
+## P_81              88.89 (NaN)
+## P_82              4.382 (NaN)
+## P_83             -288.0 (NaN)
+## P_84             -409.2 (NaN)
+## P_85             -136.0 (NaN)
+## P_86             -225.3 (NaN)
+## P_87             -91.71 (NaN)
+## P_88              139.6 (NaN)
+## P_89             -84.91 (NaN)
+## P_90              349.6 (NaN)
+## P_91             -293.1 (NaN)
+## P_92             -348.0 (NaN)
+## P_93             -4.049 (NaN)
+## P_94             -339.2 (NaN)
+## P_95              135.1 (NaN)
+## P_96              100.0 (NaN)
+## P_97             -316.6 (NaN)
+## P_98             -165.9 (NaN)
+## P_99              128.4 (NaN)
+## _______________  ____________
+## S.E. type       NA (not-ava.)
+## Observations              100
+## R2                          1
+## Adj. R2              NaNe+Inf
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
 
 ---
 # How can we cut down on variables?
@@ -96,7 +255,7 @@ class: inverse, center, middle
 
 - This is a form of **variable selection**
 
-- But it forces us to turn continuous data binary ($X &gt; c$ vs. `\(X geq c\)`) 
+- But it forces us to turn continuous data binary ( `\(X&gt;c\)` vs. `\(X\geq c\)` ) 
 
 - But what other ways are available? 
 
@@ -245,10 +404,10 @@ $$
 \end{aligned}`
 $$
 
-- So now instead of the squared penalty on the coefficient size, you have the absolute value of the penalty
+- Instead of the squared penalty on coefficient size, you have absolute value
 
 - The magic of the absolute value is that it can shrink coefficients to zero with a sufficiently large `\(\lambda\)`
-  - This means that LASSO can be used for variable selection -- a zero means that variable is not in the model
+  - This means that LASSO can select variables: `\(\beta_j=0\)` means that `\(x_j\)` is not in the model
   - **Intuition**: The absolute value has a "sharp" corner at zero, so it can "cut" coefficients to zero, Ridge is a circle, so it can only shrink coefficients to the edge of the circle
 
 - Selection is a big advantage over Ridge Regression
@@ -274,7 +433,7 @@ name: other-regularization
 ---
 # K-fold cross-validation: How to pick `\(\lambda\)`
 
-- The `\(\lambda\)` in both of the examples above is a "tuning parameter," which controls the strength of the penalty
+- The `\(\lambda\)` in is a "tuning parameter," which controls the strength of the penalty
 
 - You need to do `\(K\)`-fold cross-validation:
 
@@ -285,7 +444,7 @@ name: other-regularization
   - Run Ridge or LASSO on the `\(K-1\)` folds
   - Calculate the `\(MSE_k\)` on the remaining `\(k\)`-fold
 5. Calculate the average `\(MSE_k\)` for each `\(\lambda\)`
-$$ MSE_{CV}(\lambda) = \frac{1}{K} \sum_{k=1}^K MSE_k(\lambda) $$
+`$$MSE_{CV}(\lambda) = \frac{1}{K} \sum_{k=1}^K MSE_k(\lambda)$$`
 6. Pick the `\(\lambda\)` with the lowest MSE
 
 - You know what's neat? You can do this in R with the **glmnet** library! 
@@ -312,21 +471,25 @@ $$ MSE_{CV}(\lambda) = \frac{1}{K} \sum_{k=1}^K MSE_k(\lambda) $$
 
 - Sometimes you don't mind being a little off in your predictions
 
-- For example, if you are predicting the number of people who will show up to a party, you don't care if you are a little off
+- Imagine you are predicting the number of people who will show up to a party
   
-- You do care if someone tells you that between 0 and 100 people will show up, but 50 on average -- that's not helpful
+- Someone tells you there's a 50% chance 0 people come and a 50% chance 100 people come
+  - That's not very helpful
 
-- It is even less helpful if they tell you that to make am accurate prediction they need to know:
-  - The number of invites
+--
+
+- But what if they predict 45-55 people will show up and then 40 people showed up
+  - That's wrong, but not so wrong to cause problems
+
+- It is even less helpful if they tell you that to make an accurate prediction they need to know:
+  - The number of invites, the number of RSVPs
   - The weather
-  - The day of the week
-  - The time of day
-  - The number of people who have already RSVP'd
+  - The day of the week, the time of day
   - The variety of chips you're serving
   - What is on TV that night
   - etc. 
 
-- You'd rather just have a simple model that is a little off then a complicated model that is super sensitive
+- I'd prefer a simple model that is a little wrong then a complicated model that swings wildly in its predictions
 
 ---
 # Warning
