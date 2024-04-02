@@ -151,23 +151,20 @@ class: inverse, center, middle
 ---
 # Types of decision trees 
 
-### Regression trees
+#### Regression trees
 
 - The decision rule is what variable `\(X\)` best predicts `\(y\)` when split at some cutoff point `\(\bar{X}\)`
-  - Typically the predicted `\(\hat{y}\)` is the average of `\(y\)` conditional on `\(X\)` being less than or greater than `\(\bar{X}\)`
-  - Alternatively, it could be the mode
+  - Typically the predicted `\(\hat{y}\)` is the average (could be mode) of `\(y\)` conditional on `\(X&gt;\bar{X}\)` or `\(X&lt;\bar{X}\)`
 
-- At the terminal node, the prediction `\(\hat{y}\)` is the average of `\(y\)` for all observations in that node
+- At the terminal node, the prediction `\(\hat{y}\)` is for all observations in that node
 
-### Classification trees
+#### Classification trees
 
-- Your outcome is now a categorical variable 
+- Your outcome is now a categorical variable and you predict the probability an observation fits the category
 
-- These predict the probability that an observation fits in some category
+#### Causal Trees 
 
-### Causal Trees 
-
-- Instead of splitting based on prediction of `\(y\)`, split to maximize the difference in the average treatment effect (ATE) between the two branches
+- Split to maximize the difference in the average treatment effect (ATE) between the two branches
 
 - At each node, the `\(X\)` covariate that maximizes the difference in the ATE is selected
 
@@ -175,13 +172,13 @@ class: inverse, center, middle
   - This is the heterogeneity of treatment effect (HTE)
   - We want to find the subgroups that have the largest HTE
 
-- The result gives a conditional average treatment effect (CATE) for each subgroup from a variety of `\(X\)`'s
+- The result gives a conditional average treatment effect (CATE) for each subgroup
 
 ---
 # Regression Tree of income mobility
 
 - Each node shows the share of observations and the average income mobility for thse observations
-- Each branch shows the decision rule as a cutoff in whatever variable minimizes the residual sum of squares
+- Each branch shows the decision rule as a cutoff in the variable that minimizes the RSS
 
 &lt;img src="15-regression-trees_files/figure-html/boston-1.png" style="display: block; margin: auto;" /&gt;
 
