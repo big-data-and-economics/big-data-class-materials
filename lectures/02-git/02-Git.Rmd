@@ -669,6 +669,7 @@ Caveats
 
 - Some of you may have encountered a divergent branch:
 
+.scroll-box-8[
 ```bash
 Hint: You have divergent branches and need to specify how to reconcile them.
 Hint: You can do so by running one of the following commands sometime before
@@ -686,6 +687,11 @@ Git failed with a fatal error.
 Git failed with a fatal error.
 Need to specify how to reconcile divergent branches.
 ```
+]
+
+- Per an [update in 2022](https://github.com/desktop/desktop/pull/14439), you should not be getting this message as a fatal error
+
+- Note that GitHub issues and pull requests were used by professionals to improve the product over time
 
 ---
 # Divergent branches
@@ -695,21 +701,15 @@ Need to specify how to reconcile divergent branches.
   - `git fetch` which downloads the latest changes from the remote repo
   - `git merge` which merges the changes into your local repo
 
-- For your purposes, I recommend you enter the following in your terminal:
+- For your purposes, I recommend you enter the following in your Terminal (next to Console in RStudio):
 
 ```bash
-git config --config pull.rebase false  # merge
+git config --global pull.ff only  # fast-forward only
 ```
 
-- Feel to play with any of them though
+- This will change your `.gitconfig` file, which sets the settings of git and can be accessed with `usethis::edit_git_config()` in RStudio
 
-- This will change your `.gitconfig` file, which sets the settings of git
-
-- If you want to change any, you can do so in the `.gitconfig` file, which you can access (or delete) using the command
-
-```{r, eval=FALSE}
-usethis::edit_git_config()
-```
+- Solution pulled from [GitHub Desktop issues](https://github.com/desktop/desktop/issues/14431)
 
 - As always, get more advice from [Jenny Bryan](happygitwithr.com)
 
