@@ -269,14 +269,14 @@ TK
 
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
-| 6 × problem sets (12.5% each, drop two lowest) | 50%    | Top 4  |
+| 6 × problem sets                          | 40%    | Top 4  |
 | 1 × 5-minute presentation                 | 5%     | Top 1   |
 | 1 × GitHub participation                  | 5%     | Overall   |
-| 1 × group final project                   | 30%-40%    | [In parts](https://github.com/big-data-and-economics/final-project) |
-| 1 x Lewiston Hackathon                    | 0%-10%    | Optional  |
+| N x In-class exercises                    | 10%    | Completion by next class |
+| 1 × "proof of concept" project            | 15%    | [In parts](https://github.com/big-data-and-economics/final-project) |
+| 1 x Lewiston Hackathon                    | 15%    | Optional  |
 | Classroom participation                   | Bonus up to 2.5%    | Discretion  |
 | Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
-| Most "good-faith" posts to GitHub           | Bonus 2.5% | Posts/answers in course organization |
 
 Finalized grades on each component will be posted to Lyceum. Where possible to give feedback privately, it will be posted to GitHub. 
 
