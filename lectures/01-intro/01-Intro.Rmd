@@ -1052,6 +1052,7 @@ class: inverse, center, middle
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+# If broken in the future, check the fix here: https://stackoverflow.com/questions/78928374/how-to-solve-pagedown-chrome-print-failed-to-generate-output-due-to-fail-to-open
 infile = list.files(pattern = '.html')
 pagedown::chrome_print(input = infile, timeout = 100)
 ```
