@@ -3,7 +3,12 @@
 ARG VARIANT="4.3"
 FROM ghcr.io/rocker-org/devcontainer/geospatial:${VARIANT}
 
-RUN apt-get install -y --no-install-recommends libxt6 \
+RUN install2.r --error --skipinstalled -n -1 \
+    hrbrthemes \
+    fontawesome \
+    RefManageR \
+    gapminder \
+    apt-get install -y --no-install-recommends libxt6 \
     && rm -rf /var/lib/apt/lists/*
 
 # RUN install2.r --error --skipinstalled -n -1 \
