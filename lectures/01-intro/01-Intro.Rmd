@@ -103,7 +103,7 @@ name: syllabus
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
-(Read the full document [here](https://github.com/big-data-and-economics/syllabus/blob/master/syllabus.pdf).)
+(Read the full document [here](https://github.com/big-data-and-economics/syllabus/blob/main/syllabus.pdf).)
 
 ---
 # Why this course?
@@ -150,51 +150,35 @@ You're gonna write a lot of code for this class, which means you're gonna troubl
 
 2. Break this description into smaller steps (1: Read in data, 2: Drop rows with NA County, etc.)
 
-3. Write code "modularly" to do each step
+3. Write code "modularly" (in pieces) to do each step, then you can troubleshoot modularly
 
-4. Then you can troubleshoot modularly too
+4. The `help` documentation for R functions is the best place to start for troubleshooting
 
-5. The `help` documentation for R functions is the best place to start for troubleshooting
-
-6. Google is your dictionary, ChatGPT is your weird friend who knows a lot of words but sometimes uses them wrong<sup>1</sup>
+5. Google is your dictionary, AI is your weird friend who knows a lot of words but sometimes uses them wrong<sup>1</sup>
   - Be precise in your Google searches and ChatGPT instructions
 
-7. If you're stuck, ask for help from me and classmates on GitHub Discussions
+  - I encourage you to use Generative AI ([ChatGPT](https://chat.openai.com/) and [GitHub CoPilot](https://github.com/features/copilot)) to help learn R and Git
+
+6. If you're stuck, ask for help from me and classmates on GitHub Discussions/Issues
+  - Write a minimally reproducible example of the bug
 
 <sup>1</sup> GitHub CoPilot (ChatGPT's cousin) wrote that sentence fragment!
 
 ---
-# You, at the end of this course
+# Assignments and grading
 
-<div align="center">
-<img src="pics/awesome.jpg">
-</div>
+1. Exercises: low-stakes completition exercises
 
+2. 5 group problem sets, drop the lowest, grade improvement allowed
 
----
-# Syllabus readthrough
-
-- Read over the class [ReadMe](https://github.com/big-data-and-economics/big-data-class-materials) for 3 minutes
-- Identify at least one word you're unfamiliar with
-- Anyone have guesses for how to define them?
-- [Mentimeter](https://www.mentimeter.com/app/presentation/bldvy2hwjfb483btveenvon9k7mbtkdm/xqvbqbhy8hzo)
-
---
-
-#### Highlights
-
-1. Final project: Paper replication
-
-2. 6 problem sets, drop the two lowest, grade improvement
-
-3. 5-minute presentations
-
+3. Group presentations
+  - 
 4. GitHub Participation
 
-5. _Optional_ Lewiston Hack-a-thon: 1-day data science competition at end of semester
-  - Details TBD
-  - I will soon be asking your availability for 24-hour periods in late March/April
-  - Does 24 hours lead to immediate red flags for anyone's schedule? If so please let me know now. 
+5. Final Project/Lewiston Hack-a-thon: 2-day data science competition at end of semester
+  - Prizes for "best" in various categories
+  - Either week before Thanksgiving or last week of class -- come ready to vote next class
+  - If falls through for some reason, final project will be a replication project
 
 ---
 # Class outline
@@ -210,9 +194,9 @@ You're gonna write a lot of code for this class, which means you're gonna troubl
 
 ### Analysis and Programming
 
-- Regression analysis in R
-- Spatial analysis in R
-- Functions in R
+- Spatial analysis
+- Regression analysis
+- Functions and loops
 - Parallel programming
 ]
 
@@ -221,14 +205,13 @@ You're gonna write a lot of code for this class, which means you're gonna troubl
 
 - Regression discontinuity design
 - Panel data and fixed effects
-- Field experiments
+- Difference-in-difference design
 
 ### Scaling up: Big data, ML, and cloud computation
 
-- High performance computing (Leavitt cluster) 
-- Databases: SQL(ite) and BigQuery
 - Machine Learning techniques
 - Text analysis
+
 ]
 
 ---
@@ -244,9 +227,9 @@ name: what_is_data_science
 
     - Facebook: Collects data on search history, friendship links, site clicks, occupation, etc.
 
-    - Chetty et al. used FB data to estimate users' SES and social network ([Social Capital Atlas](https://www.socialcapital.org/))
+    - Chetty et al. (2022) used FB data to estimate users' SES and social network ([Social Capital Atlas](https://www.socialcapital.org/))
 
-- The rise of data science has come because of the so-called Big Data revolution
+- The rise of data science has come because of the so-called "Big" Data revolution
 
     - The rise of the internet in the late-1990s and 2000s $\Rightarrow \,\uparrow$ opportunities for companies and governments to collect data on consumers & citizens
 
@@ -276,7 +259,7 @@ Source: [R for Data Science](http://r4ds.had.co.nz/introduction.html)
 ]
 
 ---
-# Big Data
+# "Big" Data
 .center[
 ```{r img3, echo=F, out.width="90%"}
 knitr::include_graphics('pics/frisch.jpg')
@@ -284,7 +267,7 @@ knitr::include_graphics('pics/frisch.jpg')
 ]
 
 ---
-# Big Data
+# "Big" Data
 .center[
 ```{r img, echo=F, out.width="90%"}
 knitr::include_graphics('pics/frisch.jpg')
@@ -293,20 +276,22 @@ knitr::include_graphics('pics/frisch.jpg')
 
 Source: Frisch, Ragnar. 1933. "Editor's Note" _Econometrica_ 1(1): 1-4
 
+<!-- ---
+# Data fallacies -->
+
 ---
-# What is Big Data?
+# Types of data
 
-It depends on who you ask. It could mean:
-
-1. "Wild" data (unstructured; happenstance; collected without a particular intention; e.g. twitter, contrast with Census surveys)
+1. "Long" data (a.k.a. "Big-N" data because $N$ very, very large [and may not all fit onto a single hard drive!], government tax records, Medicare claims data, etc.)
 
 2. "Wide" data (a.k.a. "Big-K" data because $K>N$, customer data sets where each click is a variable)
 
-3. "Long" data (a.k.a. "Big-N" data because $N$ very, very large [and may not all fit onto a single hard drive!], government tax records, Medicare claims data, etc.)
+3. "Wild" data (unstructured; happenstance; collected without a particular intention; e.g. twitter, contrast with Census surveys)
 
-4. Any data set that cannot be analyzed with classical methods like OLS (e.g. all combinations of the above three types)
-
-"Big Data" not so much about size of data, but about whether or not "small data" (read: classical) methods can be used
+4. "Big Data" is a catch-all for any combination of the above data types that is hard to analyze with classical methods like OLS regression
+  - Too many variables
+  - Too many observations
+  - Needs special wrangling or analysis
 
 ---
 # Long data
@@ -328,25 +313,60 @@ knitr::include_graphics('pics/widedata.png')
 - Example: predicting income to target ads from tons of information like location, links clicked, etc.
 
 ---
-# Why does data shape matter?
+# Wild Data
+
+.scroll-box-12[
+```html
+<caption>List of men's Olympic records in athletics
+</caption>
+<tbody><tr>
+<th scope="col" width="12%">Event
+</th>
+<th class="unsortable" width="5%">Record
+</th>
+<th scope="col" width="10%">Athlete(s)
+</th>
+<th scope="col" width="15%">Nation
+</th>
+<th scope="col" width="10%">Games
+</th>
+<th scope="col" width="5%">Date
+</th>
+<th scope="col" class="unsortable" width="3%">Ref(s)
+</th></tr>
+<tr>
+<th scope="row"><span data-sort-value="00100&#160;!"><a href="/wiki/100_metres" title="100 metres">100 metres</a></span>
+</th>
+<td align="right">9.63&#160;
+</td>
+<td><span data-sort-value="Bolt, Usain"><span class="vcard"><span class="fn"><a href="/wiki/Usain_Bolt" title="Usain Bolt">Usain Bolt</a></span></span></span>
+</td>
+<td><span class="mw-image-border" typeof="mw:File"><span><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/22px-Flag_of_Jamaica.svg.png" decoding="async" width="22" height="11" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/33px-Flag_of_Jamaica.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/44px-Flag_of_Jamaica.svg.png 2x" data-file-width="1200" data-file-height="600" /></span></span>&#160;<a href="/wiki/Jamaica_at_the_2012_Summer_Olympics" title="Jamaica at the 2012 Summer Olympics">Jamaica</a>&#160;<span style="font-size:90%;">(JAM)</span>
+</td>
+<td><span data-sort-value="2012&#160;!"><a href="/wiki/Athletics_at_the_2012_Summer_Olympics_%E2%80%93_Men%27s_100_metres" title="Athletics at the 2012 Summer Olympics – Men&#39;s 100 metres">2012 London</a></span>
+</td>
+<td><span data-sort-value="000000002012-08-05-0000" style="white-space:nowrap">August 5, 2012</span>
+</td>
+<td align="center"><sup id="cite_ref-9" class="reference"><a href="#cite_note-9">&#91;9&#93;</a></sup>
+</td></tr>
+```]
+
+---
+# Why does data type matter?
 
 --
 
-1. Data shape determines how much memory is required to store information
+1. Data type determines how much memory is required to store information
 
-2. Data shape determines what method you can use to analyze the data
+2. Data type determines what method you can use to read and analyze the data
 
 --
 
-  - A regression model with year fixed effects requires that year changes between observations, so you need long data
+  - A difference-in-difference model requires a different data shape than a regression discontinuity model
   - You cannot have a wide data set with one row per unit and one column per year
 
 ---
-# What can we measure with data?
-
-- Data can measure a lot of information about the world, but not everything
-
-- Yes, that sounds like buzzword soup, but it is true
+# The data you need depend on the question you're asking
 
 - Any dataset, no matter how big, has simplified the world in some way
 
@@ -357,13 +377,11 @@ knitr::include_graphics('pics/widedata.png')
   - IP address? Changes frequently 
   - GPS coordinates? Too precise, and changes every second!
 
-- The solution? Decide why you need location
+- Your question and theory should guide your data collection
   - Are you curious about the effect of local government policies or firms on people?
   - Are you looking to measure the effect of air pollution on health?
   - Do you want to see how people change their commute patterns over time? When there is a road closure?
-
-- Different questions require different levels of precision
-
+<!-- 
 ---
 # Big data & machine learning
 
@@ -376,12 +394,6 @@ knitr::include_graphics('pics/widedata.png')
     - Streamlined techniques for processing "wild" data
 
     - New modeling approaches that can leverage the greater amount of information that Big Data has
-
-- ML also gave us generative AI ([ChatGPT](https://chat.openai.com/) and [GitHub CoPilot](https://github.com/features/copilot)), which I encourage you to use heavily to help you learn R and Git
-
-- Think of it as a more interactive version of Googling for the solution to a bug
-  - It is not (yet) a replacement for thinking through the best way to code something
-  - It will actually perform better if you think through the basic coding tasks first, then ask it to fill in the blanks
 
 ---
 # What is machine learning? What is AI?
@@ -396,7 +408,7 @@ knitr::include_graphics('pics/widedata.png')
 
 - .hi[Artificial intelligence (AI):] Constructing machines (robots, computers) to think and act like human beings
 
-- ML is a subset of AI
+- ML is a subset of AI -->
 
 ---
 class: inverse, center, middle
@@ -416,7 +428,7 @@ name: started
 3. Download [Git](https://git-scm.com/downloads).
 
 4. Create an account on [GitHub](https://github.com/) and register for a student/educator [discount](https://education.github.com/discount_requests/new).
-  - We will use GitHub to disseminate and submit assignments, receive feedback and grading, etc. 
+  - I will use GitHub to disseminate and submit assignments, receive feedback, etc. 
 
 5. Make a folder on your computer for this class. Any and all repositories for this class should be cloned into this folder.
 
@@ -441,7 +453,7 @@ I'll detail further software requirements as and when the need arises. However, 
   ```{r, cache=FALSE}
   version$version.string
   ```
-☑ Do you have the most recent version of RStudio? (The [preview version](https://www.rstudio.com/products/rstudio/download/preview/) is fine.)
+☑ Do you have the most recent version of RStudio?
   ```{r eval=FALSE}
   RStudio.Version()$version
   ## Requires an interactive session but should return something like "[1] ‘1.4.1100’"
@@ -492,6 +504,9 @@ Open up the [shell](http://happygitwithr.com/shell.html#shell).
 - Navigate back to the main GitHub repository page and click `Code`, the three dots next to the codespace name, and `Delete codespace`.
 
 - I'll encourage you to use Codespaces on some problem sets when I want to hit the ground running instead of troubleshooting package installation issues.
+  - But you can use them for any problem set or exercise
+
+- Use it today if your R installation is having issues!
 
 ---
 # Checklist (cont.)
@@ -532,7 +547,7 @@ programming languages and APIs.
 
 ### Path dependency
 
-- It's also the language that I know (second) best.
+- It's also the language that I know best.
 - (Learning multiple languages is a good idea, though.)
 
 ---
@@ -549,7 +564,7 @@ summary(fit)
 ```{r mtcars_baseplot, dev="svg"}
 par(mar = c(4, 4, 1, .1)) ## Just for nice plot margins on this slide deck
 plot(mtcars$wt, mtcars$mpg)
-abline(fit, col = "red")
+abline(fit, col = "red") # Add in the object fit from before! 
 ```
 
 ---
@@ -584,10 +599,10 @@ name: ggplot2
 ---
 # Install and load
 
-Open up your laptops. For the remainder of this first lecture, we're going to play around with [ggplot2](https://ggplot2.tidyverse.org/) (i.e. livecoding) to answer our question about GDP and life expectancy.
+Open up your laptops. For the remainder of this first lecture, we're going to play around with [ggplot2](https://ggplot2.tidyverse.org/) (i.e. livecoding) to explore our question about GDP and life expectancy.
 
-If you don't have them already, install the `ggplot2` and `gapminder` packages via either:
-- **Console:** Enter `install.packages(c("ggplot2", "gapminder"), dependencies=T)`.
+If you don't have them already, install the `ggplot2` and `gapminder` and `swirl` packages via either:
+- **Console:** Enter `install.packages(c("ggplot2", "gapminder","swirl"), dependencies=T)`.
 - **RStudio:** Click the "Packages" tab in the bottom-right window pane. Then click "Install" and search for these two packages.
   
 ![](pics/install.gif)
@@ -599,6 +614,7 @@ Once the packages are installed, load them into your R session with the `library
 ```{r pkg_load}
 library(ggplot2)
 library(gapminder) ## We're just using this package for the gapminder data
+library(swirl)
 ```
 
 Notice too that you don't need quotes around the package names any more. Reason: R now recognises these packages as defined objects with given names. 
@@ -607,6 +623,42 @@ Notice too that you don't need quotes around the package names any more. Reason:
 
 PS — A convenient way to combine the package installation and loading steps is with the [pacman package's](https://github.com/trinker/pacman) `p_load()` function. If you run `pacman::p_load(ggplot, gapminder)` it will first look to see whether it needs to install either package before loading them. Clever.
 - We'll get to this later, but if you want to run a function from an (installed) package without loading it, you can use the `PACKAGE::package_function()` syntax.
+
+---
+# Exploratory analysis
+
+- What initial exploratory questions do we have? Shout them out! 
+
+--
+
+- Here's what I want to know:
+
+  1. How are the data organized? 
+  2. What are the unique countries in the dataset?
+  3. What does the relationship between GDP per capita and life expectancy look like?
+
+- We'll tackle the third today since it is the most visually interesting
+
+---
+# Swirl installation
+
+- Swirl is an R package that teaches you R interactively
+
+- It's a great way to learn R if you're new to the language
+
+- Use this code to get it up and running
+
+```{r swirl_install,eval=FALSE}
+library(swirl)
+install_course_github('big-data-and-economics','ECON368-R-Swirls')
+swirl()
+```
+
+- Tell swirl what it should call you (e.g. "Wizard of R")
+
+- Then select the course `ECON368-R-Swirls` and the lesson `GGPlot Demo` (#13 last time I checked)
+
+- Work through interactively
 
 ---
 name: ai
@@ -627,7 +679,7 @@ name: ai
 
 - ChatGPT is excellent at producing basic code and helping resolve bugs
 
-- It serves as a bridge between the ideas in your head and crisp instructions for a computer (code)
+- It serves as a bridge between the abstract ideas in your head and code you write
 
 ---
 # ChatGPT example
@@ -739,6 +791,10 @@ ggplot(gapminder_df, aes(x = gdpPercap, y = lifeExp)) +
 ---
 # Tips for using ChatGPT
 
+- Think of it as a more interactive version of Googling for the solution to a bug
+  - It is not a replacement for you, the programmer
+  - Think through the basic coding tasks first, then ask AI to fill in the blanks
+
 - Be as specific as possible in your instructions
   - If you know the name of the variables in your dataset, use them
 
@@ -752,7 +808,7 @@ ggplot(gapminder_df, aes(x = gdpPercap, y = lifeExp)) +
   - ChatGPT is a tool to help you, not replace you
   - You will not get much mileage if you say, "Read in the gapminder dataset and do something interesting with it"
 
-- Often it only "skeleton code" for you, so you'll need to fill in the blanks
+- Often it only provides "skeleton code", so you'll need to fill in the blanks
 
 ---
 # Elements of ggplot2
@@ -797,7 +853,7 @@ Focus on the top line, which contains the initialising `ggplot()` function call.
 
 --
 
-The aesthetic mappings here are pretty simple: They just define an x-axis (GDP per capita) and a y-axis (life expecancy).
+The aesthetic mappings here are pretty simple: They just define an x-axis (GDP per capita) and a y-axis (life expectancy).
 - To get a sense of the power and flexibility that comes with this approach, however, consider what happens if we add more aesthetics to the plot call...
 
 ---
@@ -831,16 +887,14 @@ The aesthetics expect "long" data. This is distinct from the "wide" format, wher
 
 --
 
-.pull-left[
   #### Long will work
 ```{r aesthetics_long,echo=FALSE}
-gapminder 
+head(gapminder)
 ```
-]
-.pull-right[
 
 #### Wide would not work
 
+.scroll-box-12[
 ```{r aesthetics_wide,echo=FALSE}
 gapminder %>% pivot_wider(id_cols=c(country,continent),names_from=year,values_from=c(lifeExp,gdpPercap)) 
 ```
@@ -1015,7 +1069,7 @@ ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
 Note that this animated plot provides a much more intuitive understanding of the underlying data. Just as [Hans Rosling](https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen) intended.
 
 ---
-# But do GDP per cap increases cause life expectancy to increase?
+# But do GDPPC increases cause life expectancy to increase?
 
 - We can't answer this question with a simple plot.
 - We also can't answer this question with a very fancy plot. 
@@ -1027,13 +1081,6 @@ Note that this animated plot provides a much more intuitive understanding of the
 ---
 # What else? (cont.)
 
-We also haven't touched on ggplot2's relationship to "tidy" data.
-  - It actually forms part of a suite of packages collectively known as the [tidyverse](https://www.tidyverse.org/). 
-  - We will get back to this.
-
-Rest assured, you will be using ggplot2 throughout the rest of this course and developing your skills along the way.
-- Your second assignment (coming up) is a chance specifically to hone some of those skills.
-
 You can do some reading and practice on your own. Pick any of the following (or choose among the litany of online resources) and work through their examples:
 - [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html) of *R for Data Science* by Hadley Wickham and Garett Grolemund.
 - [*Data Visualization: A Practical Guide*](https://socviz.co/makeplot.html) by Kieran Healy.
@@ -1041,7 +1088,7 @@ You can do some reading and practice on your own. Pick any of the following (or 
 
 For next class on GitHub, please complete the following:
 
-- Problem Set 0
+- Exercise 0 Part I
 - Work through Chapters 1-14 of https://happygitwithr.com/
 - Read through the [Git fundamentals](https://happygitwithr.com/git-intro) unit
 
