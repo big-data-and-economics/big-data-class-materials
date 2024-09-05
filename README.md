@@ -14,7 +14,7 @@ My office hours are:
 - Tuesdays 4pm-5pm
 - Wednesdays 10:30am-11:30am
 
-My office is in Pettengill 166.
+My office is in Pettengill 161.
 
 You can make an appointment at [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61). 
 
