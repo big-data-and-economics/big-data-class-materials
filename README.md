@@ -40,6 +40,10 @@ If you would like to discuss a private matter, you can of course email me at kco
 
 <!-- You can book time [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61). -->
 
+# Class updates
+
+Check the [discussions page](https://github.com/orgs/big-data-and-economics/discussions/4) for most recent updates. 
+
 # Lectures 
 
 *Note: While I have provided PDF versions of the lectures, they are best viewed as HTMLs.*
