@@ -77,26 +77,13 @@ name: prologue
 1. Introduce version control
 
 2. Learn the steps of a basic Git/GitHub workflow with Rstudio
-  - Create an SSH Key in RStudio.
+  - Create an SSH Key in RStudio if you did not complete the first exercise.
   - Create a GitHub repository as a project in RStudio.
   - Implement a commit, push, and pull using GitHub.
   - Create a new branch in your repository.
   - Create and fix a merge conflict in your repository.
 
 3. Talk about READMEs and .gitignore files
-
----
-
-# Student presentation: R Markdown
-
-Resources:
-- Website: https://rmarkdown.rstudio.com
-- Cheatsheet: https://github.com/rstudio/cheatsheets/raw/main/rmarkdown-2.0.pdf
-- Book: [*R Markdown: The Definitive Guide*](https://bookdown.org/yihui/rmarkdown) (Yihui Xie, JJ Allaire, and Garrett Grolemund)
-
-Other points:
-- You will be submitting all of your assignments as R Markdown documents.
-- FWIW, my lecture slides and notes are all written in R Markdown too. (E.g. This slide deck is built using the [**xaringan**](https://github.com/yihui/xaringan/wiki) package with the metropolis theme.)
 
 ---
 
@@ -108,34 +95,18 @@ We went through a software installation check during the previous lecture. By no
 
 ☑ Installed [RStudio](https://www.rstudio.com/products/rstudio/download/preview/).
 
-☑ Installed [Git](https://git-scm.com/downloads).
+☑ Installed [Git](https://git-scm.com/downloads) and [GitHub Desktop](https://desktop.github.com/).
 
 ☑ Created an account on [GitHub](https://github.com/) 
 
 ☑ Accepted an invitation to ECON 368 course repo.
 
+☑ Created an SSH key in RStudio and added it to your GitHub account.
+
 
 &lt;/br&gt;
 
 If in doubt about software, please consult Jenny Bryan's amazing guide: http://happygitwithr.com.
-
----
-# Class updates
-
-- The [final project replication](https://github.com/big-data-and-economics/final-project) instructions have been posted. Please read through. 
-  - Replication proposal is due 1/25
-  - It is a group project, please select a partner by 1/18
-
-- I added my policy on posting to GitHub to the [Discussions page](https://github.com/orgs/big-data-and-economics/discussions/6)
-  - tl;dr: Post thoughtfully
-
-- How are folks doing with problem set 0?
-
-- Questions on: 
-  - GitHub course page?
-  - Syllabus and course policies? (Make note of regrading policy.)
-  - Grading? 
-  - GitHub Education?
 
 ---
 class: inverse, center, middle
@@ -159,14 +130,14 @@ name: git
 
 - Git is a distributed version control system. (Wait, what?)
 - Okay, try this: Imagine if Dropbox and the "Track changes" feature in MS Word had a baby. Git would be that baby.
-- In fact, it's even better than that because Git is optimised for the things that economists and data scientists spend a lot of time working on (e.g. code).
+- Git is optimized for coding and project management, i.e. what economists and data scientists spend a lot of time doing
 - There is a learning curve, but I promise you it's worth it.
 
 ### GitHub
 
-- It's important to realise that Git and GitHub are distinct things.
+- Git and GitHub are distinct things.
 - GitHub is an online hosting platform that provides an array of services built on top of the Git system. (Similar platforms include Bitbucket and GitLab.)
-- Just like we don't *need* Rstudio to run R code, we don't *need* GitHub to use Git... But it will make our lives so much easier.
+- We don't *need* GitHub to use Git... But it will make our lives so much easier.
 
 ---
 
@@ -179,10 +150,9 @@ Git and GitHub's role in global software development is not in question.
 
 ### ... to scientific research
 
-Scientists and academic researchers are cottoning on too. 
 - Benefits of VC and collaboration tools aside, Git(Hub) helps to operationalise the ideals of open science and reproducibility.
 - Journals have increasingly strict requirements regarding reproducibility and data access. GH makes this easy (DOI integration, off-the-shelf licenses, etc.)
-- I host all of the code and data for my [papers](https://kylecoombs.com/research/) on GH. Same for teaching materials. I even use it to host and maintain my [website](https://github.com/grantmcdermott/grantmcdermott.github.io).
+- I host all of the code for my [papers](https://kylecoombs.com/research/) on GH. I even use it to host and maintain my [website](https://github.com/kgcsport/kgcsport.github.io).
 - *Nature:* "[Democratic databases: science on GitHub](https://www.nature.com/news/democratic-databases-science-on-github-1.20719)" (Perkel, 2016).
 
 ---
@@ -191,6 +161,18 @@ name: rstudio
 
 # Git(Hub) + RStudio
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+# Some terminology
+
+- There's a lot of jargon in the open source software world. Here are some key terms to get you started:
+  
+  - GUI: Graphical User Interface. The point-and-click way of interacting with a program.
+  - GitHub (GH): The online platform where you store your Git repositories.
+  - GitHub Desktop: A GUI for Git that makes it easier to interact with your repositories. _(We will only use this as a backup in this course.)_
+  - IDE: Integrated Development Environment. RStudio is an example of an IDE.
+  - R: The programming language that we use in this course.
+  - RStudio: The IDE that we use for R programming.
 
 ---
 
@@ -210,7 +192,7 @@ I also want to bookmark a general point that we'll revisit many times during thi
 
 # First create an SSH-key
 
-Before we get started, you need to create an SSH key on your local machine.
+Before we get started, raise your hand if you did not successfully create an SSH key on your local machine. You will need one today.
 
 - SSH keys are a way to identify trusted computers, without involving passwords.
 - A private key on your computer that matches a public key to put on servers, GitHub, etc. 
@@ -249,7 +231,7 @@ Your public key has been saved in /Users/you/.ssh/id_ed25519.pub.
 ```
 
 ---
-# Add the SSH-key to ssh-agent, then GitHub
+# Add SSH-key to ssh-agent, GitHub
 
 - Then you'll need to add the key to the ssh-agent:
 ```bash
@@ -285,13 +267,13 @@ ssh-add ~/.ssh/id_ed25519
 The starting point for our workflow is to link a GitHub repository (i.e. "repo") to an RStudio Project. Here are the steps we're going to follow:
 
 1. Create the repo on GitHub and initialize with a README.
-2. Copy the HTTPS/SSH link (the green "Clone or Download" button).&lt;sup&gt;1&lt;/sup&gt;
+2. Copy the SSH link (the green "Code" button).&lt;sup&gt;1&lt;/sup&gt;
 3. Open up RStudio.
 4. Navigate to `File -&gt; New Project -&gt; Version Control -&gt; Git`.
 5. Paste your copied link into the "Repository URL:" box.
 6. Choose the project path ("Create project as subdirectory of:") and click `Create Project`.
 
-.footnote[&lt;sup&gt;1&lt;/sup&gt; It's easiest to start with HTTPS, but &lt;a href="http://happygitwithr.com/ssh-keys.html#ssh-keys" target="_blank"&gt;SSH&lt;/a&gt; is advised for more advanced users.]
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Do not use the HTTPS link. It will cause problems with RStudio and you will only be able to use GitHub Desktop.]
 
 --
 
@@ -368,7 +350,7 @@ Note the helpful commit message to ourselves.
 
 ---
 
-# Push and Pull
+# Pull then push
 
 &lt;div align="center"&gt;
 &lt;img src="pics/git-push-pull.gif" height=500&gt;
@@ -408,91 +390,66 @@ RStudio Projects are great.
 
 .footnote[&lt;sup&gt;1&lt;/sup&gt; You know that calling files from `YourComputer/YourName/Documents/Special-Subfolder/etc` in your scripts makes you a bad person, right?]
 
----
-class: inverse, center, middle
-name: shell
+&lt;!-- Add section .gitignore here? Tell them to include .DS_Store if on a MAC. --&gt;
 
-# Git from the shell
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
 
 ---
 
-# Why bother with the shell?
+# .gitignore
 
-The GitHub + RStudio Project combo is ideal for new users.
-- RStudio's Git integration and built-in GUI cover all the major operations.
-- RStudio Projects FTW.
+A .gitignore file tells Git what to — *wait for it* — ignore.
 
-However, I want to go over Git &lt;a href="http://happygitwithr.com/ssh-keys.html#shell" target="_blank"&gt;shell&lt;/a&gt; commands so that you can internalise the basics.
-- The shell is more powerful and flexible. Does some things that the RStudio Git GUI can't.
-- Potentially more appropriate for projects that aren't primarily based in R. (Although, no real harm in using RStudio Projects to clone a non-R repo.)
-- Also, I don't want to screen record more
+This is especially useful if you want to exclude whole folders or a class of files (e.g. based on size or type).
+- Proprietary data files should be ignored from the beginning if you intend to make a repo public at some point.
+- Very large individual files (&gt;100 MB) exceed GitHub's maximum allowable size and should be ignored regardless. See &lt;a href="https://help.github.com/articles/working-with-large-files/" target="_blank"&gt;here&lt;/a&gt; and &lt;a href="https://help.github.com/articles/versioning-large-files/" target=_"blank"&gt;here&lt;/a&gt;.
+
+I typically add compiled datasets to my .gitignore in the early stages of a project.
+- Reduces redundant version control history, so I only save the raw data and the code used to compile it
+- Simple to remove from my .gitignore once the project is being finalised (e.g. paper is being submitted).
+  
+---
+
+# .gitignore (cont.)
+
+You can create a .gitignore file in multiple ways.
+
+- A .gitignore file was automatically generated if you cloned your repo with an RStudio Project.
+- You could also have the option of adding one when you first create a repo on GitHub.
+- Or, you can create one with your preferred text editor. (Must be saved as ".gitignore".)
+
+Once the .gitignore file is created, simply add in lines of text corresponding to the files that should be ignored.
+
+- To ignore a single a file: `FILE-I-WANT-TO-IGNORE.csv`
+- To ignore a whole folder (and all of its contents, subfolders, etc.): `FOLDER-NAME/**`
+- The standard shell commands and special characters apply.
+  - E.g. Ignore all CSV files in the repo: `*.csv`
+  - E.g. Ignore all files beginning with "test": `test*`
+  - E.g. Don't ignore a  particular file: `!somefile.txt`
+
+---
+# Let's ignore some file types!
+
+- Open up your `.gitignore` file in RStudio.
+
+- Add the following line of text: `*.csv` to your `.gitignore`
+
+- Save the file and run the following code in your R console:
+
+
+``` r
+download.file('https://tinyurl.com/econ368ignore',destfile='my_data.csv')
+```
+
+- Check your git tab in Rstudio
+
+1. The `.gitignore` file should be in need of staging
+2. The `my_data.csv` file should not appear despite being in your working directory
+
+- Why not?
 
 --
 
-(Yes, we're going to cover the shell in depth next lecture, but think of this as a sneak preview.)
-
----
-
-# Main Git shell commands
-
-Clone a repo.
-```bash
-$ git clone git@REPOSITORY-URL
-```
-
-See the commit history (hit spacebar to scroll down or q to exit).
-```bash
-$ git log
-```
-
-What has changed? 
-```bash
-$ git status
-```
-
----
-
-# Main Git shell commands (cont.)
-
-Stage ("add") a file or group of files.
-```bash
-$ git add NAME-OF-FILE-OR-FOLDER
-```
-
-You can use [wildcard](https://ryanstutorials.net/linuxtutorial/wildcards.php) characters to stage a group of files (e.g. sharing a common prefix). There are a bunch of useful flag options too:
-
-- Stage all files.
-```bash
-$ git add -A
-```
-- Stage updated files only (modified or deleted, but not new).
-```bash
-$ git add -u
-```
-- Stage new files only (not updated).
-```bash
-$ git add .
-```
-
----
-
-# Main Git shell commands (cont.)
-
-Commit your changes.
-```bash
-$ git commit -m "Helpful message"
-```
-
-Pull from the upstream repository (i.e. GitHub).
-```bash
-$ git pull
-```
-
-Push any local changes that you've committed to the upstream repo (i.e. GitHub).
-```bash
-$ git push
-```
+Because we told Git to ignore all CSV files in the `.gitignore` file!
 
 ---
 class: inverse, center, middle
@@ -525,7 +482,7 @@ Did P1 encounter a `merge conflict` error?
 
 # Merge conflicts
 
-Let's confirm what's going on.
+Let's confirm what's going on. Type this into your terminal:
 ```bash
 $ git status
 ```
@@ -551,9 +508,9 @@ You should see something like:
 # README
 Some text here.
 &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-Text added by Partner 2.
-=======
 Text added by Partner 1.
+=======
+Text added by Partner 2.
 &gt;&gt;&gt;&gt;&gt;&gt;&gt; 814e09178910383c128045ce67a58c9c1df3f558.
 More text here.
 ```
@@ -698,6 +655,7 @@ Need to specify how to reconcile divergent branches.
 ]
 
 - Per an [update in 2022](https://github.com/desktop/desktop/pull/14439), you should not be getting this message as a fatal error
+  - If you got this error, you likely do not have the latest version of Git installed as requested. Fix this.
 
 - Note that GitHub issues and pull requests were used by professionals to improve the product over time
 
@@ -743,6 +701,89 @@ $ git config --global core.autocrlf input
 ```
 
 (Windows users: Change `input` to `true`).
+
+
+---
+class: inverse, center, middle
+name: shell
+
+# Git from the shell
+&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+
+# Why bother with the shell?
+
+The GitHub + RStudio Project combo is ideal for new users.
+- RStudio's Git integration and built-in GUI cover all the major operations.
+- RStudio Projects FTW.
+
+However, I want to go over Git &lt;a href="http://happygitwithr.com/ssh-keys.html#shell" target="_blank"&gt;shell&lt;/a&gt; commands so that you can internalise the basics.
+- The shell is more powerful and flexible. Does some things that the RStudio Git GUI can't.
+- Potentially more appropriate for projects that aren't primarily based in R. (Although, no real harm in using RStudio Projects to clone a non-R repo.)
+- Also, I don't want to screen record more
+
+---
+
+# Main Git shell commands
+
+Clone a repo.
+```bash
+$ git clone git@REPOSITORY-URL
+```
+
+See the commit history (hit spacebar to scroll down or q to exit).
+```bash
+$ git log
+```
+
+What has changed? 
+```bash
+$ git status
+```
+
+---
+
+# Main Git shell commands (cont.)
+
+Stage ("add") a file or group of files.
+```bash
+$ git add NAME-OF-FILE-OR-FOLDER
+```
+
+You can use [wildcard](https://ryanstutorials.net/linuxtutorial/wildcards.php) characters to stage a group of files (e.g. sharing a common prefix). There are a bunch of useful flag options too:
+
+- Stage all files.
+```bash
+$ git add -A
+```
+- Stage updated files only (modified or deleted, but not new).
+```bash
+$ git add -u
+```
+- Stage new files only (not updated).
+```bash
+$ git add .
+```
+
+---
+
+# Main Git shell commands (cont.)
+
+Commit your changes.
+```bash
+$ git commit -m "Helpful message"
+```
+
+Pull from the upstream repository (i.e. GitHub).
+```bash
+$ git pull
+```
+
+Push any local changes that you've committed to the upstream repo (i.e. GitHub).
+```bash
+$ git push
+```
 
 ---
 class: inverse, center, middle
@@ -911,39 +952,6 @@ READMEs should be written in Markdown, which GH automatically renders.
 - We'll learn more about [Markdown](https://www.markdownguide.org/) (and its close relation, [R Markdown](https://rmarkdown.rstudio.com/)) during the course of our homework assignments.
 
 ---
-
-# .gitignore
-
-A .gitignore file tells Git what to — *wait for it* — ignore.
-
-This is especially useful if you want to exclude whole folders or a class of files (e.g. based on size or type).
-- Proprietary data files should be ignored from the beginning if you intend to make a repo public at some point.
-- Very large individual files (&gt;100 MB) exceed GitHub's maximum allowable size and should be ignored regardless. See &lt;a href="https://help.github.com/articles/working-with-large-files/" target="_blank"&gt;here&lt;/a&gt; and &lt;a href="https://help.github.com/articles/versioning-large-files/" target=_"blank"&gt;here&lt;/a&gt;.
-
-I typically add compiled datasets to my .gitignore in the early stages of a project.
-- Reduces redundant version control history, where the main thing is the code that produces the compiled dataset, not the end CSV in of itself. ("Source is real.")
-- Simple to remove from my .gitignore once the project is being finalised (e.g. paper is being submitted).
-  
----
-
-# .gitignore (cont.)
-
-You can create a .gitignore file in multiple ways.
-
-- A .gitignore file was automatically generated if you cloned your repo with an RStudio Project.
-- You could also have the option of adding one when you first create a repo on GitHub.
-- Or, you can create one with your preferred text editor. (Must be saved as ".gitignore".)
-
-Once the .gitignore file is created, simply add in lines of text corresponding to the files that should be ignored.
-
-- To ignore a single a file: `FILE-I-WANT-TO-IGNORE.csv`
-- To ignore a whole folder (and all of its contents, subfolders, etc.): `FOLDER-NAME/**`
-- The standard shell commands and special characters apply.
-  - E.g. Ignore all CSV files in the repo: `*.csv`
-  - E.g. Ignore all files beginning with "test": `test*`
-  - E.g. Don't ignore a  particular file: `!somefile.txt`
-
----
 # GitHub Codespaces
 
 - GitHub Codespaces is a new feature that allows you to code directly in the browser
@@ -1031,26 +1039,6 @@ name: summary
 --
 
 Repeat steps 3—7 (but especially steps 3 and 4) often.
-
----
-
-# Coming up
-
-### Get the course materials
-
-If you haven't done so already, now is a good time to clone/fork the course materials to your local computer.
-
-### Problem Set 0
-
-Problem Set 0 is due on Thursday.
-
-### Problem Set 1 
-
-This will be posted later this week and is due at the end of the month.
-
-### Next lecture
-
-Learning to love the shell...
 
 ---
 class: inverse, center, middle
