@@ -274,10 +274,10 @@ Economics is at the forefront of developing statistical methods for analyzing da
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
 | 5 × problem sets                          | 20%    | Top 4  |
-| 1 × group presentation                    | 15%    | Top 1   |
-| 1 × GitHub participation                  | 5%     | Overall   |
+| 1 × group presentation                    | 20%    | Top 1   |
+| 1 × GitHub participation                  | 10%     | Overall   |
 | N x In-class exercises                    | 20%    | Completion by next class |
-| 1 × Final Project                         | 30%    | TK |
+| 1 × Final Project                         | 30%    | Hackathon participation |
 | Classroom participation                   | Bonus up to 2.5%    | Discretion  |
 | Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
 
