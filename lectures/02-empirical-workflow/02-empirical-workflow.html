@@ -88,8 +88,6 @@ Also a small contribution from [here](https://garywoodfine.com/what-is-clean-cod
 # Jargon
 
 - There is a jargon in this class that won't make sense at first, I'll try to flag it as it comes
-    - If I don't flag a term, look it up on ChatGPT
-    - If it still doesn't make sense, ask me -- could be I'm using it idiosyncratically
 
 - Here's a few terms:
 
@@ -935,42 +933,6 @@ ggplot(data = dat, x = Sepal.Length, y = Sepal.Width) +
 ## [70] R6_2.5.1                plyr_1.8.9              systemfonts_1.1.0
 ```
 ]
----
-# Now you try
-
-- Below is some code I wrote that is throwing an error
-- Try to write a MRE
-- I have already raised this as a poorly-written issue on GitHub. You can see the issue [here](https://github.com/big-data-and-economics/exercises/issues/6)
-- Tips: https://aosmith16.github.io/spring-r-topics/slides/week09_reprex.html#1
-
-
-``` r
-# install.packages('ggplot2')
-library(ggplot2)
-mtcars46carb     = mtcars[mtcars$carb==4 | mtcars$carb==6]
-```
-
-```
-## Error in `[.data.frame`(mtcars, mtcars$carb == 4 | mtcars$carb == 6): undefined columns selected
-```
-
-``` r
-mtcars4carb_mean = mean(mtcars[mtcars$carb==4,'mpg'],na.rm=TRUE)
-mtcars6carb_mean = mean(mtcars[mtcars$carb==6,'mpg'],na.rm=TRUE)
-
-ggplot(data=mtcars46carb, aes(x=mpg, y=wt)) +
-    geom_point() +
-    geom_smooth(method='lm') +
-    geom_vline(xintercept=mtcars4carb_mean, color='red') +
-    geom_vline(xintercept=mtcars6carb_mean, color='blue') +
-    annotate('text', x=mtcars4carb_mean-.25,y=5, label='4-carb mean', color='red', angle=90) +
-    annotate('text', x=mtcars6carb_mean-.25,y=5, label='6-carb mean', color='blue', angle=90) +
-    labs(title='Mpg vs. weight for 4 and 6 carburetor cars')
-```
-
-```
-## Error in eval(expr, envir, enclos): object 'mtcars46carb' not found
-```
 
 ---
 # Troubleshooting tips
@@ -1046,6 +1008,48 @@ ggplot(data=mtcars46carb, aes(x=mpg, y=wt)) +
 
 - .hi[I strongly encourage you to do pair programming on problem sets in this course!]
     - (Sometimes I will require it)
+
+---
+# Try to write an MRE!
+
+- Sync your fork of the exercise repository and open the folder for [mre-exercise](https://github.com/big-data-and-economics/exercises/blob/main/mre-exercise)
+- The file `mre-opatlas.Rmd` has a bug in it that has led to a host of problems when you look at the knit output, `mre-opatlas.md`
+- Try to write an MRE
+- I have already raised this as a poorly-written issue on GitHub. You can see the issue [here](https://github.com/big-data-and-economics/exercises/issues/6)
+- Tips: https://aosmith16.github.io/spring-r-topics/slides/week09_reprex.html#1
+
+
+``` r
+# install.packages('ggplot2')
+library(ggplot2)
+opp_atlas &lt;- read.csv('https://raw.githubusercontent.com/big-data-and-economics/exercises/main/mre-exercise/data/county_opatlas.csv?token=GHSAT0AAAAAACVGS6MILY55LOABVIMH4OX6ZXDI4DQ')
+opp_atlas_me = opp_atlas[opp_atlas$state_name=='Maine'] 
+```
+
+```
+## Error in `[.data.frame`(opp_atlas, opp_atlas$state_name == "Maine"): undefined columns selected
+```
+
+``` r
+opp_atlas_andro_mean = mean(opp_atlas_me[opp_atlas_me$county_name=='Androscoggin','kfr_p25'],na.rm=TRUE)
+```
+
+```
+## Error in eval(expr, envir, enclos): object 'opp_atlas_me' not found
+```
+
+``` r
+ggplot(data=opp_atlas_me, aes(x=cohort, y=kfr_p25)) +
+    geom_point(aes(col=county_name)) +
+    geom_smooth(method='lm',se=FALSE) +
+    geom_hline(yintercept=opp_atlas_andro_mean, color='red') +
+    annotate('text', x=1985,y=opp_atlas_andro_mean-.005, label='Androscoggin', color='red') +
+    labs(title='Average income percentile of children born in 25th income percentile by cohort', x='Cohort', y='Income percentile',col='County')
+```
+
+```
+## Error in eval(expr, envir, enclos): object 'opp_atlas_me' not found
+```
 
 ---
 class: inverse, center, middle
