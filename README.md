@@ -296,6 +296,12 @@ Throughout the course you will engage in problem sets that deal with actual data
 
 I reserve the right to add a problem set if I feel it will aid your learning.
 
+### Exercises
+
+Exercises are quick turnaround assignments that are designed to get you to think about the material we covered in class. They will be due by the next class period. 
+
+I will drop the lowest two exercise grades. You will have the opportunity to revise any exercise submission to improve your grade as per the policy outlined below. You have a week to re-submit.
+
 #### What you will turn in:
 
 - Each problem set will be posted as a GitHub repository, which you will fork, set to private, and then clone to your computer (instructions provided in each problem set)
