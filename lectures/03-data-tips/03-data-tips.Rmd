@@ -546,10 +546,10 @@ Note that the JSON code above is also valid YAML; YAML simply has an alternative
 library(jsonlite)
 
 # Read in the JSON file
-read_json('data/lakisha_aer.json',
+resumes_json <- read_json('data/lakisha_aer.json',
   simplifyVector = TRUE # Simplify the data to a dataframe
-  ) %>%
-  head(5)
+  ) 
+head(resumes_json)
 ```
 
 ---
@@ -639,6 +639,34 @@ Because data can be big and bulky, it is often easier to store and share the dat
 ```
 
 ---
+# Can I just read a zip directly in?
+
+- Yes, but it's a little more complicated
+- And you can may still want to read in a few rows or columns like before
+
+```{r read-in-zip,warning=FALSE,message=FALSE}
+read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv'))  # Unzip the file
+  head(5) # pipe to a read csv
+```
+
+Check appendix for what happens with "bigger" files when you attempt this.
+
+---
+# How do I zip a file?
+
+- You can zip a file using the `zip` command in the R terminal
+
+- It allows you to zip one or many files
+
+```{r zip-file,eval=FALSE}
+zip(zipfile='lakisha_aer_one.zip',
+  files='lakisha_aer.csv')
+
+zip(zipfile='lakisha_aer.zip',
+  files=c('lakisha_aer.rds','lakisha_aer.csv','lakisha_aer.tsv','lakisha_aer.xlsx','lakisha_aer.dta','lakisha_aer.json'))
+```
+
+---
 # Other file types that aren't data
 
 - There are many file types that don't correspond to readable data. For example, script files (e.g. `.R`, `.py`, `.jl`, `.sql`, `.do`, `.cpp`, `.f90`, ...) are text files with convenient extensions to help the user remember which programming language the code is in
@@ -651,37 +679,6 @@ Because data can be big and bulky, it is often easier to store and share the dat
 - When you think of data, you probably think of rows and columns, like a matrix or a spreadsheet 
 
 - But it turns out there are other ways to store data, and you should know their similarities and differences to tabular data
-
----
-# Can I just read a zip directly in?
-
-- Yes, but it's a little more complicated
-- And you can may still want to read in a few rows or columns like before
-
-```{r read-in-zip,warning=FALSE,message=FALSE}
-unz('data/lakisha_aer.zip','lakisha_aer.csv') %>% # Unzip the file
-  read_csv(show_col_types = FALSE) # pipe to a read csv
-```
-
-Check appendix for what happens with "bigger" files when you attempt this.
-
----
-# Minor aside: what's `%>%`?
-
-- This may be the first time you're seeing `%>%` called a pipe
-
-- This comes from the `tidyverse`, which is a group of R functions that are designed to work well together and follow the .hi[tidy data] principles
-
-- Basically a pipe takes the output of the function before it and sends it to the first argument of the function after it
-
-- It means you can do things in order of how you think about them 
-
-1. unzip first (returns the file name)
-2. then feed the file name to the `read_csv` function
-
-- You can do this with lots of functions, not just `unz()` and `read_csv()`
-
-- We'll cover the tidyverse more in the next lecture
 
 ---
 class: inverse, center, middle

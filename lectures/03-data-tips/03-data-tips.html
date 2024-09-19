@@ -454,19 +454,19 @@ readr::read_csv(
 ```
 
 ```
-## # A tibble: 4,873 × 7
-##    id       ofjobs firstname       sex       race        call lmedhhinc
-##    &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
-##  1 id row 1      2 firstname row 3 sex row 4 race row 5     0      9.53
-##  2 id row 1      3 firstname row 3 sex row 4 race row 5     0     10.4 
-##  3 id row 1      1 firstname row 3 sex row 4 race row 5     0     10.5 
-##  4 b             2 Allison         FEMALE    Caucasian      0      9.53
-##  5 b             3 Kristen         FEMALE    Caucasian      0     10.4 
-##  6 b             1 Lakisha         FEMALE    BLACK          0     10.5 
-##  7 b             4 Latonya         FEMALE    BLACK          0     10.4 
-##  8 b             3 Carrie          FEMALE    Caucasian      0      9.88
-##  9 b             2 Jay             MALE      Caucasian      0     10.4 
-## 10 b             2 Jill            FEMALE    Caucasian      0     10.5 
+## # A tibble: 4,873 × 5
+##    firstname       gender       race       call       ofjobs
+##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt;
+##  1 firstname row 1 gender row 1 race row 1 call row 1     NA
+##  2 firstname row 2 gender row 2 race row 2 call row 2     NA
+##  3 firstname row 3 gender row 3 race row 3 call row 3     NA
+##  4 Allison         female       cauc       no              2
+##  5 Kristen         female       cauc       no              3
+##  6 Lakisha         female       afam       no              1
+##  7 Latonya         female       afam       no              4
+##  8 Carrie          female       cauc       no              3
+##  9 Jay             male         cauc       no              2
+## 10 Jill            female       cauc       no              2
 ## # ℹ 4,863 more rows
 ```
 
@@ -622,10 +622,10 @@ Note that the JSON code above is also valid YAML; YAML simply has an alternative
 library(jsonlite)
 
 # Read in the JSON file
-read_json('data/lakisha_aer.json',
+resumes_json &lt;- read_json('data/lakisha_aer.json',
   simplifyVector = TRUE # Simplify the data to a dataframe
-  ) %&gt;%
-  head(5)
+  ) 
+head(resumes_json)
 ```
 
 ```
@@ -635,6 +635,7 @@ read_json('data/lakisha_aer.json',
 ## 3 firstname row 3 gender row 3 race row 3 call row 3     NA
 ## 4         Allison       female       cauc         no      2
 ## 5         Kristen       female       cauc         no      3
+## 6         Lakisha       female       afam         no      1
 ```
 
 ---
@@ -742,20 +743,6 @@ Because data can be big and bulky, it is often easier to store and share the dat
 
 
 ---
-# Other file types that aren't data
-
-- There are many file types that don't correspond to readable data. For example, script files (e.g. `.R`, `.py`, `.jl`, `.sql`, `.do`, `.cpp`, `.f90`, ...) are text files with convenient extensions to help the user remember which programming language the code is in
-
-- As a rule of thumb, if you don't recognize the extension of a file, it's best to inspect the file in a text editor (though pay attention to the size of the file as this can also help you discern whether it's code or data)
-
----
-# General Types of Data
-
-- When you think of data, you probably think of rows and columns, like a matrix or a spreadsheet 
-
-- But it turns out there are other ways to store data, and you should know their similarities and differences to tabular data
-
----
 # Can I just read a zip directly in?
 
 - Yes, but it's a little more complicated
@@ -763,8 +750,7 @@ Because data can be big and bulky, it is often easier to store and share the dat
 
 
 ``` r
-unz('data/lakisha_aer.zip','lakisha_aer.csv') %&gt;% # Unzip the file
-  read_csv(show_col_types = FALSE) # pipe to a read csv
+read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv'))  # Unzip the file
 ```
 
 ```
@@ -784,25 +770,45 @@ unz('data/lakisha_aer.zip','lakisha_aer.csv') %&gt;% # Unzip the file
 ## # ℹ 4,863 more rows
 ```
 
+``` r
+  head(5) # pipe to a read csv
+```
+
+```
+## [1] 5
+```
+
 Check appendix for what happens with "bigger" files when you attempt this.
 
 ---
-# Minor aside: what's `%&gt;%`?
+# How do I zip a file?
 
-- This may be the first time you're seeing `%&gt;%` called a pipe
+- You can zip a file using the `zip` command in the R terminal
 
-- This comes from the `tidyverse`, which is a group of R functions that are designed to work well together and follow the .hi[tidy data] principles
+- It allows you to zip one or many files
 
-- Basically a pipe takes the output of the function before it and sends it to the first argument of the function after it
 
-- It means you can do things in order of how you think about them 
+``` r
+zip(zipfile='lakisha_aer_one.zip',
+  files='lakisha_aer.csv')
 
-1. unzip first (returns the file name)
-2. then feed the file name to the `read_csv` function
+zip(zipfile='lakisha_aer.zip',
+  files=c('lakisha_aer.rds','lakisha_aer.csv','lakisha_aer.tsv','lakisha_aer.xlsx','lakisha_aer.dta','lakisha_aer.json'))
+```
 
-- You can do this with lots of functions, not just `unz()` and `read_csv()`
+---
+# Other file types that aren't data
 
-- We'll cover the tidyverse more in the next lecture
+- There are many file types that don't correspond to readable data. For example, script files (e.g. `.R`, `.py`, `.jl`, `.sql`, `.do`, `.cpp`, `.f90`, ...) are text files with convenient extensions to help the user remember which programming language the code is in
+
+- As a rule of thumb, if you don't recognize the extension of a file, it's best to inspect the file in a text editor (though pay attention to the size of the file as this can also help you discern whether it's code or data)
+
+---
+# General Types of Data
+
+- When you think of data, you probably think of rows and columns, like a matrix or a spreadsheet 
+
+- But it turns out there are other ways to store data, and you should know their similarities and differences to tabular data
 
 ---
 class: inverse, center, middle
