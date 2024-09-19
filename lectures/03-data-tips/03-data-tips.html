@@ -24,7 +24,7 @@ class: center, middle, inverse, title-slide
 ### Kyle Coombs
 ]
 .date[
-### Bates College | <a href="https://github.com/-big-data-and-economics">ECON/DCS 368</a>
+### Bates College | <a href="https://github.com/big-data-and-economics">ECON/DCS 368</a>
 ]
 
 ---
@@ -75,31 +75,7 @@ Today we'll focus on grappling with data
   - Big Data file types
 
 ---
-# Housekeeping
-
-- .hi[Presentations:] Sign-up in the [Presentations github repository](https://classroom.github.com/a/jWcBRDZJ)
-
-- .hi[Problem Set 1:] due on Sunday, January 29th at 11:59pm
-
-- .hi[Final Project Proposal:] due on Sunday, January 25th at 11:59pm
-  - Create a fork of the Final Project repository and add me as a collaborator
-  - List the names of you and your partner in the README.md file
-
-- If you notice something wrong with a problem set or lecture, please either:
-
-1. Raise it as an issue in the relevant repository
-2. Pull request the change you think is needed
-
-- Typo corrections, documentation improvement, etc. earn you extra credit (up to 10 points per problem set)
-
-- I will ask you to pull request fixes to receive the point
-
-- How do I pull request? It is in the git lecture, but I provide [instructions on the class materials page](https://github.com/big-data-and-economics/big-data-class-materials?tab=readme-ov-file#ive-spotted-a-mistake-or-would-like-to-contribute)
-
-- I have to approve any fixes, but I will aim to do so within 24 hours
-
----
-# Student Presentation: GitHub Desktop
+# Student Presentation
 
 ---
 # Why do we need to do this?
@@ -204,24 +180,15 @@ name: empirical-workflow
 
 #### On your computer
 
-- Everyone fork and clone the class materials repository to your class folder
+- Everyone sync your fork of the class exercises repository&lt;sup&gt;1&lt;/sup&gt;
 
-- Double-click `big-data-class-materials.Rproj` to open RStudio at the correct working directory
+- Double-click `exercises.Rproj` on your computer to open RStudio at the correct working directory
 
-- Type `setwd(lectures/03-data-tips/)` to make sure you are in the same directory as this `.Rmd`&lt;sup&gt;1&lt;/sup&gt;
+- Run the housekeeping file to install the relevant packages
 
-- Package installation: Install the following functions using `install.packages()` and `library()`
-  - Note: once you install a package, you don't need to do it again, just use `library()`
+- Alternatively, you can open a codespace in your `exercises` repo
 
-
-```r
-install.packages(c('tidyverse','arrow','datasauRus','gganimate'))
-library(tidyverse,arrow,datasauRus,gganimate)
-```
-
-- Alternatively, you can open a codespace
-
-- You can run code chunks by clicking the green play button in the top right of each chunk or the shortcut `Ctrl+Shift+Enter`
+- We will tackle the class exercise after class, but you'll take what we do in class to fill it in
 
 - We're going to explore a mangled version of the dataset from the Bertrand and Mullainathan (2004) resume audit study
 
@@ -257,45 +224,52 @@ library(tidyverse,arrow,datasauRus,gganimate)
 - Open the raw data and look at it: 
 
 
-```r
+``` r
 resumes &lt;- read_csv('data/lakisha_aer.csv',
   show_col_types= FALSE) # Don't tell me the column types
-head(resumes)
+head(resumes,10)
 ```
 
 ```
-## # A tibble: 6 × 7
-##   id       ofjobs firstname       sex       race        call lmedhhinc
-##   &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
-## 1 id row 1      2 firstname row 3 sex row 4 race row 5     0      9.53
-## 2 id row 1      3 firstname row 3 sex row 4 race row 5     0     10.4 
-## 3 id row 1      1 firstname row 3 sex row 4 race row 5     0     10.5 
-## 4 b             2 Allison         FEMALE    Caucasian      0      9.53
-## 5 b             3 Kristen         FEMALE    Caucasian      0     10.4 
-## 6 b             1 Lakisha         FEMALE    BLACK          0     10.5
+## # A tibble: 10 × 5
+##    firstname       gender       race       call       ofjobs
+##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt;
+##  1 firstname row 1 gender row 1 race row 1 call row 1     NA
+##  2 firstname row 2 gender row 2 race row 2 call row 2     NA
+##  3 firstname row 3 gender row 3 race row 3 call row 3     NA
+##  4 Allison         female       cauc       no              2
+##  5 Kristen         female       cauc       no              3
+##  6 Lakisha         female       afam       no              1
+##  7 Latonya         female       afam       no              4
+##  8 Carrie          female       cauc       no              3
+##  9 Jay             male         cauc       no              2
+## 10 Jill            female       cauc       no              2
 ```
+
+---
+# Drop junk rows
 
 - Oh weird, the first few rows are junk, let's skip them and give more informative names
 
 
-```r
+``` r
 resumes &lt;- read_csv('data/lakisha_aer.csv',
   skip=4, # skip some rows
-  col_names=c('id','ofjobs','firstname','sex','race','call','lmedhhinc'), # Column names
+  col_names=c('firstname','gender','race','call','ofjobs'), # Column names
   show_col_types = FALSE) # Don't tell me the column types
 head(resumes)
 ```
 
 ```
-## # A tibble: 6 × 7
-##   id    ofjobs firstname sex    race       call lmedhhinc
-##   &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;
-## 1 b          2 Allison   FEMALE Caucasian     0      9.53
-## 2 b          3 Kristen   FEMALE Caucasian     0     10.4 
-## 3 b          1 Lakisha   FEMALE BLACK         0     10.5 
-## 4 b          4 Latonya   FEMALE BLACK         0     10.4 
-## 5 b          3 Carrie    FEMALE Caucasian     0      9.88
-## 6 b          2 Jay       MALE   Caucasian     0     10.4
+## # A tibble: 6 × 5
+##   firstname gender race  call  ofjobs
+##   &lt;chr&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;
+## 1 Allison   female cauc  no         2
+## 2 Kristen   female cauc  no         3
+## 3 Lakisha   female afam  no         1
+## 4 Latonya   female afam  no         4
+## 5 Carrie    female cauc  no         3
+## 6 Jay       male   cauc  no         2
 ```
 
 ---
@@ -304,23 +278,26 @@ head(resumes)
 Do factor variables have multiple spellings?
 
 
-```r
-table(resumes$race,resumes$sex)
+``` r
+table(resumes$race,resumes$gender)
 ```
 
 ```
 ##            
-##                f FEMALE    m MALE  MLE WOMAN WOMN
-##   b         1140    131  471   18    0   325    0
-##   BLACK        0    290    0   60    0     0    0
-##   Caucasian    0    193    0   55    1     0    1
-##   w         1113    220  488   31    0   333    0
+##             female FEMALE male MALE  MLE WOMN
+##   afam        1855     15  548    0    0   14
+##   BLACK          0      0    0    1    0    2
+##   cauc        1761     13  541    0    2    0
+##   Caucasian     73      0   32    0    0   13
 ```
 
-The `skimr` package is great!
-.scroll-box-12[
+---
+# 3a. Skim again
 
-```r
+The `skimr` package is great!
+.scroll-box-20[
+
+``` r
 skimr::skim(resumes)
 ```
 
@@ -331,11 +308,11 @@ Table: Data summary
 |:------------------------|:-------|
 |Name                     |resumes |
 |Number of rows           |4870    |
-|Number of columns        |7       |
+|Number of columns        |5       |
 |_______________________  |        |
 |Column type frequency:   |        |
 |character                |4       |
-|numeric                  |3       |
+|numeric                  |1       |
 |________________________ |        |
 |Group variables          |None    |
 
@@ -344,19 +321,17 @@ Table: Data summary
 
 |skim_variable | n_missing| complete_rate| min| max| empty| n_unique| whitespace|
 |:-------------|---------:|-------------:|---:|---:|-----:|--------:|----------:|
-|id            |         0|             1|   1|   3|     0|      289|          0|
 |firstname     |         0|             1|   3|   8|     0|       36|          0|
-|sex           |         0|             1|   1|   6|     0|        7|          0|
-|race          |         0|             1|   1|   9|     0|        4|          0|
+|gender        |         0|             1|   3|   6|     0|        6|          0|
+|race          |         0|             1|   4|   9|     0|        4|          0|
+|call          |         0|             1|   2|   3|     0|        2|          0|
 
 
 **Variable type: numeric**
 
-|skim_variable | n_missing| complete_rate| mean|    sd|  p0|  p25|   p50|   p75|  p100|hist  |
-|:-------------|---------:|-------------:|----:|-----:|---:|----:|-----:|-----:|-----:|:-----|
-|ofjobs        |         0|             1| 3.07|  7.86| -99| 3.00|  4.00|  4.00|  7.00|▁▁▁▁▇ |
-|call          |         0|             1| 0.08|  0.27|   0| 0.00|  0.00|  0.00|  1.00|▇▁▁▁▁ |
-|lmedhhinc     |         0|             1| 8.22| 14.38| -99| 9.93| 10.14| 10.34| 11.12|▁▁▁▁▇ |
+|skim_variable | n_missing| complete_rate| mean|   sd|  p0| p25| p50| p75| p100|hist  |
+|:-------------|---------:|-------------:|----:|----:|---:|---:|---:|---:|----:|:-----|
+|ofjobs        |         0|             1| 3.11| 7.58| -99|   3|   4|   4|    7|▁▁▁▁▇ |
 ]
 
 - What's -99?
@@ -366,7 +341,7 @@ Table: Data summary
 
 - Go beyond the eyeball and graph the data
 
-```r
+``` r
 # ggplot is a great tool for visualizing data
 ggplot(data=resumes,mapping=aes(x=ofjobs))+
   geom_histogram()
@@ -379,9 +354,9 @@ ggplot(data=resumes,mapping=aes(x=ofjobs))+
 ---
 # 5. Visualize by group
 
-```r
-resumes &lt;-  mutate(resumes,race=ifelse(race=='w' | race=='Caucasian','White',
-    ifelse(race=="BLACK" | race=="b", "Black",race))) # change the data up
+``` r
+resumes &lt;-  mutate(resumes,race=ifelse(race=='cauc' | race=='Caucasian','White',
+    ifelse(race=="BLACK" | race=="afam", "Black",race))) # change the data up
 ggplot(data=resumes,aes(x=ofjobs,fill=race))+
     geom_histogram(alpha=0.25) # alpha makes bars see through! 
 ```
@@ -390,13 +365,13 @@ ggplot(data=resumes,aes(x=ofjobs,fill=race))+
 
 - Oh! I bet -99 means NA or missing
 - This only occurs for fake black name applicant profiles
-- That be bad news for this RCT...
+- That could be bad news for an RCT...
 
 ---
 # 6. Visualize summaries by group
 
 
-```r
+``` r
 ggplot(data=resumes,aes(y=ofjobs,x=race)) + 
   geom_bar(stat='summary',fun='mean')
 ```
@@ -464,16 +439,16 @@ name: downloading-data
 - Here is an example that downloads my copy of the Bertrand and Mullainathan (2004) data off of GitHub
 
 
-```r
+``` r
 download.file(
-  url='https://raw.githubusercontent.com/big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/data/lakisha_aer.csv',
-  destfile='data/lakisha_aer.csv')
+  url='https://raw.githubusercontent.com/big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/data/lakisha_aer.zip',
+  destfile='data/lakisha_aer.zip')
 ```
 
 - Several R packages will read files right off of the internet
 
 
-```r
+``` r
 readr::read_csv(
   file='https://raw.githubusercontent.com/big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/data/lakisha_aer.csv')
 ```
@@ -542,6 +517,7 @@ The following file extensions are not tied to a specific software program
 | PDF                                | Portable Document Format; not a great way to store data, but there exists much data in PDF format. Good luck unpacking it! |
 | TIFF, JPEG                         | These common image formats are used to store data in the form of images, or sometimes pictures of text data. There exist image processing libraries in almost every scientific programming language that can convert data in this format into more usable formats. |
 | MP3, WAV                           | These common audio formats may be used to store data. For example, voice-to-text applications have some way of converting income audio (in some format) into data that the machine can comprehend. The same holds for MP4 and other video file formats (e.g. for video input to self-driving cars, etc.) |
+| RDS                                | R data file; can be read in using the `readRDS()` function in R |
 ]
 
 - Here's a more [complete list](https://en.wikipedia.org/wiki/List_of_file_formats) of almost every file extension (note: missed Stata's `.do` and `.dta` formats).
@@ -549,7 +525,7 @@ The following file extensions are not tied to a specific software program
 - Another great discussion about file formats is [here](https://opendata.stackexchange.com/questions/1208/a-python-guide-for-open-data-file-formats) on stackexchange
 
 ---
-# ExamplesL JSON
+# Examples JSON
 
 A possible JSON representation describing a person ([source](https://en.wikipedia.org/wiki/JSON#Example))
 ```JSON
@@ -635,8 +611,31 @@ phoneNumber:
 gender: 
   type: male
 ```
-
+ 
 Note that the JSON code above is also valid YAML; YAML simply has an alternative syntax that makes it more human-readable
+
+---
+# Read a JSON
+
+
+``` r
+library(jsonlite)
+
+# Read in the JSON file
+read_json('data/lakisha_aer.json',
+  simplifyVector = TRUE # Simplify the data to a dataframe
+  ) %&gt;%
+  head(5)
+```
+
+```
+##         firstname       gender       race       call ofjobs
+## 1 firstname row 1 gender row 1 race row 1 call row 1     NA
+## 2 firstname row 2 gender row 2 race row 2 call row 2     NA
+## 3 firstname row 3 gender row 3 race row 3 call row 3     NA
+## 4         Allison       female       cauc         no      2
+## 5         Kristen       female       cauc         no      3
+```
 
 ---
 # Proprietary file extensions
@@ -665,7 +664,7 @@ The following file extensions typically require additional software to read, edi
   - I bet you someone has already needed to solve this problem
 
 
-```r
+``` r
 df_csv   &lt;- read_csv('data/lakisha_aer.csv')
 df_fread   &lt;- data.table::fread('data/lakisha_aer.tab')
 df_stata &lt;- haven::read_dta('data/lakisha_aer.dta')
@@ -681,7 +680,7 @@ df_xlsx &lt;- readxl::read_xlsx('data/lakisha_aer.xlsx')
 Just read in a single row to see the column names:
 
 
-```r
+``` r
 # I need to sete an environment variable to increase the size of the connection
 # R will complain if you try to read in a file that's too big
 # This will reset when I close this session.
@@ -697,26 +696,25 @@ df &lt;- read_csv('data/lakisha_aer.csv',n_max=1)
 Once you know your columns, read those in:
 
 
-```r
-Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
+``` r
 read_csv('data/lakisha_aer.csv',
-  col_select=c('id', 'race', 'sex','call'))
+  col_select=c('firstname', 'race', 'gender','call','ofjobs'))
 ```
 
 ```
-## # A tibble: 4,873 × 4
-##    id       race       sex        call
-##    &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;     &lt;dbl&gt;
-##  1 id row 1 race row 5 sex row 4     0
-##  2 id row 1 race row 5 sex row 4     0
-##  3 id row 1 race row 5 sex row 4     0
-##  4 b        Caucasian  FEMALE        0
-##  5 b        Caucasian  FEMALE        0
-##  6 b        BLACK      FEMALE        0
-##  7 b        BLACK      FEMALE        0
-##  8 b        Caucasian  FEMALE        0
-##  9 b        Caucasian  MALE          0
-## 10 b        Caucasian  FEMALE        0
+## # A tibble: 4,873 × 5
+##    firstname       race       gender       call       ofjobs
+##    &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;       &lt;dbl&gt;
+##  1 firstname row 1 race row 1 gender row 1 call row 1     NA
+##  2 firstname row 2 race row 2 gender row 2 call row 2     NA
+##  3 firstname row 3 race row 3 gender row 3 call row 3     NA
+##  4 Allison         cauc       female       no              2
+##  5 Kristen         cauc       female       no              3
+##  6 Lakisha         afam       female       no              1
+##  7 Latonya         afam       female       no              4
+##  8 Carrie          cauc       female       no              3
+##  9 Jay             cauc       male         no              2
+## 10 Jill            cauc       female       no              2
 ## # ℹ 4,863 more rows
 ```
 
@@ -764,109 +762,29 @@ Because data can be big and bulky, it is often easier to store and share the dat
 - And you can may still want to read in a few rows or columns like before
 
 
-```r
+``` r
 unz('data/lakisha_aer.zip','lakisha_aer.csv') %&gt;% # Unzip the file
   read_csv(show_col_types = FALSE) # pipe to a read csv
 ```
 
 ```
-## # A tibble: 4,873 × 7
-##    id       ofjobs firstname       sex       race        call lmedhhinc
-##    &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
-##  1 id row 1      2 firstname row 3 sex row 4 race row 5     0      9.53
-##  2 id row 1      3 firstname row 3 sex row 4 race row 5     0     10.4 
-##  3 id row 1      1 firstname row 3 sex row 4 race row 5     0     10.5 
-##  4 b             2 Allison         FEMALE    Caucasian      0      9.53
-##  5 b             3 Kristen         FEMALE    Caucasian      0     10.4 
-##  6 b             1 Lakisha         FEMALE    BLACK          0     10.5 
-##  7 b             4 Latonya         FEMALE    BLACK          0     10.4 
-##  8 b             3 Carrie          FEMALE    Caucasian      0      9.88
-##  9 b             2 Jay             MALE      Caucasian      0     10.4 
-## 10 b             2 Jill            FEMALE    Caucasian      0     10.5 
+## # A tibble: 4,873 × 5
+##    firstname       gender       race       call       ofjobs
+##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt;
+##  1 firstname row 1 gender row 1 race row 1 call row 1     NA
+##  2 firstname row 2 gender row 2 race row 2 call row 2     NA
+##  3 firstname row 3 gender row 3 race row 3 call row 3     NA
+##  4 Allison         female       cauc       no              2
+##  5 Kristen         female       cauc       no              3
+##  6 Lakisha         female       afam       no              1
+##  7 Latonya         female       afam       no              4
+##  8 Carrie          female       cauc       no              3
+##  9 Jay             male         cauc       no              2
+## 10 Jill            female       cauc       no              2
 ## # ℹ 4,863 more rows
 ```
 
----
-# What if there is only one file in the zip?
-
-Turns out, you can read the file directly from the zip file with `read_csv()`:
-
-
-```r
-read_csv('data/lakisha_aer.zip',show_col_type=FALSE)
-```
-
-```
-## # A tibble: 4,873 × 7
-##    id       ofjobs firstname       sex       race        call lmedhhinc
-##    &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;     &lt;chr&gt;      &lt;dbl&gt;     &lt;dbl&gt;
-##  1 id row 1      2 firstname row 3 sex row 4 race row 5     0      9.53
-##  2 id row 1      3 firstname row 3 sex row 4 race row 5     0     10.4 
-##  3 id row 1      1 firstname row 3 sex row 4 race row 5     0     10.5 
-##  4 b             2 Allison         FEMALE    Caucasian      0      9.53
-##  5 b             3 Kristen         FEMALE    Caucasian      0     10.4 
-##  6 b             1 Lakisha         FEMALE    BLACK          0     10.5 
-##  7 b             4 Latonya         FEMALE    BLACK          0     10.4 
-##  8 b             3 Carrie          FEMALE    Caucasian      0      9.88
-##  9 b             2 Jay             MALE      Caucasian      0     10.4 
-## 10 b             2 Jill            FEMALE    Caucasian      0     10.5 
-## # ℹ 4,863 more rows
-```
-
----
-# What is VROOM_CONNECTION_SIZE?
-
-- You'll often hit an error when reading zipped files
-
-
-```r
-read_csv('data/county_outcomes.zip',show_col_type=FALSE)
-```
-
-```
-## Error: The size of the connection buffer (131072) was not large enough
-## to fit a complete line:
-##   * Increase it by setting `Sys.setenv("VROOM_CONNECTION_SIZE")`
-```
-
----
-# What is `VROOM_CONNECTION_SIZE`?
-
-`VROOM_CONNECTION_SIZE` is an environment variable that tells R how much data to read in at a time
-
-- It's a way to read in large files without crashing your computer
-
-- It basically tells R to read in a certain number of bytes at a time
-
-- When R unzips and reads simultaneously, it needs more memory than usual while it decompresses
-
-- Think of it like having too narrow a space to squeeze the data through
-
-- If the data are wide, this can be a problem because of how `read_csv()` works
-  - It reads in the entire file and then tries to figure out the column types
-
----
-# Two Fixes 
-
-### Fix 1: Increase `VROOM_CONNECTION_SIZE`
-
-
-```r
-Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
-read_csv(unz('data/county_outcomes.zip','county_outcomes.csv'),show_col_type=FALSE)
-Sys.setenv("VROOM_CONNECTION_SIZE"=131072) # Returning to default
-```
-
-### Fix 2: Unzip then read
-
-
-```r
-unz('data/county_outcomes.zip','county_outcomes.csv') %&gt;% # Unzip the file
-  read_csv(show_col_types = FALSE) # pipe to a read csv
-rm('county_outcomes.csv') # remove the file
-```
-
-I don't evaluate the code because it will make knitting take awhile, but try it yourself
+Check appendix for what happens with "bigger" files when you attempt this.
 
 ---
 # Minor aside: what's `%&gt;%`?
@@ -912,7 +830,7 @@ name: dictionaries
 - You'll mainly use them as lists or vectors
 
 
-```r
+``` r
 phone_numbers_list &lt;- list('Jenny'='1 (623) 867-5309',
   'Rejection Hotline'='1 (518) 935-4012',
   'Santa'='1 (951) 262-3062')
@@ -1006,6 +924,93 @@ class: inverse, center, middle
 
 
 
+---
+class: inverse, center, middle
+name: appendix
+
+# Appendix
+
+---
+# What if there is only one file in the zip?
+
+Turns out, you can read the file directly from the zip file with `read_csv()`:
+
+
+``` r
+read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv'),show_col_type=FALSE)
+```
+
+```
+## # A tibble: 4,873 × 5
+##    firstname       gender       race       call       ofjobs
+##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt;
+##  1 firstname row 1 gender row 1 race row 1 call row 1     NA
+##  2 firstname row 2 gender row 2 race row 2 call row 2     NA
+##  3 firstname row 3 gender row 3 race row 3 call row 3     NA
+##  4 Allison         female       cauc       no              2
+##  5 Kristen         female       cauc       no              3
+##  6 Lakisha         female       afam       no              1
+##  7 Latonya         female       afam       no              4
+##  8 Carrie          female       cauc       no              3
+##  9 Jay             male         cauc       no              2
+## 10 Jill            female       cauc       no              2
+## # ℹ 4,863 more rows
+```
+
+---
+# What is VROOM_CONNECTION_SIZE?
+
+- You'll often hit an error when reading zipped files
+
+
+``` r
+read_csv('data/county_outcomes.zip',show_col_type=FALSE)
+```
+
+```
+## Error: The size of the connection buffer (131072) was not large enough
+## to fit a complete line:
+##   * Increase it by setting `Sys.setenv("VROOM_CONNECTION_SIZE")`
+```
+
+---
+# What is `VROOM_CONNECTION_SIZE`?
+
+`VROOM_CONNECTION_SIZE` is an environment variable that tells R how much data to read in at a time
+
+- It's a way to read in large files without crashing your computer
+
+- It basically tells R to read in a certain number of bytes at a time
+
+- When R unzips and reads simultaneously, it needs more memory than usual while it decompresses
+
+- Think of it like having too narrow a space to squeeze the data through
+
+- If the data are wide, this can be a problem because of how `read_csv()` works
+  - It reads in the entire file and then tries to figure out the column types
+
+---
+# Two Fixes 
+
+### Fix 1: Increase `VROOM_CONNECTION_SIZE`
+
+
+``` r
+Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
+read_csv(unz('data/county_outcomes.zip','county_outcomes.csv'),show_col_type=FALSE)
+Sys.setenv("VROOM_CONNECTION_SIZE"=131072) # Returning to default
+```
+
+### Fix 2: Unzip then read
+
+
+``` r
+unz('data/county_outcomes.zip','county_outcomes.csv') %&gt;% # Unzip the file
+  read_csv(show_col_types = FALSE) # pipe to a read csv
+rm('county_outcomes.csv') # remove the file
+```
+
+I don't evaluate the code because it will make knitting take awhile, but try it yourself
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

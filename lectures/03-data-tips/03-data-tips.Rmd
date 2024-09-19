@@ -31,12 +31,12 @@ knitr::opts_chunk$set(
   # out.width=748px, #out.length=520.75px,
   dpi=300, #fig.path='Figs/',
   root.dir='../../',
-  cache=T,#, echo=F, warning=F, message=F
+  #cache=F,#, echo=F, warning=F, message=F
   warning=F,
   message=F
   )
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,arrow,datasauRus,gganimate)
+pacman::p_load(tidyverse,arrow,datasauRus,gganimate,jsonlite)
 ```
 
 # Table of contents
@@ -73,31 +73,7 @@ Today we'll focus on grappling with data
   - Big Data file types
 
 ---
-# Housekeeping
-
-- .hi[Presentations:] Sign-up in the [Presentations github repository](https://classroom.github.com/a/jWcBRDZJ)
-
-- .hi[Problem Set 1:] due on Sunday, January 29th at 11:59pm
-
-- .hi[Final Project Proposal:] due on Sunday, January 25th at 11:59pm
-  - Create a fork of the Final Project repository and add me as a collaborator
-  - List the names of you and your partner in the README.md file
-
-- If you notice something wrong with a problem set or lecture, please either:
-
-1. Raise it as an issue in the relevant repository
-2. Pull request the change you think is needed
-
-- Typo corrections, documentation improvement, etc. earn you extra credit (up to 10 points per problem set)
-
-- I will ask you to pull request fixes to receive the point
-
-- How do I pull request? It is in the git lecture, but I provide [instructions on the class materials page](https://github.com/big-data-and-economics/big-data-class-materials?tab=readme-ov-file#ive-spotted-a-mistake-or-would-like-to-contribute)
-
-- I have to approve any fixes, but I will aim to do so within 24 hours
-
----
-# Student Presentation: GitHub Desktop
+# Student Presentation
 
 ---
 # Why do we need to do this?
@@ -106,7 +82,7 @@ Today we'll focus on grappling with data
 - But lots of data are messy or frankly bogus, but you wouldn't know it from sum stats
 - Meet Anscombe's Quartet (Anscombe, 1973)
   
-```{r data-viz-reason,echo=FALSE,warning=FALSE,fig.width=6,fig.height=3.5}
+```{r data-viz-reason,echo=FALSE,warning=FALSE,fig.width=6,fig.height=3.5,cache=T}
 # Reshape the data
 data(anscombe) 
 anscombe_df <-anscombe %>%
@@ -129,7 +105,7 @@ ggplot(anscombe_df, aes(x = x, y = y)) +
 
 - A more ambitious example is the [Datasaurus Dozen](https://www.autodeskresearch.com/publications/samestats) dataset.
 
-```{r datasaurus_dozen,echo=FALSE,warning=FALSE}
+```{r datasaurus_dozen,echo=FALSE,warning=FALSE,cache=T}
 datasaurus_dozen <- datasaurus_dozen %>% 
   mutate(dataset_counter = as.integer(factor(dataset, levels = unique(dataset))))
 
@@ -230,23 +206,15 @@ name: empirical-workflow
 
 #### On your computer
 
-- Everyone fork and clone the class materials repository to your class folder
+- Everyone sync your fork of the class exercises repository<sup>1</sup>
 
-- Double-click `big-data-class-materials.Rproj` to open RStudio at the correct working directory
+- Double-click `exercises.Rproj` on your computer to open RStudio at the correct working directory
 
-- Type `setwd(lectures/03-data-tips/)` to make sure you are in the same directory as this `.Rmd`<sup>1</sup>
+- Run the housekeeping file to install the relevant packages
 
-- Package installation: Install the following functions using `install.packages()` and `library()`
-  - Note: once you install a package, you don't need to do it again, just use `library()`
+- Alternatively, you can open a codespace in your `exercises` repo
 
-```{r,eval=FALSE}
-install.packages(c('tidyverse','arrow','datasauRus','gganimate'))
-library(tidyverse,arrow,datasauRus,gganimate)
-```
-
-- Alternatively, you can open a codespace
-
-- You can run code chunks by clicking the green play button in the top right of each chunk or the shortcut `Ctrl+Shift+Enter`
+- We will tackle the class exercise after class, but you'll take what we do in class to fill it in
 
 - We're going to explore a mangled version of the dataset from the Bertrand and Mullainathan (2004) resume audit study
 
@@ -281,18 +249,21 @@ library(tidyverse,arrow,datasauRus,gganimate)
 
 - Open the raw data and look at it: 
 
-```{r open-data}
+```{r open-data,cache=FALSE}
 resumes <- read_csv('data/lakisha_aer.csv',
   show_col_types= FALSE) # Don't tell me the column types
-head(resumes)
+head(resumes,10)
 ```
+
+---
+# Drop junk rows
 
 - Oh weird, the first few rows are junk, let's skip them and give more informative names
 
 ```{r skip-rows}
 resumes <- read_csv('data/lakisha_aer.csv',
   skip=4, # skip some rows
-  col_names=c('id','ofjobs','firstname','sex','race','call','lmedhhinc'), # Column names
+  col_names=c('firstname','gender','race','call','ofjobs'), # Column names
   show_col_types = FALSE) # Don't tell me the column types
 head(resumes)
 ```
@@ -303,11 +274,14 @@ head(resumes)
 Do factor variables have multiple spellings?
 
 ```{r factor}
-table(resumes$race,resumes$sex)
+table(resumes$race,resumes$gender)
 ```
 
+---
+# 3a. Skim again
+
 The `skimr` package is great!
-.scroll-box-12[
+.scroll-box-20[
 ```{r continuous}
 skimr::skim(resumes)
 ```
@@ -330,15 +304,15 @@ ggplot(data=resumes,mapping=aes(x=ofjobs))+
 ---
 # 5. Visualize by group
 ```{r funky_data2, dev="svg",fig.width=6,fig.height=3.5}
-resumes <-  mutate(resumes,race=ifelse(race=='w' | race=='Caucasian','White',
-    ifelse(race=="BLACK" | race=="b", "Black",race))) # change the data up
+resumes <-  mutate(resumes,race=ifelse(race=='cauc' | race=='Caucasian','White',
+    ifelse(race=="BLACK" | race=="afam", "Black",race))) # change the data up
 ggplot(data=resumes,aes(x=ofjobs,fill=race))+
     geom_histogram(alpha=0.25) # alpha makes bars see through! 
 ```
 
 - Oh! I bet -99 means NA or missing
 - This only occurs for fake black name applicant profiles
-- That be bad news for this RCT...
+- That could be bad news for an RCT...
 
 ---
 # 6. Visualize summaries by group
@@ -410,13 +384,13 @@ name: downloading-data
 
 ```{r download-data,eval=FALSE}
 download.file(
-  url='https://raw.githubusercontent.com/big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/data/lakisha_aer.csv',
-  destfile='data/lakisha_aer.csv')
+  url='https://raw.githubusercontent.com/big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/data/lakisha_aer.zip',
+  destfile='data/lakisha_aer.zip')
 ```
 
 - Several R packages will read files right off of the internet
 
-```{r read-data}
+```{r read-data,cache=FALSE}
 readr::read_csv(
   file='https://raw.githubusercontent.com/big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/data/lakisha_aer.csv')
 ```
@@ -468,6 +442,7 @@ The following file extensions are not tied to a specific software program
 | PDF                                | Portable Document Format; not a great way to store data, but there exists much data in PDF format. Good luck unpacking it! |
 | TIFF, JPEG                         | These common image formats are used to store data in the form of images, or sometimes pictures of text data. There exist image processing libraries in almost every scientific programming language that can convert data in this format into more usable formats. |
 | MP3, WAV                           | These common audio formats may be used to store data. For example, voice-to-text applications have some way of converting income audio (in some format) into data that the machine can comprehend. The same holds for MP4 and other video file formats (e.g. for video input to self-driving cars, etc.) |
+| RDS                                | R data file; can be read in using the `readRDS()` function in R |
 ]
 
 - Here's a more [complete list](https://en.wikipedia.org/wiki/List_of_file_formats) of almost every file extension (note: missed Stata's `.do` and `.dta` formats).
@@ -475,7 +450,7 @@ The following file extensions are not tied to a specific software program
 - Another great discussion about file formats is [here](https://opendata.stackexchange.com/questions/1208/a-python-guide-for-open-data-file-formats) on stackexchange
 
 ---
-# ExamplesL JSON
+# Examples JSON
 
 A possible JSON representation describing a person ([source](https://en.wikipedia.org/wiki/JSON#Example))
 ```JSON
@@ -561,8 +536,21 @@ phoneNumber:
 gender: 
   type: male
 ```
-
+ 
 Note that the JSON code above is also valid YAML; YAML simply has an alternative syntax that makes it more human-readable
+
+---
+# Read a JSON
+
+```{r read-json}
+library(jsonlite)
+
+# Read in the JSON file
+read_json('data/lakisha_aer.json',
+  simplifyVector = TRUE # Simplify the data to a dataframe
+  ) %>%
+  head(5)
+```
 
 ---
 # Proprietary file extensions
@@ -590,7 +578,7 @@ The following file extensions typically require additional software to read, edi
 - When in doubt, Google/ChatGPT "How do I open file .XXX in R?"
   - I bet you someone has already needed to solve this problem
 
-```{r read-types,warning=FALSE,message=FALSE}
+```{r read-types,warning=FALSE,message=FALSE,cache=FALSE}
 df_csv   <- read_csv('data/lakisha_aer.csv')
 df_fread   <- data.table::fread('data/lakisha_aer.tab')
 df_stata <- haven::read_dta('data/lakisha_aer.dta')
@@ -605,7 +593,7 @@ df_xlsx <- readxl::read_xlsx('data/lakisha_aer.xlsx')
 
 Just read in a single row to see the column names:
 
-```{r read-in-1-row}
+```{r read-in-1-row,cache=FALSE}
 # I need to sete an environment variable to increase the size of the connection
 # R will complain if you try to read in a file that's too big
 # This will reset when I close this session.
@@ -620,10 +608,9 @@ df <- read_csv('data/lakisha_aer.csv',n_max=1)
 
 Once you know your columns, read those in:
 
-```{r read-in-columns,warning=FALSE,message=FALSE}
-Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
+```{r read-in-columns,warning=FALSE,message=FALSE,cache=FALSE}
 read_csv('data/lakisha_aer.csv',
-  col_select=c('id', 'race', 'sex','call'))
+  col_select=c('firstname', 'race', 'gender','call','ofjobs'))
 ```
 
 ---
@@ -676,60 +663,7 @@ unz('data/lakisha_aer.zip','lakisha_aer.csv') %>% # Unzip the file
   read_csv(show_col_types = FALSE) # pipe to a read csv
 ```
 
----
-# What if there is only one file in the zip?
-
-Turns out, you can read the file directly from the zip file with `read_csv()`:
-
-```{r read_csv_zip_lakisha,warning=FALSE,message=FALSE}
-read_csv('data/lakisha_aer.zip',show_col_type=FALSE)
-```
-
----
-# What is VROOM_CONNECTION_SIZE?
-
-- You'll often hit an error when reading zipped files
-
-```{r read_csv_zip_county,warning=FALSE,message=FALSE,error=TRUE}
-read_csv('data/county_outcomes.zip',show_col_type=FALSE)
-```
-
----
-# What is `VROOM_CONNECTION_SIZE`?
-
-`VROOM_CONNECTION_SIZE` is an environment variable that tells R how much data to read in at a time
-
-- It's a way to read in large files without crashing your computer
-
-- It basically tells R to read in a certain number of bytes at a time
-
-- When R unzips and reads simultaneously, it needs more memory than usual while it decompresses
-
-- Think of it like having too narrow a space to squeeze the data through
-
-- If the data are wide, this can be a problem because of how `read_csv()` works
-  - It reads in the entire file and then tries to figure out the column types
-
----
-# Two Fixes 
-
-### Fix 1: Increase `VROOM_CONNECTION_SIZE`
-
-```{r read_csv_zip_vroom,warning=FALSE,message=FALSE,eval=FALSE}
-Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
-read_csv(unz('data/county_outcomes.zip','county_outcomes.csv'),show_col_type=FALSE)
-Sys.setenv("VROOM_CONNECTION_SIZE"=131072) # Returning to default
-```
-
-### Fix 2: Unzip then read
-
-```{r unzip_read_csv,warning=FALSE,message=FALSE,eval=FALSE}
-unz('data/county_outcomes.zip','county_outcomes.csv') %>% # Unzip the file
-  read_csv(show_col_types = FALSE) # pipe to a read csv
-rm('county_outcomes.csv') # remove the file
-```
-
-I don't evaluate the code because it will make knitting take awhile, but try it yourself
+Check appendix for what happens with "bigger" files when you attempt this.
 
 ---
 # Minor aside: what's `%>%`?
@@ -862,3 +796,63 @@ infile=knitr::current_input() %>% str_replace('.Rmd','.html')
 pagedown::chrome_print(input = infile, timeout = 100)
 ```
 
+---
+class: inverse, center, middle
+name: appendix
+
+# Appendix
+
+---
+# What if there is only one file in the zip?
+
+Turns out, you can read the file directly from the zip file with `read_csv()`:
+
+```{r read_csv_zip_lakisha,warning=FALSE,message=FALSE,cache=FALSE}
+read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv'),show_col_type=FALSE)
+```
+
+---
+# What is VROOM_CONNECTION_SIZE?
+
+- You'll often hit an error when reading zipped files
+
+```{r read_csv_zip_county,warning=FALSE,message=FALSE,error=TRUE,cache=FALSE}
+read_csv('data/county_outcomes.zip',show_col_type=FALSE)
+```
+
+---
+# What is `VROOM_CONNECTION_SIZE`?
+
+`VROOM_CONNECTION_SIZE` is an environment variable that tells R how much data to read in at a time
+
+- It's a way to read in large files without crashing your computer
+
+- It basically tells R to read in a certain number of bytes at a time
+
+- When R unzips and reads simultaneously, it needs more memory than usual while it decompresses
+
+- Think of it like having too narrow a space to squeeze the data through
+
+- If the data are wide, this can be a problem because of how `read_csv()` works
+  - It reads in the entire file and then tries to figure out the column types
+
+---
+# Two Fixes 
+
+### Fix 1: Increase `VROOM_CONNECTION_SIZE`
+
+```{r read_csv_zip_vroom,warning=FALSE,message=FALSE,eval=FALSE}
+Sys.setenv("VROOM_CONNECTION_SIZE"=1e6) # Telling R to read in 1 million bytes at a time
+read_csv(unz('data/county_outcomes.zip','county_outcomes.csv'),show_col_type=FALSE)
+Sys.setenv("VROOM_CONNECTION_SIZE"=131072) # Returning to default
+```
+
+### Fix 2: Unzip then read
+
+```{r unzip_read_csv,warning=FALSE,message=FALSE,eval=FALSE}
+unz('data/county_outcomes.zip','county_outcomes.csv') %>% # Unzip the file
+  read_csv(show_col_types = FALSE) # pipe to a read csv
+rm('county_outcomes.csv') # remove the file
+```
+
+I don't evaluate the code because it will make knitting take awhile, but try it yourself

@@ -5,19 +5,6 @@ It has been purposefully mangled for the purposes of this class.
 The following variables are included in the data (unless otherwise noted -99 denotes a missing variable):
 
 --------------------------------------------------------------------------------------------------
-id                                                                                              ID
---------------------------------------------------------------------------------------------------
-
-                  Type: String (str8), but longest is str3
-
-         Unique values: 289                       Missing "": 0/4,870
-
-              Examples: "413"
-                        "b"
-                        "b"
-                        "b"
-
---------------------------------------------------------------------------------------------------
 ofjobs                                                             number of jobs listed on resume
 --------------------------------------------------------------------------------------------------
 
@@ -50,7 +37,7 @@ firstname                                                                   appl
                         "Neil"
 
 --------------------------------------------------------------------------------------------------
-sex                                                                                    (unlabeled)
+gender                                                                                    (unlabeled)
 --------------------------------------------------------------------------------------------------
 
                   Type: String (str9), but longest is str6
@@ -77,8 +64,8 @@ race                                                                            
             Tabulation: Freq.  Value
                           350  "BLACK"
                           250  "Caucasian"
-                        2,085  "b"
-                        2,185  "w"
+                        2,085  "cauc"
+                        2,185  "afam"
 
 --------------------------------------------------------------------------------------------------
 call                                                                   1=applicant was called back
@@ -90,20 +77,5 @@ call                                                                   1=applica
          Unique values: 2                         Missing .: 0/4,870
 
             Tabulation: Freq.  Value
-                        4,478  0
-                          392  1
-
---------------------------------------------------------------------------------------------------
-lmedhhinc                                                  log median HH income in applicant's zip
---------------------------------------------------------------------------------------------------
-
-                  Type: Numeric (float)
-
-                 Range: [-99,11.11929]                Units: 1.000e-07
-         Unique values: 63                        Missing .: 0/4,870
-
-                  Mean: 8.21974
-             Std. dev.: 14.3812
-
-           Percentiles:     10%       25%       50%       75%       90%
-                        9.66288   9.92974   10.1441   10.3429   10.5656
+                        4,478  "No"
+                          392  "Yes"
