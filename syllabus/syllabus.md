@@ -22,15 +22,10 @@ E-mail: `kcoombs@bates.edu`
 Web: [kylecoombs.com](http://kylecoombs.com)
 GitHub: @kgcsport
 
-- Office Hours: T, 4-5pm, W 10:30-11:30am, or by request (Zoom or in-person)
-- Class Hours: T/Th 11am-12:20pm
-- Office: PGill 277
-- Classroom: Bonney 310
-
 Course Website: [https://github.com/big-data-and-economics](https://github.com/big-data-and-economics)  
 OH Link: [https://calendar.app.google/XF36Ujpg9NcJbSD58](https://calendar.app.google/XF36Ujpg9NcJbSD58)
 
-_You can get in touch with me via email, but please always write **[ECON 368]** in the subject. Alternatively, as you start using GitHub, you can raise an issue and type @kgcsport to get my attention. Please add me as a collaborator on your page as well. I will aim to respond as quickly as possible via email or if beneficial to the class, I will share with everyone._
+_You can get in touch with me via email, but please always write **[ECON 368]** in the subject. I am most quick and responding to course matters raised as GitHub Issues and Discussions posts._
 
 ---
 
