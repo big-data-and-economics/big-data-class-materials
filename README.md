@@ -9,6 +9,8 @@
 
 I am constantly trying to improve this course. Provide [feedback](https://docs.google.com/forms/d/e/1FAIpQLScZyphM1fwb6GBH7HtGx4H_hwW6sGGVfZ3MXFnFLNlawQoOsQ/viewform?usp=sf_link).
 
+- Class Hours: T/Th 11am-12:20pm
+
 # Office hours:
 My office hours are: 
 - Tuesdays 4pm-5pm
@@ -222,10 +224,10 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 
 #### Course-Attached Tutor
 
-Charlie Berman is our Course-Attached tutor. He will host office hours in the SASC and will be available for individual appointments. His hours are:
+Jangmin Song is our Course-Attached tutor. He will host office hours in the SASC and will be available for individual appointments. His hours are:
 
-- **SASC Drop-in Hours**: MTR 2:30-4
-- **Evening Help Session:** R 7:30-9 (room assignment to come)
+- **Evening Help Session:** Tuesday 8-9pm
+- **Regular Office Hours:** Sunday 7-9pm
 
 You can also schedule private office hours at the Calendar Link: https://calendar.app.google/2Abyp3LqY3NPeg4u8. 
 
