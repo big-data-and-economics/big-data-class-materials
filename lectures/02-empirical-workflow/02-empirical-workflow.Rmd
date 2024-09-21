@@ -815,6 +815,10 @@ dput(iris[1:4,]) # copy/paste output of dput into your MRE
 #### Summary 
 When I try to make a scatterplot with ggplot, I am told that `geom_point()` requires missing aesthetics `x` and `y`. But I specified `x` and `y` in the `ggplot()` function. Can you help resolve?
 
+#### Expected behavior 
+
+I expected the code to produce a scatterplot of `Sepal.Length` and `Sepal.Width` from the iris dataset.
+
 #### Data
 
 I used a subset of the iris dataset.
