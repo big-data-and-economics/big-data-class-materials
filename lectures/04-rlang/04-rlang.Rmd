@@ -1,12 +1,12 @@
 ---
-title: "Big Data and Economics"
+title: "Data Science for Economists"
 # subtitle: "<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>"
 subtitle: "Lecture 4: R language basics"
-author: "Grant McDermott, adapted by Kyle Coombs"
+author: "Kyle Coombs"
 date: "Bates College | [EC/DCS 368](https://github.com/big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
 output:
   xaringan::moon_reader:
-    css: [default, metropolis, metropolis-fonts] 
+    css: [default, metropolis, metropolis-fonts,ou-colors.css] 
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -33,28 +33,48 @@ Add mentimeter quiz as an incentive to try things?
 options(htmltools.dir.version = FALSE)
 library(knitr)
 opts_chunk$set(
-  fig.align="center", #fig.width=6, fig.height=4.5, 
+  fig.align="center", fig.width=8, fig.height=6, 
   # out.width="748px", #out.length="520.75px",
   dpi=300, #fig.path='Figs/',
   cache=F#, echo=F, warning=F, message=F
   )
+library(tidyverse)
+library(directlabels)
+library(ggdag)
+theme_metro <- function(x) {
+  theme_classic() + 
+  theme(panel.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
+        plot.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
+        text = element_text(size = 16),
+        axis.title.x = element_text(hjust = 1),
+        axis.title.y = element_text(hjust = 1, angle = 0))
+}
+theme_metro_regtitle <- function(x) {
+  theme_classic() + 
+  theme(panel.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
+        plot.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
+        text = element_text(size = 16))
+}
+```
+
+```{css, echo=FALSE}
+pre {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 100px;
+}
 ```
 
 # Table of contents
 
 1. [Prologue](#prologue)
 
-2. [Introduction](#intro)
+2. [RStudio Layout](#intro)
 
 3. [Object-oriented programming in R](#oop)
-
-4. ["Everything is an object"](#eobject)
-
-5. ["Everything has a name"](#ename)
-
-6. [Indexing](#indexing)<sup>1</sup>
-
-7. [Cleaning up](#cleaning)<sup>1</sup>
 
 .footnote[<sup>1</sup> Items 6 and 7 are less critical to complete today. 6 is helpful to understand, but we can come back to it later as needed. 7 is just tips on how to refresh your R session without restarting.]
 
@@ -68,38 +88,13 @@ name: prologue
 
 ---
 
-# Housekeeping 
-
-- Full version of these slides available on [Grant McDermott's website](https://github.com/uo-ec607/lectures)
-
-- Project proposals looked good: 
-  - Note: Some of these papers have proprietary data components, I need you to confirm that you can replicate sufficient parts of their analysis
-  - Note 2: Some of you picked experimental data (cool), I want you to spend some time stress-testing to confirm the data are "real"
-  - Unless I _specifically_ say otherwise, you should not upload to Lyceum
-
-- Please navigate to these slides on your desktop to follow along
-
-- Try the code interactively on your laptop (with a Codespace or by forking/cloning the repository to your computer)
-
----
-
-# Checklist
-
-☑ Fork repo class material if you haven't done so
-
-☑ Clone repo if you haven't done so
-
-☑ Pull from the lecture repo to get the latest slides.
-
-☑ Update your R packages. Do this regularly as a matter of good habit. (`update.packages()` should do the trick, or click `Update` under the Packages tab (lower right-hand side))
-
----
-
 # Agenda
 
 - We're going to spent a lot of time live coding together. This is deliberate. 
 
-- I want you to type R commands — and navigate RStudio — without copy+paste.
+- You're also going to try code I will/have not covered in class -- also deliberate
+
+- I want you to try R commands — and navigate RStudio — without copy+paste.
   - Slightly more painful in the beginning, but much better payoff in the long-run.
 
 #### Goal:
@@ -114,7 +109,7 @@ name: prologue
 
 #### Not the goal: Fluency
 
-- My goal is not that you leave this lecture, or even this class, fluent in R
+- My goal is not that you leave this lecture, or even this course, fluent in R
   - That's outside the scope of 80 minutes, let alone 12 weeks
 
 ---
@@ -138,7 +133,603 @@ name: intro
 
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
-(Some important R concepts)
+---
+
+# The RStudio Panes
+
+- Console
+- Environment Pane
+- Browser Pane
+- Source Editor
+
+---
+
+# Console
+
+- Typically bottom-left
+- This is where you can type in code and have it run immediately
+- Or, when you run code from the Source Editor, it will show up here
+- It will also show any output or errors
+
+---
+
+# Console Example
+
+- Let's copy/paste some code in there to run
+
+```{r, echo = TRUE, eval = FALSE}
+#Generate 500 heads and tails
+dat <- sample(c("Heads","Tails"),500,replace=TRUE)
+#Calculate the proportion of heads
+mean(dat=="Heads")
+#This line should give an error - it didn't work!
+dat <- sample(c("Heads","Tails"),500,replace=BLUE)
+#This line should give a warning
+#It did SOMETHING but maybe not what you want
+mean(dat)
+#This line won't give an error or a warning
+#But it's not what we want!
+mean(dat=="heads")
+```
+
+---
+
+# What We Get Back
+
+- We can see the code that we've run
+- We can see the output of that code, if any
+- We can see any errors or warnings (in <span style="color: red">red</span>). Remember - errors mean it didn't work. Warnings mean it *maybe* didn't work.
+- Just because there's no error or warning doesn't mean it DID work! Always think carefully
+- Specific note: <span style="color: red">Warning: (package name) was built in R version (version number)</span> just means that your R installation isn't fully updated. Usually not a problem, but you can update R at [R-project.org](R-project.org) to make this go away
+
+---
+
+# Environment Tab
+
+- Environment tab shows us all the objects we have in memory
+- For example, we created the `dat` object, so we can see that in Environment
+- It shows us lots of handy information about that object too
+  - (we'll get to that later)
+- You can erase everything with that little broom button (technically this does `rm(list=ls())`)
+
+---
+
+# Browser Pane
+
+- Bottom-right
+- Lots of handy stuff here!
+- Mostly, the *outcome* of what you do will be seen here
+- Plots you make will show up here
+- Some functions create tables or output that show up in Viewer
+- Packages tab - avoid for loading, but the update button is nice!
+
+---
+
+# Files Tab
+
+- Basic file browser
+- Handy for opening up files
+- Can also help you set the working directory:
+    - Go to folder
+    - In menu bar, Session
+    - Set Working Directory
+    - To Files Pane Location
+
+---
+
+# Help Tab
+
+- This is where help files appear when you ask for them
+- You can use the search bar here, or
+
+```{r help, eval=FALSE}
+help(plot)
+?plot # This is what most people use
+```
+
+
+- In additon to documentation there's:
+  - Vignettes (more detailed documentation), type `vignette("packagename")`
+  - Demos (interactive examples), type `demo("packagename")`
+  - Examples (examples of how to use the function), type `example("functionname")`
+
+- Of course, plenty of materials also available across the internet!
+  - And Gen AI can be helpful, but remember it's not always right
+
+---
+
+# Source Pane
+
+- You should be working with code FROM THIS PANE, not the console!
+- Why? Replicability!
+- Also, COMMENTS! USE THEM! PLEASE! `#` lets you write a comment.
+- Switch between tabs like a browser
+
+
+**Aside:** Comments in R files are demarcated by `#`. 
+- Hit `Ctrl+Shift+c` (`Cmd+Shift+c` on Macs) in RStudio to (un)comment whole sections of highlighted code.
+
+- In Rmarkdown files, `<!--- --->` is the equivalent syntax for comments. NOT `#`. 
+  - Yes, that's confusing. Yes, I expect you to use the syntax correctly.
+
+---
+
+# Running Code from the Source Pane
+
+- Select a chunk of code and hit the "Run" button
+- Click on a line of code and do Ctrl/Cmd-Enter to run just that line and advance to the next <- Super handy!
+- Going one line at a time lets you check for errors more easily
+- Let's try some!
+
+```{r, eval=FALSE, echo=TRUE}
+data(mtcars)
+mean(mtcars$mpg)
+mean(mtcars$wt)
+372+565
+log(exp(1))
+2^9
+(1+1)^9
+```
+
+More fun comamnds and tricks in the [appendix](#appendix)
+
+---
+
+# Autocomplete
+
+- RStudio comes with autocomplete! 
+- Typing in the Source Pane or the Console, it will try to fill in things for you
+    - Command names (shows the syntax of the function too!)
+    - Object names from your environment
+    - Variable names in your data
+- Let's try redoing the code we just did, typing it out
+- It also pairs with GitHub CoPilot if you have successfully gotten GitHub Education access
+
+---
+
+# Help
+
+- Autocomplete is one way that RStudio tries to help you out
+- The way that R helps you out is with the documentation
+- When you start doing anything serious with a computer, like programming, the most important skills are:
+     - Knowing to read documentation
+     - Knowing to search the internet for help (always!)
+ 
+---
+     
+# help()
+
+- You can get the documentation on most R objects using the `help()` function
+- `help(mean)`, for example, will show you:
+    - What the function is
+    - The "syntax" for the function and the order the arguments go in
+    - The available options for the function
+    - Other, related functions, like `weighted.mean`
+    - Ideally, some examples of proper use
+- Not just for functions/commands - some data sets will work too! Try `help(mtcars)`
+
+---
+
+# Packages
+
+- R runs on user-contributed packages that contain functions you can use
+- Packages stored on CRAN can be installed with `install.packages('packagename')`
+- Once a package is installed you don't need to install it again (except to update it)
+- But every time you open R you'll need to load it in again with `library(packagename)` if you want to use its functions
+- *Please don't* include package installation in your code itself; this will make you re-install the package every time you run!
+
+```{r, eval = FALSE, echo = TRUE}
+# If we haven't installed it yet
+# install.packages('vtable')
+library(vtable)
+vtable(iris)
+```
+
+---
+
+# Rmarkdown
+
+- Go File $\rightarrow$ New File $\rightarrow$ RMarkdown to create a new RMarkdown document<sup>1</sup>
+
+- RMarkdown is a blend of an R file and a markdown file
+  - Markdown is a simple way to format text
+  - R is a programming language
+  - RMarkdown lets you write text and code in the same document
+
+- A text document with some basic layout, for example hashtags for sectioning
+
+- Include code chunks with three backticks which execute when you Render to PDF, HTML, MD, etc.
+
+- Include code in-line with single backticks and an `r`
+
+.footnote[<sup>1</sup> You can also make Quarto documents, which work across languages, but we're sticking with RMarkdown for now.]
+
+---
+class: inverse, center, middle
+name: oop
+
+# Object-oriented programming in R
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+---
+
+# Working in R
+
+- Everything in R is an object
+- We can only really do three things in R:
+     - Create objects with `<-` or `=`
+     - Send objects through functions to manipulate them
+     - Look at objects
+
+Appendix: [More on objects](#eobject)
+
+---
+
+# Objects
+
+- Let's create a basic object
+
+```{r, echo = TRUE}
+a <- 1
+```
+
+- We've taken `1` and stored it inside the `a` object
+- Now if we just type `a` by itself, it will show us the `1` we stored inside
+- This is a numeric object. We could also have `'strings'` or logicals: `TRUE` or `FALSE` or factors
+
+---
+
+# Objects
+
+- We can manipulate objects
+
+```{r, echo = TRUE}
+a + 1
+```
+
+- "create a new object that takes `a` (1) and adds 1 to it (`1+1=2`)
+- Notice that `a` itself doesn't change until we *reassign it*
+
+```{r, echo = TRUE}
+a
+a = a + 1
+a
+```
+
+---
+
+# Assignment
+
+#### Assignment with `<-`<sup>1</sup>
+
+`<-` is normally read aloud as "gets". You can think of it as a (left-facing) arrow.<sup>2</sup> 
+
+```{r assign}
+b <- 10 + 5
+b
+```
+
+#### Assignment with `=`
+
+```{r}
+b = 10 + 10 ## Note that the assigned object *must* be on the left with "=".
+b
+```
+
+
+R purists insist on `<-`, but just pick one and be consistent
+
+--
+
+.footnote[
+  <sup>1</sup> The `<-` is really a `<` followed by a `-`. It just looks like one thing b/c of the [font](https://github.com/tonsky/FiraCode) I'm using here.
+
+  <sup>2</sup> An arrow can point in the other direction too (i.e. `->`). So, `10 + 5 -> a` following code chunk is equivalent, although used much less frequently.
+]
+
+---
+
+# Vectors
+
+- A vector is a collection of objects of the same type
+- While lots of functions create vectors, we can also make them ourselves with `c()` (concatenate)
+
+```{r, echo = TRUE}
+my_vector <- c(1,8,2,4,3)
+```
+
+- We can refer to a certain element of a vector with square brackets `[]` with a single number or a range `start:end`
+
+```{r, echo = TRUE}
+my_vector[3:4]
+```
+
+- Or using another vector of logicals (`TRUE` and `FALSE`) to pick elements (handy when we get to data!)
+
+```{r, echo = TRUE}
+my_vector[c(TRUE, FALSE, TRUE, TRUE, FALSE)]
+```
+
+[More on indexing](#indexing)
+
+---
+
+# Data Frames
+
+- A `data.frame` is what we'll be working with most of the time.
+- It's a collection of vectors of the same length
+- We can create them ourselves, but often we will read in a file or use `data()` to get a data set
+
+```{r, echo = TRUE}
+df1 = data.frame(x = 1:5, y = 6:10)
+
+data(mtcars)
+mtcars
+```
+
+---
+
+# Data Frames
+
+- We can get a vector back out of the data frame with `$` or `[[]]`
+
+```{r, echo = TRUE}
+mtcars$cyl[1:5]
+mtcars[['cyl']][1:5]
+```
+
+---
+
+# Data Frames
+
+- Which we might want to do to send it to a function like `mean` that takes a vector!
+
+```{r, echo = TRUE}
+mean(mtcars$cyl)
+```
+
+---
+
+# Logic
+
+R also comes equipped with a full set of logical operators and Booleans, which follow standard programming protocol. For example:
+
+```{r}
+1 > 2
+1 > 2 & 1 > 0.5 ## The "&" stands for "and"
+1 > 2 | 1 > 0.5 ## The "|" stands for "or" (not a pipe a la the shell)
+isTRUE (1 < 2)
+```
+
+--
+
+You can read more about logical operators and types <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html" target="_blank">here</a> and <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/logical.html" target="_blank">here</a>. I also summarise more in the [appendix.](#appendix)
+
+---
+# if/else
+
+The `if/else` statement is a fundamental building block of programming logic. It allows us to evaluate a logical statement and then execute a particular command if that statement is TRUE. For example:
+
+```{r logical}
+x = 5
+if (1>x) {
+  print("x is greater than 1")
+} else {
+  print("x is less than or equal to 1")
+}
+```
+
+R's `ifelse` collapses this into one line. (Try it yourself.)
+
+```{r ifelse}
+ifelse(1>x, "x is greater than 1", "x is less than or equal to 1")
+```
+
+- `case_when()` in the `dplyr` package is a more flexible version of `ifelse()` that can handle multiple conditions. (It is on the problem set.)
+
+---
+name: global_env
+
+# Global environment
+
+Let's go back to the df1 data frame we made
+```{r}
+df1
+```
+
+--
+
+Now, let's try to run a regression<sup>1</sup> on these "x" and "y" variables:
+
+.footnote[
+<sup>1</sup> Yes, this is a dumb regression with perfectly co-linear variables. Just go with it. 
+]
+
+```{r, error=T}
+lm(y ~ x) ## The "lm" stands for linear model(s)
+```
+
+--
+
+Uh-oh. What went wrong here? (Answer on next slide.)
+
+---
+
+# Global environment (cont.)
+
+The error message provides the answer to our question:
+
+```
+*## Error in eval(predvars, data, env): object 'y' not found
+```
+
+--
+
+R can't find the variables that we've supplied in our [Global Environment](https://www.datamentor.io/r-programming/environment-scope/):
+
+--
+
+Put differently: We have to tell R that they belong to the object `df1`.
+- Think about how you might do this before clicking through to the next slide.
+
+---
+
+# Global environment (cont.)
+
+There are a various ways to solve this problem. One is to simply specify the datasource:
+
+```{r}
+lm(y ~ x, data = df1) ## Works when we add "data = df1"!
+```
+
+--
+
+I want to emphasize this global environment issue, because it is something that Stata users (i.e. many economists) struggle with when they first come to R.
+- In Stata, the entire workspace essentially consists of one (and only one) data frame meaning no ambiguity where variables are coming from.
+- That "convenience" has a high price -- literally you need to buy Stata 16 or higher to use `frames` to open multiple data frames with less flexibility.
+- Speaking of which...
+
+---
+
+# Working with multiple objects
+
+R's ability to keep multiple objects in memory at the same time is a huge plus for data work. 
+- E.g. We can copy an existing data frame, or create new one entirely from scratch. Either will exist happily with our existing objects in the global environment.
+- Just make sure to give them distinct names and be specific about which objects you are referring to.
+- [More on names](#ename)
+
+```{r df2}
+df2 = data.frame(x = rnorm(10), y = runif(10))
+```
+
+---
+
+# dplyr
+
+- In this course, we'll be working with data largely using the **dplyr** package, which is a part of the **tidyverse**
+- **dplyr** is a collection of verbs for manipulating data, all strung together with the pipe `%>%` (which technically **dplyr** just borrows from **magrittr**)
+- **dplyr** has lots of functions in it. Today we'll cover just five: `pull()`, `filter()`, `%>%`, `select()`, and `mutate()`.
+- For all of these, don't forget that if you want to take the data frame you've changed and *keep* that change, you have to re-assign the object with `<-` or `=`!
+- If you already know a different way of doing things in R, I **strongly recommend** using the **dplyr** commands, if only for this class, as it will make it much easier to follow along with the material, and it's good to learn to pick up new things (and also in my experience you guys end up making things waaaay harder on yourselves by avoiding the switch)
+
+---
+
+# pull()
+
+- Pull just takes a vector back out of a data set, just like `$` or `[[]]`
+- So why use it? It plays well with the pipe (upcoming)
+- Also, it's flexible. It takes a variable name, a variable name as a string, or a column number
+
+```{r, echo = TRUE, eval = FALSE}
+mtcars$cyl
+pull(mtcars, cyl)
+pull(mtcars, 'cyl')
+pull(mtcars, 2)
+mtcars %>% pull(cyl)
+```
+
+---
+
+# filter()
+
+- `filter()` picks just some of the *rows* of your data
+- Important for analyzing a subset of your data!
+- Give it a logical statement that's `TRUE` for the rows you want. `==` checks for equality!
+
+```{r, echo = TRUE}
+filter(mtcars, cyl == 4 & am == 1)
+```
+
+---
+
+# The pipe
+
+- The pipe `%>%` is important for making your code readable, and minimizing balanced-parentheses errors
+- It takes whatever is on its left and makes it the first argument of the function on the right
+- So whatever object you're working with you take, ship it along to the next function, process, then ship along again, then ship along again! Like a conveyer belt
+- Notice that all **dplyr** functions take the data frame as the first argument, making it easy to chain them
+- "Ships along" anything, including vectors or single numbers, not just data frames! Track what the object being shipped is in each step.
+
+
+---
+
+# The pipe
+
+- See how clean it can make the code!
+
+```{r, echo = TRUE}
+mean(mtcars[mtcars$am == 1,]$cyl, na.rm = TRUE)
+```
+
+vs.
+
+```{r, echo = TRUE}
+mtcars %>%
+  filter(am == 1) %>%
+  pull(cyl) %>%
+  mean(na.rm = TRUE)
+```
+
+---
+
+# select()
+
+- `select()` is like `filter()`, but instead of picking rows it picks columns
+- Unlike `pull()` it doesn't give you a vector - it gives you back a data frame with fewer columns
+
+```{r, echo = TRUE}
+mtcars %>%
+  select(mpg, cyl) %>%
+  summary()
+```
+
+---
+
+# mutate()
+
+- `mutate()` creates a new column using the old ones. You can assign multiple columns at once!
+- The syntax is `NewVariableName = FunctionOfOldVariables`
+- Don't forget to save the object!
+
+```{r, echo = TRUE}
+mtcars <- mtcars %>%
+  mutate(high_mpg = mpg > median(mpg))
+mtcars %>%
+  pull(high_mpg) %>%
+  table()
+```
+---
+
+# Basics of R
+
+- This has been a lot of information!
+- To really learn it you'll have to get used to applying it yourself
+- For that we will be using the **swirl** package which will walk us through using these commands!
+
+---
+
+# Swirl
+
+- Open up R and install Swirl with `install.packages('swirl')`
+- Then, load up swirl with `library(swirl)`
+- Download the Swirl course for this class (the first time you use it) with `install_course_github('big-data-and-economics','ECON368-R-Swirls')`
+- Then start swirl with `swirl()` and pick ECON368-R-Swirls, and the R Basics lesson. Let's work through this!
+- This is your in-class assignment, due before Thursday
+
+---
+
+class: inverse, center, middle
+
+# Next lecture(s): Working with data!
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+---
+name: appendix
+class: inverse, center, middle
+
+# Appendix
 
 ---
 
@@ -168,23 +759,6 @@ We can also invoke modulo operators (integer division & remainder).
 
 ---
 
-# Logic
-
-R also comes equipped with a full set of logical operators and Booleans, which follow standard programming protocol. For example:
-
-```{r}
-1 > 2
-1 > 2 & 1 > 0.5 ## The "&" stands for "and"
-1 > 2 | 1 > 0.5 ## The "|" stands for "or" (not a pipe a la the shell)
-isTRUE (1 < 2)
-```
-
---
-
-You can read more about logical operators and types <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Logic.html" target="_blank">here</a> and <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/logical.html" target="_blank">here</a>. In the next few slides, however, I want to emphasise some special concepts and gotchas...
-
----
-
 # Logic (cont.)
 
 ### Order of precedence
@@ -197,7 +771,7 @@ Is this statement TRUE or FALSE?
 
 --
 
-Much like standard arithmetic, logic statements follow a strict order of precedence. Logical operators (`>`, `==`, etc) are evaluated before Boolean operators (`&` and `|`). Failure to recognise this can lead to unexpected behaviour...
+Logic statements follow a strict order of precedence. Logical operators (`>`, `==`, etc) are evaluated before Boolean operators (`&` and `|`). Failure to recognise this can lead to unexpected behaviour...
 
 ```{r,include=FALSE}
 1 > 0.5 & 2
@@ -221,7 +795,6 @@ What's happening here is that R is evaluating two separate "logical" statements:
 ---
 
 # Logic (cont.)
-
 ### Negation: `!`
 
 We use `!` as a short hand for negation. This will come in very handy when we start filtering data objects based on non-missing (i.e. non-NA) observations.
@@ -260,173 +833,29 @@ We'll get to assignment shortly. However, to preempt it somewhat, we use two equ
 1 != 2 ## Note the single equal sign when combined with a negation.
 ```
 
----
-# if/else
-
-The `if/else` statement is a fundamental building block of programming logic. It allows us to evaluate a logical statement and then execute a particular command if that statement is TRUE. For example:
-
-```{r logical}
-x = 5
-if (1>x) {
-  print("x is greater than 1")
-} else {
-  print("x is less than or equal to 1")
-}
-```
-
-R's `ifelse` collapses this into one line. (Try it yourself.)
-
-```{r ifelse}
-ifelse(1>x, "x is greater than 1", "x is less than or equal to 1")
-```
 
 ---
+name: notin-slide
+# Not in
 
-# Assignment
-
-In R, we can use either `<-` or `=` to handle assignment.<sup>1</sup>
+There's no equivalent "not in" command, but how might we go about creating one?
+- Hint: Think about negation...
 
 --
-
-### Assignment with `<-`
-
-`<-` is normally read aloud as "gets". You can think of it as a (left-facing) arrow saying *assign in this direction*.<sup>2</sup> 
 
 ```{r}
-a <- 10 + 5
-a
+`%ni%` = Negate(`%in%`) ## The backticks (`) help to specify functions.
+4 %ni% 5:10
 ```
 
---
+[Back](#in-slide)
 
-.footnote[
-  <sup>1</sup> The `<-` is really a `<` followed by a `-`. It just looks like one thing b/c of the [font](https://github.com/tonsky/FiraCode) I'm using here.
-
-  <sup>2</sup> An arrow can point in the other direction too (i.e. `->`). So, `10 + 5 -> a` following code chunk is equivalent, although used much less frequently.
-]
-
----
-
-# Assignment (cont.)
-
-### Assignment with `=`
-
-You can also use `=` for assignment.
-
-```{r}
-b = 10 + 10 ## Note that the assigned object *must* be on the left with "=".
-b
-```
-
---
-
-### Which assignment operator to use?
-
-Most R users (purists?) seem to prefer `<-` for assignment, since `=` also has specific role for evaluation *within* functions. 
-- We'll see lots of examples of this later.
-- But I don't think it matters; `=` is quicker to type and is more intuitive if you're coming from another programming language. (More discussion [here](https://github.com/Robinlovelace/geocompr/issues/319#issuecomment-427376764) and [here](https://www.separatinghyperplanes.com/2018/02/why-you-should-use-and-never.html).)
-
-**Bottom line:** Pick one and be consistent.
-
----
-# Challenge: Detect government payments
-
-Imagine that you have a large bank transaction dataset. You know government payments are only divisible by $100, but never divisible by $4 or $400. 
-
-Write code to check if a transaction is possibly a government payment. [Submit to Mentimeter](https://www.mentimeter.com/app/presentation/bleq87wo3evgh3j6ks3wqro6zdfh7nwz/v5wc59b5wfph).
-
-- Implement the modulo operator `%`
-- Employ the corder order of logical operators (`&`, `|`)
-- Utilize any arithmetic operations you need
-
-```{r uc, eval=FALSE}
-transaction <- 9400
-# Your code here
-```
-
-- I had to do a slightly more complicated verison of this for my dissertation.
-
----
-
-# Help
-
-For more information on a (named) function or object in R, consult the "help" documentation. For example:
-
-```R
-help(plot)
-```
-
-Or, more simply, just use `?`:
-  
-```R
-?plot # This is what most people use. 
-```
-
---
-
-**Aside 1:** Comments in R are demarcated by `#`. 
-- Hit `Ctrl+Shift+c` (`Cmd+Shift+c` on Macs) in RStudio to (un)comment whole sections of highlighted code.
-- In Rmarkdown files, `<!--- --->` is the equivalent syntax for comments. NOT `#`. 
-  - Yes, that's confusing. Yes, I expect you to use the syntax correctly.
-
---
-
-**Aside 2:** See the *Examples* section at the bottom of the help file?
-- You can run them with the `example()` function. Try it: `example(plot)`.
-
----
-
-# Help (cont.)
-
-### Vignettes
-
-For many packages, you can also try the `vignette()` function, which will provide an introduction to a package and it's purpose through a series of helpful examples.
-- Try running `vignette("dplyr")` in your console now.
-
---
-
-I highly encourage reading package vignettes if they are available. 
-- They are often the best way to learn how to use a package.
-
---
-
-One complication is that you need to know the exact name of the package vignette(s).
-- E.g. The `dplyr` package actually has several vignettes associated with it: "dplyr", "window-functions", "programming", etc.
-- You can run `vignette()` (i.e. without any arguments) to list the available vignettes of every *installed* package installed on your system. 
-- Or, run `vignette(all = FALSE)` if you only want to see the vignettes of any *loaded* packages.
-
----
-
-# Help (cont.)
-
-### Demos
-
-Similar to vignettes, many packages come with built-in, interactive demos.
-
-To list all available demos on your system:<sup>1</sup> 
-
-```r
-demo(package = .packages(all.available = TRUE))
-```
-
-.footnote[
-<sup>1</sup> How would you limit the demos to one particular package?
-]
-
---
-
-To run a specific demo, just tell R which one and the name of the parent package. For example:
-
-```r
-demo("graphics", package = "graphics")
-```
 
 ---
 class: inverse, center, middle
-name: oop
+name: eobject
 
-# Object-oriented programming in R
-
+# "Everything is an object"
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
@@ -449,13 +878,6 @@ The good news is that avoiding and solving these issues is pretty straightforwar
 .footnote[
 <sup>1</sup> Technically, there are actually _multiple_ OOP frameworks in R (**S3**, **S4**, **R6**). Hadley Wickham's "Advanced R" provides a [very thorough overview](https://adv-r.hadley.nz/oo.html) of the main ones. Read his book sometime if you're into this stuff, it is superbly helpful.
 ]
-
----
-class: inverse, center, middle
-name: eobject
-
-# "Everything is an object"
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
 
@@ -482,8 +904,7 @@ Most likely, you already have a good idea of what distinguishes these objects an
 # Object class, type, and structure
 
 ```{r df1}
-## Create a small data frame called "df1".
-df1 = data.frame(x = 1:2, y = 3:4) 
+df1 = data.frame(x = 1:2, y = 3:4)  ## Create a small data frame called "df1".
 ```
 
 Use the `class`, `typeof`, and `str` commands to understand more about a particular object.
@@ -522,90 +943,6 @@ The `View()` function is also very helpful. This is the same as clicking on the 
 --
 
 - R is open source and you will often be working with functions that you did not write which return objects that you are unfamiliar with.
-
----
-name: global_env
-
-# Global environment
-
-Let's go back to the simple data frame that we created a few slides earlier.
-```{r}
-df1
-```
-
---
-
-Now, let's try to run a regression<sup>1</sup> on these "x" and "y" variables:
-
-.footnote[
-<sup>1</sup> Yes, this is a dumb regression with perfectly co-linear variables. Just go with it. 
-]
-
-```{r, error=T}
-lm(y ~ x) ## The "lm" stands for linear model(s)
-```
-
---
-
-Uh-oh. What went wrong here? (Answer on next slide.)
-
----
-
-# Global environment (cont.)
-
-The error message provides the answer to our question:
-
-```
-*## Error in eval(predvars, data, env): object 'y' not found
-```
-
---
-
-R can't find the variables that we've supplied in our [Global Environment](https://www.datamentor.io/r-programming/environment-scope/):
-
-![No "x" or "y" here...](pics/environment.png)
-
---
-
-Put differently: Because the variables "x" and "y" live as separate objects in the global environment, we have to tell R that they belong to the object `df1`.
-- Think about how you might do this before clicking through to the next slide.
-
----
-
-# Global environment (cont.)
-
-There are a various ways to solve this problem. One is to simply specify the datasource:
-
-```{r}
-lm(y ~ x, data = df1) ## Works when we add "data = df1"!
-```
-
---
-
-I want to emphasize this global environment issue, because it is something that Stata users (i.e. many economists) struggle with when they first come to R.
-- In Stata, the entire workspace essentially consists of one (and only one) data frame meaning no ambiguity where variables are coming from.
-- That "convenience" has a high price -- literally you need to buy Stata 16 or higher to use `frames` to open multiple data frames with less flexibility.
-- Speaking of which...
-
----
-
-# Working with multiple objects
-
-R's ability to keep multiple objects in memory at the same time is a huge plus when it comes to effective data work. 
-- E.g. We can copy an exiting data frame, or create new one entirely from scratch. Either will exist happily with our existing objects in the global environment.
-
-```{r df2}
-df2 = data.frame(x = rnorm(10), y = runif(10))
-```
-
-![Now with df2 added](pics/environment2.png)
-
----
-
-# Working with multiple objects (cont.)
-
-Again, however, it does mean that you have to pay attention to the names of those distinct data frames and be specific about which objects you are referring to.
-- Do we want to run a regression of "y" on "x" from data frame `df1` or data frame `df2`?
 
 ---
 class: inverse, center, middle
@@ -791,6 +1128,7 @@ Again, R will figure out what you mean if you are clear/lucky enough. But, much 
 
 .footnote[<sup>1</sup> Guess who has two thumbs and keeps making this mistake? This guy.]
 
+
 ---
 class: inverse, center, middle
 name: indexing
@@ -947,6 +1285,7 @@ lm(y ~ x) ## Doesn't work
 lm(df1$y ~ df1$x) ## Works!
 ```
 
+
 ---
 class: inverse, center, middle
 name: cleaning
@@ -990,37 +1329,8 @@ You may also have noticed that RStudio has convenient buttons for clearing your 
 
 ![](pics/broom.png?display=inline-block)
 
----
-
-class: inverse, center, middle
-
-# Next lecture(s): Data wrangling and cleaning
-
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile = list.files(pattern = '.html')
 pagedown::chrome_print(input = infile, timeout = 100)
 ```
-
----
-
-class: inverse, center, middle
-
-# Appendix
-
----
-name: notin-slide
-# Not in
-
-There's no equivalent "not in" command, but how might we go about creating one?
-- Hint: Think about negation...
-
---
-
-```{r}
-`%ni%` = Negate(`%in%`) ## The backticks (`) help to specify functions.
-4 %ni% 5:10
-```
-
-[Back](#in-slide)
