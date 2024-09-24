@@ -302,7 +302,7 @@ I reserve the right to add a problem set if I feel it will aid your learning.
 
 Exercises are quick turnaround assignments that are designed to get you to think about the material we covered in class. They will be due by the next class period. 
 
-I will drop the lowest two exercise grades. You will have the opportunity to revise any exercise submission to improve your grade as per the policy outlined below. You have a week to re-submit.
+I will drop the lowest two exercise grades. You will have the opportunity to revise any exercise submission to improve your grade as per the policy outlined below. You have until the next class meeting to re-submit. 
 
 #### What you will turn in:
 
