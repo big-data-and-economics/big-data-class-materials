@@ -35,10 +35,9 @@ opts_chunk$set(
   message=FALSE,
   cache=T#, echo=F, warning=F, message=F
   )
-library(tidyverse)
-library(hrbrthemes)
-library(fontawesome)
-library(RefManageR)
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(tidyverse, httr, lubridate, hrbrthemes, janitor, jsonlite, fredr, 
+               listviewer, usethis, tidycensus,RefManageR, fontawesome,purrr)
 theme_set(theme_minimal())
 BibOptions(check.entries = FALSE,
            bib.style = "authoryear",
@@ -72,25 +71,6 @@ name: prologue
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
-# Check-in
-
-- I graded Part IV of problem sets
-  - Knit, knit, knit, knit, knit your R Markdown submission: ensures your code runs
-  - New policy for PS submission: full points for pushing with GitHub, 10 points off if you upload a zip file
-
-- Tip on debugging: just because R writes something in red text, it doesn't mean it's an error
-  - Confirm a bug is a bug before you go down the rabbit hole
-
-- GitHub message: "This branch is .hi-blue[2 commits ahead of, 2 commits behind] `big-data-and-economics/ps1-employment-discrimination:main.`"
-  - This is not (necessarily) a bug. Can anyone explain what it means
-
-- Ask and answer questions on GitHub issues: part of your grade is using it
-
-- Final project annotated summaries were due yesterday. Thoughts?
-
-- Data description has been punted to be due after winter break (nothing is stopping you from doing it sooner though)
-
----
 # Prologue
 
 - We've spent the first month of this class on learning: 
@@ -98,11 +78,18 @@ name: prologue
   - basics of R
   - basics of data wrangling and tidy data
 
-- Now we're going to learn about a data acquisition skill: **scraping**
+- Now we're going to tackle data acquisition via **scraping**
 
 - Essentially, we're going to learn how to get data from the web
 
+- As context, everything I am showing you today assumes you've:
+  1. Found data on the web you want
+  2. Found the relevant way to access it (APIs vs. CSS)
+  3. Know the specifics needed to access the data (e.g. the name of a series, have an API key, the rough HTML structure)
+
 - These data are usually messy in one way or another, so it'll give you something to tidy
+
+- Extended demos for this lecture are available in [WEB APIs](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/07-web-apis/07-web-apis.html) and [web Scraping](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/06-web-css/06-web-css.html)
 
 ---
 # Plan for today
@@ -284,9 +271,7 @@ name: client-side-scraping
 ---
 # APIs 
 
-- [Zapier](https://zapier.com/resources/guides/apis) offers a fantastic intro to APIs
-
-- APIs is a collection of rules/methods that allow one software application to interact with another
+- APIs are a collection of rules/methods that allow one software application to interact with another
 
 - Examples include:
   - Web servers and web browsers
@@ -303,6 +288,9 @@ name: client-side-scraping
 - **Methods:** The “verbs” that clients use to talk with a server. The main one that we’ll be using is GET (i.e. ask a server to retrieve information), but other common methods are POST, PUT and DELETE.
 - **Requests:** What the client asks of the server (see Methods above).
 - **Response:** The server’s response. This includes a Status Code (e.g. “404” if not found, or “200” if successful), a Header (i.e. meta-information about the reponse), and a Body (i.e the actual content that we’re interested in).
+
+- Not covered? Explicit directions for each API we cover today
+- Instead, we're covering the nuts and bolts so you can figure out how to use any API
 
 ---
 # API Endponts
@@ -328,16 +316,91 @@ name: client-side-scraping
 - To be clear, that's all still tricky! 
 
 ---
+# Easy API: New York City Open Data
+
+- NYC OpenData provides a ton of data on New York City
+
+- It offers it as something easy to download
+
+- It also offers it as 
+
+---
+# Trees of NYC
+
+```{r trees_gif, echo = FALSE, out.width='100%'}
+if (knitr::is_html_output()){
+  knitr::include_graphics('pics/trees.gif')
+} else {
+  message("Sorry, this GIF is only available in the the HTML version of the notes.")
+}
+```
+
+---
+# Read the trees JSON
+
+```{r nyc1}
+# library(jsonlite) ## Already loaded
+nyc_trees = 
+  fromJSON("https://data.cityofnewyork.us/resource/nwxe-4ae8.json") %>%
+  as_tibble()
+nyc_trees
+```
+
+---
+# "Map" the trees
+
+```{r nyc3, warning=FALSE,eval=FALSE}
+nyc_trees %>% 
+  select(longitude, latitude, stump_diam, spc_common, spc_latin, tree_id) %>% 
+  mutate_at(vars(longitude:stump_diam), as.numeric) %>% 
+  ggplot(aes(x=longitude, y=latitude, size=stump_diam)) + 
+  geom_point(alpha=0.5) +
+  scale_size_continuous(name = "Stump diameter") +
+  labs(
+    x = "Longitude", y = "Latitude",
+    title = "Sample of New York City trees",
+    caption = "Source: NYC Open Data"
+    )
+```
+
+---
+# "Map" the trees
+
+- Don't worry, better looking maps to come
+
+```{r nyc3_actual, warning=FALSE,echo=FALSE}
+nyc_trees %>% 
+  select(longitude, latitude, stump_diam, spc_common, spc_latin, tree_id) %>% 
+  mutate_at(vars(longitude:stump_diam), as.numeric) %>% 
+  ggplot(aes(x=longitude, y=latitude, size=stump_diam)) + 
+  geom_point(alpha=0.5) +
+  scale_size_continuous(name = "Stump diameter") +
+  labs(
+    x = "Longitude", y = "Latitude",
+    title = "Sample of New York City trees",
+    caption = "Source: NYC Open Data"
+    )
+```
+
+
+---
 # You've likely used FRED before
 
 <div style="display: flex; justify-content: center;">
   <iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=yo2J&width=670&height=475" scrolling="no" frameborder="0" style="overflow:hidden; width:670px; height:525px;" allowTransparency="true" loading="lazy"  data-external="1"></iframe>
 </div>
+
 ---
 # Underneath is an API!
 
-- The endpoint is https://api.stlouisfed.org/fred/series/observations?series_id=GNPCA&api_key=YOUR_API_KEY&file_type=json
-- Just sub in your API key and you're good to go
+- The endpoint is https://api.stlouisfed.org/fred/series/observations?series_id=GNPCA&api_key=<YOUR_API_KEY>&file_type=json
+- Just sub an your API key and you're good to go
+
+- What's an API Key? It is a unique identifier that is used to authenticate access to the data
+  - It's like a password, but it's not a password
+  - It tracks who is using the API and how much they're using it
+  - Fake example: `asdfjaw523a3523414at43sad`
+  - FRED gives you one for free if you [register an API key](https://research.stlouisfed.org/useraccount/apikey)
 
 .scroll-box-16[
 ```json
@@ -440,7 +503,7 @@ name: client-side-scraping
 ]
 
 ---
-# What did I need to know? 
+# What do I need to know? 
 
 - The base URL: https://api.stlouisfed.org/
 - The API endpoint (fred/series/observations/)
@@ -449,10 +512,96 @@ name: client-side-scraping
   - api_key=YOUR_API_KEY
   - file_type=json
 
-- What's an API Key? It is a unique identifier that is used to authenticate a user, developer, or calling program to an API.
-  - It's like a password, but it's not a password
-  - It tracks who is using the API and how much they're using it
-  - Example: `asdfjaw523a3523414at43sad`
+```{r params,eval=FALSE}
+endpoint = "fred/series/observations"
+params = list(
+  api_key= "YOUR_FRED_KEY", ## Change to your own key
+  file_type="json", 
+  series_id="GNPCA"
+  )
+```
+
+```{r params_actual,echo=FALSE}
+endpoint = "fred/series/observations"
+params = list(
+  api_key= Sys.getenv("FRED_API_KEY"), ## Change to your own key
+  file_type="json", 
+  series_id="GNPCA"
+  )
+```
+
+---
+# Reading FRED's JSON
+
+```{r read_fred}
+fred = 
+  httr::GET(
+    url = "https://api.stlouisfed.org/", ## Base URL
+    path = endpoint,    ## The API endpoint
+    query = params                       ## Our parameter list
+    ) %>% 
+  httr::content("text") %>%
+  jsonlite::fromJSON()
+```
+
+- What's in there?
+
+.scroll-box-16[
+```{r fred_contents}
+fred
+```
+]
+
+---
+# Turn it into data
+
+```{r fred4, cache=F}
+fred =
+  fred %>% 
+  purrr::pluck("observations") %>% ## Extract the "$observations" list element
+  # .$observations %>% ## I could also have used this
+  # magrittr::extract("observations") %>% ## Or this
+  as_tibble() ## Just for nice formatting
+fred
+```
+
+---
+# Clean it up a bit and plot it
+
+```{r fred5, message=F}
+# library(lubridate) ## Already loaded above
+
+fred =
+  fred %>%
+  mutate(across(realtime_start:date, ymd)) %>% # make all the dates, dates
+  mutate(value = as.numeric(value)) # Make the values numeric  
+head(fred,3)
+```
+
+### Plot it
+
+```{r fred6,eval=FALSE}
+ggplot(fred, aes(x=date, y=value)) + # set your ggplot df and aesthetics
+  geom_line() + # what geom?
+  scale_y_continuous(labels = scales::comma) + # Make the scale prettier
+  labs(
+    x="Date", y="2012 USD (Billions)",
+    title="US Real Gross National Product", caption="Source: FRED"
+    )
+```
+
+---
+# Plot it
+
+```{r fred6_actual,echo=FALSE}
+ggplot(fred, aes(x=date, y=value)) + # set your ggplot df and aesthetics
+  geom_line() + # what geom?
+  scale_y_continuous(labels = scales::comma) + # Make the scale prettier
+  labs(
+    x="Date", y="2012 USD (Billions)",
+    title="US Real Gross National Product", caption="Source: FRED"
+    )
+```
 
 ---
 # Hide your API Key
@@ -468,18 +617,14 @@ FRED_API_KEY_TEST
 ```
 
 - You can also permanently add it to your `.Renviron` file, by running the `edit_r_environ()` function from the **usethis** package
+- Then just type in `FRED_API_KEY_TEST=abcdefghijklmnopqrstuvwxyz0123456789`, save, and re-read
 
 ```{r edit_r_environ, eval = F}
-usethis::edit_r_environ() 
+usethis::edit_r_environ() # open R environment to edit
+readRenviron("~/.Renviron")  # read the .Renviron file
 ```
 
-- Then just type in `FRED_API_KEY_TEST=abcdefghijklmnopqrstuvwxyz0123456789` and save the file and re-read using 
-
-```{r readRenviron, eval = F}
-readRenviron("~/.Renviron") 
-```
-
-- Any time you need it, you can just call `Sys.getenv("FRED_API_KEY_TEST")`
+- Any time you need it, use `Sys.getenv("FRED_API_KEY_TEST")`
 
 ---
 # Popular APIs
@@ -497,6 +642,37 @@ readRenviron("~/.Renviron")
 
 - Here's a curated list: https://github.com/RomanTsegelskyi/r-api-wrappers
 
+---
+# Tidycensus
+
+```{r tidycensus,eval=FALSE}
+#library(tidycensus) # Already loaded
+census_api_key("YOUR API KEY GOES HERE")
+get_acs(geography = "county", 
+  state="ME", 
+  variables = "B19013_001E", # Median household income
+  year = 2017, 
+  show_call = TRUE,
+  survey='acs5')
+```
+
+```{r tidycensus_eval,echo=FALSE}
+#library(tidycensus) # Already loaded
+get_acs(geography = "county", 
+  state="ME", 
+  variables = "B19013_001E",
+  year = 2017, 
+  show_call = TRUE,
+  survey='acs5') %>%
+  head(3)
+```
+
+#### Note
+
+- You still need to go find a series ID (ChatGPT is your friend)
+- But documentation works too. 
+  - Census has documentation organized by year and survey: https://api.census.gov/data/<year>/<survey>/<sub-survey>/variables.html
+  - tidycensus' `load_variables(YYYY, "sub-survey")` syntax will help you find the variables you need
 ---
 # Hidden APIs
 

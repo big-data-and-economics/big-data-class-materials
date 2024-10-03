@@ -64,25 +64,6 @@ name: prologue
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
 
 ---
-# Check-in
-
-- I graded Part IV of problem sets
-  - Knit, knit, knit, knit, knit your R Markdown submission: ensures your code runs
-  - New policy for PS submission: full points for pushing with GitHub, 10 points off if you upload a zip file
-
-- Tip on debugging: just because R writes something in red text, it doesn't mean it's an error
-  - Confirm a bug is a bug before you go down the rabbit hole
-
-- GitHub message: "This branch is .hi-blue[2 commits ahead of, 2 commits behind] `big-data-and-economics/ps1-employment-discrimination:main.`"
-  - This is not (necessarily) a bug. Can anyone explain what it means
-
-- Ask and answer questions on GitHub issues: part of your grade is using it
-
-- Final project annotated summaries were due yesterday. Thoughts?
-
-- Data description has been punted to be due after winter break (nothing is stopping you from doing it sooner though)
-
----
 # Prologue
 
 - We've spent the first month of this class on learning: 
@@ -90,11 +71,18 @@ name: prologue
   - basics of R
   - basics of data wrangling and tidy data
 
-- Now we're going to learn about a data acquisition skill: **scraping**
+- Now we're going to tackle data acquisition via **scraping**
 
 - Essentially, we're going to learn how to get data from the web
 
+- As context, everything I am showing you today assumes you've:
+  1. Found data on the web you want
+  2. Found the relevant way to access it (APIs vs. CSS)
+  3. Know the specifics needed to access the data (e.g. the name of a series, have an API key, the rough HTML structure)
+
 - These data are usually messy in one way or another, so it'll give you something to tidy
+
+- Extended demos for this lecture are available in [WEB APIs](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/07-web-apis/07-web-apis.html) and [web Scraping](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/06-web-css/06-web-css.html)
 
 ---
 # Plan for today
@@ -277,9 +265,7 @@ name: client-side-scraping
 ---
 # APIs 
 
-- [Zapier](https://zapier.com/resources/guides/apis) offers a fantastic intro to APIs
-
-- APIs is a collection of rules/methods that allow one software application to interact with another
+- APIs are a collection of rules/methods that allow one software application to interact with another
 
 - Examples include:
   - Web servers and web browsers
@@ -296,6 +282,9 @@ name: client-side-scraping
 - **Methods:** The “verbs” that clients use to talk with a server. The main one that we’ll be using is GET (i.e. ask a server to retrieve information), but other common methods are POST, PUT and DELETE.
 - **Requests:** What the client asks of the server (see Methods above).
 - **Response:** The server’s response. This includes a Status Code (e.g. “404” if not found, or “200” if successful), a Header (i.e. meta-information about the reponse), and a Body (i.e the actual content that we’re interested in).
+
+- Not covered? Explicit directions for each API we cover today
+- Instead, we're covering the nuts and bolts so you can figure out how to use any API
 
 ---
 # API Endponts
@@ -321,16 +310,98 @@ name: client-side-scraping
 - To be clear, that's all still tricky! 
 
 ---
+# Easy API: New York City Open Data
+
+- NYC OpenData provides a ton of data on New York City
+
+- It offers it as something easy to download
+
+- It also offers it as 
+
+---
+# Trees of NYC
+
+&lt;img src="pics/trees.gif" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+# Read the trees JSON
+
+
+``` r
+# library(jsonlite) ## Already loaded
+nyc_trees = 
+  fromJSON("https://data.cityofnewyork.us/resource/nwxe-4ae8.json") %&gt;%
+  as_tibble()
+nyc_trees
+```
+
+```
+## # A tibble: 1,000 × 45
+##    tree_id block_id created_at        tree_dbh stump_diam curb_loc status health
+##    &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; 
+##  1 180683  348711   2015-08-27T00:00… 3        0          OnCurb   Alive  Fair  
+##  2 200540  315986   2015-09-03T00:00… 21       0          OnCurb   Alive  Fair  
+##  3 204026  218365   2015-09-05T00:00… 3        0          OnCurb   Alive  Good  
+##  4 204337  217969   2015-09-05T00:00… 10       0          OnCurb   Alive  Good  
+##  5 189565  223043   2015-08-30T00:00… 21       0          OnCurb   Alive  Good  
+##  6 190422  106099   2015-08-30T00:00… 11       0          OnCurb   Alive  Good  
+##  7 190426  106099   2015-08-30T00:00… 11       0          OnCurb   Alive  Good  
+##  8 208649  103940   2015-09-07T00:00… 9        0          OnCurb   Alive  Good  
+##  9 209610  407443   2015-09-08T00:00… 6        0          OnCurb   Alive  Good  
+## 10 192755  207508   2015-08-31T00:00… 21       0          OffsetF… Alive  Fair  
+## # ℹ 990 more rows
+## # ℹ 37 more variables: spc_latin &lt;chr&gt;, spc_common &lt;chr&gt;, steward &lt;chr&gt;,
+## #   guards &lt;chr&gt;, sidewalk &lt;chr&gt;, user_type &lt;chr&gt;, problems &lt;chr&gt;,
+## #   root_stone &lt;chr&gt;, root_grate &lt;chr&gt;, root_other &lt;chr&gt;, trunk_wire &lt;chr&gt;,
+## #   trnk_light &lt;chr&gt;, trnk_other &lt;chr&gt;, brch_light &lt;chr&gt;, brch_shoe &lt;chr&gt;,
+## #   brch_other &lt;chr&gt;, address &lt;chr&gt;, zipcode &lt;chr&gt;, zip_city &lt;chr&gt;,
+## #   cb_num &lt;chr&gt;, borocode &lt;chr&gt;, boroname &lt;chr&gt;, cncldist &lt;chr&gt;, …
+```
+
+---
+# "Map" the trees
+
+
+``` r
+nyc_trees %&gt;% 
+  select(longitude, latitude, stump_diam, spc_common, spc_latin, tree_id) %&gt;% 
+  mutate_at(vars(longitude:stump_diam), as.numeric) %&gt;% 
+  ggplot(aes(x=longitude, y=latitude, size=stump_diam)) + 
+  geom_point(alpha=0.5) +
+  scale_size_continuous(name = "Stump diameter") +
+  labs(
+    x = "Longitude", y = "Latitude",
+    title = "Sample of New York City trees",
+    caption = "Source: NYC Open Data"
+    )
+```
+
+---
+# "Map" the trees
+
+- Don't worry, better looking maps to come
+
+&lt;img src="06a-scraping-in-research_files/figure-html/nyc3_actual-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
 # You've likely used FRED before
 
 &lt;div style="display: flex; justify-content: center;"&gt;
   &lt;iframe src="https://fred.stlouisfed.org/graph/graph-landing.php?g=yo2J&amp;width=670&amp;height=475" scrolling="no" frameborder="0" style="overflow:hidden; width:670px; height:525px;" allowTransparency="true" loading="lazy"  data-external="1"&gt;&lt;/iframe&gt;
 &lt;/div&gt;
+
 ---
 # Underneath is an API!
 
-- The endpoint is https://api.stlouisfed.org/fred/series/observations?series_id=GNPCA&amp;api_key=YOUR_API_KEY&amp;file_type=json
-- Just sub in your API key and you're good to go
+- The endpoint is https://api.stlouisfed.org/fred/series/observations?series_id=GNPCA&amp;api_key=&lt;YOUR_API_KEY&gt;&amp;file_type=json
+- Just sub an your API key and you're good to go
+
+- What's an API Key? It is a unique identifier that is used to authenticate access to the data
+  - It's like a password, but it's not a password
+  - It tracks who is using the API and how much they're using it
+  - Fake example: `asdfjaw523a3523414at43sad`
+  - FRED gives you one for free if you [register an API key](https://research.stlouisfed.org/useraccount/apikey)
 
 .scroll-box-16[
 ```json
@@ -433,7 +504,7 @@ name: client-side-scraping
 ]
 
 ---
-# What did I need to know? 
+# What do I need to know? 
 
 - The base URL: https://api.stlouisfed.org/
 - The API endpoint (fred/series/observations/)
@@ -442,10 +513,249 @@ name: client-side-scraping
   - api_key=YOUR_API_KEY
   - file_type=json
 
-- What's an API Key? It is a unique identifier that is used to authenticate a user, developer, or calling program to an API.
-  - It's like a password, but it's not a password
-  - It tracks who is using the API and how much they're using it
-  - Example: `asdfjaw523a3523414at43sad`
+
+``` r
+endpoint = "fred/series/observations"
+params = list(
+  api_key= "YOUR_FRED_KEY", ## Change to your own key
+  file_type="json", 
+  series_id="GNPCA"
+  )
+```
+
+
+
+---
+# Reading FRED's JSON
+
+
+``` r
+fred = 
+  httr::GET(
+    url = "https://api.stlouisfed.org/", ## Base URL
+    path = endpoint,    ## The API endpoint
+    query = params                       ## Our parameter list
+    ) %&gt;% 
+  httr::content("text") %&gt;%
+  jsonlite::fromJSON()
+```
+
+- What's in there?
+
+.scroll-box-16[
+
+``` r
+fred
+```
+
+```
+## $realtime_start
+## [1] "2024-09-26"
+## 
+## $realtime_end
+## [1] "2024-09-26"
+## 
+## $observation_start
+## [1] "1600-01-01"
+## 
+## $observation_end
+## [1] "9999-12-31"
+## 
+## $units
+## [1] "lin"
+## 
+## $output_type
+## [1] 1
+## 
+## $file_type
+## [1] "json"
+## 
+## $order_by
+## [1] "observation_date"
+## 
+## $sort_order
+## [1] "asc"
+## 
+## $count
+## [1] 95
+## 
+## $offset
+## [1] 0
+## 
+## $limit
+## [1] 100000
+## 
+## $observations
+##    realtime_start realtime_end       date     value
+## 1      2024-09-26   2024-09-26 1929-01-01  1202.659
+## 2      2024-09-26   2024-09-26 1930-01-01   1100.67
+## 3      2024-09-26   2024-09-26 1931-01-01  1029.038
+## 4      2024-09-26   2024-09-26 1932-01-01   895.802
+## 5      2024-09-26   2024-09-26 1933-01-01   883.847
+## 6      2024-09-26   2024-09-26 1934-01-01   978.188
+## 7      2024-09-26   2024-09-26 1935-01-01  1065.716
+## 8      2024-09-26   2024-09-26 1936-01-01  1201.443
+## 9      2024-09-26   2024-09-26 1937-01-01  1264.393
+## 10     2024-09-26   2024-09-26 1938-01-01  1222.966
+## 11     2024-09-26   2024-09-26 1939-01-01  1320.924
+## 12     2024-09-26   2024-09-26 1940-01-01  1435.656
+## 13     2024-09-26   2024-09-26 1941-01-01  1690.844
+## 14     2024-09-26   2024-09-26 1942-01-01  2008.853
+## 15     2024-09-26   2024-09-26 1943-01-01  2349.125
+## 16     2024-09-26   2024-09-26 1944-01-01  2535.744
+## 17     2024-09-26   2024-09-26 1945-01-01  2509.982
+## 18     2024-09-26   2024-09-26 1946-01-01   2221.51
+## 19     2024-09-26   2024-09-26 1947-01-01  2199.313
+## 20     2024-09-26   2024-09-26 1948-01-01  2291.804
+## 21     2024-09-26   2024-09-26 1949-01-01  2277.883
+## 22     2024-09-26   2024-09-26 1950-01-01  2476.097
+## 23     2024-09-26   2024-09-26 1951-01-01  2677.414
+## 24     2024-09-26   2024-09-26 1952-01-01  2786.602
+## 25     2024-09-26   2024-09-26 1953-01-01  2915.598
+## 26     2024-09-26   2024-09-26 1954-01-01  2900.038
+## 27     2024-09-26   2024-09-26 1955-01-01  3107.796
+## 28     2024-09-26   2024-09-26 1956-01-01  3175.622
+## 29     2024-09-26   2024-09-26 1957-01-01  3243.263
+## 30     2024-09-26   2024-09-26 1958-01-01  3215.954
+## 31     2024-09-26   2024-09-26 1959-01-01  3438.007
+## 32     2024-09-26   2024-09-26 1960-01-01  3527.996
+## 33     2024-09-26   2024-09-26 1961-01-01  3620.292
+## 34     2024-09-26   2024-09-26 1962-01-01  3843.844
+## 35     2024-09-26   2024-09-26 1963-01-01  4012.113
+## 36     2024-09-26   2024-09-26 1964-01-01  4243.962
+## 37     2024-09-26   2024-09-26 1965-01-01  4519.102
+## 38     2024-09-26   2024-09-26 1966-01-01    4812.8
+## 39     2024-09-26   2024-09-26 1967-01-01  4944.919
+## 40     2024-09-26   2024-09-26 1968-01-01  5188.802
+## 41     2024-09-26   2024-09-26 1969-01-01  5348.589
+## 42     2024-09-26   2024-09-26 1970-01-01  5358.035
+## 43     2024-09-26   2024-09-26 1971-01-01  5537.202
+## 44     2024-09-26   2024-09-26 1972-01-01  5829.057
+## 45     2024-09-26   2024-09-26 1973-01-01  6170.549
+## 46     2024-09-26   2024-09-26 1974-01-01  6145.506
+## 47     2024-09-26   2024-09-26 1975-01-01  6118.231
+## 48     2024-09-26   2024-09-26 1976-01-01  6454.905
+## 49     2024-09-26   2024-09-26 1977-01-01  6758.055
+## 50     2024-09-26   2024-09-26 1978-01-01  7127.776
+## 51     2024-09-26   2024-09-26 1979-01-01  7375.014
+## 52     2024-09-26   2024-09-26 1980-01-01   7355.39
+## 53     2024-09-26   2024-09-26 1981-01-01  7528.705
+## 54     2024-09-26   2024-09-26 1982-01-01  7397.849
+## 55     2024-09-26   2024-09-26 1983-01-01  7730.794
+## 56     2024-09-26   2024-09-26 1984-01-01  8280.163
+## 57     2024-09-26   2024-09-26 1985-01-01  8598.506
+## 58     2024-09-26   2024-09-26 1986-01-01  8876.436
+## 59     2024-09-26   2024-09-26 1987-01-01  9179.633
+## 60     2024-09-26   2024-09-26 1988-01-01  9569.566
+## 61     2024-09-26   2024-09-26 1989-01-01  9920.542
+## 62     2024-09-26   2024-09-26 1990-01-01 10120.114
+## 63     2024-09-26   2024-09-26 1991-01-01 10100.371
+## 64     2024-09-26   2024-09-26 1992-01-01 10452.604
+## 65     2024-09-26   2024-09-26 1993-01-01 10738.246
+## 66     2024-09-26   2024-09-26 1994-01-01 11155.769
+## 67     2024-09-26   2024-09-26 1995-01-01 11459.835
+## 68     2024-09-26   2024-09-26 1996-01-01 11893.706
+## 69     2024-09-26   2024-09-26 1997-01-01 12408.947
+## 70     2024-09-26   2024-09-26 1998-01-01 12954.457
+## 71     2024-09-26   2024-09-26 1999-01-01 13583.582
+## 72     2024-09-26   2024-09-26 2000-01-01 14144.962
+## 73     2024-09-26   2024-09-26 2001-01-01 14294.624
+## 74     2024-09-26   2024-09-26 2002-01-01 14529.585
+## 75     2024-09-26   2024-09-26 2003-01-01 14949.293
+## 76     2024-09-26   2024-09-26 2004-01-01 15542.707
+## 77     2024-09-26   2024-09-26 2005-01-01 16075.089
+## 78     2024-09-26   2024-09-26 2006-01-01 16483.539
+## 79     2024-09-26   2024-09-26 2007-01-01  16867.78
+## 80     2024-09-26   2024-09-26 2008-01-01 16940.097
+## 81     2024-09-26   2024-09-26 2009-01-01 16514.062
+## 82     2024-09-26   2024-09-26 2010-01-01 17013.917
+## 83     2024-09-26   2024-09-26 2011-01-01 17306.204
+## 84     2024-09-26   2024-09-26 2012-01-01 17686.281
+## 85     2024-09-26   2024-09-26 2013-01-01 18049.236
+## 86     2024-09-26   2024-09-26 2014-01-01  18499.72
+## 87     2024-09-26   2024-09-26 2015-01-01 19021.225
+## 88     2024-09-26   2024-09-26 2016-01-01 19372.908
+## 89     2024-09-26   2024-09-26 2017-01-01 19905.052
+## 90     2024-09-26   2024-09-26 2018-01-01 20490.925
+## 91     2024-09-26   2024-09-26 2019-01-01 21000.945
+## 92     2024-09-26   2024-09-26 2020-01-01 20482.341
+## 93     2024-09-26   2024-09-26 2021-01-01 21648.657
+## 94     2024-09-26   2024-09-26 2022-01-01 22176.949
+## 95     2024-09-26   2024-09-26 2023-01-01  22769.38
+```
+]
+
+---
+# Turn it into data
+
+
+``` r
+fred =
+  fred %&gt;% 
+  purrr::pluck("observations") %&gt;% ## Extract the "$observations" list element
+  # .$observations %&gt;% ## I could also have used this
+  # magrittr::extract("observations") %&gt;% ## Or this
+  as_tibble() ## Just for nice formatting
+fred
+```
+
+```
+## # A tibble: 95 × 4
+##    realtime_start realtime_end date       value   
+##    &lt;chr&gt;          &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;   
+##  1 2024-09-26     2024-09-26   1929-01-01 1202.659
+##  2 2024-09-26     2024-09-26   1930-01-01 1100.67 
+##  3 2024-09-26     2024-09-26   1931-01-01 1029.038
+##  4 2024-09-26     2024-09-26   1932-01-01 895.802 
+##  5 2024-09-26     2024-09-26   1933-01-01 883.847 
+##  6 2024-09-26     2024-09-26   1934-01-01 978.188 
+##  7 2024-09-26     2024-09-26   1935-01-01 1065.716
+##  8 2024-09-26     2024-09-26   1936-01-01 1201.443
+##  9 2024-09-26     2024-09-26   1937-01-01 1264.393
+## 10 2024-09-26     2024-09-26   1938-01-01 1222.966
+## # ℹ 85 more rows
+```
+
+---
+# Clean it up a bit and plot it
+
+
+``` r
+# library(lubridate) ## Already loaded above
+
+fred =
+  fred %&gt;%
+  mutate(across(realtime_start:date, ymd)) %&gt;% # make all the dates, dates
+  mutate(value = as.numeric(value)) # Make the values numeric  
+head(fred,3)
+```
+
+```
+## # A tibble: 3 × 4
+##   realtime_start realtime_end date       value
+##   &lt;date&gt;         &lt;date&gt;       &lt;date&gt;     &lt;dbl&gt;
+## 1 2024-09-26     2024-09-26   1929-01-01 1203.
+## 2 2024-09-26     2024-09-26   1930-01-01 1101.
+## 3 2024-09-26     2024-09-26   1931-01-01 1029.
+```
+
+### Plot it
+
+
+``` r
+ggplot(fred, aes(x=date, y=value)) + # set your ggplot df and aesthetics
+  geom_line() + # what geom?
+  scale_y_continuous(labels = scales::comma) + # Make the scale prettier
+  labs(
+    x="Date", y="2012 USD (Billions)",
+    title="US Real Gross National Product", caption="Source: FRED"
+    )
+```
+
+---
+# Plot it
+
+&lt;img src="06a-scraping-in-research_files/figure-html/fred6_actual-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Hide your API Key
@@ -466,20 +776,15 @@ FRED_API_KEY_TEST
 ```
 
 - You can also permanently add it to your `.Renviron` file, by running the `edit_r_environ()` function from the **usethis** package
+- Then just type in `FRED_API_KEY_TEST=abcdefghijklmnopqrstuvwxyz0123456789`, save, and re-read
 
 
-```r
-usethis::edit_r_environ() 
+``` r
+usethis::edit_r_environ() # open R environment to edit
+readRenviron("~/.Renviron")  # read the .Renviron file
 ```
 
-- Then just type in `FRED_API_KEY_TEST=abcdefghijklmnopqrstuvwxyz0123456789` and save the file and re-read using 
-
-
-```r
-readRenviron("~/.Renviron") 
-```
-
-- Any time you need it, you can just call `Sys.getenv("FRED_API_KEY_TEST")`
+- Any time you need it, use `Sys.getenv("FRED_API_KEY_TEST")`
 
 ---
 # Popular APIs
@@ -497,6 +802,37 @@ readRenviron("~/.Renviron")
 
 - Here's a curated list: https://github.com/RomanTsegelskyi/r-api-wrappers
 
+---
+# Tidycensus
+
+
+``` r
+#library(tidycensus) # Already loaded
+census_api_key("YOUR API KEY GOES HERE")
+get_acs(geography = "county", 
+  state="ME", 
+  variables = "B19013_001E", # Median household income
+  year = 2017, 
+  show_call = TRUE,
+  survey='acs5')
+```
+
+
+```
+## # A tibble: 3 × 5
+##   GEOID NAME                       variable   estimate   moe
+##   &lt;chr&gt; &lt;chr&gt;                      &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
+## 1 23001 Androscoggin County, Maine B19013_001    49538  1293
+## 2 23003 Aroostook County, Maine    B19013_001    39021  1177
+## 3 23005 Cumberland County, Maine   B19013_001    65702  1115
+```
+
+#### Note
+
+- You still need to go find a series ID (ChatGPT is your friend)
+- But documentation works too. 
+  - Census has documentation organized by year and survey: https://api.census.gov/data/&lt;year&gt;/&lt;survey&gt;/&lt;sub-survey&gt;/variables.html
+  - tidycensus' `load_variables(YYYY, "sub-survey")` syntax will help you find the variables you need
 ---
 # Hidden APIs
 
