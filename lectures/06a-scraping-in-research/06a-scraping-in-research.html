@@ -918,7 +918,7 @@ get_acs(geography = "county",
   state="ME", 
   variables = "B19013_001E", # Median household income
   year = 2017, 
-  show_call = TRUE,
+  show_call = TRUE, # Show the API call
   survey='acs5')
 ```
 
@@ -944,13 +944,20 @@ get_acs(geography = "county",
 ## 16 23031 York County, Maine         B19013_001    62618  1559
 ```
 
-#### Note
+---
+# Notes on Tidycensus
 
-You still need to go find a series ID (AI/Census documentation)
-- Census API docs organized by year and survey: https://api.census.gov/data/YEAR/SURVEY/SUBSURVEY/variables.html
-- **tidycensus**' `load_variables(YYYY, "sub-survey")` syntax will help you find the variables you need
+- You still need to go find a series ID (AI/Census documentation)
 
-Argument `geography=TRUE` returns the polygon needed to map these! (Hint hint hint)
+  - Census API docs organized by year and survey: https://api.census.gov/data/YEAR/SURVEY/SUBSURVEY/variables.html
+  
+  - **tidycensus**' `load_variables(YYYY, "sub-survey")` syntax will help you find the variables you need
+
+- `show_call=TRUE` will show you the API call that was made -- learn by doing
+
+- Argument `geography=TRUE` returns the polygon needed to map these! (Hint hint hint)
+
+- `tidycensus` is a great example of how to abstract the details of an API
 
 ---
 # Hidden APIs
