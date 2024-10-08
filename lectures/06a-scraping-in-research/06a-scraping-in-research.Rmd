@@ -33,11 +33,12 @@ opts_chunk$set(
   # out.width="748px", #out.length="520.75px",
   dpi=300, #fig.path='Figs/',
   message=FALSE,
-  cache=T#, echo=F, warning=F, message=F
+  cache=T,#, echo=F, warning=F, message=F,
+  warning=F
   )
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, httr, lubridate, hrbrthemes, janitor, jsonlite, fredr, 
-               listviewer, usethis, tidycensus,RefManageR, fontawesome,purrr)
+               listviewer, usethis, tidycensus,RefManageR, fontawesome,purrr,janitor)
 theme_set(theme_minimal())
 BibOptions(check.entries = FALSE,
            bib.style = "authoryear",
@@ -540,7 +541,7 @@ fred =
     path = endpoint,    ## The API endpoint
     query = params                       ## Our parameter list
     ) %>% 
-  httr::content("text") %>%
+  httr::content(as="text") %>%
   jsonlite::fromJSON()
 ```
 
@@ -638,16 +639,73 @@ readRenviron("~/.Renviron")  # read the .Renviron file
 - For example, the `tidycensus` package is a wrapper for the US Census API
   - You'll use it on your problem set
 
-- Others include: `fredr`, `blsAPI`, `rgithub`, `googlesheets4`, `googledrive`, `wikipediR`, etc.
+- Others include: `fredr`, `blsAPI`, `gh`, `googlesheets4`, `googledrive`, `wikipediR`, etc.
 
 - Here's a curated list: https://github.com/RomanTsegelskyi/r-api-wrappers
 
 ---
+# Without tidycensus
+
+- Sign up for a [Census API key](https://api.census.gov/data/key_signup.html)
+- Get [API endpoint you want](https://www.census.gov/data/developers/data-sets.html) 
+- Define other parameters
+  - Series you want, your "get,:" i.e. B19013_001E is median household income, NAME is the name of the geography, GEOID is a census identifier
+  - Figure out the types of parameters
+  - Name the groups you want, in Census that is the "for" -- e.g. state, county, etc.
+  - Name the groups you want, in Census that is your "in" -- e.g. Maine, Cumberland County, etc.
+
+```{r census_params}
+params_census <- list("key"=Sys.getenv('CENSUS_API_KEY'),                       ## Our parameter list
+              "get" = "NAME,B19013_001E", 
+              "for" = "county:*", 
+              "in" = "state:23")
+```
+
+```{r census_for_real}
+census = 
+  httr::GET(
+    url = "https://api.census.gov/", ## Base URL
+    path = "data/2017/acs/acs5",    ## The API endpoint
+    query = params_census,
+    ) %>% 
+  httr::content(as="text") %>%
+  jsonlite::fromJSON() 
+```
+
+---
+# Census API differs from FRED
+
+- Hey, wait that output a different structure than FRED did through this point
+- So you need a different process to turn into a data table! 
+
+```{r census_output}
+print(census)
+```
+
+---
+# For completion janitor package
+
+- Oh shoot, I don't have a GEOID (FIPS code) for the counties!
+
+```{r census_to_df}
+# library(tidyverse)
+# library(janitor)
+census %>% 
+  as_tibble() %>%
+  row_to_names(row_number=1)
+```
+
+---
 # Tidycensus
 
-```{r tidycensus,eval=FALSE}
+- Tidycensus embraces the **abstraction** principle of clean code
+
+```{r census_key,eval=FALSE}
 #library(tidycensus) # Already loaded
-census_api_key("YOUR API KEY GOES HERE")
+census_api_key("YOUR API KEY GOES HERE") # type this once and do not share your key
+```
+
+```{r tidycensus}
 get_acs(geography = "county", 
   state="ME", 
   variables = "B19013_001E", # Median household income
@@ -656,23 +714,14 @@ get_acs(geography = "county",
   survey='acs5')
 ```
 
-```{r tidycensus_eval,echo=FALSE}
-#library(tidycensus) # Already loaded
-get_acs(geography = "county", 
-  state="ME", 
-  variables = "B19013_001E",
-  year = 2017, 
-  show_call = TRUE,
-  survey='acs5') %>%
-  head(3)
-```
-
 #### Note
 
-- You still need to go find a series ID (ChatGPT is your friend)
-- But documentation works too. 
-  - Census has documentation organized by year and survey: https://api.census.gov/data/<year>/<survey>/<sub-survey>/variables.html
-  - tidycensus' `load_variables(YYYY, "sub-survey")` syntax will help you find the variables you need
+You still need to go find a series ID (AI/Census documentation)
+- Census API docs organized by year and survey: https://api.census.gov/data/YEAR/SURVEY/SUBSURVEY/variables.html
+- **tidycensus**' `load_variables(YYYY, "sub-survey")` syntax will help you find the variables you need
+
+Argument `geography=TRUE` returns the polygon needed to map these! (Hint hint hint)
+
 ---
 # Hidden APIs
 
@@ -831,7 +880,7 @@ name: ethics-of-web-scraping
 
 - Client-side content is often rendered using an API endpoint, which is a URL that you can use to access the data directly.
   - APIs are a set of rules/methods that allow one software application to interact with another they often require an access token
-  - You can use R packages (**httr**, **xml2** **jsonlite**) to access these endpoints and tidy the data.
+  - You can use R packages (**httr**, **xml2**, **jsonlite**) to access these endpoints and tidy the data.
   - Popular APIs have packages in R or other software that streamline access
 
 - Server-side content is often rendered using HTML and CSS.

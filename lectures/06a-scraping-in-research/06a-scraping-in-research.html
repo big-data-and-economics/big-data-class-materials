@@ -247,7 +247,7 @@ name: click-and-download
 - Below will download the Occupational Employment and Wage Statistics (OEWS) data for Massachusetts in 2021 from the BLS
 
 
-```r
+``` r
 download.file("https://www.bls.gov/oes/special.requests/oesm21ma.zip", "oesm21ma.zip")
 ```
 
@@ -536,7 +536,7 @@ fred =
     path = endpoint,    ## The API endpoint
     query = params                       ## Our parameter list
     ) %&gt;% 
-  httr::content("text") %&gt;%
+  httr::content(as="text") %&gt;%
   jsonlite::fromJSON()
 ```
 
@@ -765,7 +765,7 @@ ggplot(fred, aes(x=date, y=value)) + # set your ggplot df and aesthetics
 - Instead, you can make it an environment variable either for a single session or permanently
 
 
-```r
+``` r
 Sys.setenv(FRED_API_KEY_TEST="abcdefghijklmnopqrstuvwxyz0123456789") 
 FRED_API_KEY_TEST = Sys.getenv("FRED_API_KEY_TEST")
 FRED_API_KEY_TEST
@@ -798,17 +798,122 @@ readRenviron("~/.Renviron")  # read the .Renviron file
 - For example, the `tidycensus` package is a wrapper for the US Census API
   - You'll use it on your problem set
 
-- Others include: `fredr`, `blsAPI`, `rgithub`, `googlesheets4`, `googledrive`, `wikipediR`, etc.
+- Others include: `fredr`, `blsAPI`, `gh`, `googlesheets4`, `googledrive`, `wikipediR`, etc.
 
 - Here's a curated list: https://github.com/RomanTsegelskyi/r-api-wrappers
 
 ---
+# Without tidycensus
+
+- Sign up for a [Census API key](https://api.census.gov/data/key_signup.html)
+- Get [API endpoint you want](https://www.census.gov/data/developers/data-sets.html) 
+- Define other parameters
+  - Series you want, your "get,:" i.e. B19013_001E is median household income, NAME is the name of the geography, GEOID is a census identifier
+  - Figure out the types of parameters
+  - Name the groups you want, in Census that is the "for" -- e.g. state, county, etc.
+  - Name the groups you want, in Census that is your "in" -- e.g. Maine, Cumberland County, etc.
+
+
+``` r
+params_census &lt;- list("key"=Sys.getenv('CENSUS_API_KEY'),                       ## Our parameter list
+              "get" = "NAME,B19013_001E", 
+              "for" = "county:*", 
+              "in" = "state:23")
+```
+
+
+``` r
+census = 
+  httr::GET(
+    url = "https://api.census.gov/", ## Base URL
+    path = "data/2017/acs/acs5",    ## The API endpoint
+    query = params_census,
+    ) %&gt;% 
+  httr::content(as="text") %&gt;%
+  jsonlite::fromJSON() 
+```
+
+---
+# Census API differs from FRED
+
+- Hey, wait that output a different structure than FRED did through this point
+- So you need a different process to turn into a data table! 
+
+
+``` r
+print(census)
+```
+
+```
+##       [,1]                         [,2]          [,3]    [,4]    
+##  [1,] "NAME"                       "B19013_001E" "state" "county"
+##  [2,] "Oxford County, Maine"       "44582"       "23"    "017"   
+##  [3,] "Waldo County, Maine"        "50162"       "23"    "027"   
+##  [4,] "Penobscot County, Maine"    "47886"       "23"    "019"   
+##  [5,] "Piscataquis County, Maine"  "38797"       "23"    "021"   
+##  [6,] "Androscoggin County, Maine" "49538"       "23"    "001"   
+##  [7,] "Aroostook County, Maine"    "39021"       "23"    "003"   
+##  [8,] "Washington County, Maine"   "40328"       "23"    "029"   
+##  [9,] "Cumberland County, Maine"   "65702"       "23"    "005"   
+## [10,] "Knox County, Maine"         "53117"       "23"    "013"   
+## [11,] "Sagadahoc County, Maine"    "60457"       "23"    "023"   
+## [12,] "York County, Maine"         "62618"       "23"    "031"   
+## [13,] "Kennebec County, Maine"     "50116"       "23"    "011"   
+## [14,] "Franklin County, Maine"     "45541"       "23"    "007"   
+## [15,] "Somerset County, Maine"     "41549"       "23"    "025"   
+## [16,] "Hancock County, Maine"      "51438"       "23"    "009"   
+## [17,] "Lincoln County, Maine"      "54041"       "23"    "015"
+```
+
+---
+# For completion janitor package
+
+- Oh shoot, I don't have a GEOID (FIPS code) for the counties!
+
+
+``` r
+# library(tidyverse)
+# library(janitor)
+census %&gt;% 
+  as_tibble() %&gt;%
+  row_to_names(row_number=1)
+```
+
+```
+## # A tibble: 16 × 4
+##    NAME                       B19013_001E state county
+##    &lt;chr&gt;                      &lt;chr&gt;       &lt;chr&gt; &lt;chr&gt; 
+##  1 Oxford County, Maine       44582       23    017   
+##  2 Waldo County, Maine        50162       23    027   
+##  3 Penobscot County, Maine    47886       23    019   
+##  4 Piscataquis County, Maine  38797       23    021   
+##  5 Androscoggin County, Maine 49538       23    001   
+##  6 Aroostook County, Maine    39021       23    003   
+##  7 Washington County, Maine   40328       23    029   
+##  8 Cumberland County, Maine   65702       23    005   
+##  9 Knox County, Maine         53117       23    013   
+## 10 Sagadahoc County, Maine    60457       23    023   
+## 11 York County, Maine         62618       23    031   
+## 12 Kennebec County, Maine     50116       23    011   
+## 13 Franklin County, Maine     45541       23    007   
+## 14 Somerset County, Maine     41549       23    025   
+## 15 Hancock County, Maine      51438       23    009   
+## 16 Lincoln County, Maine      54041       23    015
+```
+
+---
 # Tidycensus
+
+- Tidycensus embraces the **abstraction** principle of clean code
 
 
 ``` r
 #library(tidycensus) # Already loaded
-census_api_key("YOUR API KEY GOES HERE")
+census_api_key("YOUR API KEY GOES HERE") # type this once and do not share your key
+```
+
+
+``` r
 get_acs(geography = "county", 
   state="ME", 
   variables = "B19013_001E", # Median household income
@@ -817,22 +922,36 @@ get_acs(geography = "county",
   survey='acs5')
 ```
 
-
 ```
-## # A tibble: 3 × 5
-##   GEOID NAME                       variable   estimate   moe
-##   &lt;chr&gt; &lt;chr&gt;                      &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
-## 1 23001 Androscoggin County, Maine B19013_001    49538  1293
-## 2 23003 Aroostook County, Maine    B19013_001    39021  1177
-## 3 23005 Cumberland County, Maine   B19013_001    65702  1115
+## # A tibble: 16 × 5
+##    GEOID NAME                       variable   estimate   moe
+##    &lt;chr&gt; &lt;chr&gt;                      &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;
+##  1 23001 Androscoggin County, Maine B19013_001    49538  1293
+##  2 23003 Aroostook County, Maine    B19013_001    39021  1177
+##  3 23005 Cumberland County, Maine   B19013_001    65702  1115
+##  4 23007 Franklin County, Maine     B19013_001    45541  2739
+##  5 23009 Hancock County, Maine      B19013_001    51438  1931
+##  6 23011 Kennebec County, Maine     B19013_001    50116  1664
+##  7 23013 Knox County, Maine         B19013_001    53117  2506
+##  8 23015 Lincoln County, Maine      B19013_001    54041  2895
+##  9 23017 Oxford County, Maine       B19013_001    44582  1758
+## 10 23019 Penobscot County, Maine    B19013_001    47886  1189
+## 11 23021 Piscataquis County, Maine  B19013_001    38797  2314
+## 12 23023 Sagadahoc County, Maine    B19013_001    60457  2953
+## 13 23025 Somerset County, Maine     B19013_001    41549  1522
+## 14 23027 Waldo County, Maine        B19013_001    50162  2047
+## 15 23029 Washington County, Maine   B19013_001    40328  1454
+## 16 23031 York County, Maine         B19013_001    62618  1559
 ```
 
 #### Note
 
-- You still need to go find a series ID (ChatGPT is your friend)
-- But documentation works too. 
-  - Census has documentation organized by year and survey: https://api.census.gov/data/&lt;year&gt;/&lt;survey&gt;/&lt;sub-survey&gt;/variables.html
-  - tidycensus' `load_variables(YYYY, "sub-survey")` syntax will help you find the variables you need
+You still need to go find a series ID (AI/Census documentation)
+- Census API docs organized by year and survey: https://api.census.gov/data/YEAR/SURVEY/SUBSURVEY/variables.html
+- **tidycensus**' `load_variables(YYYY, "sub-survey")` syntax will help you find the variables you need
+
+Argument `geography=TRUE` returns the polygon needed to map these! (Hint hint hint)
+
 ---
 # Hidden APIs
 
@@ -991,7 +1110,7 @@ name: ethics-of-web-scraping
 
 - Client-side content is often rendered using an API endpoint, which is a URL that you can use to access the data directly.
   - APIs are a set of rules/methods that allow one software application to interact with another they often require an access token
-  - You can use R packages (**httr**, **xml2** **jsonlite**) to access these endpoints and tidy the data.
+  - You can use R packages (**httr**, **xml2**, **jsonlite**) to access these endpoints and tidy the data.
   - Popular APIs have packages in R or other software that streamline access
 
 - Server-side content is often rendered using HTML and CSS.
