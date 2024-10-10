@@ -54,7 +54,7 @@ I heavily suggest that you work through this lecture interactively, you'll get t
 
 Once you have access to these notes and your R environment setup, navigate to the directory `lectures/08-spatial-analysis` and open the `08-spatial.Rmd` file. You can then start running the code chunks. 
 
-As a caveat, everything here is self-contained. Any installations are included in the code chunks, so you can run everything from start to finish with copy-and-paste. But it will be a bit slow and tedious. 
+3. **Run on your own computer**: Everything here is self-contained. Any installations are included in the code chunks, so you can run everything from start to finish with copy-and-paste. 
 
 ## Requirements
 
@@ -71,7 +71,7 @@ We're going to be doing all our spatial analysis and plotting today in R. Behind
 - New: **sf**, **lwgeom**, **maps**, **mapdata**, **spData**, **tigris**, **leaflet**, **mapview**, **tmap**, **tmaptools**, **nngeo**
 - Already used: **tidyverse**, **data.table**, **hrbrthemes**, **tidycensus**
 
-Truth be told, you only need a handful of the above libraries to do 95% of the spatial work that you're likely to encounter. But R's spatial ecosystem and support is extremely rich, so I'll try to walk through a number of specific use-cases in this lecture. Run the following code chunk to install (if necessary) and load everything.
+Truth be told, you only need a handful of the above libraries to do 95% of the spatial work that you're likely to encounter. But R's spatial ecosystem and support is extremely rich, so I cover a number of specific use-cases in this lecture. Run the following code chunk to install (if necessary) and load everything.
 
 ```{r, cache=F, message=FALSE}
 ## Load and install the packages that we'll be using today
@@ -108,8 +108,6 @@ download.file("https://www2.census.gov/ces/opportunity/county_outcomes.zip", "da
 options(timeout=60) # Reset the timeout to the default
 ```
 
-On your problem set, you will be using the [Opportunity Atlas datasets](https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html) at the Census tract level. It takes much longer to download and automating it may require your to increase the timeout even more. Alternatively, you can download manually. 
-
 There a couple ways to open up this file. We'll go with a two-step approach of unzipping the file and then reading it in.^[If you're curious about reading in the file directly from the zip file, check the [Data Tips notes](https://raw.githack.com/ECON368-fall2023big-data-and-economics/big-data-class-materials/main/lectures/03-data-tips/03-data-tips.html#1).] The code block below shows you how to unzip then read with `readr::read_csv`. 
 
 ```{r unzip_read,eval=FALSE}
@@ -118,7 +116,7 @@ op_atlas <- read_csv("data/county_outcomes.csv")
 file.remove("data/county_outcomes.csv") # Remove the CSV
 ```
 
-That read-in took a minute, huh? That's because the file is pretty big. Let's shrink it down to just the necessary variables and rows to save space. Today we're only mapping the mean household income percentile rank of children born to parents at the 25th and 75th percentile for a few race groups in Maine. So let's select and filter. 
+That probably took a while to load! That's cause it is a big file. Let's shrink it down to just the necessary variables and rows to save space. Today we're only mapping the mean household income percentile rank of children born to parents at the 25th and 75th percentile for a few race groups in Maine. So let's select and filter. 
 
 If you checkout the [codebook](https://www2.census.gov/ces/opportunity/Codebook-for-Table-5.pdf), you can see that variables have the form `[outcome]_[race]_[gender]_p[pctile]`. We want the outcome of average household income for children born to parents at the 25th percentile and 75th percentile. Per the codebook:
 
@@ -128,7 +126,7 @@ If you checkout the [codebook](https://www2.census.gov/ces/opportunity/Codebook-
 - `state` : State fips code
 - `county` : County fips code
 
-Also, a quick Google search confirms that Maine's FIPS code is 23. 
+A quick Google search confirms that Maine's FIPS code is 23. 
 
 #### Quick comprehension test: 
 
@@ -162,8 +160,6 @@ op_atlas <- op_atlas %>%
 ```
 
 ## Introduction: CRS and map projections
-
-Student presentation time. 
 
 If you're reading this after the fact, I recommend [these](https://geocompr.robinlovelace.net/spatial-class.html#crs-intro) [two](https://proj.org/usage/quickstart.html) helpful resources. The very short version is that spatial data, like all coordinate-based systems, only make sense relative to some fixed point. That fixed point is what the Coordinate Reference Systems, or **CRS**, is trying to set. In R, we can define the CRS in one of two ways:
 
@@ -261,7 +257,7 @@ me_plot +
 
 ### Data wrangling with **dplyr** and **tidyr**
 
-As I keep saying, the tidyverse approach to data wrangling carries over very smoothly to **sf** objects. For example, the standard **dplyr** verbs like `filter()`, `mutate()` and `select()` all work.
+The tidyverse approach to data wrangling carries over very smoothly to **sf** objects. For example, the standard **dplyr** verbs like `filter()`, `mutate()` and `select()` all work.
 
 **Be sure to run the code in this block to split NAME into the COUNTY and STATE components.**
 
