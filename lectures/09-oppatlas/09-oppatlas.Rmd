@@ -6,7 +6,7 @@ author: "Kyle Coombs"
 date: "Bates College | [EC/DCS 368](https://github.com/big-data-and-economics)" #"`r format(Sys.time(), '%d %B %Y')`"
 output:
   xaringan::moon_reader:
-    css: [default, metropolis, metropolis-fonts] 
+    css: [default, metropolis, metropolis-fonts,'ou-colors.css'] 
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -31,10 +31,13 @@ opts_chunk$set(
   fig.align="center", fig.width=6, fig.height=4, 
   # out.width="748px", #out.length="520.75px",
   dpi=300, #fig.path='Figs/',
-  cache=T#, echo=F, warning=F, message=F
+  cache=T, warning=F, message=F#, echo=F 
   )
 
 library(tidyverse)
+library(gganimate)
+library(broom)
+library(fixest)
 ```
 
 # Table of contents
@@ -56,13 +59,6 @@ name: prologue
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
-# Housekeeping
-
-- Problem Set 2 is due on Friday
-
-- Your data description is due after break
-
----
 # Prologue 
 
 - Today's lecture is a little different than the last few
@@ -77,8 +73,6 @@ name: prologue
 - He released summaries of the data publicly in 2018 as the Opportunity Atlas
 
 - These show tons of descriptive measures of income mobility at various levels of geography: state, county, and Census Tract
-
-- Problem Set 3 will involve using the Census Tract data to learn about income mobility in Lewiston
 
 ---
 
@@ -126,12 +120,12 @@ There's bound to be a messy with this much data, so they create an analysis samp
 
 - Data visualization
 
-- Spatial analysis (this week)
+- Spatial analysis
 
-- Regression analysis (after break)
+- Regression analysis
 
 ---
-# Parent and Children Incomes in Tax Data
+# Incomes in Tax Data
 
 - Parent household incomes: average income reported on Form 1040 tax return from 1994-2000
 
@@ -152,6 +146,7 @@ There's bound to be a messy with this much data, so they create an analysis samp
 
 ---
 # Average Child Income Percentile by Parent Income Percentile
+
 ```{r oppatlas, echo=F,warning=FALSE,message=FALSE,dev="svg"}
 opatlas <- read_csv(
     'https://opportunityinsights.org/wp-content/uploads/2018/10/national_percentile_outcomes.csv',
@@ -211,6 +206,100 @@ knitr::include_graphics('pics/op_atlas_map.png')
 Source: [The Opportunity Atlas](https://opportunityinsights.org/data/)
 
 ---
+# All that data and still limitations?
+
+- They worked with the near universe of tax returns in the USA from 1989-2015
+
+- Yet, they still have limitations
+
+- What are a few?
+
+--
+
+- Underscores a key point: data limitations are a fact of life no matter how much data you have 
+
+- You are always simplifying the world to make it fit into data
+
+- We use models to make sense of what those limitations are
+
+- Even if you do not think you are using a model, you are
+
+---
+# What model? I didn't write one
+
+- A model is a simplification of the world
+
+- It outlines the variables that you assume are systematically related to each other
+
+- e.g. Chetty et al. use tax data to measure income mobility
+  - Unreported income is not included 
+  - Do you think unreported income is systematically underreported for some groups? In some areas? 
+  - To some extent this can be tested
+
+- Can anyone think of examples of places where models are used to interpret data?
+
+--
+
+- Pre-1950s housing as a proxy for lead exposure
+
+---
+# Inferences about today
+
+Chetty et al. extrapolate from cohorts born in the 80s to make inferences about today
+- Assumption: mobility is not systematically changing over time, but it may lose precision
+- Tests for "correlation" between mobility measures for cohorts born earlier in history
+
+```{r autocovariance, echo=F, out.width="80%"}
+knitr::include_graphics('pics/autocovariance.jpg')
+```
+
+---
+# Sometimes more data is the answer
+
+- After a few years, the Opp Atlas team (Chetty, Dobbie, Goldman, Porter, and Yang 2024) updated with more data
+
+- They repeat the same analysis for cohorts born between 1978 and 1992<sup>2</sup>
+  - Measure adulthood income from 2005 to 2019
+
+- Able to look at how mobility has changed over time by cohort, location, other demographics
+
+- Indications that mobility has increased over time for some, but not all groups
+
+.footnote[<sup>2</sup> I'm in the data!]
+
+---
+# Mobility trends shift over time
+
+```{r mobility_trends, echo=F, out.width="90%",warning=FALSE,message=FALSE}
+# download.file('https://www2.census.gov/ces/opportunity/national_estimates_by_cohort_primary_outcomes.csv', destfile='data/national_estimates_by_cohort_primary_outcomes.csv')
+
+outcomes_long <- read_csv('data/national_estimates_by_cohort_primary_outcomes.csv', 
+  col_select=c('cohort','kfr_pooled_pooled_p1','kfr_pooled_pooled_p25','kfr_pooled_pooled_p50','kfr_pooled_pooled_p75','kfr_pooled_pooled_p100')) %>%
+  pivot_longer(cols=-cohort, names_to='percentile', values_to='income_percentile',names_prefix='kfr_pooled_pooled_p') %>% 
+  mutate(percentile=as.numeric(str_replace(percentile,'p',''),
+    income_percentile=100*income_percentile),
+    cohort=as.factor(cohort)) 
+
+# Make gif of trends that changes over time with gganimate
+
+ggplot(outcomes_long, aes(x = percentile, y = income_percentile,color=cohort))+
+    geom_point()+
+    geom_smooth(method = "lm", se = FALSE) +
+    theme_bw() +
+    theme(legend.position = "none") +
+    transition_states(cohort, transition_length=1, state_length=30) +
+    ease_aes('linear') +
+    labs(title='Cohort: {closest_state}',y='Income Percentile',x='Parent Income Percentile') 
+```
+
+---
+# Racial differences 
+
+```{r racial diff,echo=FALSE,warning=FALSE,message=FALSE,out.width="90%"}
+knitr::include_graphics('pics/opp_atlas_race_mobility.jpg')
+```
+
+---
 class: inverse, center, middle
 name: characteristics
 # Characteristics of High-Mobility Areas
@@ -241,6 +330,72 @@ knitr::include_graphics('pics/metro_areas.png')
 ```
 
 ---
+# How to calculate a correlation
+
+- Quick review: what is a correlation?
+
+- Mathematically:
+
+$$ \text{Correlation} = \frac{\text{Cov}(X,Y)}{\text{SD}(X)\text{SD}(Y)} $$
+
+- Intuitively, what is it? 
+
+--
+
+- It is a measure of how two variables move together normalized to be between -1 and 1
+
+- What are some ways to calculation a correlation in R?
+
+```{r opp_atlas_corr, echo=F}
+outcomes <- read_csv('data/national_estimates_by_cohort_primary_outcomes.csv', 
+  col_select=c('cohort','kfr_pooled_pooled_p25','kfr_pooled_pooled_p75')) %>%
+  rename(kfr_p25=kfr_pooled_pooled_p25, kfr_p75=kfr_pooled_pooled_p75)
+```
+
+```{r correlation}
+corr <- cor(outcomes$kfr_p25, outcomes$kfr_p75)
+print(paste("This correlation between 25th and 75th percentile mobility is:", corr))
+```
+
+---
+# Correlations using regression
+
+- One handy way to calculate a correlation is to use regression, exploiting the formula for the coefficient
+
+In a regression, the coefficient on $X$:
+
+$$ \beta = \frac{\text{Cov}(X,Y)}{\text{Var}(X)} $$
+
+$$ \text{Cov}(X,Y) = \frac{1}{n}\sum_{i=1}^{n}(X_i - \bar{X})(Y_i - \bar{Y})$$ 
+
+$$\text{Var}(X) = \frac{1}{n}\sum_{i=1}^{n}(X_i - \bar{X})^2 $$
+
+- Subtract means and divide by the standard deviation, or "z-score," we'll calculate the correlation with a regression coefficient
+
+- Why do this? 
+  - It is easy to interpret a coefficient
+  - It is easy to get a confidence interval
+  - It is easy to control for other variables
+  - Great way to normalize wildly different variables
+
+---
+# Let's test it out
+
+```{r correlation_regression,eval=FALSE}
+# library(fixest); library(broom) # already loaded
+# Finish this code! 
+outcomes <- mutate(outcomes, 
+  kfr_p25_demean=, 
+  kfr_p75_demean=)
+
+results <- feols(kfr_p75_demean ~ kfr_p25_demean, data=outcomes)
+diff <- tidy(results) %>% filter(term=='kfr_p25_demean') %>% pull(estimate) - corr
+
+etable(results,note=paste('Correlation function and z-scored regression approach are within', 
+  round(diff,16), 'of each other'))
+```
+
+---
 # Actual correlates
 
 1. Segregation: Greater racial and income segregation associated with lower levels of mobility
@@ -256,6 +411,23 @@ knitr::include_graphics('pics/metro_areas.png')
 5. Social Capital
   - It takes a village to raise a child
   - Chetty et al. (2023) leveraged Facebook Data to create the Social Capital Atlas
+
+---
+# Why do we care about correlation? 
+
+- We all know correlation is not causation
+
+- We'll discuss this in-depth after break if you don't believe me
+
+- So why are we talking about correlation at all?
+
+- One of the first steps in understanding a complex system is to understand how variables are related
+
+- This is especially true when we have a lot of data
+
+- Plus, almost ever causal relationship is just a correlation with a story
+  - Story might be: I ran an experiment and found a correlation with a randomly assigned treatment
+  - But the story might be: I assume some natural variation in the data is like a random assignment and I found a correlation
 
 ---
 class: inverse, center, middle

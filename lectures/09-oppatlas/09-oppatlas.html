@@ -8,6 +8,7 @@
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="ou-colors.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -23,7 +24,7 @@ class: center, middle, inverse, title-slide
 ### Kyle Coombs
 ]
 .date[
-### Bates College | <a href="https://github.com/-big-data-and-economics">EC/DCS 368</a>
+### Bates College | <a href="https://github.com/big-data-and-economics">EC/DCS 368</a>
 ]
 
 ---
@@ -59,13 +60,6 @@ name: prologue
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
 
 ---
-# Housekeeping
-
-- Problem Set 2 is due on Friday
-
-- Your data description is due after break
-
----
 # Prologue 
 
 - Today's lecture is a little different than the last few
@@ -80,8 +74,6 @@ name: prologue
 - He released summaries of the data publicly in 2018 as the Opportunity Atlas
 
 - These show tons of descriptive measures of income mobility at various levels of geography: state, county, and Census Tract
-
-- Problem Set 3 will involve using the Census Tract data to learn about income mobility in Lewiston
 
 ---
 
@@ -127,12 +119,12 @@ There's bound to be a messy with this much data, so they create an analysis samp
 
 - Data visualization
 
-- Spatial analysis (this week)
+- Spatial analysis
 
-- Regression analysis (after break)
+- Regression analysis
 
 ---
-# Parent and Children Incomes in Tax Data
+# Incomes in Tax Data
 
 - Parent household incomes: average income reported on Form 1040 tax return from 1994-2000
 
@@ -153,6 +145,7 @@ There's bound to be a messy with this much data, so they create an analysis samp
 
 ---
 # Average Child Income Percentile by Parent Income Percentile
+
 &lt;img src="09-oppatlas_files/figure-html/oppatlas-1.svg" style="display: block; margin: auto;" /&gt;
 Source: [The Opportunity Atlas](https://opportunityinsights.org/data/)
 
@@ -188,6 +181,76 @@ name: geo-vary
 Source: [The Opportunity Atlas](https://opportunityinsights.org/data/)
 
 ---
+# All that data and still limitations?
+
+- They worked with the near universe of tax returns in the USA from 1989-2015
+
+- Yet, they still have limitations
+
+- What are a few?
+
+--
+
+- Underscores a key point: data limitations are a fact of life no matter how much data you have 
+
+- You are always simplifying the world to make it fit into data
+
+- We use models to make sense of what those limitations are
+
+- Even if you do not think you are using a model, you are
+
+---
+# What model? I didn't write one
+
+- A model is a simplification of the world
+
+- It outlines the variables that you assume are systematically related to each other
+
+- e.g. Chetty et al. use tax data to measure income mobility
+  - Unreported income is not included 
+  - Do you think unreported income is systematically underreported for some groups? In some areas? 
+  - To some extent this can be tested
+
+- Can anyone think of examples of places where models are used to interpret data?
+
+--
+
+- Pre-1950s housing as a proxy for lead exposure
+
+---
+# Inferences about today
+
+Chetty et al. extrapolate from cohorts born in the 80s to make inferences about today
+- Assumption: mobility is not systematically changing over time, but it may lose precision
+- Tests for "correlation" between mobility measures for cohorts born earlier in history
+
+&lt;img src="pics/autocovariance.jpg" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+# Sometimes more data is the answer
+
+- After a few years, the Opp Atlas team (Chetty, Dobbie, Goldman, Porter, and Yang 2024) updated with more data
+
+- They repeat the same analysis for cohorts born between 1978 and 1992&lt;sup&gt;2&lt;/sup&gt;
+  - Measure adulthood income from 2005 to 2019
+
+- Able to look at how mobility has changed over time by cohort, location, other demographics
+
+- Indications that mobility has increased over time for some, but not all groups
+
+.footnote[&lt;sup&gt;2&lt;/sup&gt; I'm in the data!]
+
+---
+# Mobility trends shift over time
+
+&lt;img src="09-oppatlas_files/figure-html/mobility_trends-1.gif" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+# Racial differences 
+
+&lt;img src="pics/opp_atlas_race_mobility.jpg" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
 class: inverse, center, middle
 name: characteristics
 # Characteristics of High-Mobility Areas
@@ -216,6 +279,74 @@ Armed with a summary measure of upward mobility, we can ask:
 &lt;img src="pics/metro_areas.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
+# How to calculate a correlation
+
+- Quick review: what is a correlation?
+
+- Mathematically:
+
+$$ \text{Correlation} = \frac{\text{Cov}(X,Y)}{\text{SD}(X)\text{SD}(Y)} $$
+
+- Intuitively, what is it? 
+
+--
+
+- It is a measure of how two variables move together normalized to be between -1 and 1
+
+- What are some ways to calculation a correlation in R?
+
+
+
+
+``` r
+corr &lt;- cor(outcomes$kfr_p25, outcomes$kfr_p75)
+print(paste("This correlation between 25th and 75th percentile mobility is:", corr))
+```
+
+```
+## [1] "This correlation between 25th and 75th percentile mobility is: -0.684480995406698"
+```
+
+---
+# Correlations using regression
+
+- One handy way to calculate a correlation is to use regression, exploiting the formula for the coefficient
+
+In a regression, the coefficient on `\(X\)`:
+
+$$ \beta = \frac{\text{Cov}(X,Y)}{\text{Var}(X)} $$
+
+$$ \text{Cov}(X,Y) = \frac{1}{n}\sum_{i=1}^{n}(X_i - \bar{X})(Y_i - \bar{Y})$$ 
+
+$$\text{Var}(X) = \frac{1}{n}\sum_{i=1}^{n}(X_i - \bar{X})^2 $$
+
+- Subtract means and divide by the standard deviation, or "z-score," we'll calculate the correlation with a regression coefficient
+
+- Why do this? 
+  - It is easy to interpret a coefficient
+  - It is easy to get a confidence interval
+  - It is easy to control for other variables
+  - Great way to normalize wildly different variables
+
+---
+# Let's test it out
+
+
+``` r
+# library(fixest); library(broom) # already loaded
+# Finish this code! 
+outcomes &lt;- mutate(outcomes, 
+  kfr_p25_demean=, 
+  kfr_p75_demean=)
+
+results &lt;- feols(kfr_p75_demean ~ kfr_p25_demean, data=outcomes)
+diff &lt;- tidy(results) %&gt;% filter(term=='kfr_p25_demean') %&gt;% pull(estimate) - corr
+
+etable(results,note=paste('Correlation function and z-scored regression approach are within', 
+  round(diff,16), 'of each other'))
+```
+
+---
 # Actual correlates
 
 1. Segregation: Greater racial and income segregation associated with lower levels of mobility
@@ -231,6 +362,23 @@ Armed with a summary measure of upward mobility, we can ask:
 5. Social Capital
   - It takes a village to raise a child
   - Chetty et al. (2023) leveraged Facebook Data to create the Social Capital Atlas
+
+---
+# Why do we care about correlation? 
+
+- We all know correlation is not causation
+
+- We'll discuss this in-depth after break if you don't believe me
+
+- So why are we talking about correlation at all?
+
+- One of the first steps in understanding a complex system is to understand how variables are related
+
+- This is especially true when we have a lot of data
+
+- Plus, almost ever causal relationship is just a correlation with a story
+  - Story might be: I ran an experiment and found a correlation with a randomly assigned treatment
+  - But the story might be: I assume some natural variation in the data is like a random assignment and I found a correlation
 
 ---
 class: inverse, center, middle
