@@ -75,6 +75,7 @@ name: prologue
 - These show tons of descriptive measures of income mobility at various levels of geography: state, county, and Census Tract
 
 ---
+class: white-slide
 
 ```{r img_wide, echo=F, out.width="90%"}
 knitr::include_graphics('pics/fading_dream.png')
