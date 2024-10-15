@@ -343,7 +343,7 @@ The solutions are made public within a week of the problem set being posted.
 
 In an effort to incentivize you to see coding as an ongoing process of learning and improvement, I will allow you to improve the coding and presentation quality portions of your grade on any problem set. However, you cannot just copy and paste the solutions. 
 
-Instead, you must provide carefully commented explanations of each step of the code -- whether from the solutions or of your own invention. This is a great way to learn, but it is also a lot of work. 
+Instead, you must provide carefully commented explanations of each step of the code. This is a great way to learn, but it is also a lot of work. 
 
 *Example.* You might write add a comment like this to the top of your code:
 
@@ -363,7 +363,7 @@ suppressWarnings({
 To be eligible to resubmit to improve your grade, you must have submitted an initial version of the problem set on time.
 
 1. View my feedback on the `feedback` branch of your problem set repository. 
-2. Fix your problem set answers and comment your code as needed. Write "CORRECTED" in all caps next to any changes. 
+2. Fix your problem set answers and comment your code as needed to explain the change. Write "CORRECTED" in all caps next to any changes. 
 3. Push changes to the `main` branch of your problem set repository.
 4. Navigate to the `Issues` tab of your problem set repository and create a new issue titled "Resubmission for Problem Set X". Briefly describe your changes in the body of the issue and tag my username, @kgcsport. 
 5. **Deadline for resubmissions**: All resubmissions must be pushed within one week of the solutions being posted.
