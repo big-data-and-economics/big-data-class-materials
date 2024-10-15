@@ -38,6 +38,17 @@ library(tidyverse)
 library(gganimate)
 library(broom)
 library(fixest)
+
+outcomes <- read_csv('data/national_estimates_by_cohort_primary_outcomes.csv', 
+  col_select=c('cohort','kfr_pooled_pooled_p25','kfr_pooled_pooled_p75')) %>%
+  rename(kfr_p25=kfr_pooled_pooled_p25, kfr_p75=kfr_pooled_pooled_p75)
+
+outcomes <- mutate(outcomes, 
+  kfr_p25_demean=(kfr_p25-mean(kfr_p25))/sd(kfr_p25), 
+  kfr_p75_demean=(kfr_p75-mean(kfr_p75))/sd(kfr_p75))
+
+results <- feols(kfr_p75_demean ~ kfr_p25_demean, data=outcomes)
+
 ```
 
 # Table of contents
@@ -237,11 +248,17 @@ Source: [The Opportunity Atlas](https://opportunityinsights.org/data/)
   - Do you think unreported income is systematically underreported for some groups? In some areas? 
   - To some extent this can be tested
 
-- Can anyone think of examples of places where models are used to interpret data?
+- Can anyone think of examples of places where hidden models are used to interpret data?
 
 --
 
-- Pre-1950s housing as a proxy for lead exposure
+- Economic wellbeing summarized by income percentile
+
+- GDP per capita as an indicator of economic development
+
+- More lead paint in old buildings $\Rightarrow$ Pre-1950s housing proxies for lead exposure
+
+- New construction is slow, so pre-1950s housing measured today likely holds for the past
 
 ---
 # Inferences about today
@@ -250,7 +267,7 @@ Chetty et al. extrapolate from cohorts born in the 80s to make inferences about 
 - Assumption: mobility is not systematically changing over time, but it may lose precision
 - Tests for "correlation" between mobility measures for cohorts born earlier in history
 
-```{r autocovariance, echo=F, out.width="80%"}
+```{r autocovariance, echo=F, out.width="75%"}
 knitr::include_graphics('pics/autocovariance.jpg')
 ```
 
@@ -271,7 +288,7 @@ knitr::include_graphics('pics/autocovariance.jpg')
 ---
 # Mobility trends shift over time
 
-```{r mobility_trends, echo=F, out.width="90%",warning=FALSE,message=FALSE}
+```{r mobility_trends, echo=F, out.width="90%",warning=FALSE,message=FALSE,cache=TRUE}
 # download.file('https://www2.census.gov/ces/opportunity/national_estimates_by_cohort_primary_outcomes.csv', destfile='data/national_estimates_by_cohort_primary_outcomes.csv')
 
 outcomes_long <- read_csv('data/national_estimates_by_cohort_primary_outcomes.csv', 
@@ -290,7 +307,8 @@ ggplot(outcomes_long, aes(x = percentile, y = income_percentile,color=cohort))+
     theme(legend.position = "none") +
     transition_states(cohort, transition_length=1, state_length=30) +
     ease_aes('linear') +
-    labs(title='Cohort: {closest_state}',y='Income Percentile',x='Parent Income Percentile') 
+    labs(title='Cohort: {closest_state}',y='Income Percentile',x='Parent Income Percentile') +
+    shadow_mark(alpha=0.5)
 ```
 
 ---
@@ -347,19 +365,13 @@ $$ \text{Correlation} = \frac{\text{Cov}(X,Y)}{\text{SD}(X)\text{SD}(Y)} $$
 
 - What are some ways to calculation a correlation in R?
 
-```{r opp_atlas_corr, echo=F}
-outcomes <- read_csv('data/national_estimates_by_cohort_primary_outcomes.csv', 
-  col_select=c('cohort','kfr_pooled_pooled_p25','kfr_pooled_pooled_p75')) %>%
-  rename(kfr_p25=kfr_pooled_pooled_p25, kfr_p75=kfr_pooled_pooled_p75)
-```
-
 ```{r correlation}
 corr <- cor(outcomes$kfr_p25, outcomes$kfr_p75)
 print(paste("This correlation between 25th and 75th percentile mobility is:", corr))
 ```
 
 ---
-# Correlations using regression
+# Z-score to get correlation with regression
 
 - One handy way to calculate a correlation is to use regression, exploiting the formula for the coefficient
 
@@ -385,15 +397,31 @@ $$\text{Var}(X) = \frac{1}{n}\sum_{i=1}^{n}(X_i - \bar{X})^2 $$
 ```{r correlation_regression,eval=FALSE}
 # library(fixest); library(broom) # already loaded
 # Finish this code! 
+# I renamed kfr_pooled_pooled_p25 to kfr_p25 and kfr_pooled_pooled_p75 to kfr_p75
 outcomes <- mutate(outcomes, 
   kfr_p25_demean=, 
   kfr_p75_demean=)
 
 results <- feols(kfr_p75_demean ~ kfr_p25_demean, data=outcomes)
-diff <- tidy(results) %>% filter(term=='kfr_p25_demean') %>% pull(estimate) - corr
+#diff <- round(results$coefficients[['kfr_p25_demean']] - corr,16)
+diff <- NA
+etable(results) %>% # table it
+  kable() %>% # make it prettier
+  print() # print it
+print(paste("Correlation function and z-scored regression approach are within",diff,"of each other"))
+```
 
-etable(results,note=paste('Correlation function and z-scored regression approach are within', 
-  round(diff,16), 'of each other'))
+---
+# Correlation vs. Regression
+
+```{r answer,echo=FALSE}
+diff <- round(results$coefficients[['kfr_p25_demean']] - corr,16)
+
+etable(results) %>% # table it
+  kable() %>% # make it prettier
+  print() # print it
+print(paste("Correlation function and z-scored regression approach are within",diff,"of each other"))
+
 ```
 
 ---
@@ -408,6 +436,7 @@ etable(results,note=paste('Correlation function and z-scored regression approach
 4. Family Structure: 
   - Areas with more single parents have lower mobility
   - Strong correlation even for kids whose *own* parents are married
+  - This result is a puzzling one and the focus of much recent and (somewhat controversially) reported on research
 
 5. Social Capital
   - It takes a village to raise a child

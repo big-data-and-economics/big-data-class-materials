@@ -212,11 +212,17 @@ Source: [The Opportunity Atlas](https://opportunityinsights.org/data/)
   - Do you think unreported income is systematically underreported for some groups? In some areas? 
   - To some extent this can be tested
 
-- Can anyone think of examples of places where models are used to interpret data?
+- Can anyone think of examples of places where hidden models are used to interpret data?
 
 --
 
-- Pre-1950s housing as a proxy for lead exposure
+- Economic wellbeing summarized by income percentile
+
+- GDP per capita as an indicator of economic development
+
+- More lead paint in old buildings `\(\Rightarrow\)` Pre-1950s housing proxies for lead exposure
+
+- New construction is slow, so pre-1950s housing measured today likely holds for the past
 
 ---
 # Inferences about today
@@ -225,7 +231,7 @@ Chetty et al. extrapolate from cohorts born in the 80s to make inferences about 
 - Assumption: mobility is not systematically changing over time, but it may lose precision
 - Tests for "correlation" between mobility measures for cohorts born earlier in history
 
-&lt;img src="pics/autocovariance.jpg" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="pics/autocovariance.jpg" width="75%" style="display: block; margin: auto;" /&gt;
 
 ---
 # Sometimes more data is the answer
@@ -297,8 +303,6 @@ $$ \text{Correlation} = \frac{\text{Cov}(X,Y)}{\text{SD}(X)\text{SD}(Y)} $$
 - What are some ways to calculation a correlation in R?
 
 
-
-
 ``` r
 corr &lt;- cor(outcomes$kfr_p25, outcomes$kfr_p75)
 print(paste("This correlation between 25th and 75th percentile mobility is:", corr))
@@ -309,7 +313,7 @@ print(paste("This correlation between 25th and 75th percentile mobility is:", co
 ```
 
 ---
-# Correlations using regression
+# Z-score to get correlation with regression
 
 - One handy way to calculate a correlation is to use regression, exploiting the formula for the coefficient
 
@@ -336,15 +340,42 @@ $$\text{Var}(X) = \frac{1}{n}\sum_{i=1}^{n}(X_i - \bar{X})^2 $$
 ``` r
 # library(fixest); library(broom) # already loaded
 # Finish this code! 
+# I renamed kfr_pooled_pooled_p25 to kfr_p25 and kfr_pooled_pooled_p75 to kfr_p75
 outcomes &lt;- mutate(outcomes, 
   kfr_p25_demean=, 
   kfr_p75_demean=)
 
 results &lt;- feols(kfr_p75_demean ~ kfr_p25_demean, data=outcomes)
-diff &lt;- tidy(results) %&gt;% filter(term=='kfr_p25_demean') %&gt;% pull(estimate) - corr
+#diff &lt;- round(results$coefficients[['kfr_p25_demean']] - corr,16)
+diff &lt;- NA
+etable(results) %&gt;% # table it
+  kable() %&gt;% # make it prettier
+  print() # print it
+print(paste("Correlation function and z-scored regression approach are within",diff,"of each other"))
+```
 
-etable(results,note=paste('Correlation function and z-scored regression approach are within', 
-  round(diff,16), 'of each other'))
+---
+# Correlation vs. Regression
+
+
+```
+## 
+## 
+## |                |results            |
+## |:---------------|:------------------|
+## |Dependent Var.: |kfr_p75_demean     |
+## |                |                   |
+## |Constant        |3.08e-14 (0.1953)  |
+## |kfr_p25_demean  |-0.6845** (0.2022) |
+## |_______________ |__________________ |
+## |S.E. type       |IID                |
+## |Observations    |15                 |
+## |R2              |0.46851            |
+## |Adj. R2         |0.42763            |
+```
+
+```
+## [1] "Correlation function and z-scored regression approach are within 1e-16 of each other"
 ```
 
 ---
@@ -359,6 +390,7 @@ etable(results,note=paste('Correlation function and z-scored regression approach
 4. Family Structure: 
   - Areas with more single parents have lower mobility
   - Strong correlation even for kids whose *own* parents are married
+  - This result is a puzzling one and the focus of much recent and (somewhat controversially) reported on research
 
 5. Social Capital
   - It takes a village to raise a child
