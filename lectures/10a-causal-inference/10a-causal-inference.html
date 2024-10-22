@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Big Data and Economics</title>
+    <title>Data Science for Economists</title>
     <meta charset="utf-8" />
     <meta name="author" content="Kyle Coombs" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -15,7 +15,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Big Data and Economics
+# Data Science for Economists
 ]
 .subtitle[
 ## Causal Inference
@@ -74,23 +74,6 @@ class: inverse, center, middle
 
 - If so, we should be able to .pink[change] neighborhood characteristics to .pink[change] outcomes
 
-- Problem set 3 has been posted to the course website, get started early! 
-
----
-# Hack-a-thon update
-
-- Lewiston's Department of Economic Development has been in touch about the hack-a-thon
-
-- We'll be helping the city with a project to understand where to put street lights to help reduce crime
-
-- Two options for scheduling hack-a-thon
-
-  - Last week of class - kick off Tuesday (4/9), team presentations Thursday (4/11), participation optional
-
-  - Last two weeks of class - kick off Tuesday (4/2), team presentations Thursday (4/11) and converted to your last problem set, so no longer optional
-
-- I'll poll Thursday to see what works best for everyone
-
 ---
 
 # Goals today
@@ -105,7 +88,7 @@ class: inverse, center, middle
 ---
 # Warning
 
-- This causality stuff is **really** tricky
+- Causality stuff is **really** tricky
 
 - A causal paper may be intuitive -- that means it is a great paper, but finding your own intuitive causal relationship in the wild is hard
 
@@ -114,9 +97,7 @@ class: inverse, center, middle
   - There are many interrelated frameworks to put some structure on the problem
   - Connections between frameworks can be hard to see and sometimes not particularly illuminating at first
 
-- Be patient and comfortable with the fact that you won't understand everything at first, second, third, or even when you're trying to teach the material.super[†]
-
-.footnote[.super[†] cough, cough --- me]
+- Be patient and comfortable with the fact that you won't understand everything at first, second, third, or even when you're trying to teach the material
 
 ---
 # Attribution
@@ -319,7 +300,7 @@ Causal inference can be pretty difficult—both .purple[practically] and .pink[e
 Many of these challenges relate to .hi-slate[exogeneity], _i.e._, `\(\color{#314f4f}{\mathop{\boldsymbol{E}}\left[ u_i | X \right] = 0}\)`.
 --
 &lt;br&gt;Causality requires us to .hi-slate[hold all else constant] (*ceterus paribus*) on average, i.e. 
-  - The amount our model misses the mark ($u$) is equally likely to be positive as negative, or .hi-slide[unbiased] 
+  - The amount our model misses the mark ( `\(u\)` ) is equally likely to be positive as negative, or .hi-slide[unbiased] 
 
 ---
 # Fund. Problem of Causal Inference
@@ -356,7 +337,7 @@ $$
 
 - Formally, exogeneity means `\(\mathbb{E}[u_i|X] = 0\)`: in expectation ("on average") the error term is zero after controlling for all the `\(x\)` variables
 
-- Intuition: anything we left out that explains `\(y\)` is uncorrelated with our `\(x\)` variables
+- Intuition: anything left out that explains `\(y\)` is uncorrelated with `\(X\)`
 
 - This is massive: it means you don't have to explain everything! Just the things that are correlated with the causal relationship you care about
 
