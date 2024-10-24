@@ -667,6 +667,12 @@ rent
 rent
 ```
 
+<!-- group_quarters <- get_decennial(
+  geography = "state", 
+  table = "P5", 
+  year = 2020
+) -->
+
 This returns an **sf** object, which we can plot directly.
 
 ```{r rent_plot}
