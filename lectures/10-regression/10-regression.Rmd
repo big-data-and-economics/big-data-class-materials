@@ -1,5 +1,5 @@
 ---
-title: "Big Data and Economics"
+title: "Data Science for Economists"
 subtitle: "Regression analysis in R"
 author:
   name: Kyle Coombs
@@ -40,7 +40,7 @@ knit: (function(inputFile, encoding) {
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300)
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE, dpi=300)
 ```
 
 This lecture covers the bread-and-butter tool of applied econometrics and data science: regression analysis. This adapted from work by [Grant McDermott](https://raw.githack.com/uo-ec607/lectures/master/08-regression/08-regression.html). Today is focused on practical skills of using regression tools with R to do some analysis. I am not working through major econometric theory of regression analysis and inference. We're instead focusing on the practical skills of producing regression tables, interpreting coefficients, standardizing variables, and understanding the different types of standard errors.
@@ -163,6 +163,34 @@ We can then dig down further by extracting a summary of the regression coefficie
 summary(ols_fixest)$coefficients
 ```
 
+#### Presenting
+
+I give more formaly coverage of this below, but let's shift from summaries to a nice looking table.
+
+```{r etable_intro}
+etable(ols_fixest)
+```
+
+Hmm... how can I clean that up a bit? Well `etable()` has a number of options including `dict` where you can assign variable names. 
+
+```{r etable_clean_intro}
+
+etable(ols_fixest,
+  dict=c("poor_share1990"="Poverty Rate (1990)",
+  'kfr_p25'='Income Mobility (25th Percentile)'))
+
+```
+
+#### Kable with etable
+
+Sadly, `etable()` is not great with the markdown documents your turn in (the curse of open source). However, you can use `kable()` to make it look nicer in a markdown table.
+
+```{r kable_etable_intro}
+etable_object <- etable(ols_fixest, dict = c("poor_share1990"="Poverty Rate (1990)",
+  'kfr_p25'='Income Mobility (25th Percentile)'))
+kable(etable_object, format = "markdown")
+```
+
 #### Multiple regression 
 
 The `feols()` function can handle multiple regression models unlike `lm()`. It can split regressions by different dependent variables, independent variables, fixed effects, and subsets all in one. I need to briefly create an indicator for region to show you multiple subset regression.
@@ -170,7 +198,9 @@ The `feols()` function can handle multiple regression models unlike `lm()`. It c
 ```{r ols1_multi}
 # Indicator for south created.
 opp_atlas <- opp_atlas %>% 
-  mutate(insouth= ifelse(state_abb %in% c("AL", "AR", "FL", "GA", "KY", "LA", "MS", "NC", "OK", "SC", "TN", "TX", "VA", "WV"), "South", "North"))
+  mutate(insouth= ifelse(state_abb %in% 
+    c("AL", "AR", "FL", "GA", "KY", "LA", "MS", 
+    "NC", "OK", "SC", "TN", "TX", "VA", "WV"), "South", "North"))
 
 ols_multi <- feols(c(kfr_p25, kfr_white_p25) ~  
   sw(poor_share1990,ann_avg_job_growth_2004_2013),
@@ -476,6 +506,15 @@ Other neat tricks with `etable()` is that you can specify a "note" and "label" f
 
 ```{r etable_caption}
 etable(ols_fixest,ols_fixest_filter,ols_robust,fixest_cluster,fixest_corr, dict = dict, notes="This is a caption", label="tab:regression_table",se='IID')
+```
+
+#### Kable with etable
+
+Sadly, `etable()` is not great with the markdown documents your turn in (the curse of open source). However, you can use `kable()` to make it look nicer in a markdown table.
+
+```{r kable_etable}
+etable_object <- etable(ols_fixest,ols_fixest_filter,ols_robust,fixest_cluster,fixest_corr, dict = dict)
+kable(etable_object, format = "markdown")
 ```
 
 #### Other tools
