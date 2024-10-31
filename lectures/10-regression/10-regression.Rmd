@@ -1,5 +1,5 @@
 ---
-title: "Big Data and Economics"
+title: "Data Science for Economists"
 subtitle: "Regression analysis in R"
 author:
   name: Kyle Coombs
@@ -40,7 +40,7 @@ knit: (function(inputFile, encoding) {
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE, dpi=300)
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE, dpi=300)
 ```
 
 This lecture covers the bread-and-butter tool of applied econometrics and data science: regression analysis. This adapted from work by [Grant McDermott](https://raw.githack.com/uo-ec607/lectures/master/08-regression/08-regression.html). Today is focused on practical skills of using regression tools with R to do some analysis. I am not working through major econometric theory of regression analysis and inference. We're instead focusing on the practical skills of producing regression tables, interpreting coefficients, standardizing variables, and understanding the different types of standard errors.
@@ -199,7 +199,9 @@ The `feols()` function can handle multiple regression models unlike `lm()`. It c
 ```{r ols1_multi}
 # Indicator for south created.
 opp_atlas <- opp_atlas %>% 
-  mutate(insouth= ifelse(state_abb %in% c("AL", "AR", "FL", "GA", "KY", "LA", "MS", "NC", "OK", "SC", "TN", "TX", "VA", "WV"), "South", "North"))
+  mutate(insouth= ifelse(state_abb %in% 
+    c("AL", "AR", "FL", "GA", "KY", "LA", "MS", 
+    "NC", "OK", "SC", "TN", "TX", "VA", "WV"), "South", "North"))
 
 ols_multi <- feols(c(kfr_p25, kfr_white_p25) ~  
   sw(poor_share1990,ann_avg_job_growth_2004_2013),
