@@ -1,5 +1,5 @@
 ---
-title: Big Data and Economics
+title: Data Science for Economists
 subtitle: Fixed Effects - control for what you can't see
 author: Kyle Coombs
 date: "Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics)"

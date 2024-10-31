@@ -72,6 +72,7 @@ if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse, fixest, vtable, broom, modelsummary,tidycensus,kableExtra)
 ## My preferred ggplot2 plotting theme (optional)
 theme_set(theme_minimal())
+DO NOT KNIT UNTIL YOU FIX.
 ```
 
 While we've already loaded all of the required packages for today, I'll try to be as explicit about where a particular function is coming from, whenever I use it below. 
@@ -161,6 +162,34 @@ We can then dig down further by extracting a summary of the regression coefficie
 
 ```{r ols1_coefs}
 summary(ols_fixest)$coefficients
+```
+
+#### Presenting
+
+I give more formaly coverage of this below, but let's shift from summaries to a nice looking table.
+
+```{r etable_intro}
+etable(ols_fixest)
+```
+
+Hmm... how can I clean that up a bit? Well `etable()` has a number of options including `dict` where you can assign variable names. 
+
+```{r etable_clean_intro}
+
+etable(ols_fixest,
+  dict=c("poor_share1990"="Poverty Rate (1990)",
+  'kfr_p25'='Income Mobility (25th Percentile)'))
+
+```
+
+#### Kable with etable
+
+Sadly, `etable()` is not great with the markdown documents your turn in (the curse of open source). However, you can use `kable()` to make it look nicer in a markdown table.
+
+```{r kable_etable_intro}
+etable_object <- etable(ols_fixest, dict = c("poor_share1990"="Poverty Rate (1990)",
+  'kfr_p25'='Income Mobility (25th Percentile)'))
+kable(etable_object, format = "markdown")
 ```
 
 #### Multiple regression 
@@ -476,6 +505,15 @@ Other neat tricks with `etable()` is that you can specify a "note" and "label" f
 
 ```{r etable_caption}
 etable(ols_fixest,ols_fixest_filter,ols_robust,fixest_cluster,fixest_corr, dict = dict, notes="This is a caption", label="tab:regression_table",se='IID')
+```
+
+#### Kable with etable
+
+Sadly, `etable()` is not great with the markdown documents your turn in (the curse of open source). However, you can use `kable()` to make it look nicer in a markdown table.
+
+```{r kable_etable}
+etable_object <- etable(ols_fixest,ols_fixest_filter,ols_robust,fixest_cluster,fixest_corr, dict = dict)
+kable(etable_object, format = "markdown")
 ```
 
 #### Other tools
