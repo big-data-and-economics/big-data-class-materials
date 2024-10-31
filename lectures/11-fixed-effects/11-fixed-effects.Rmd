@@ -326,6 +326,26 @@ name: panel-data
 
 - This works with unbalanced panels too, but it's more complicated
 
+
+---
+# Panel Data
+
+- Here's what (a few rows from) a panel data set looks like - a variable for individual (county), a variable for time (year), and then the data
+
+```{r,eval=FALSE}
+data(crime4)
+crime4 %>%
+  select(county, year, crmrte, prbarr) %>%
+  rename(County = county,
+         Year = year,
+         CrimeRate = crmrte,
+         ProbofArrest = prbarr) %>%
+  slice(1:9) %>%
+  knitr::kable(note = '...') %>%
+  kableExtra::add_footnote('9 rows out of 630. "Prob. of Arrest" is estimated probability of being arrested when you commit a crime', notation = 'none')
+```
+
+
 ---
 # Panel Data
 
@@ -663,11 +683,23 @@ $$(Y_{it} - \bar{Y}_i) = \beta_0 + \beta_1(X_{it} - \bar{X}_i) + \varepsilon_{it
 
 ---
 
-# Let's do it!
+# Try it!
 
 - We can use `group_by` to get means-within-groups and subtract them out
 
-```{r, echo = TRUE}
+```{r, echo = TRUE,eval=FALSE}
+data(crime4, package = 'wooldridge')
+crime4 <- crime4 %>%
+  # Filter to the data points from our graph
+  filter(county %in% c(1,3,7, 23),
+         prbarr < .5) %>%
+  group_by(county) %>%
+  mutate(demeaned_crime = crmrte - mean_crime,
+         demeaned_prob = prbarr - mean_prob)
+```
+
+
+```{r, echo = FALSE}
 data(crime4, package = 'wooldridge')
 crime4 <- crime4 %>%
   # Filter to the data points from our graph
@@ -880,7 +912,7 @@ class: inverse, center, middle
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
 #print(infile)
-pagedown::chrome_print(input = infile, timeout = 100)
+#pagedown::chrome_print(input = infile, timeout = 100)
 ```
 
 

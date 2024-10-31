@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Big Data and Economics</title>
+    <title>Data Science for Economists</title>
     <meta charset="utf-8" />
     <meta name="author" content="Kyle Coombs" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -15,7 +15,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Big Data and Economics
+# Data Science for Economists
 ]
 .subtitle[
 ## Fixed Effects - control for what you can’t see
@@ -231,82 +231,47 @@ name: panel-data
 
 - This works with unbalanced panels too, but it's more complicated
 
+
 ---
 # Panel Data
 
 - Here's what (a few rows from) a panel data set looks like - a variable for individual (county), a variable for time (year), and then the data
 
-&lt;table&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:right;"&gt; County &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Year &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; CrimeRate &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; ProbofArrest &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 81 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0398849 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.289696 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 82 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0383449 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.338111 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 83 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0303048 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.330449 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 84 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0347259 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.362525 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 85 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0365730 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.325395 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 86 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0347524 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.326062 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 87 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0356036 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.298270 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 81 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0163921 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.202899 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 82 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0190651 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.162218 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;tfoot&gt;
-&lt;tr&gt;
-&lt;td style = 'padding: 0; border:0;' colspan='100%'&gt;&lt;sup&gt;&lt;/sup&gt; 9 rows out of 630. &amp;quot;Prob. of Arrest&amp;quot; is estimated probability of being arrested when you commit a crime&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tfoot&gt;
-&lt;/table&gt;
+
+``` r
+data(crime4)
+crime4 %&gt;%
+  select(county, year, crmrte, prbarr) %&gt;%
+  rename(County = county,
+         Year = year,
+         CrimeRate = crmrte,
+         ProbofArrest = prbarr) %&gt;%
+  slice(1:9) %&gt;%
+  knitr::kable(note = '...') %&gt;%
+  kableExtra::add_footnote('9 rows out of 630. "Prob. of Arrest" is estimated probability of being arrested when you commit a crime', notation = 'none')
+```
+
+
+---
+# Panel Data
+
+- Here's what (a few rows from) a panel data set looks like - a variable for individual (county), a variable for time (year), and then the data
+
+
+| County| Year| CrimeRate| ProbofArrest|
+|------:|----:|---------:|------------:|
+|      1|   81| 0.0398849|     0.289696|
+|      1|   82| 0.0383449|     0.338111|
+|      1|   83| 0.0303048|     0.330449|
+|      1|   84| 0.0347259|     0.362525|
+|      1|   85| 0.0365730|     0.325395|
+|      1|   86| 0.0347524|     0.326062|
+|      1|   87| 0.0356036|     0.298270|
+|      3|   81| 0.0163921|     0.202899|
+|      3|   82| 0.0190651|     0.162218|
+
+__Note:__
+9 rows out of 630. "Prob. of Arrest" is estimated probability of being arrested when you commit a crime
 
 ---
 name: crime-and-arrests
@@ -335,7 +300,7 @@ Do you notice that these problems have overlap? That's cause they're all forms o
 
 - Let's pick a few counties and graph this out
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -343,7 +308,7 @@ Do you notice that these problems have overlap? That's cause they're all forms o
 
 - If we look at the overall variation, just pretending this is all together, we get this
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -351,7 +316,7 @@ Do you notice that these problems have overlap? That's cause they're all forms o
 
 - BETWEEN variation is what we get if we look at the relationship between the *means of each county*
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -359,7 +324,7 @@ Do you notice that these problems have overlap? That's cause they're all forms o
 
 - And I mean it! Only look at those means! Individual year-to-year variation within county doesn't matter.
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -367,7 +332,7 @@ Do you notice that these problems have overlap? That's cause they're all forms o
 
 - Within variation treats the orange crosses as individualized axes for the variation *within* county from year-to-year only!
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-8-1.gif" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-9-1.gif" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -503,30 +468,31 @@ name: demeaning
 
 ---
 
-# Let's do it!
+# Try it!
 
 - We can use `group_by` to get means-within-groups and subtract them out
 
 
-```r
+``` r
 data(crime4, package = 'wooldridge')
 crime4 &lt;- crime4 %&gt;%
   # Filter to the data points from our graph
   filter(county %in% c(1,3,7, 23),
          prbarr &lt; .5) %&gt;%
   group_by(county) %&gt;%
-  mutate(mean_crime = mean(crmrte),
-         mean_prob = mean(prbarr)) %&gt;%
   mutate(demeaned_crime = crmrte - mean_crime,
          demeaned_prob = prbarr - mean_prob)
 ```
+
+
+
 
 ---
 
 # And Regress!
 
 
-```r
+``` r
 orig_data &lt;- feols(crmrte ~ prbarr, data = crime4)
 de_mean &lt;- feols(demeaned_crime ~ demeaned_prob, data = crime4)
 etable(orig_data, de_mean)
@@ -590,7 +556,7 @@ name: lsdv
 # Let's do it!
 
 
-```r
+``` r
 lsdv &lt;- feols(crmrte ~ prbarr + factor(county), data = crime4)
 etable(orig_data, de_mean, lsdv, keep = c('prbarr', 'demeaned_prob'))
 ```
@@ -632,13 +598,13 @@ etable(orig_data, de_mean, lsdv, keep = c('prbarr', 'demeaned_prob'))
 - We left those out of the table with the `coefs` argument of `export_summs` (we rarely want them) but here they are:
 
 
-```r
+``` r
 lsdv
 ```
 
 ```
 ## OLS estimation, Dep. Var.: crmrte
-## Observations: 27 
+## Observations: 27
 ## Standard-errors: IID 
 ##                   Estimate Std. Error   t value   Pr(&gt;|t|)    
 ## (Intercept)       0.045631   0.004116  11.08640 1.7906e-10 ***
@@ -660,7 +626,7 @@ lsdv
 - LSDV makes clear what's happening by creating a separate intercept for each county
 - Graphically, de-meaning moves all the points together, while LSDV moves the line up and down to meet the points
 
-&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="11-fixed-effects_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -691,7 +657,7 @@ lsdv
 # Going Professional
 
 
-```r
+``` r
 library(fixest)
 pro &lt;- feols(crmrte ~ prbarr | county, data = crime4)
 etable(de_mean, pro)
