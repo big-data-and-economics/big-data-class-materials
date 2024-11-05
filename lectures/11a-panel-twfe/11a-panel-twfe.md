@@ -4,7 +4,7 @@ subtitle: "Fixed Effects and Difference-in-differences"
 author:
   name: Kyle Coombs
   affiliation: Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics/big-data-class-materials#lectures)
-# date: Lecture 6  #"04 March 2024"
+# date: Lecture 6  #"04 November 2024"
 output: 
   html_document:
     theme: journal
@@ -57,7 +57,7 @@ It's important to note that "base" R already provides all of the tools to implem
 A convenient way to install (if necessary) and load everything is by running the below code chunk.
 
 
-```r
+``` r
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(modelsummary, broom, fixest, wooldridge, tidyverse)
@@ -1073,11 +1073,7 @@ Can we say any of the above are causal? What would we need to assume?
 
 ## Difference-in-differences
 
-One of the most popular uses of fixed effects is to implement difference-in-difference designs we've discussed. Here's a quick visualization. Let's walk through an example that uses the National Supported Work Demonstration dataset that [Lalonde (1986)](https://business.baylor.edu/scott_cunningham/teaching/lalonde-1986.pdf) published on.^[I take this example from an activity devised by Scott Cunningham and Kyle Butts.]
-
-### Lalonde (1986)
-
-The neat thing about these data is Lalonde (and a follow-up by [Dehejia and Wahba (2022)](https://business.baylor.edu/scott_cunningham/teaching/dehejia-and-wahba-2002.pdf)) compare experimental to non-experimental data. The experimental data is from a randomized control trial (RCT) of a job training program. The non-experimental data is a random sample of US households. 
+One of the most popular uses of fixed effects is to implement difference-in-difference designs we've discussed. Here's a quick visualization. Let's walk through an example that uses the Earned Income Tax Credit.
 
 ### Earned Income Tax Credit
 
@@ -1090,6 +1086,13 @@ Effectively at low-income levels, the EITC increases the dollars earned from wor
 Let's focus on how this affects labor supply of single mothers who are the primary beneficiaries of  . This example is borrowed from Nick Huntington-Klein and pulled from work by [Bruce Meyer (2002)](https://www.jstor.org/stable/pdf/3083435.pdf).
 
 We walked through this example in the lecture, but let's do it again.
+
+#### Questions to keep in mind
+
+1. How do you interpret each coefficient? 
+2. What assumptions provide a causal interpretation? 
+3. Are we able to test any of these assumptions?
+4. If not, what can we test? 
 
 ### Diff-in-diff with data
 
@@ -1187,7 +1190,6 @@ iplot(eitc_did,dict=c('treated'='EITC Treatment','year'='Year'))
 ```
 
 ![](11a-panel-twfe_files/figure-html/iplot-did-1.png)<!-- -->
-```
 
 ## Further resources
 
