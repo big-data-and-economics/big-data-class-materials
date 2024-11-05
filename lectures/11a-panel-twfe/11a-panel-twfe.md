@@ -1,10 +1,10 @@
 ---
-title: "Big Data and Economics"
+title: "Data Science for Economists"
 subtitle: "Fixed Effects and Difference-in-differences"
 author:
   name: Kyle Coombs
   affiliation: Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics/big-data-class-materials#lectures)
-# date: Lecture 6  #"04 November 2024"
+# date: Lecture 6  #"05 November 2024"
 output: 
   html_document:
     theme: journal

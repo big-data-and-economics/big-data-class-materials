@@ -1,5 +1,5 @@
 ---
-title: "Big Data and Economics"
+title: "Data Science for Economists"
 subtitle: "Fixed Effects and Difference-in-differences"
 author:
   name: Kyle Coombs
