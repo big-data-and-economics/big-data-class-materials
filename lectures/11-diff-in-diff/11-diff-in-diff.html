@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Big Data and Economics</title>
+    <title>Data Science for Economists</title>
     <meta charset="utf-8" />
     <meta name="author" content="Kyle Coombs" />
-    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
@@ -15,7 +15,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Big Data and Economics
+# Data Science for Economists
 ]
 .subtitle[
 ## Difference-in-differences
@@ -58,17 +58,6 @@ name: toc
 name: prologue
 class: inverse, center, middle
 # Prologue
-
----
-# Announcement
-
-- Talk on Friday March 15 at 11am by my friend and colleague, Dr. Szymon Sacher
-
-- The talk is entitled "Inference for Regression with Variables Generated from Unstructured Data"
-
-- It is in Pettengill Hall G50 and concerns matters of data science, economics, and machine learning methods
-
-- I'll announce an incentive to attend after I decide on the appropriate incentive
 
 ---
 # Plan for the day
@@ -131,11 +120,7 @@ name: causal-inference-review
 ---
 # Causal Inference Review
 
-Last week, we discussed .hi[causality].
-
---
-
-We worked through the *Rubin causal model*, in which we defined
+Let's review the *Rubin causal model*, in which we defined
 
 - `\(\color{#e64173}{y_{1i}:}\)` the outcome for individual `\(i\)` if she had received treatment
 
@@ -213,30 +198,6 @@ $$
 $$
 
 which says that the difference in the groups' means will give us a **biased estimate** for the causal effect of treatment .hi-orange[if we have selection bias.]
-
----
-# Selection bias 
-
-**Q:** What is this .hi-orange[selection bias]?
-
---
-
-**A:** **(Informal)** We have selection bias when our control group doesn't offer a good comparison for our treatment group.
-
---
-
-Specifically, the control group doesn't give us a good .hi-orange[counterfactual] for .orange[what our treatment group would have looked like if the members had not received treatment.]
---
- Basically, the groups are different.
-
---
-
-**A:** **(Formal)** The .pink[average *untreated* outcome for a member of our **treatment group**] (which we cannot observe) differs from the .purple[average *untreated* outcome for a member of our **control group**], _i.e._,
-$$
-`\begin{align}
-  \color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}
-\end{align}`
-$$
 
 ---
 # Observing selection bias?
@@ -327,7 +288,19 @@ If Al attended college (D.sub[Al]=1) and Bri did not (D.sub[Bri]=0):
 .pull-right[
 .blue[Earn.sub[0,Bri].super[Post]] = .blue[$50K]
 &lt;br&gt;.red[Earn.sub[0,Bri].super[Pre]] = .red[$40K]
-]
+] 
+
+### Bridge from fixed effects
+
+- It is now possible to apply fixed effects. Why? 
+
+--
+
+- We can take the average of observations and subtract it from each observation
+
+- Individual fixed effect for Al on his post-college observation:  
+
+.purple[Earn.sub[1,Al].super[Post]] - Avg Earn.sub[Al] = .purple[$60K] - $40K = $20K
 
 ---
 # Bridge from fixed effects
@@ -340,9 +313,9 @@ If Al attended college (D.sub[Al]=1) and Bri did not (D.sub[Bri]=0):
 
 --
 
-- No! Recessions drive down earnings and his education is correlated with recession timing
+- No! Recessions `\(\downarrow\)` earnings and his education is correlated with recession timing
 
-- Can I just use a fixed effect for time to wash out the effect of the recession **on average**?
+- Okay, what if I restrict my sample to just college goers (Al). Can I just use a fixed effect for time to wash out the effect of the recession **on Al**?
 
 --
 
@@ -351,7 +324,7 @@ If Al attended college (D.sub[Al]=1) and Bri did not (D.sub[Bri]=0):
 ---
 # Compare to Bri
 
-- Let's say Bri did not go to college like Al, we've already seen we cannot just use .purple[Earn.sub[1,Al]]-.purple[Earn.sub[0,Bri]] due to selection bias
+- We've already seen we cannot just use .purple[Earn.sub[1,Al]]-.purple[Earn.sub[0,Bri]] due to selection bias
 
 - But we know that before college, their earnings differ by $20K
 
@@ -451,11 +424,20 @@ class: inverse, center, middle
 &lt;br&gt;.red[Earn.sub[0,Bri].super[Pre]] = .red[$40K]
 ]
 
+
 &lt;img src="11-diff-in-diff_files/figure-html/aidelaide-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
+# Check back on Bri and Al
 
-# Example
+.pull-left[.center[
+.purple[Earn.sub[1,Al].super[Post]] = .purple[$60K]
+&lt;br&gt;.red[Earn.sub[0,Al].super[Pre]] = .red[$20K]
+]]
+.pull-right[
+.blue[Earn.sub[0,Bri].super[Post]] = .blue[$50K]
+&lt;br&gt;.red[Earn.sub[0,Bri].super[Pre]] = .red[$40K]
+]
 
 &lt;img src="11-diff-in-diff_files/figure-html/aidelaide-diff-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -480,15 +462,13 @@ DiD = (.blue[**TA**] - .red[**TB**]) - (.blue[UA] - .red[UB]) = .hi-purple[Treat
 
 # Concept Checks: 
 
-## menti.com, code 9338 7492
+- Why do we need a control group? What does this let us do?
 
-- [Why do we need a control group? What does this let us do?](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/izpyfh3gzj9b)
-
-- [What do we need to assume is true about our control group?](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/qhr82ocgn4mj)
+- What do we need to assume is true about our control group?
 
 - In 2015, a new, higher minimum wage went into effect in Seattle, but this increase did not occur in some of the areas surrounding Seattle. 
 
-  - [How might you use DiD to estimate the effect of this minimum wage change on employment levels?](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/rqip3f758v7w)
+  - How might you use DiD to estimate the effect of this minimum wage change on employment levels?
 
 ---
 
@@ -502,7 +482,7 @@ DiD = (.blue[**TA**] - .red[**TB**]) - (.blue[UA] - .red[UB]) = .hi-purple[Treat
 
 - Why, use OLS regression of course, just use binary variables and interaction terms to get a DiD
 
-`$$Y_{it} = \beta_0 + \beta_1After_t + \beta_2Treated_i + \beta_3After_tTreated_i + \varepsilon_{it}$$`
+`$$Y_{it} = \beta_0 + \beta_1After_t + \beta_2Treated_i + \beta_3After_t \times Treated_i + \varepsilon_{it}$$`
 
 where `\(After_t\)` is a binary variable for being in the post-treatment period, and `\(Treated_t\)` is a binary variable for being in the treated group
 
@@ -552,8 +532,6 @@ where `\(After_t\)` is a binary variable for being in the post-treatment period,
 
 - If you don't have a before/after, or you don't have a control group, that same setup may tell you something interesting but it won't be DID!
 
-&lt;!-- minimum wages? mariel boatlift? --&gt;
-&lt;!-- discrim in wooldridge has minimum wage. but it is all screwed about for some reason. --&gt;
 ---
 name: EITC
 class: inverse, center, middle
@@ -581,12 +559,23 @@ class: white-slide
 &lt;img src="img/eitc.jpg" width="1067" style="display: block; margin: auto;" /&gt;
 
 ---
+# Earned Income Tax Credit demo
+
+Navigate to the [Difference-in-differences activity under lecture 11a-panel-twfe](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/11a-panel-twfe/11a-panel-twfe.html#Difference-in-differences)
+
+1. Check the top of the activity for the packages to load
+
+2. Work through the activity
+
+We'll check back in in ~20 minutes
+
+---
 
 # Earned Income Tax Credit
 
-- EITC was increased in 1993. This may increase chances single mothers (treated) return to work, but likely not affect single non-moms (control)
+- EITC was increased in 1993. This may increase chances single mothers (treated) work, but likely not affect single non-moms (control)
 
-- Does this program incentivize single mothers to work more? 
+- Question: Does this program incentivize single mothers to work more? 
 
 
 ```r
@@ -608,6 +597,8 @@ eitc %&gt;%
 ## 3 TRUE  FALSE                0.573
 ## 4 TRUE  TRUE                 0.491
 ```
+
+- Caveat: This is not a bulletproof causal inference design
 
 ---
 
@@ -636,6 +627,9 @@ means &lt;- eitc %&gt;%
 
 # Let's try OLS!
 
+`\(\text{Work}_{it} = \text{Has Kids}_i + (\text{Year} \geq {1994})_t + \text{Has Kids}_i \times (\text{Year} \geq {1994})_t + \varepsilon_{it}\)`
+
+
 ```r
 etable(feols(work ~ after*treated, data = eitc), digits = 3,fitstat=c('n','r2'))
 ```
@@ -655,21 +649,75 @@ etable(feols(work ~ after*treated, data = eitc), digits = 3,fitstat=c('n','r2'))
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
-##### Concept Checks: menti.com, code 9338 7492
+##### Concept Check: menti.com, code 9338 7492
 
-- [Interpret the coefficients in a sentence each.](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/bh6cx73mmcb4)
+1. [Interpret the coefficients in a sentence each.](https://www.mentimeter.com/app/presentation/n/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/edit?question=bh6cx73mmcb4)
 
-- [Why can the `\(After \times Treated\)` interaction stand in for `\(Treated\)`?](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/o6ani5b9p4o3)
+2. [What assumptions provide a causal interpretation?](https://www.mentimeter.com/app/presentation/n/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/edit?question=ed2zbgizwj2y)
+
+
+---
+
+# Parallel Trends
+
+- This assumption - that nothing else changes at the same time, is the poorly-named "parallel trends"
+
+- Again, this assumes that, *if the Treatment hadn't happened to anyone*, the gap between the two would have stayed the same
+
+- You can if *prior trends* are the same - if we have multiple pre-treatment periods, was the gap changing a lot during that period?
+
+- There are methods to "adjust for prior trends" to fix parallel trends violations, or use related methods like Synthetic Control
+  - These are beyond the scope of this class and also often snake oil
+
+---
+
+# Prior Trends
+
+- Let's see how that EITC example looks in the leadup to 1994
+
+- They look like the gap between them is pretty constant before 1994! They move up and down but the *gap* stays the same. That's good.
+
+&lt;img src="11-diff-in-diff_files/figure-html/prior-trends-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Prior Trends
+
+- Formally, prior trends being the same tells us nothing about parallel trends
+
+- But it can be suggestive if the gap was closing *anyway*
+  - For example, what if you compare earnings to Bri's boss
+
+&lt;img src="11-diff-in-diff_files/figure-html/prior-trends-df-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Parallel Trends
+
+- Just because *prior trends* are equal doesn't mean that *parallel trends* holds. 
+
+- *Parallel trends* is about what the before-after change *would have been* - we can't see that!
+
+--
+
+- For example, let's say we want to see the effect of online teaching on student test scores, using COVID school shutdowns to get a Before/After
+
+- As of March/April 2020, some schools had gone online (Treated) and others hadn't (Untreated)
+
+- Test score trends were probably pretty similar in the Before periods (Jan/Feb 2020), so prior trends are likely the same
+
+- But LOTS of stuff changed between Jan/Feb and Mar/Apr, like, uh, Coronavirus, lockdowns, etc. not just online teaching! SO *parallel trends* likely wouldn't hold
 
 ---
 
 # What if there are more groups?
 
-- You can recognize `\(After_t\)` and `\(Treated_i\)` as *fixed effects*
+- You can recognize `\((\text{Year} \geq {1994})_t\)` and `\(\text{Has Kids}_i\)` as *fixed effects*
 
 - `\(Treated_i\)` is a fixed effect for group - we only need one coefficient for it since there are only two groups
 
-- And `\(After_t\)` is a fixed effect for *time* - one coefficient for two time periods
+- And `\((\text{Year} \geq {1994})_t\)` is a fixed effect for *time* - one coefficient for two time periods
 
 - You can have more than one set of fixed effects like this! Our interpretation is now within-group *and* within-time
 
@@ -802,59 +850,6 @@ $$
 
 ---
 
-# Parallel Trends
-
-- This assumption - that nothing else changes at the same time, is the poorly-named "parallel trends"
-
-- Again, this assumes that, *if the Treatment hadn't happened to anyone*, the gap between the two would have stayed the same
-
-- You can if *prior trends* are the same - if we have multiple pre-treatment periods, was the gap changing a lot during that period?
-
-- There are methods to "adjust for prior trends" to fix parallel trends violations, or use related methods like Synthetic Control
-  - These are beyond the scope of this class and also often snake oil
-
----
-
-# Prior Trends
-
-- Let's see how that EITC example looks in the leadup to 1994
-
-- They look like the gap between them is pretty constant before 1994! They move up and down but the *gap* stays the same. That's good.
-
-&lt;img src="11-diff-in-diff_files/figure-html/prior-trends-1.png" style="display: block; margin: auto;" /&gt;
-
-
----
-
-# Prior Trends
-
-- Formally, prior trends being the same tells us nothing about parallel trends
-
-- But it can be suggestive if the gap was closing *anyway*
-  - For example, what if you compare earnings to Bri's boss
-
-&lt;img src="11-diff-in-diff_files/figure-html/prior-trends-df-1.png" style="display: block; margin: auto;" /&gt;
-
----
-
-# Parallel Trends
-
-- Just because *prior trends* are equal doesn't mean that *parallel trends* holds. 
-
-- *Parallel trends* is about what the before-after change *would have been* - we can't see that!
-
---
-
-- For example, let's say we want to see the effect of online teaching on student test scores, using COVID school shutdowns to get a Before/After
-
-- As of March/April 2020, some schools had gone online (Treated) and others hadn't (Untreated)
-
-- Test score trends were probably pretty similar in the Before periods (Jan/Feb 2020), so prior trends are likely the same
-
-- But LOTS of stuff changed between Jan/Feb and Mar/Apr, like, uh, Coronavirus, lockdowns, etc. not just online teaching! SO *parallel trends* likely wouldn't hold
-
----
-
 # Concept Checks
 
 ## menti.com 9338 7492
@@ -911,8 +906,6 @@ $$
 - Now I want you to go try to implement fixed effects and difference-in-differences models in R
 
 - There are tons of examples given to practice implementing the various R packages used to estimate these models
-
-- Navigate to the lecture activity [11a-panel-twfe](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/11a-panel-twfe/11a-panel-twfe.html)
 
 ---
 class: inverse, center, middle
