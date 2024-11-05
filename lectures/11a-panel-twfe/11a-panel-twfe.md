@@ -1099,15 +1099,31 @@ We walked through this example in the lecture, but let's do it again.
 Let's load in the data.
 
 
+``` r
+df <- read.csv('http://nickchk.com/eitc.csv') %>%
+  mutate(after = year >= 1994,
+         treated = children > 0) %>%
+  as_tibble()
+```
 
 We do not have an individual identifier in these data, so we can't add an individual fixed effect. We can add other fixed effects if we believe there is endogenous variation in the treatment between the groups of the fixed effect. 
 
 Still, let's work through how to visualize the data to check for no pre-trends and treatment effects change over time. We checked averages for our two groups before -- not bad! 
 
 
-```
-## `summarise()` has grouped output by 'year', 'treated'. You can override using
-## the `.groups` argument.
+``` r
+df %>%
+  mutate(tlabel = factor(treated, labels = c('Untreated','Treated'))) %>%
+  group_by(year, treated, tlabel) %>%
+  summarize(proportion_working = mean(work)) %>%
+  ggplot(aes(x = year, y = proportion_working, color = treated)) + 
+  geom_line(size = 1.5) + 
+  geom_vline(aes(xintercept = 1993.5), linetype = 'dashed') +
+  theme_bw() + 
+  scale_x_continuous(limits = c(1991,1997)) + 
+  scale_y_continuous(labels = function(x) scales::percent(x, accuracy = 1)) +
+  guides(color = FALSE) + 
+  labs(x = "Year", y = 'Proportion Working')
 ```
 
 ```
@@ -1133,9 +1149,17 @@ But the lines are a little far apart, so it makes it tricky to visualize the dif
 **Introducing** the `i()` function. This handy little guy is a function that creates an interaction term. It's a little tricky to use, but it's worth it. Basically, what you do is you feed it a factor variable, an interacted variable, then a reference value of the factor variable -- all coefficients will relative to the level when the factor variable equals the reference value. 
 
 
+``` r
+eitc_did <- feols(work ~ i(year,treated,1993) | year + treated, 
+  data = df,
+  se='hc1' # Heterogeneity robust standard errors
+  )
+eitc_did
+```
+
 ```
 ## OLS estimation, Dep. Var.: work
-## Observations: 13,746 
+## Observations: 13,746
 ## Fixed-effects: year: 6,  treated: 2
 ## Standard-errors: Heteroskedasticity-robust 
 ##                    Estimate Std. Error  t value  Pr(>|t|)    
