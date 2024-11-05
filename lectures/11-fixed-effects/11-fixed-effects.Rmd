@@ -688,6 +688,7 @@ $$(Y_{it} - \bar{Y}_i) = \beta_0 + \beta_1(X_{it} - \bar{X}_i) + \varepsilon_{it
 - We can use `group_by` to get means-within-groups and subtract them out
 
 ```{r, echo = TRUE,eval=FALSE}
+# library(tidyverse)
 data(crime4, package = 'wooldridge')
 crime4 <- crime4 %>%
   # Filter to the data points from our graph
@@ -912,7 +913,7 @@ class: inverse, center, middle
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
 #print(infile)
-#pagedown::chrome_print(input = infile, timeout = 100)
+pagedown::chrome_print(input = infile, timeout = 100)
 ```
 
 
