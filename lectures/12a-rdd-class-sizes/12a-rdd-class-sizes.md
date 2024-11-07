@@ -3,7 +3,7 @@ title: Big Data and Economics
 subtitle: RDD and Class Sizes
 author:
   name: Kyle Coombs
-  affiliation: Bates College | [DCS/ECON 368](https://github.com/ECON368-fall2023-big-data-and-economics/big-data-class-materials)  
+  affiliation: Bates College | [DCS/ECON 368](https://github.com/big-data-and-economics/big-data-class-materials)  
 output:
   html_document:
     theme: journal
@@ -53,7 +53,7 @@ It's important to note that "base" R already provides all of the tools to implem
 A convenient way to install (if necessary) and load everything is by running the below code chunk.
 
 
-```r
+``` r
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(rdrobust,rddensity,fixest,haven,tidyverse)
@@ -76,7 +76,7 @@ Recall, an RDD design is a quasi-experimental design that exploits a discontinui
 We are going to use a dataset of class sizes taken from Israel in the 1990s. The data are from [Angrist and Lavy (1999)](https://www.jstor.org/stable/117148?seq=1#metadata_info_tab_contents) and are available in Stata format at the [Angrist Data Archive](https://economics.mit.edu/people/faculty/josh-angrist/angrist-data-archive).
 
 
-```r
+``` r
 class5 <- haven::read_dta(
     'https://economics.mit.edu/sites/default/files/inline-files/final5.dta',
     col_select = c('schlcode','classize','cohsize','avgmath','avgverb','tipuach')
@@ -104,9 +104,9 @@ Before we can implement RDD, we need to identify the cutoff point in the data. F
 Let's first subset to only schools with between 20 and 60 students in 5th grade, so we focus on ONE cutoff. Let's also create a variable for that cutoff.
 
 
-```r
+``` r
 class5 <- mutate(class5,
-  cutoff=floor(cohsize/40))
+  cutoff=floor((cohsize)/40)) 
 
 class5subset <- filter(class5, cohsize<=80) %>%
   mutate(cutoff=ifelse(cohsize>40,1,0))
@@ -121,7 +121,7 @@ First, let's check how well class size changes as cohort size crosses thresholds
 Also, the data look a little funny -- there are a bunch of vertical lines at each class size. What gives? 
 
 
-```r
+``` r
 ggplot(class5,
   aes(x=cohsize,y=classize,color=as.factor(cutoff)))+
   geom_point(alpha=0.5)+
@@ -144,7 +144,7 @@ The vertical stacking is because there are many different schools with each coho
 To more smoothly plot the data, I will make a binned scatterplot. This will plot the average class size for each cohort size. 
 
 
-```r
+``` r
 ggplot(class5,aes(x=cohsize,y=classize,color=as.factor(cutoff)))+
   stat_summary(fun = "mean", geom = "point",alpha=0.5)+
   geom_smooth(method='lm',se=FALSE) +
@@ -159,6 +159,13 @@ ggplot(class5,aes(x=cohsize,y=classize,color=as.factor(cutoff)))+
 
 ![](12a-rdd-class-sizes_files/figure-html/binned-scatterplot-1.png)<!-- -->
 
+The binned scatterplot is slightly wrong.
+
+1. **Easy question:** Are the points and lines perfectly aligned? Why or why not?
+2. **Easier question:** The colors are associated with the cutoff group, so they change at each 40-student cutoff. Are the colors correctly aligned with the cutoffs? Why or why not?
+3. **Tough question:** Can you fix the problem in the data to correctly group the cohort sizes to their cutoff group? (_Hint: Check how the cutoffs are assigned for the object `class5` above. Summarise the data and take a look._)
+4. **Tougher question**: Reproduce the binned scatterplot with the corrected data. Are the lines now perfectly aligned with the scattered points? Why or why not?
+
 # Outcome variables using **rdrobust**
 
 Now, let's look at the outcome variables. Note that we could do the same thing as above, but I want to show you how to use the **rdrobust** package as well. I'll show you with average math score. 
@@ -170,7 +177,7 @@ There are a number of other more complicated options, but we'll stick with the b
 To simplify further, we are just going to look at the change around 40 students. 
 
 
-```r
+``` r
 rdplot(y=class5subset$avgmath,
   x=class5subset$cohsize,
   c=40.5,
@@ -191,7 +198,7 @@ rdplot(y=class5subset$avgmath,
 Wow, that made a weird looking dip-shape! What's going on? Well if you check the help documentation for `rdplot()`, it will tell you that the default for `p` is 4. So it is trying to estimate a 4th-order polynomial, that is: $ax+bx^2+cx^3+dx^4$. The red line makes the jump at the cutoff look very large because it is declining. This may be because we overfit the data! Let's check with just two straight lines, so `p=1`, for a linear relationship.
 
 
-```r
+``` r
 rdplot(y=class5subset$avgmath,
   x=class5subset$cohsize,
   p=1,
@@ -217,10 +224,10 @@ Try to create a polynomial of order 2, 3, and 4 using **ggplot**. Hint: you'll n
 
 Well let's estimate the actual effect of having a smaller class on average math scores.
 
-It is helpful to reset the cohort size to be centered at the cutoff. This is because the default is to estimate the effect at the cutoff, so it is helpful to have the cutoff be at 0. It makes the math smoother.
+Reset the cohort size to be centered at the cutoff. This makes it easier to interpret coefficients and check for changes in slope at the cutoff. You could technically back out the effect size from the coefficients, but it's easier to just recenter the cohort size.
 
 
-```r
+``` r
 class5subset <- mutate(class5subset,
   center_size=cohsize-40,
   below40 = ifelse(classize<40,1,0))
@@ -237,7 +244,7 @@ $$
 Well we could also estimate that ourselves using `feols()`. Note: I added the `cluster` argument to account for the fact that there are multiple observations per school and test score errors are likely clustered by school. 
 
 
-```r
+``` r
 sharp <- feols(avgmath ~ center_size*cutoff, 
   data=class5subset,
   cluster=~schlcode) 
@@ -247,7 +254,7 @@ sharp <- feols(avgmath ~ center_size*cutoff,
 ## NOTE: 1 observation removed because of NA values (LHS: 1).
 ```
 
-```r
+``` r
 etable(sharp)
 ```
 
@@ -279,7 +286,7 @@ We estimate a fuzzy RDD using an instrumental variables approach. Essentially, y
 _Note: The feols syntax for IVs is a little funky. Essentially, the second stage goes after the first |, then the outcome is regressed on 1 as a placeholder for the constant and the predicted value of the second stage._
 
 
-```r
+``` r
 fuzzy <- feols(avgmath ~ 1 | center_size*below40 ~ center_size*cutoff, 
   data=class5subset,
   cluster=~schlcode) 
@@ -289,7 +296,7 @@ fuzzy <- feols(avgmath ~ 1 | center_size*below40 ~ center_size*cutoff,
 ## NOTE: 1 observation removed because of NA values (LHS: 1).
 ```
 
-```r
+``` r
 etable(sharp,fuzzy)
 ```
 
@@ -327,7 +334,7 @@ This point is why RDD is often a big data tool -- you need a lot of observations
 The help documentation is very good, so I encourage you to check it out if you're curious. 
 
 
-```r
+``` r
 rdrobust(y=class5subset$classize,
   x=class5subset$center_size,
   p=1,
@@ -405,7 +412,7 @@ There are many varaibles to consider. Here we'll look at the number of disadvant
 .
 .
 
-```r
+``` r
 class5subset %>%
   group_by(cohsize,cutoff) %>%
   summarize(disadvantaged=mean(tipuach)) %>%
@@ -416,8 +423,6 @@ class5subset %>%
 ```
 
 ```
-## `summarise()` has grouped output by 'cohsize'. You can override using the
-## `.groups` argument.
 ## `geom_smooth()` using formula = 'y ~ x'
 ```
 
@@ -430,7 +435,7 @@ It does not seem like the number of disadvantaged students is correlated with co
 We got ahead of ourselves above and looked at some other variable at the cutoff. But let's look at the running variable itself. Does it show a jump at the cutoff? 
 
 
-```r
+``` r
 ggplot(class5subset,aes(x=cohsize))+
   geom_histogram()+
   geom_vline(xintercept = 40, linetype='dashed')
@@ -453,7 +458,7 @@ It uses some complicated econometrics to do this, but ultimately what it is doin
 The `rddensity()` function estimates the deviation from a smooth density function. The `rdplotdensity()` function plots the results.
 
 
-```r
+``` r
 class_rdd <- rddensity(X=class5subset$cohsize,
   c=40,
   p=1)
@@ -468,12 +473,12 @@ rdplotdensity(class_rdd,
 ## $Estl
 ## Call: lpdensity
 ## 
-## Sample size                                      330
+## Sample size                                      315
 ## Polynomial order for point estimation    (p=)    1
 ## Order of derivative estimated            (v=)    1
 ## Polynomial order for confidence interval (q=)    2
 ## Kernel function                                  triangular
-## Scaling factor                                   0.260079051383399
+## Scaling factor                                   0.24901185770751
 ## Bandwidth method                                 user provided
 ## 
 ## Use summary(...) to show estimates.
@@ -486,7 +491,7 @@ rdplotdensity(class_rdd,
 ## Order of derivative estimated            (v=)    1
 ## Polynomial order for confidence interval (q=)    2
 ## Kernel function                                  triangular
-## Scaling factor                                   0.75098814229249
+## Scaling factor                                   0.751778656126482
 ## Bandwidth method                                 user provided
 ## 
 ## Use summary(...) to show estimates.

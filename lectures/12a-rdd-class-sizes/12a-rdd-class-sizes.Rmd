@@ -112,7 +112,7 @@ Let's first subset to only schools with between 20 and 60 students in 5th grade,
 
 ```{r subset}
 class5 <- mutate(class5,
-  cutoff=floor(cohsize/40))
+  cutoff=floor((cohsize)/40)) 
 
 class5subset <- filter(class5, cohsize<=80) %>%
   mutate(cutoff=ifelse(cohsize>40,1,0))
@@ -150,6 +150,13 @@ ggplot(class5,aes(x=cohsize,y=classize,color=as.factor(cutoff)))+
   geom_vline(xintercept = seq(from=40.5,to=200.5,by=40), 
     linetype='dashed')
 ```
+
+The binned scatterplot is slightly wrong.
+
+1. **Easy question:** Are the points and lines perfectly aligned? Why or why not?
+2. **Easier question:** The colors are associated with the cutoff group, so they change at each 40-student cutoff. Are the colors correctly aligned with the cutoffs? Why or why not?
+3. **Tough question:** Can you fix the problem in the data to correctly group the cohort sizes to their cutoff group? (_Hint: Check how the cutoffs are assigned for the object `class5` above. Summarise the data and take a look._)
+4. **Tougher question**: Reproduce the binned scatterplot with the corrected data. Are the lines now perfectly aligned with the scattered points? Why or why not?
 
 # Outcome variables using **rdrobust**
 
