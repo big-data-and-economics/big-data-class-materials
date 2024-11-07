@@ -75,9 +75,9 @@ class: inverse, center, middle
 
 - We've just finished covering difference-in-differences, which is one way of estimating a causal effect using observational data
 
-- DID is *very* widely applicable, but it relies on some pretty strong assumptions like parallel trends
+- DID is *very* widely applicable, but it relies on strong assumptions like parallel trends
 
-- Today we'll discuss another method for estimating causal effects using observational data: Regression Discontinuity
+- Today we'll cover another causal inference method that uses observational data: Regression Discontinuity
   - This method can sometimes be easier to defend
   - But it is rarer to find situations where it applies
   - There's also plenty of room for "snake oil" here as with all causal inference
@@ -89,25 +89,11 @@ class: inverse, center, middle
 - As always, there's a ton here and we're just scratching the surface
 
 ---
-# Announcements
-
-1. New bonus opportunity: the person with most "good faith" posts/answers on GitHub gets 2.5% bonus
-  - This is to motivate you to use this tool the way actual data scientists/coding professionals do
-  - I give some guidelines on "good faith" on the course site, but tl;dr: "don't spam and be constructive"
-
-2. Dr. Szymon Sacher is coming to speak Friday March 15th at 11am in PGill G50
-  - **Bonus opportunity**: Up to five points on problem set 4 if you (1) attend and (2) write one page describing a potential application of his work
-  - Submit the description in your problem set 3 repository and tag me (@kgcsport) in an issue when you do -- just need to have a place for you to submit it
-
----
 # Questions
 
 - Any questions?
 
 - Feel free to interrupt with questions during lecture if needed
-
----
-# Student presentation
 
 ---
 # Attribution
@@ -172,7 +158,7 @@ We call these continuous variables "Running variables" because we *run along the
 ---
 # Running var triggers treatment
 
-There is a relationship between an outcome ($Y$) and a running variable ($X$)
+There is a relationship between an outcome (Y) and a running variable (X)
 
 There is also a treatment that triffers if `\(X&lt; c\)`, a cutoff.
 
@@ -301,7 +287,7 @@ name: fitlines
 
 - First, we need to *transform our data*
 
-- We need a "Treated" variable that's `TRUE` when treatment is applied - above or below the cutoff
+- Need a "Treated" variable that's `TRUE` when treatment is applied (one side of cutoff)
 
 - Then, we are going to want a bunch of things to change at the cutoff. 
 
@@ -324,42 +310,34 @@ df &lt;- df %&gt;%
 
 # Varying Slope
 
-- Typically, you will want to let the slope vary to either side
-
-- In effect, we are fitting an entirely different regression line on each side of the cutoff
+- Let the slope vary to either side, i.e. fit a different regression on each side of the cutoff
 
 - We can do this by interacting both slope and intercept with `\(Treated\)`!
-  - `\(\beta_1\)` is how the intercept jumps at treatment - that's our RDD effect, `\(\beta_3\)` is how the slope changes.
+  - `\(\beta_1\)` estimates the intercept jump at treatment (RDD effect), `\(\beta_3\)` is the slope change.&lt;sup&gt;2&lt;/sup&gt;
 
 `$$Y = \beta_0 + \beta_1Treated + \beta_2XCentered + \beta_3Treated\times XCentered + \varepsilon$$`
 
 
-```r
-etable(feols(Y ~ treated*X_centered, data = df,vcov='HC1'))
+``` r
+etable(feols(Y ~ treated*X_centered, data = df,fitstat='N',vcov='HC1'))
 ```
 
 ```
-##                      feols(Y ~ treate..
-## Dependent Var.:                       Y
-##                                        
-## Constant               -0.0111 (0.0272)
-## Treated              0.7467*** (0.0381)
-## X_centered           0.9825*** (0.0916)
-## Treated x X_centered 0.4470*** (0.1287)
-## ____________________ __________________
-## S.E. type            Heteroskedas.-rob.
-## Observations                      1,000
-## R2                              0.84769
-## Adj. R2                         0.84723
+##                      feols(Y ~ tr..
+## Dependent Var.:                   Y
+##                                    
+## Constant               -0.01 (0.03)
+## Treated              0.75*** (0.04)
+## X_centered           0.98*** (0.09)
+## Treated x X_centered 0.45*** (0.13)
+## ____________________ ______________
+## S.E. type            Heterosk.-rob.
+## Observations                  1,000
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
----
-
-# Varying Slope
-
-(as an aside, sometimes the effect of interest is the interaction term - the change in slope! This answers the question "does the effect of `\(X\)` on `\(Y\)` change at the cutoff? This is called a "regression kink" design. We won't go more into it here, but it is out there!)
+.footnote[&lt;sup&gt;2&lt;/sup&gt; Sometimes the change in slope is the effect of interest -- this is called a "regression kink" design, which measures how the relationship between `\(X\)` and `\(Y\)` changes at the cutoff.]
 
 ---
 
@@ -435,32 +413,23 @@ etable(feols(Y ~ X_centered*treated + I(X_centered^2)*treated, data = df,vcov='H
 name: careful
 # Careful with higher order polynomials
 
-- Sometimes higher order polynoials can be a little too flexible
-
-- They make it look like there is an effect where none exist
-
+- Sometimes higher order polynoials can be a little too flexible and make it look like there's an effect where there isn't one
 - "Overfitting" where your model too flexibly follows the data points can lie to you! 
-
-- Read [Andrew Gelman's](https://statmodeling.stat.columbia.edu/2020/12/27/rd-gullible/) blog for more info
-
----
-# Does voting make you sick?
-Or did the researchers just overfit their model?
 
 .pull-left[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/healthcare_exp_rdd_gullible_top.png" alt="Health care use (0/1)" width="100%" /&gt;
+&lt;img src="img/healthcare_exp_rdd_gullible_top.png" alt="Health care use (0/1)" width="90%" /&gt;
 &lt;p class="caption"&gt;Health care use (0/1)&lt;/p&gt;
 &lt;/div&gt;
 ]
 .pull-right[
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/healthcare_exp_rdd_gullible_bottom.png" alt="Log of total health care expenditure among users" width="100%" /&gt;
+&lt;img src="img/healthcare_exp_rdd_gullible_bottom.png" alt="Log of total health care expenditure among users" width="90%" /&gt;
 &lt;p class="caption"&gt;Log of total health care expenditure among users&lt;/p&gt;
 &lt;/div&gt;
 ]
 
-Running variable is age with cutoff at age 20 (voting eligibility). Chang &amp; Meyerhoefer (2020) via Andrew Gelman.
+.footnote[Running variable is age with cutoff at age 20 (voting eligibility). Chang &amp; Meyerhoefer (2020) on whether voting makes you sick via [Andrew Gelman](https://statmodeling.stat.columbia.edu/2020/12/27/rd-gullible/)]
 
 ---
 name: assumptions
@@ -492,9 +461,11 @@ name: assumptions
 
 - Oftentimes the error term is likely correlated with the running variable
 
-- That means people tend to use "robust" standard errors, though it is challenging to get them right
+- That means people tend to use "robust" standard errors, `vcov='HC1'` in R or `, r` in Stata
 
-![](12-regression-discontinuity_files/figure-html/robust-standard-errors-1.png)&lt;!-- --&gt;
+- Other times, it makes sense to clustered standard errors by the running variable
+
+&lt;img src="12-regression-discontinuity_files/figure-html/robust-standard-errors-1.png" width="90%" /&gt;
 
 ```
 ## $x
@@ -687,8 +658,6 @@ summary(mccrary)
 ---
 # rdplotdensity() implementation
 
-- Also creates a nice visual
-
 
 ```r
 rdplotdensity(mccrary,df$X_centered)
@@ -827,28 +796,27 @@ df &lt;- tibble(X = runif(1000)) %&gt;%
 - (the true effect of treatment is .5 - okay, it's not perfect)
 
 
-```r
+``` r
 predict_treatment &lt;- feols(treatment ~ X_center*above_cut, data = df)
 without_fuzzy &lt;-feols(Y ~ X_center*treatment, data = df)
 fuzzy_rdd &lt;- feols(Y ~ 1 | X_center*treatment ~ X_center*above_cut, data = df)
-etable(predict_treatment, without_fuzzy, fuzzy_rdd, dict=c('above_cutTRUE'='Above Cut','treatmentTRUE'='Treatment'))
+etable(predict_treatment, without_fuzzy, fuzzy_rdd, 
+  dict=c('above_cutTRUE'='Above Cut','treatmentTRUE'='Treatment'))
 ```
 
 ```
-##                       predict_treatment      without_fuzzy          fuzzy_rdd
-## Dependent Var.:               treatment                  Y                  Y
-##                                                                              
-## Constant               0.0605. (0.0354) 0.4079*** (0.0108) 0.4129*** (0.0345)
-## X_center                0.0044 (0.1215) 0.4030*** (0.0375) 0.4541*** (0.1227)
-## Above Cut            0.3053*** (0.0484)                                      
-## X_center x Above Cut   -0.0392 (0.1687)                                      
-## Treatment                               0.4524*** (0.0281) 0.4837*** (0.1247)
-## X_center x Treatment                       0.0660 (0.0994)   -0.2510 (0.4829)
-## ____________________ __________________ __________________ __________________
-## S.E. type                           IID                IID                IID
-## Observations                      1,000              1,000              1,000
-## R2                              0.13289            0.41696            0.41083
-## Adj. R2                         0.13028            0.41520            0.40905
+##                      predict_trea..  without_fuzzy      fuzzy_rdd
+## Dependent Var.:           treatment              Y              Y
+##                                                                  
+## Constant               0.06. (0.04) 0.41*** (0.01) 0.41*** (0.03)
+## X_center               0.004 (0.12) 0.40*** (0.04) 0.45*** (0.12)
+## Above Cut            0.31*** (0.05)                              
+## X_center x Above Cut   -0.04 (0.17)                              
+## Treatment                           0.45*** (0.03) 0.48*** (0.12)
+## X_center x Treatment                   0.07 (0.10)   -0.25 (0.48)
+## ____________________ ______________ ______________ ______________
+## S.E. type                       IID            IID            IID
+## Observations                  1,000          1,000          1,000
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
