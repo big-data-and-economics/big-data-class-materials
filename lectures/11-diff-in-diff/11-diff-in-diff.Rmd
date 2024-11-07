@@ -127,77 +127,9 @@ name: causal-inference-review
 # Causal Inference Review
 
 ---
-# Causal Inference Review
+# Selection bias
 
-Let's review the *Rubin causal model*, in which we defined
-
-- `\(\color{#e64173}{y_{1i}:}\)` the outcome for individual `\(i\)` if she had received treatment
-
---
-- `\(\color{#6A5ACD}{y_{0i}:}\)` the outcome for individual `\(i\)` if she had not received treatment
-
---
-
-and we referred to individuals who did not receive treatment as *control*.
-
---
-
-***If*** we were able to know both `\(\color{#e64173}{y_{1i}}\)` ***and*** `\(\color{#6A5ACD}{y_{0i}}\)`, we could calculate the causal effect of treatment for individual `\(i\)`, _i.e._,
-
---
-
-$$
-`\begin{align}
-  \tau_i = \color{#e64173}{y_{1i}} - \color{#6A5ACD}{y_{0i}}
-\end{align}`
-$$
-
----
-# Fund. problem of causal inference
-
-<br>We cannot simultaneously know `\(\color{#e64173}{y_{1i}}\)` and `\(\color{#6A5ACD}{y_{0i}}\)`.
-
---
-
-Either we observe individual `\(i\)` in the treatment group, _i.e._,
-$$
-`\begin{align}
-  \tau_i = \color{#e64173}{y_{1i}} - \color{#6A5ACD}{?}
-\end{align}`
-$$
-
---
-
-or we observe `\(i\)` in the control group, _i.e._,
-$$
-`\begin{align}
-  \tau_i = \color{#e64173}{?} - \color{#6A5ACD}{y_{0i}}
-\end{align}`
-$$
-
---
-
-but never both at the same time.
-
----
-# So what do we do?
-
-If we want to know `\(\tau_i\)` (or at least `\(\overline{\tau}\)`), what can we do?
-
---
-
-**Idea:** Estimate the .hi-slate[average treatment effect] as the difference between the average outcomes in the treatment group and the control group, _i.e._,
-
-$$
-`\begin{align}
-  \color{#e64173}{\mathop{E}\left( y_i\mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_i\mid D_i =0 \right)}
-\end{align}`
-$$
-where `\(D_i=1\)` if `\(i\)` received treatment, and `\(D_i=0\)` if `\(i\)` is in the control group.
-
----
-# Constant treatment effect
-**Result:** Even when treatment effect is constant (meaning $\tau_i=\tau$ for all $i$),
+- We have defined selection bias as the difference between the unobserved control outcomes for the treated and the observed outcomes for the control group
 
 $$
 `\begin{align}
@@ -205,11 +137,6 @@ $$
   &\quad\quad = \tau + \underbrace{\color{#e64173}{\mathop{E}\left(\color{#6A5ACD}{y_{0,i}} \mid D_i = 1 \right)} - \color{#6A5ACD}{\mathop{E}\left( y_{0,i}\mid D_i =0 \right)}}_{\color{#FFA500}{\text{Selection bias}}}
 \end{align}`
 $$
-
-which says that the difference in the groups' means will give us a **biased estimate** for the causal effect of treatment .hi-orange[if we have selection bias.]
-
----
-# Observing selection bias?
 
 .hi-slate[Practical problem:] Selection bias is also difficult to observe
 
