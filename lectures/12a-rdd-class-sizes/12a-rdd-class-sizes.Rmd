@@ -1,5 +1,5 @@
 ---
-title: Big Data and Economics
+title: Data Science for Economists
 subtitle: RDD and Class Sizes
 author:
   name: Kyle Coombs
