@@ -896,17 +896,6 @@ $$
 - Asjad Naqvi hosts a [list of tons of these packages](https://asjadnaqvi.github.io/DiD/docs/02_R/)
 
 ---
-# What next?
-
-## menti.com, code 9338 7492
-
-- [List up to three things you learned today](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/o56f9vmboiv2)
-
-- Now I want you to go try to implement fixed effects and difference-in-differences models in R
-
-- There are tons of examples given to practice implementing the various R packages used to estimate these models
-
----
 class: inverse, center, middle
 
 # Next lecture: Regression Discontinuity Design
