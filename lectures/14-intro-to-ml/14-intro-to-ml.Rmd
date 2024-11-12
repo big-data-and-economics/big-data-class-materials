@@ -73,15 +73,12 @@ name: prologue
   - How do we tune models?
 
 ---
-# Hack-a-thon
-
----
 # Questions
 
 ---
 # Attribution
 
-These slides are largely adapted from [Tyler Ransom's graduate course at the University of Oklahoma])https://raw.githack.com/tyleransom/DScourseS23/master/LectureNotes/19-Intro-ML/19slides.html#1
+These slides are largely adapted from [Tyler Ransom's graduate course at the University of Oklahoma](https://raw.githack.com/tyleransom/DScourseS23/master/LectureNotes/19-Intro-ML/19slides.html#1)
 
 - He gets more into the weeds than I do here
 
@@ -595,42 +592,6 @@ This shows the way the New York City data were randomly partitioned to do ML pre
 knitr::include_graphics("imgs/k-foldCV.png")
 ```
 ]
-
----
-# Intro to Statistical Learning Demo
-
-- Navigate to [https://tinyurl.com/islrecon368](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html), a website with interactive demos of machine learning resampling from the textbook Introduction to Statistical Learning
-  - Before starting use `install.packages('tidymodels')` and `install.packages('ISLR')` in R to install the necessary packages, then work through the codeblocks
-  - This demo uses simple datasets to use resampling to decide how many polynomials to use in a regression model
-  - It also teaches you how to use the **tidymodels** package, which is a tidyverse-friendly way to do machine learning
-
-- Work through implementing different resampling methods in R like test/train, k-fold cross-validation, and bootstrapping
-
----
-# Comprehension questions
-
-**Demo**: [https://tinyurl.com/islrecon368](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html)
-
-1. Plot the relationship between mpg and horsepower as shown below. Would a straight-line or curved-line fit better? Why?
-```{r plot-mpg-horsepower, eval=FALSE}
-ggplot(Auto,aes(x=mpg,y=horsepower)) + geom_point()
-```
-
-#### 5.1 (skip 5.2)
-
-2. What is `set.seed()`? Why is it important to use it when splitting the sample?
-3. Why can't you test your model on the training data?
-
-#### 5.3
-
-4. Why did you replace degree with the function `tune()`?
-5. How does k-fold cross-validation allow you to tune your model? 
-6. Why does RSME (R<sup>2</sup>) start to increase (decrease) after two polynomials?
-
-#### 5.4
-
-6. Use `View(broom::tidy(Portfolio_boots$splits[[1]]))` to see the first bootstrap sample. What do you think "Analysis" and "Assessment" can be used for?  
-7. Try using bootstrapping to return standard deviation for the polynomial model of auto. _Hint: Use the `poly_wf`_. 
 
 ---
 class: inverse, center, middle

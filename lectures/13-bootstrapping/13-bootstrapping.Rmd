@@ -60,19 +60,8 @@ name: prologue
   - Understand the intuition of bootstrapping
   - Be able to bootstrap in R
 
----
-# Hack-a-thon update
-
-Sign-up for the hack-a-thon by April 2nd!
-
-- Sign ups posted in [GitHub discussions](https://github.com/orgs/big-data-and-economics/discussions/22)
-
-- It will run from April 9 to April 11
-
-- You can sign up as a team or as an individual
-
----
-# Questions
+- Resampling and sample splitting is a useful skill to have in your toolkit
+  - Most Machine Learning methods rely on it, so it is good to understand the intuition
 
 ---
 # Attribution

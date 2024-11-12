@@ -564,7 +564,7 @@ class: inverse, center, middle
 
 # Other Difficulties
 
-More assumptions, limitations, and diagnostics!
+Assumptions, limitations, and diagnostics!
 
 - Windows
 
