@@ -64,7 +64,7 @@ name: prologue
   - Understand the intuition of bootstrapping
   - Be able to bootstrap in R
 
-- Resampling and even sample splitting is a useful skill to have in your toolkit
+- Resampling and sample splitting is a useful skill to have in your toolkit
   - Most Machine Learning methods rely on it, so it is good to understand the intuition
 
 ---
@@ -194,9 +194,9 @@ etable(list('Truth'=true_regression, 'Sample 1'=savings, 'Sample 2'=savings_new2
 
 |sample | share_with_loan| (Intercept)| forgiveness|
 |:------|---------------:|-----------:|-----------:|
-|1      |               0|   -33.99083|  1115.28902|
-|2      |               0|    11.00434|   -12.39388|
-|3      |               0|    12.99163|  5023.06071|
+|1      |            0.21|      -33.99|     1115.29|
+|2      |            0.00|       11.00|      -12.39|
+|3      |            1.00|       12.99|     5023.06|
 
 The share treated changed in each sample and the point estimate of `\(\beta_1\)` changed accordingly
 
@@ -212,7 +212,7 @@ The share treated changed in each sample and the point estimate of `\(\beta_1\)`
 - I explicitly guaranteed the last two samples were not representative of the population by design
   - I also presented a world in which two binary variables were the only things that mattered beyond random noise
 
-- In general, we assume (and take precautions) to have a representative sample of our population, but sampling uncertainty remains^&lt;sup&gt;1&lt;/sup&gt;
+- In general, we assume (and take precautions) to have a representative sample of our population, but sampling uncertainty remains&lt;sup&gt;1&lt;/sup&gt;
 
 - Today is about **bootstrapping**: a way to understand the variability of your estimates across samples assuming it is representative
 

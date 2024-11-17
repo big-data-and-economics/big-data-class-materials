@@ -171,8 +171,8 @@ etable(list('Truth'=true_regression, 'Sample 1'=savings, 'Sample 2'=savings_new2
 coefficients <- bind_rows(savings$coefficients,savings_new2$coefficients,savings_new3$coefficients)
 bind_rows(samp,samp2,samp3,.id="sample") %>% 
   group_by(sample) %>% 
-  summarise(share_with_loan = mean(had_loan=='Has Loan')) %>%
-  bind_cols(coefficients) %>% kable()
+  summarise(share_with_loan = mean(had_loan=='Had loan')) %>%
+  bind_cols(coefficients) %>% kable(digits=2)
 ```
 
 The share treated changed in each sample and the point estimate of $\beta_1$ changed accordingly
@@ -189,7 +189,7 @@ The share treated changed in each sample and the point estimate of $\beta_1$ cha
 - I explicitly guaranteed the last two samples were not representative of the population by design
   - I also presented a world in which two binary variables were the only things that mattered beyond random noise
 
-- In general, we assume (and take precautions) to have a representative sample of our population, but sampling uncertainty remains^<sup>1</sup>
+- In general, we assume (and take precautions) to have a representative sample of our population, but sampling uncertainty remains<sup>1</sup>
 
 - Today is about **bootstrapping**: a way to understand the variability of your estimates across samples assuming it is representative
 
