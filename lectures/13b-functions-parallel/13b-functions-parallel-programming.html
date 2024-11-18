@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Big Data and Economics</title>
+    <title>Data Science for Economists</title>
     <meta charset="utf-8" />
     <meta name="author" content="Kyle Coombs" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -15,7 +15,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Big Data and Economics
+# Data Science for Economists
 ]
 .subtitle[
 ## Functions and Parallel Programming
@@ -67,9 +67,6 @@ name: prologue
   - Be able to bootstrap in parallel in R
 
 ---
-# Questions
-
----
 # Attribution
 
 I pull most of this lecture from the textbook Data Science in R by [James Scott](https://bookdown.org/jgscott/DSGI/)
@@ -87,20 +84,20 @@ name: functions
 
 $$
 `\begin{align}
-f(x) = x^2 \quad \text{Takes a number from the domain and returns its square in the range} \\
-f(2) = 4 \quad \text{The function applied to 2 returns 4}
+f(x) &amp;= x^2 \quad \text{Takes a number from the domain and returns its square in the range} \\
+f(2) &amp;= 4 \quad \text{The function applied to 2 returns 4}
 \end{align}`
 $$
 
 - In programming, a function is a mapping from input to output
 
 
-```r
-square &lt;- function(x) {
-  x^2
+``` r
+exponentiate &lt;- function(x,p=2) {
+  x^p
 }
 
-square(2) # Returns 4
+exponentiate(x=2) # Returns 4
 ```
 
 ```
@@ -108,19 +105,18 @@ square(2) # Returns 4
 ```
 
 ---
-# Why use functions?
+# The functions: why and how
+
+### Why write functions?
 
 - **Abstraction**
-  - They allow you to summarize complex details into a single line of code, so you only need to understand them once (instead of repeating yourself)
-
+  - Summarize complex operations into single lines of code that are easier to remember
 - **Automation**
   - Automate a task to happen many times without having to write the same code over and over
-
 - **Documentation**
-  - Well-written functions codify the steps you take to do something, so you can easily remember what you did
+  - Well-written and named functions are "self-documenting," so you can remember what you did
 
----
-# How do I write a function?
+### How do I write a function?
 
 In R, functions are defined using the `function` keyword
 
@@ -134,30 +130,23 @@ some_function &lt;- function(positional_input1=1,positional_input2="two",keyword
 }
 ```
 
-`function` takes keyword inputs and positional inputs. It does not require a specific order for these unlike in Python. But generally, position comes first.
+`function` takes keyword inputs and positional inputs or "arguments." The order of the inputs is important unless you specify otherwise!
 
 ---
 # Control flow: If/else logic
 
-Functions make great use of if/else logic
 
-
-```r
-square = 
-  function(x = NULL) {
-    
+``` r
+square_ifelse &lt;- function(x = NULL) {
     if (is.null(x)) { ## Start multi-line IF statement with `{`
-      x = 1
-      ## Message to users:
-      message("No input value provided. Using default value of 1.")
+      x = 1 # Default value
+      message("No input value provided. Using default value of 1.") ## Message to users:
       }               ## Close multi-line if statement with `}`
-    
     x_sq = x^2 
     d = data.frame(value = x, value_squared = x_sq)
-    
     return(d)
   }
-square()
+print(square_ifelse())
 ```
 
 ```
@@ -169,13 +158,22 @@ square()
 ## 1     1             1
 ```
 
+``` r
+print(square_ifelse(2))
+```
+
+```
+##   value value_squared
+## 1     2             4
+```
+
 This function has a default value of 1 for when you fail to provide a value. 
 
 ---
 # Each step of bootstrap
 
 
-```r
+``` r
 # library(tidyverse) # Already loaded
 set.seed(1)
 df &lt;- tibble(x = rnorm(1000, mean = 0, sd = 1),
@@ -183,7 +181,7 @@ df &lt;- tibble(x = rnorm(1000, mean = 0, sd = 1),
 
 bootstrap_sample &lt;- function(df) {
   # 1. Draw a random sample with replacement of size N from your sample.
-  sample &lt;- df %&gt;% slice_sample(n = nrow(df), replace = TRUE)
+  sample &lt;- df %&gt;% sample_frac(1, replace = TRUE)
   # 2. Perform the same analysis, here a median, on the new sample.
   return(coef(feols(y ~ x, data = sample))[2])
 }
@@ -196,33 +194,17 @@ bootstrap_sample(df)
 ## 0.9671832
 ```
 
----
-# Wrapping up a function
+### Aside: What's a seed?
 
-- You can wrap functions inside of other functions
-- This is a great way to make your code more readable and modular
-- Also useful for various iteration tasks that need to take an iterated input
-
-
-```r
-wrapper_bootstrap &lt;- function(i,df) {
-  # print(i) # if you want to visualize the i.
-  bootstrap_sample(df)
-}
-wrapper_bootstrap(1,df)
-```
-
-```
-##         x 
-## 0.9824952
-```
-
+- The `set.seed()` function sets the seed for the random number generator
+- If you set the seed to the same number, you will get the same random numbers each time
+- This is important for reproducibility
 
 ---
 # More on functions
 
-- There is a lot more to functions than we can cover today
-- Check out Grant McDermott's [Introudctory](https://grantmcdermott.com/ds4e/funcs-intro.htm) and [Advanced](https://grantmcdermott.com/ds4e/funcs-adv.html) chapters on functions
+- There is a lot more to functions!
+- Check out Grant McDermott's [Introductory](https://grantmcdermott.com/ds4e/funcs-intro.htm) and [Advanced](https://grantmcdermott.com/ds4e/funcs-adv.html) chapters on functions
 - There are some incredible tips on how to:
   - Debug functions
   - Write functions that are easy to read
@@ -238,15 +220,28 @@ name: Iteration
 ---
 # Iteration: For loops
 
-- You've likely heard of for loops before! 
+- You've likely heard of for loops before!&lt;sup&gt;1&lt;/sup&gt;
 - They're the most common way to iterate across programming languages 
-- In R, the syntax is fairly simple: you iterative over a vector or list of values, and do stuff with those values
+- In R, the syntax is fairly simple: 
 
 
-```r
+``` r
 for(i in 1:10) {
-  square(i)
+  print(exponentiate(i))
 }
+```
+
+```
+## [1] 1
+## [1] 4
+## [1] 9
+## [1] 16
+## [1] 25
+## [1] 36
+## [1] 49
+## [1] 64
+## [1] 81
+## [1] 100
 ```
 
 ---
@@ -354,61 +349,50 @@ for (i in 1:2) {
 - The `*apply` family takes a function and applies it to each element of a list or vector
 - `lapply` is the most commonly used and returns a list back
 
+.pull-left[
+- `*apply` family is a little confusing at first
+- Syntax is `*apply(list_or_vector, function, other_input)`
+- The first input of the function will be the current element of the list/vector in the iteration
+- `other_inputs` are next inputs passed to the function
+]
+.pull-right[
 
-```r
-lapply(1:10, square)
+``` r
+lapply(1:10, exponentiate,p=2)
 ```
 
 ```
 ## [[1]]
-##   value value_squared
-## 1     1             1
+## [1] 1
 ## 
 ## [[2]]
-##   value value_squared
-## 1     2             4
+## [1] 4
 ## 
 ## [[3]]
-##   value value_squared
-## 1     3             9
+## [1] 9
 ## 
 ## [[4]]
-##   value value_squared
-## 1     4            16
+## [1] 16
 ## 
 ## [[5]]
-##   value value_squared
-## 1     5            25
+## [1] 25
 ## 
 ## [[6]]
-##   value value_squared
-## 1     6            36
+## [1] 36
 ## 
 ## [[7]]
-##   value value_squared
-## 1     7            49
+## [1] 49
 ## 
 ## [[8]]
-##   value value_squared
-## 1     8            64
+## [1] 64
 ## 
 ## [[9]]
-##   value value_squared
-## 1     9            81
+## [1] 81
 ## 
 ## [[10]]
-##   value value_squared
-## 1    10           100
+## [1] 100
 ```
-
----
-# `*apply` syntax
-
-- The `*apply` family is a little confusing at first, but it's very powerful
-- The syntax is `*apply(list_or_vector, function, other_arguments)`
-- The `function` is a function that takes arguments like any other
-  - The first argument will be the element of the list or vector
-- The `other_arguments` are arguments that are passed to the function
+]
 
 ---
 # Bootstrapping lapply
@@ -440,14 +424,17 @@ lapply(1:10, function(i) bootstrap_sample(df=df)) %&gt;%
 ```
 
 ---
-# Wrapper functions to get around `*apply`
+# Wrapper functions due to odd syntax
 
 - Maybe you don't like the ugly syntax of `function(i)` and then not using `i` in the function
 - Well you can write a wrapper function to get around that
 
 
-```r
+``` r
 set.seed(1)
+wrapper_bootstrap &lt;- function(i, df) {
+  bootstrap_sample(df)
+}
 lapply(1:10, wrapper_bootstrap, df=df) %&gt;%
   bind_rows()
 ```
@@ -471,8 +458,7 @@ lapply(1:10, wrapper_bootstrap, df=df) %&gt;%
 ---
 # Iteration: map
 
-- Sometimes the `*apply` syntax is a little confusing
-- The **purrr** package in the tidyverse has more intuitive syntax for iteration: `map`
+- The **purrr** package introduces `map` functions, which are more intuitive with **tidyverse**
 - The variant `map_df` is especially useful beause it automatically binds the output into a data frame
   - The same iteration syntax applies here too. 
 
@@ -505,35 +491,32 @@ name: parallel
 # Parallel Programming
 
 ---
-# Motivating example: Parallel Programming
+# Parallel Programming
 
 - Imagine you get home from the grocery store with 100 bags of groceries
 - You have to bring them all inside, but you can only carry 2 at a time
-- That's 50 trips back and forth
-- How can you speed things up?
+- That's 50 trips back and forth, so how can you speed things up?
 
 --
 
-  - Ask friends to carry to at a time with you (Parallel Programming)
-  - Get a cart and carry 10 at a time (more RAM and a better processor)
+- Ask friends to carry to at a time with you (Parallel Programming)
+- Get a cart and carry 10 at a time (more RAM and a better processor)
 
-
----
-# "One trip?" okay
+--
 
 &lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="imgs/maxresdefault.jpg" alt="One trip? Okay ,sure" width="75%" /&gt;
+&lt;img src="imgs/maxresdefault.jpg" alt="One trip? Okay ,sure" width="50%" /&gt;
 &lt;p class="caption"&gt;One trip? Okay ,sure&lt;/p&gt;
 &lt;/div&gt;
 
 ---
 # A warning
 
-- Parallel Programming is an incredibly powerful tool, but it is full of pitfalls
+- Parallel Programming is an incredibly exponentiateful tool, but it is full of pitfalls
 
 - A friend of mine from the PhD said that he did not understand it until the 4th year of his PhD
 
-- Many economists understand the intuition, but not the details and only do it if absolutely necessary
+- Many economists understand the intuition, but not the details until they have to
 
 - That used to be me until I started teaching this class!
 
@@ -551,27 +534,44 @@ name: parallel
   - That means they can be broken up into many small tasks that can be done at the same time
   - Bootstrapping is one such example
 
-- Some tasks are not embarrassingly parallel
-  - These are called "serial" tasks
-  - Parts of these tasks may be possible to do in parallel
+- Some "serial" tasks are not "embarrassingly parallel"
+  - Still, parts of these tasks may be possible to do in parallel
+
+- R has many Parallel Programming packages: 
+  - **future.apply** - today
+  - **furrr** - today
+  - **parallel** - today
+  - **future**
+  - **pbapply**
+  - **foreach**
+  - **doParallel**
 
 ---
-# Parallel Programming vocab
+# Parallel Programming: Why?
 
-The vocab for Parallel Programming can get a little confusing:
+- Parallel Programming is a great way to speed up your code and often there are straight-forward ways to do it
+- It is not always worth doing:
+  - Theoretically, the gain should be linear: each additional node should speed up your code by the same amount
+  - In practice, there are "overhead" costs to Parallel Programming that can slow things down
+  - **Overhead costs**: reading in and subsetting data, tracking each node 
+  - A 10-minute task on one core, might take 6 minutes on 2 cores, 4 minutes on 4 cores, etc.
+  - `parallel::detectCores()` function shows how many cores there are
 
-- **Socket**: A socket is a physical connection between a processor and the motherboard
-- **Core**: A core is a physical processor that can do computations
-- **Process**: A process is a task that is being done by a core (Windows users may know this from Task Manager)
-- **Thread**: A thread is a subtask of a process that can be done in parallel and share memory with other threads
-- **Cluster**: A cluster is a group of computers that can be used to do Parallel Programming
-- **Node**: One computer within a cluster
 
----
-# Parallel Programming in R
+``` r
+print(paste("I have", parallel::detectCores(), "cores on my computer"))
+```
 
-- In R, there are many ways to parallel process, I'll introduce you to the **future.apply** package
-- There are many Parallel Programming packages in R, but **future.apply** follows the `*apply` family syntax
+```
+## [1] "I have 8 cores on my computer"
+```
+
+### Distributed computing across computer clusters
+
+- Distributed computing speeds up code by using multiple computers
+- Imagine you have 1000 computers, each with 1/1000th of your data
+- You can run the same code on each computer, and then combine the results
+- Same logic as parallel programming with higher "overhead" costs
 
 ---
 # Trivial example: square numbers
@@ -610,6 +610,8 @@ toc(log = TRUE)
 ---
 # Now in parallel
 
+- `plan` multisession tells R to use multiple cores
+
 
 ```r
 # library(future.apply)  ## Already loaded
@@ -635,10 +637,11 @@ all.equal(serial_ex, future_ex)
 ---
 # Example: bootstrapping in parallel
 
-- The future_lapply works the same, but now I have to set the seed inside the function
+- The future_lapply works the same, but now I have to set the seed inside the function with `future.seed`
+- Why? Because each node is a separate R session, so they need to coordinate their random numbers
 
 
-```r
+``` r
 set.seed(1)
 tic()
 serial_boot &lt;- lapply(1:1e4, function(i) bootstrap_sample(df)) %&gt;%
@@ -647,10 +650,10 @@ toc(log = TRUE)
 ```
 
 ```
-## 222.89 sec elapsed
+## 220.22 sec elapsed
 ```
 
-```r
+``` r
 tic()
 parallel_boot &lt;- future_lapply(1:1e4, 
   function(i) bootstrap_sample(df), 
@@ -660,7 +663,7 @@ toc(log = TRUE)
 ```
 
 ```
-## 69.52 sec elapsed
+## 82.45 sec elapsed
 ```
 
 ---
@@ -668,10 +671,10 @@ toc(log = TRUE)
 
 The **furrr** package, i.e. future **purrrr** is a Parallel Programming version of **purrr**
 
-- Again, the syntax is the same, but you have to set the seed inside the function with `.options`.
+- Again, set the seed inside the function with `.options`.
 
 
-```r
+``` r
 tic()
 furrr_boot = future_map_dfr(1:1e4, 
   function(i) bootstrap_sample(df), 
@@ -680,45 +683,25 @@ toc(log = TRUE)
 ```
 
 ```
-## 56.9 sec elapsed
+## 92.55 sec elapsed
 ```
 
 ---
 # Get standard errors from results
 
 - Now that we have a bunch of estimates, we can get the standard error of our estimates
-- The 95% confidence interval is just the 2.5th and 97.5th percentile of the sampling distribution
 
 &lt;img src="13b-functions-parallel-programming_files/figure-html/bootstrapping-density-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-# R packages that use Parallel Programming
+# Many R packages use Parallel Programming
 
 - Many R packages already use Parallel Programming
-- `feols()` from **fixest** uses Parallel Programming to speed up OLS estimation
-  - You can control how using the `nthreads` argument
+- `feols()` from **fixest** uses Parallel Programming to speed up regressions
+  - You can control how using the `nthreads` input
 - **data.table** uses Parallel Programming to speed up data wrangling
 - **boot** and **sandwich** can use Parallel Programming to speed up bootstrapping
 - And many others do the same
-
----
-# Parallel Programming: Why?
-
-- Parallel Programming is a great way to speed up your code and often there are straight-forward ways to do it
-- It is not always worth doing:
-  - Theoretically, the gain should be linear: each additional node should speed up your code by the same amount
-  - In practice, there are "overhead" costs to Parallel Programming that can slow things down
-  - **Overhead costs**: reading in and subsetting data, tracking each node 
-
----
-# Across computer clusters
-
-- Parallel Programming is also a way to speed up your code across multiple computers
-- This is called "distributed computing"
-- It is a way to speed up your code when you have a lot of data and a lot of computers
-- Imagine you have 1000 computers, each with 1/1000th of your data
-- You can run the same code on each computer, and then combine the results
-- Same logic, but the "overhead" costs are higher
 
 ---
 # What next?
@@ -736,6 +719,18 @@ class: inverse, center, middle
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
 
 
+
+---
+# Parallel Programming vocab
+
+The vocab for Parallel Programming can get a little confusing:
+
+- **Socket**: A socket is a physical connection between a processor and the motherboard
+- **Core**: A core is a physical processor that can do computations
+- **Process**: A process is a task that is being done by a core (Windows users may know this from Task Manager)
+- **Thread**: A thread is a subtask of a process that can be done in parallel and share memory with other threads
+- **Cluster**: A cluster is a group of computers that can be used to do Parallel Programming
+- **Node**: One computer within a cluster
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
