@@ -1,5 +1,5 @@
 ---
-title: Big Data and Economics
+title: Data Science for Economists
 subtitle: Bootstrapping, Functions, and Parallel Programming
 author:
   name: Kyle Coombs

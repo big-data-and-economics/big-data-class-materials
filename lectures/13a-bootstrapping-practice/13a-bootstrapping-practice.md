@@ -1,5 +1,5 @@
 ---
-title: Big Data and Economics
+title: Data Science for Economists
 subtitle: Bootstrapping, Functions, and Parallel Programming
 author:
   name: Kyle Coombs
@@ -52,7 +52,7 @@ It's important to note that "base" R already provides all of the tools to implem
 A convenient way to install (if necessary) and load everything is by running the below code chunk.
 
 
-```r
+``` r
 ## Load and install the packages that we'll be using today
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(boot,doParallel,fixest,sandwich,haven,tidyverse,broom,stargazer,
