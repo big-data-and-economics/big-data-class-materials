@@ -1,5 +1,5 @@
 ---
-title: Big Data and Economics
+title: Data Science for Economists
 subtitle: Introduction to Machine Learning
 author: Kyle Coombs, adapated from Tyler Ransom
 date: "Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics)"
@@ -71,9 +71,6 @@ name: prologue
   - What are the goals? How do we measure accuracy?
   - What is the bias-variance tradeoff?
   - How do we tune models?
-
----
-# Questions
 
 ---
 # Attribution
@@ -298,11 +295,11 @@ The fundamental objective is to maximize out-of-sample "fit"
 
 * But how is this possible given that -- by definition -- we don't see what's not in our sample?
 
-* The solution is to choose functions that predict well in-sample, but penalize them from being too complex
+* **Solution:** Pick functions that predict well in-sample, but penalize them from being too complex
 
-* .hi[Regularization] is the tool by which in-sample fit is penalized, i.e. regularization prevents overly complex functions
+* .hi[Overfitting] means you focused too much on in-sample fit and get poor out-of-sample fit
 
-* .hi[Overfitting] is when we put too much emphasis on in-sample fit, leading us to make poor out-of-sample fit
+* .hi[Regularization] is the tool by which in-sample fit is penalized, i.e. regularization prevents overfitting
 
 ---
 # Not the objective of ML
@@ -317,11 +314,11 @@ Taken from the always poignant [XKCD](https://xkcd.com/1838/). Sometimes it's ha
 ---
 # Elements of Machine Learning
 
-1. Loss function (this is how one measures how well a particular algorithm predicts in- or out-of-sample)
-2. Algorithm (a way to generate prediction rules in-sample that can generate to out-of-sample)
-3. Training data (the sample on which the algorithm estimates)
-4. Validation data (the sample on which algorithm tuning occurs)
-5. Test data (the "out-of-sample" data which is used to measure predictive power on unseen cases)
+1. .hi[Loss function] (measures how well a particular algorithm predicts in- or out-of-sample)
+2. .hi[Algorithm] (a way to generate prediction rules in-sample that can generate to out-of-sample)
+3. .hi[Training data] (the sample on which the algorithm estimates)
+4. .hi[Validation data] (the sample on which algorithm tuning occurs)
+5. .hi[Test data] (the "out-of-sample" data which is used to measure predictive power on unseen cases)
 
 The algorithm typically comes with .hi[tuning parameters] which are ways to regularize the in-sample fit
 
@@ -457,17 +454,16 @@ head(cps_test)
 name: bias-variance-tradeoff
 # Bias-variance tradeoff
 
-The .hi[bias-variance tradeoff] refers to the fact that we need to find a model that is complex enough to generalize to new datasets, but is simple enough that it doesn't "hallucinate" random noise as being important
-
-The way to optimally trade off bias and variance is via .hi[regularization]
-
----
-# Visualizing the bias-variance tradeoff
-
-The following graphic from p. 194 of Hastie, Tsibshirani, and Friedman's *Elements of Statistical Learning* illustrates this tradeoff:
+The .hi[bias-variance tradeoff] is between a model that is too simple and a model that is too complex
+.small[
+  - Too complex models will "hallucinate" random noise as being important (high variance)
+  - Too simple models will not generalize to new datasets/samples (high bias)
+  - The way to optimally trade off bias and variance is via .hi[regularization]
+]
 
 .center[
-```{r echo = FALSE, fig.retina=.25,fig.height=6}
+```{r echo = FALSE,fig.retina=.25,fig.cap="Taken from Hastie, Tibshirani, and Friedman (2009) Elements of Statistical Learning (p. 194)"}
+
 knitr::include_graphics("imgs/biasVarianceHTFp194.png")
 ```
 ]
@@ -493,44 +489,7 @@ bind_rows(list('In/Train'=cps_train, 'Out/Test'=cps_test),.id='sample') %>%
   knitr::kable(digits=2,format.args=list(big.mark=","))
 ```
 
----
-# Prediction accuracy of binary $y$
-
-The .hi[confusion matrix] which compares how often $y$ and $\hat{y}$ align (i.e. for what fraction of cases $\hat{y} = 0$ when $y = 0$)
-
-|   |  $\hat{y}$ |   | 
-|--|--|--|
-|  $y$ |  0 |  1 | 
-|  0 |  True negative |  False positive | 
-|  1 |  False negative |  True positive | 
-
-Where are Type I and Type II errors in a confusion matrix?
-
---
-- .hi[Type I error]: false positive (i.e. $\hat{y} = 1$ when $y = 0$)
-- .hi[Type II error]: false negative (i.e. $\hat{y} = 0$ when $y = 1$)
-
-The three most commonly used quantities that are computed from the confusion matrix are:
-
-1. .hi[sensitivity or recall:] fraction of $y = 1$ have $\hat{y} = 1$ ? (What is the true positive rate?)
-2. .hi[specificity:] fraction of $y = 0$ have $\hat{y} = 0$ ? (What is the true negative rate?)
-3. .hi[precision:] fraction of $\hat{y} = 1$ have $y = 1$ ? (What is the rate at which positive predictions are true?)
-
-The goal is to trade off Type I and Type II errors in classification<sup>1</sup>
-
-.footnote[<sup>1</sup> The most common way to quantify this tradeoff is $F1$ score. Check Tyler Ransom's slides for more on different metrics in the confusion matrix.]
----
-# Why use the confusion matrix?
-
-- We do not want to "game" our accuracy measure by always predicting "negative" (or always predicting "positive")
-
-- Consider the case of classifying emails as "spam" or "ham"
-  
-  - There are few "spam" messages relative to "ham" messages
-  
-  - If only 1% of messages are spam, we don't want to say an algorithm is superior if it always predicts "ham" correctly, but does not pin down the 1% of spam<sup>2</sup>
-
-.footnote[<sup>2</sup> The F1 measure attempts to quantify the tradeoff between Type I and Type II errors (false negatives and false positives) that would be rampant if we were to always predict "ham" in the email example.]
+.footnote[See end of slides for prediction with a binary $y$.]
 
 ---
 name: cross-validation
@@ -607,4 +566,41 @@ print(infile)
 ```
 
 
+---
+# Prediction accuracy of binary $y$
 
+The .hi[confusion matrix] which compares how often $y$ and $\hat{y}$ align (i.e. for what fraction of cases $\hat{y} = 0$ when $y = 0$)
+
+|   |  $\hat{y}$ |   | 
+|--|--|--|
+|  $y$ |  0 |  1 | 
+|  0 |  True negative |  False positive | 
+|  1 |  False negative |  True positive | 
+
+Where are Type I and Type II errors in a confusion matrix?
+
+--
+- .hi[Type I error]: false positive (i.e. $\hat{y} = 1$ when $y = 0$)
+- .hi[Type II error]: false negative (i.e. $\hat{y} = 0$ when $y = 1$)
+
+The three most commonly used quantities that are computed from the confusion matrix are:
+
+1. .hi[sensitivity or recall:] fraction of $y = 1$ have $\hat{y} = 1$ ? (What is the true positive rate?)
+2. .hi[specificity:] fraction of $y = 0$ have $\hat{y} = 0$ ? (What is the true negative rate?)
+3. .hi[precision:] fraction of $\hat{y} = 1$ have $y = 1$ ? (What is the rate at which positive predictions are true?)
+
+The goal is to trade off Type I and Type II errors in classification<sup>1</sup>
+
+.footnote[<sup>1</sup> The most common way to quantify this tradeoff is $F1$ score. Check Tyler Ransom's slides for more on different metrics in the confusion matrix.]
+---
+# Why use the confusion matrix?
+
+- We do not want to "game" our accuracy measure by always predicting "negative" (or always predicting "positive")
+
+- Consider the case of classifying emails as "spam" or "ham"
+  
+  - There are few "spam" messages relative to "ham" messages
+  
+  - If only 1% of messages are spam, we don't want to say an algorithm is superior if it always predicts "ham" correctly, but does not pin down the 1% of spam<sup>2</sup>
+
+.footnote[<sup>2</sup> The F1 measure attempts to quantify the tradeoff between Type I and Type II errors (false negatives and false positives) that would be rampant if we were to always predict "ham" in the email example.]
