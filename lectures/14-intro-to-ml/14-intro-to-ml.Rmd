@@ -1,7 +1,7 @@
 ---
 title: Data Science for Economists
 subtitle: Introduction to Machine Learning
-author: Kyle Coombs, adapated from Tyler Ransom
+author: Kyle Coombs, adapted from Tyler Ransom
 date: "Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics)"
 output:
   xaringan::moon_reader:
