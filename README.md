@@ -134,7 +134,7 @@ Thursday (2025-03-06): Difference-in-differences ([.html][11-diff-in-diff.html],
 
 ### Week 10: Regression Discontinuity Design
 
-Tuesday (2025-03-11): Regression Discontinuity Design ([.html][11-regression-discontinuity.html], [.pdf][11-regression-discontinuity.pdf], [.Rmd](lectures/11-regression-discontinuity/11-regression-discontinuity.Rmd))
+Tuesday (2025-03-11): Regression Discontinuity Design ([.html][12-regression-discontinuity.html], [.pdf][12-regression-discontinuity.pdf], [.Rmd](lectures/12-regression-discontinuity/12-regression-discontinuity.Rmd))
     - Class activity: 
     - Exercise due before class: TK
 
@@ -160,7 +160,7 @@ Thursday (2025-03-27): Tree-based methods ([.html][15-regression-trees.html], [.
 
 Tuesday (2025-04-01): Sentiment Analysis ([.html][19-analysis-of-language.html], [.pdf][19-analysis-of-language.pdf], [.Rmd](lectures/19-analysis-of-language/19-analysis-of-language.Rmd))
 
-Thursday (2025-04-03): Lasso and Ridge Regression ([.html][16-lasso-ridge.html], [.pdf][16-lasso-ridge.pdf], [.Rmd](lectures/16-lasso-ridge/16-lasso-ridge.Rmd))
+Thursday (2025-04-03): Lasso and Ridge Regression ([.html][16-lasso.html], [.pdf][16-lasso.pdf], [.Rmd](lectures/16-lasso/16-lasso.Rmd))
 
 ### Week 14: Hackathon!
 
@@ -725,8 +725,10 @@ The material in this repository is made available under the [MIT license](http:/
 [04-rlang.pdf]:  https://big-data-and-economics.github.io/big-data-class-materials/lectures/04-rlang/04-rlang.pdf
 [05-tidyverse.html]: https://big-data-and-economics.github.io/big-data-class-materials/lectures/05-tidyverse/05-tidyverse.html
 [05-tidyverse.pdf]:  https://big-data-and-economics.github.io/big-data-class-materials/lectures/05-tidyverse/05-tidyverse.pdf
-[06-scraping-in-research.html]: https://big-data-and-economics.github.io/big-data-class-materials/lectures/06a-scraping-in-research/06a-scraping-in-research.html
-[06-scraping-in-research.pdf]:  https://big-data-and-economics.github.io/big-data-class-materials/lectures/06a-scraping-in-research/06a-scraping-in-research.pdf
+[06a-scraping-in-research.html]: https://big-data-and-economics.github.io/big-data-class-materials/lectures/06a-scraping-in-research/06a-scraping-in-research.html
+[06a-scraping-in-research.pdf]:  https://big-data-and-economics.github.io/big-data-class-materials/lectures/06a-scraping-in-research/06a-scraping-in-research.pdf
+[06-web-css.html]: https://big-data-and-economics.github.io/big-data-class-materials/lectures/06-web-css/06-web-css.html
+[06-web-css.pdf]:  https://big-data-and-economics.github.io/big-data-class-materials/lectures/06-web-css/06-web-css.pdf
 [07-web-apis.html]: https://big-data-and-economics.github.io/big-data-class-materials/lectures/07-web-apis/07-web-apis.html
 [07-web-apis.pdf]:  https://big-data-and-economics.github.io/big-data-class-materials/lectures/07-web-apis/07-web-apis.pdf
 [08-spatial.html]: https://big-data-and-economics.github.io/big-data-class-materials/lectures/08-spatial/08-spatial.html#1
