@@ -76,7 +76,7 @@ Parts 2 and 3 will highlight examples of using big data to address social proble
 - Thursday (2025-01-16): Empirical Organization [.html][02-empirical-workflow.html], [.pdf][02-empirical-workflow.pdf], [.Rmd](lectures/02-empirical-workflow/02-empirical-workflow.Rmd)
     - Exercise due before class: TK
 
-### Week 3 (2025-01-21 to ): R Basics
+### Week 3: R Basics
 
 - Tuesday (2025-01-21): R Basics ([.html][04-rlang.html], [.pdf][04-rlang.pdf], [.Rmd](lectures/04-rlang/04-rlang.Rmd))
     - Exercise due before class: [Introduction to R TK][datacamp]
@@ -160,7 +160,7 @@ Thursday (2025-03-27): Tree-based methods ([.html][15-regression-trees.html], [.
 
 Tuesday (2025-04-01): Sentiment Analysis ([.html][19-analysis-of-language.html], [.pdf][19-analysis-of-language.pdf], [.Rmd](lectures/19-analysis-of-language/19-analysis-of-language.Rmd))
 
-Thursday (2025-04-03): Lasso and Ridge Regression ([.html][16-lasso.html], [.pdf][16-lasso.pdf], [.Rmd](lectures/16-lasso/16-lasso.Rmd))
+Thursday (2025-04-03): Lasso and Ridge Regression ([.html][17-lasso.html], [.pdf][17-lasso.pdf], [.Rmd](lectures/17-lasso/17-lasso.Rmd))
 
 ### Week 14: Hackathon!
 
