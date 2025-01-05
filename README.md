@@ -13,7 +13,7 @@ I am constantly trying to improve this course. Provide [feedback](https://docs.g
 
 # Office hours:
 My office hours are: 
-- Tuesdays 4pm-5pm
+- Tuesdays 4:30pm-5:30pm
 - Wednesdays 10:30am-11:30am
 
 My office is in Pettengill 161.
@@ -22,7 +22,7 @@ You can make an appointment at [here](https://calendar.google.com/calendar/u/0/a
 
 ## Getting in touch
 
-In this course, I ask that you use GitHub Discussions and `Issues` to ask questions about the problem sets, final projects, presentation clarifications, and other class specifics. This is so that everyone can benefit from the answer. Also, it will encourage collaboration (and declutter my inbox). A portion of the grade is based on participation in GitHub Issues.
+In this course, I ask that you use GitHub Discussions and `Issues` to ask questions about the problem sets, exercises, and other class materials. This is so that everyone can benefit from the answer. Also, it will encourage collaboration (and declutter my inbox). A portion of the grade is based on participation in GitHub Issues.
 
 ### Course Organization Page
 
@@ -36,9 +36,9 @@ I will also make announcements for the benefit of the course here.
 
 ### GitHub Issues
 
-GitHub `Issues` are for repository specific questions. 
+GitHub `Issues` are for repository-specific questions. 
 
-If you would like to discuss a private matter, you can of course email me at kcoombs@bates.edu. I will respond as quickly as possible. If you do need to email me, please include "ECON368" in the subject line. If you email me a question that would benefit the whole class or someone else in the class could answer, I will respond by asking you to post it to GitHub Discussions or Issues. 
+If you would like to discuss a private matter, you can of course email me at kcoombs [at] bates.edu. I will respond as quickly as possible. If you do need to email me, please include "ECON368" in the subject line. If you email me a question that would benefit the whole class or someone else in the class could answer, I will respond by asking you to post it to GitHub Discussions or Issues. 
 
 <!-- You can book time [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61). -->
 
@@ -395,7 +395,7 @@ Economics is at the forefront of developing statistical methods for analyzing da
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
 | 5 × problem sets                          | 20%    | Top 4  |
-| 1 × group presentation                    | 20%    | Top 1   |
+| 1 × presentation                             | 20%    | Top 1   |
 | 1 × GitHub participation                  | 10%     | Overall   |
 | N x In-class exercises                    | 20%    | Completion by next class |
 | 1 × Final Project                         | 30%    | Hackathon participation |
@@ -409,9 +409,10 @@ Finalized grades on each component will be posted to Lyceum. Where possible to g
 Throughout the course you will engage in problem sets that deal with actual data. These may seem out of step with what we do in class, but they are designed to get you to think about how to apply the tools we learn in class to real data. 
 
 - Problem sets are coding assignments that get you to play with data using R
+- Some problem sets will be group assignments, some will be individual
 - They are extremely challenging, but also extremely rewarding
 - With rare exceptions: You will not be given code to copy and paste to accomplish these data cleaning tasks, but instead given a set of instructions and asked to figure out how to write code yourself
-- You are encouraged to work together on problem sets and can turn in any as a group assignment
+- You are actively encouraged to collaborate with your classmates even if the assignment is not a group assignment
 - All problem sets will be completed and turned in as GitHub repositories
 - I will drop the lowest problem set grade
 
@@ -421,9 +422,13 @@ I reserve the right to add a problem set if I feel it will aid your learning.
 
 Exercises are quick turnaround assignments that are designed to get you to think about the material we covered in class. They will be due by the next class period. 
 
+Exercises will be graded on a 0, 1, 2 scale. A 0 means you did not turn in the assignment. A 1 means you turned in the assignment, but put in minimal effort. A 2 means you turned in the assignment with clear effort. 
+
 I will drop the lowest two exercise grades. You will have the opportunity to revise any exercise submission to improve your grade as per the policy outlined below. You have until the next class meeting to re-submit. 
 
 #### What you will turn in:
+
+_Unless otherwise indicated on the problem set, this is what you will turn in._
 
 - Each problem set will be posted as a GitHub repository, which you will fork, set to private, and then clone to your computer (instructions provided in each problem set)
 - You will then work on the problem set on your computer or a Codespaces server, and push your code to GitHub (push often!) (**Note: You have to push in Codespaces. If you delete your Codespace without pushing changes, you will lose your answers.**)
@@ -514,7 +519,7 @@ This semester, we will be working with the City of Lewiston to help them solve a
 
 We will specifically be engaging in a Hack-a-thon. A hack-a-thon is a short (often 24 hours), intense period of collaboration between a group of people to solve a problem. Scheduling is still in the works.
 
-The Hack-a-thon is planned to be mandatory.
+The Hack-a-thon is mandatory.
 
 #### Data Requests
 
@@ -522,7 +527,7 @@ Several weeks before the hack-a-thon, we will brainstorm datasets that your grou
 
 #### What you will do
 
-- Compete in groups of 3-4 to each propose solutions to the same problem
+- Compete in groups of 3-5 to each propose solutions to the same problem
 - Present your solution to a group from the City of Lewiston
 - Write a short report on your solution
 - Maintain all code and necessary documentation to the City of Lewiston in a GitHub repository
@@ -585,15 +590,7 @@ There are several opportunities for bonus points during the semester:
 
 1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material. This can be to fix a typo or to fix a bug in the code.
 2. A 2.5% participation bonus on your final grade that I will award at my discretion.
-3. I will offer a 2.5% participation bonus to the person with most "good faith" posts/answers in GitHub Issues and Discussions within this organization. "Good faith" means:
-    - The posts are made to actually ask about a problem you are having with a problem set/your final project or to answer someone else's question
-    - The posts/answers follow the guidelines above
-    - The posts are not duplicates of existing posts -- you have to search before you post to see if folks are already working on this problem.
-    - The posts and answers are not spam -- I'm a child of the 90s. I can spot spam from a mile away.
-    - The posts and answers are respectful and constructive.
-    - An improvement on existing answer is fine, if it actually improves on the existing answer.
-The intent of this bonus is to encourage you to work together to solve technical problems in a way that resembles professional software development and data analysis on this platform. This is one of the most important skills you can take away from this, and really any, course.
-4. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
+3. I offer a problem set bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
 
 I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
 
@@ -604,7 +601,11 @@ I offer extensions for two things:
 1. Major health issues
 2. Major family emergencies
 
-Please flag either with Bates Reach and email me with the subject "[ECON 368] _subject here_", so I can be aware of the situation. Together we'll figure out an appropriate extension.
+Please flag with Bates Reach and email me with the subject "[ECON 368] _subject here_", so I can be aware of the situation. Together we'll figure out an appropriate extension.
+
+#### Group assignments
+
+If you are asking for an extension on a group assignment include all group partners on the email. Do not email me individually and ask for an extension on behalf of your group. This practice will ensure that all group members are aware of the request. 
 
 # FAQ
 
