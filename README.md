@@ -40,8 +40,6 @@ GitHub `Issues` are for repository-specific questions.
 
 If you would like to discuss a private matter, you can of course email me at kcoombs [at] bates.edu. I will respond as quickly as possible. If you do need to email me, please include "ECON368" in the subject line. If you email me a question that would benefit the whole class or someone else in the class could answer, I will respond by asking you to post it to GitHub Discussions or Issues. 
 
-<!-- You can book time [here](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ02UMZxGreYvp2MnVl5VkXrIQNOXpFuu6vOI-loXJZIJE141Ml4Qh05FCPbw73kVLUjSFCRhM61). -->
-
 # Class updates
 
 Check the [discussions page](https://github.com/orgs/big-data-and-economics/discussions/4) for most recent updates. 
@@ -395,14 +393,33 @@ Economics is at the forefront of developing statistical methods for analyzing da
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
 | 5 × problem sets                          | 20%    | Top 4  |
-| 1 × presentation                             | 20%    | Top 1   |
-| 1 × GitHub participation                  | 10%     | Overall   |
-| N x In-class exercises                    | 20%    | Completion by next class |
+| 1 × presentation                          | 15%     | Top 1   |
+| N x In-class exercises                    | 15%    | Completion, drop two lowest |
+| N x Datacamp tutorials                    | 15%    | Completion, two makeups |
 | 1 × Final Project                         | 30%    | Hackathon participation |
+| 1 × GitHub participation                  | 5%     | Overall   |
 | Classroom participation                   | Bonus up to 2.5%    | Discretion  |
 | Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
 
-Finalized grades on each component will be posted to Lyceum. Where possible to give feedback privately, it will be posted to GitHub. 
+Finalized grades on each component will be posted to Lyceum. Where possible to give feedback privately, it will be posted to GitHub. '
+
+### Exercises
+
+There are two types of exercises in this course: in-class exercises and Datacamp exercises.
+
+#### In-class exercises
+
+These exercises are short coding assignments that you will start in class. They are designed to help you practice the skills we are learning in class and are due by the next class.
+
+Exercises will be graded on a 0, 1, 2 scale. A 0 means you did not turn in the assignment. A 1 means you turned in the assignment, but put in minimal effort. A 2 means you turned in the assignment with clear effort. 
+
+I will drop the lowest two in-class exercise grades. 
+
+#### Datacamp tutorials
+
+During the semester, I sometimes use datacamp to help you learn R or Git skills outside of class. These tutorials are due by the start of the class period listed on the syllabus and are graded on completion. You will receive full credit for completing the tutorial.
+
+I will allow you to makeup two Datacamp tutorials if you do not complete them on time.
 
 ### Problem sets
 
@@ -417,14 +434,6 @@ Throughout the course you will engage in problem sets that deal with actual data
 - I will drop the lowest problem set grade
 
 I reserve the right to add a problem set if I feel it will aid your learning.
-
-### Exercises
-
-Exercises are quick turnaround assignments that are designed to get you to think about the material we covered in class. They will be due by the next class period. 
-
-Exercises will be graded on a 0, 1, 2 scale. A 0 means you did not turn in the assignment. A 1 means you turned in the assignment, but put in minimal effort. A 2 means you turned in the assignment with clear effort. 
-
-I will drop the lowest two exercise grades. You will have the opportunity to revise any exercise submission to improve your grade as per the policy outlined below. You have until the next class meeting to re-submit. 
 
 #### What you will turn in:
 
