@@ -1,5 +1,5 @@
 ---
-title: "Big Data and Economics"
+title: "Data Science for Economists"
 subtitle: "Lecture 6: Webscraping: (1) Server-side and CSS"
 author:
   name: Kyle Coombs

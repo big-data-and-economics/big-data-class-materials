@@ -1,5 +1,5 @@
 ---
-title: Big Data and Economics
+title: Data Science for Economists
 subtitle: Tidy text activity
 author:
   name: Kyle Coombs

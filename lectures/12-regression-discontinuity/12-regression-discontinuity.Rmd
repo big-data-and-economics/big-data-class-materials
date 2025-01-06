@@ -111,7 +111,7 @@ class: inverse, center, middle
 ---
 # Attribution
 
-- Most of these slides are borrowed from Nick Huntington-Klein slides on RDD and Raj Chetty's course of Big Data and Economics
+- Most of these slides are borrowed from Nick Huntington-Klein slides on RDD and Raj Chetty's course of Data Science for Economists
 
 ---
 name: rdd

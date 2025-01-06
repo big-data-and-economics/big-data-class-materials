@@ -1,5 +1,5 @@
 ---
-title: "Big Data and Economics"
+title: "Data Science for Economists"
 subtitle: "Spatial analysis in R"
 author:
   name: Kyle Coombs (adapted from Grant McDermott)

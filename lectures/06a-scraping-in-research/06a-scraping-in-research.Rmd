@@ -1,5 +1,5 @@
 ---
-title: "Big Data and Economics"
+title: "Data Science for Economists"
 # subtitle: "<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>"
 subtitle: "Lecture 6a: Web Data in Research"
 author: "Kyle Coombs (he/him/his)"

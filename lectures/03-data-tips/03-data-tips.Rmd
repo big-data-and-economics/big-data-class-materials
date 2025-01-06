@@ -1,5 +1,5 @@
 ---
-title: Big Data and Economics
+title: Data Science for Economists
 subtitle: "Lecture 3: Data tips"
 author: Kyle Coombs
 date: "Bates College | [ECON/DCS 368](https://github.com/big-data-and-economics)"
@@ -103,8 +103,6 @@ ggplot(anscombe_df, aes(x = x, y = y)) +
 ---
 # DataSarus Dozen
 
-- A more ambitious example is the [Datasaurus Dozen](https://www.autodeskresearch.com/publications/samestats) dataset.
-
 ```{r datasaurus_dozen,echo=FALSE,warning=FALSE,cache=T}
 datasaurus_dozen <- datasaurus_dozen %>% 
   mutate(dataset_counter = as.integer(factor(dataset, levels = unique(dataset))))
@@ -116,7 +114,9 @@ ggplot(datasaurus_dozen, aes(x = x, y = y))+
     theme(legend.position = "none") +
     transition_states(dataset, transition_length=1, state_length=30) +
     ease_aes('linear') +
-    labs(title='Sample: {closest_state}')
+    labs(title='Sample: {closest_state}') + 
+    # footnote data saurus dozen 
+    labs(caption = "Data from the Datasaurus Dozen. Each dataset has the same summary statistics, but looks very different.")
 ```
 
 ---
@@ -136,6 +136,110 @@ ggplot(datasaurus_dozen, aes(x = x, y = y))+
 - Throughout this course we'll think about how to deal with these issues
 
 - Today we're making sure you have safeguards in place so you don't write an entire paper only to discover your dataset looks like a T-rex
+
+---
+# Types of data
+
+1. "Long" data (a.k.a. "Big-N" data because $N$ very, very large [and may not all fit onto a single hard drive!], government tax records, Medicare claims data, etc.)
+
+2. "Wide" data (a.k.a. "Big-K" data because $K>N$, customer data sets where each click is a variable)
+
+3. "Wild" data (unstructured; happenstance; collected without a particular intention; e.g. twitter, contrast with Census surveys)
+
+4. "Big Data" is a catch-all for any combination of the above data types that is hard to analyze with classical methods like OLS regression
+  - Too many variables
+  - Too many observations
+  - Needs special wrangling or analysis
+
+---
+# Long data
+```{r img_long, echo=F, out.width="90%"}
+knitr::include_graphics('pics/longdata.png')
+```
+
+- Main application: *identifying causal effects*
+- Example: effects of improving schools on income
+
+---
+# Wide data
+
+```{r img_wide, echo=F, out.width="90%"}
+knitr::include_graphics('pics/widedata.png')
+```
+
+- Main application: *prediction*
+- Example: predicting income to target ads from tons of information like location, links clicked, etc.
+
+---
+# Wild Data
+
+.scroll-box-12[
+```html
+<caption>List of men's Olympic records in athletics
+</caption>
+<tbody><tr>
+<th scope="col" width="12%">Event
+</th>
+<th class="unsortable" width="5%">Record
+</th>
+<th scope="col" width="10%">Athlete(s)
+</th>
+<th scope="col" width="15%">Nation
+</th>
+<th scope="col" width="10%">Games
+</th>
+<th scope="col" width="5%">Date
+</th>
+<th scope="col" class="unsortable" width="3%">Ref(s)
+</th></tr>
+<tr>
+<th scope="row"><span data-sort-value="00100&#160;!"><a href="/wiki/100_metres" title="100 metres">100 metres</a></span>
+</th>
+<td align="right">9.63&#160;
+</td>
+<td><span data-sort-value="Bolt, Usain"><span class="vcard"><span class="fn"><a href="/wiki/Usain_Bolt" title="Usain Bolt">Usain Bolt</a></span></span></span>
+</td>
+<td><span class="mw-image-border" typeof="mw:File"><span><img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/22px-Flag_of_Jamaica.svg.png" decoding="async" width="22" height="11" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/33px-Flag_of_Jamaica.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/44px-Flag_of_Jamaica.svg.png 2x" data-file-width="1200" data-file-height="600" /></span></span>&#160;<a href="/wiki/Jamaica_at_the_2012_Summer_Olympics" title="Jamaica at the 2012 Summer Olympics">Jamaica</a>&#160;<span style="font-size:90%;">(JAM)</span>
+</td>
+<td><span data-sort-value="2012&#160;!"><a href="/wiki/Athletics_at_the_2012_Summer_Olympics_%E2%80%93_Men%27s_100_metres" title="Athletics at the 2012 Summer Olympics – Men&#39;s 100 metres">2012 London</a></span>
+</td>
+<td><span data-sort-value="000000002012-08-05-0000" style="white-space:nowrap">August 5, 2012</span>
+</td>
+<td align="center"><sup id="cite_ref-9" class="reference"><a href="#cite_note-9">&#91;9&#93;</a></sup>
+</td></tr>
+```]
+
+---
+# Why does data type matter?
+
+--
+
+1. Data type determines how much memory is required to store information
+
+2. Data type determines what method you can use to read and analyze the data
+
+--
+
+  - A difference-in-difference model requires a different data shape than a regression discontinuity model
+  - You cannot have a wide data set with one row per unit and one column per year
+
+---
+# The data you need depend on the question you're asking
+
+- Any dataset, no matter how big, has simplified the world in some way
+
+- You want the simplification to match the question
+
+- How do you record where a person is? 
+  - County? Lots of people have same location. 
+  - IP address? Changes frequently 
+  - GPS coordinates? Too precise, and changes every second!
+
+- Your question and theory should guide your data collection
+  - Are you curious about the effect of local government policies or firms on people?
+  - Are you looking to measure the effect of air pollution on health?
+  - Do you want to see how people change their commute patterns over time? When there is a road closure?
+
 
 ---
 class: inverse, center, middle
