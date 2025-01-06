@@ -35,29 +35,23 @@ opts_chunk$set(
   message=FALSE,
   cache=T#, echo=F, warning=F, message=F
   )
-theme_set(theme_minimal())
-BibOptions(check.entries = FALSE,
-           bib.style = "authoryear",
-           style = "markdown",
-           hyperlink = FALSE,
-           dashed = TRUE)
 pacman::p_load(tidyverse,arrow,datasauRus,gganimate,jsonlite,hrbrthemes,fontawesome)
-#biblio <- ReadBib("../../References/References.bib", check = FALSE)
+theme_set(theme_minimal())
 ```
 
 # Table of contents
 
 1. [Prologue](#prologue)
 
-2. [Veggies: Syllabus highlights](#syllabus)
+2. [What is data science?](#what_is_data_science)
 
-2. [Dessert: What is data science?](#what_is_data_science)
+3. [Syllabus highlights](#syllabus)
 
-4. [Appetizer: Getting started](#started)
+4. [Getting started](#started)
 
-5. [Entree: R for data science](#r4ds)
+5. [R for data science](#r4ds)
 
-6. [Second Dessert: Data visualization with ggplot2](#ggplot2)
+6. [Data visualization with ggplot2](#ggplot2)
 
 ---
 class: inverse, center, middle
@@ -93,16 +87,6 @@ You'll soon receive access to this GitHub organization, where we submit assignme
 `r fa('book')` Research fields: Public and Labor, interested in applied econometrics and data science
 
 ---
-class: inverse, center, middle
-name: syllabus
-
-# Syllabus highlights
-
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
-
-(Read the full document [here](https://github.com/big-data-and-economics/syllabus/blob/main/syllabus.pdf).)
-
----
 # Why this course?
 
 Fill in the gaps left by traditional econometrics and methods classes.
@@ -120,24 +104,6 @@ Data science skills are largely distinct from (and complementary to) the core 'm
 
 > *"In short, we will cover things that I wish someone had taught me when I was starting out in college."*
 
----
-# Navigate data fallacies
-
-```{r datasaurus_dozen,echo=FALSE,warning=FALSE,cache=T}
-datasaurus_dozen <- datasaurus_dozen %>% 
-  mutate(dataset_counter = as.integer(factor(dataset, levels = unique(dataset))))
-
-ggplot(datasaurus_dozen, aes(x = x, y = y))+
-    geom_point()+
-    geom_smooth(method = "lm", se = FALSE) +
-    theme_bw() +
-    theme(legend.position = "none") +
-    transition_states(dataset, transition_length=1, state_length=30) +
-    ease_aes('linear') +
-    labs(title='Sample: {closest_state}') + 
-    # footnote data saurus dozen 
-    labs(caption = "Data from the Datasaurus Dozen. Each dataset has the same summary statistics, but looks very different.")
-```
 
 ---
 
@@ -155,83 +121,6 @@ ggplot(datasaurus_dozen, aes(x = x, y = y))+
     - Seriously, a little data science goes a long way in helping you see through BS
 
 ---
-# What to do when you are stuck
-
-You're gonna write a lot of code for this class, which means you're gonna troubleshoot a lot of bugs.
-
-- Some of these will be bugs of your own making, some will be bugs of open source R tools
-
-1. Try to describe in plain words/simple pictures what you want code to do before you write it
-  - Read in a CSV file with variables for annual population at the county level and calculate the change in population from the previous year
-
-2. Break this description into smaller steps (1: Read in data, 2: Drop rows with NA County, etc.)
-
-3. Write code "modularly" (in pieces) to do each step, then you can troubleshoot modularly
-
-4. The `help` documentation for R functions is the best place to start for troubleshooting
-
-5. [Google is your friend.](http://xkcd.com/627/) Google is your friend. Google is your friend.<sup>1</sup>
-
-> - Per [Stat 545 course](https://stat545.stat.ubc.ca/notes/notes-a01/): copy the error message, strip out highly specific stuff, surround with quotes and Google it!
-
-6. If you're stuck, ask for help from me and classmates on GitHub Discussions/Issues
-  - Write a minimally reproducible example of the bug
-
-.footnote[<sup>1</sup> Generative AI ([ChatGPT](https://chat.openai.com/) and [GitHub CoPilot](https://github.com/features/copilot)) is a bit of a frenemy.]
-
----
-# Assignments and grading
-
-1. In-class exercises: low-stakes completion exercises
-
-2. Datacamp exercises to really dig into the thornier parts of R/git
-
-3. 5 group problem sets, drop the lowest, grade improvement allowed
-
-4. Coding presentation
-  
-4. GitHub Participation
-
-5. Final Project/Lewiston Hack-a-thon: 2-day data science competition at end of semester
-  - Prizes for "best" in various categories
-  - Either week before Thanksgiving or last week of class -- come ready to vote next class
-  - If falls through for some reason, final project will be a replication project
-
----
-# Class outline
-
-.pull-left[
-### Data science basics
-
-- Version control with Git and GitHub
-- R language basics
-- Data cleaning and wrangling
-- Webscraping 
-- Data visualization
-
-### Analysis and Programming
-
-- Spatial analysis
-- Regression analysis
-- Functions and loops
-- Parallel programming
-]
-
-.pull-right[
-### Causal inference
-
-- Regression discontinuity design
-- Panel data and fixed effects
-- Difference-in-difference design
-
-### Scaling up: Big data, ML, and cloud computation
-
-- Machine Learning techniques
-- Text analysis
-
-]
-
----
 class: inverse, center, middle
 name: what_is_data_science
 
@@ -244,7 +133,7 @@ name: what_is_data_science
 
     - Facebook: Collects data on search history, friendship links, site clicks, occupation, etc.
 
-    - Chetty et al. (2022) used FB data to estimate users' SES and social network ([Social Capital Atlas](https://www.socialcapital.org/))
+    - Chetty et al. (2022) used FB data to estimate SES and social network ([Social Capital Atlas](https://www.socialcapital.org/))
 
 - The rise of data science has come because of the so-called "Big" Data revolution
 
@@ -255,14 +144,31 @@ name: what_is_data_science
 #### Pillars of data science
 
 - Programming (automation of data collection, manipulation, cleaning, visualization, and modeling)
-
 - Visualization & exploration
-
 - Causal inference (to be able to make a policy prescription)
-
 - Machine learning (to select models, compress data, predict outcomes)
 
 ...Assuming one has the appropriate foundation of basic calculus and statistics
+
+---
+# Data are weird!
+
+```{r datasaurus_dozen,echo=FALSE,warning=FALSE,cache=T}
+datasaurus_dozen <- datasaurus_dozen %>% 
+  mutate(dataset_counter = as.integer(factor(dataset, levels = unique(dataset))))
+
+ggplot(datasaurus_dozen, aes(x = x, y = y))+
+    geom_point()+
+    geom_smooth(method = "lm", se = FALSE) +
+    theme_bw() +
+    theme(legend.position = "none") +
+    transition_states(dataset, transition_length=1, state_length=30) +
+    ease_aes('linear') +
+    labs(title='Sample: {closest_state}') + 
+    # footnote data saurus dozen 
+    labs(caption = "Data from the Datasaurus Dozen. Each dataset has the same summary statistics, but looks very different.")
+```
+
 
 ---
 # The data science workflow
@@ -293,8 +199,121 @@ knitr::include_graphics('pics/frisch.jpg')
 
 Source: Frisch, Ragnar. 1933. "Editor's Note" _Econometrica_ 1(1): 1-4
 
-<!-- ---
-# Data fallacies -->
+---
+class: inverse, center, middle
+name: syllabus
+
+# Syllabus highlights
+
+<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+(Read the full document [here](https://github.com/big-data-and-economics/syllabus/blob/main/syllabus.pdf).)
+
+---
+# Assignments and grading
+
+1. In-class exercises: low-stakes completion exercises
+
+2. Datacamp exercises to really dig into the thornier parts of R/git
+
+3. 5 group problem sets, drop the lowest, grade improvement allowed
+
+4. Coding presentation
+  
+4. GitHub Participation
+
+5. Final Project/Lewiston Hack-a-thon: 2-day data science competition at end of semester
+  - Prizes for "best" in various categories
+  - Either week before Thanksgiving or last week of class -- come ready to vote next class
+  - If falls through for some reason, final project will be a replication project
+
+---
+# Tips for success in this class
+
+- **Start early:** This is a fast-paced class, and you will need to start assignments early to get help when you need it
+
+- **Try to understand the task before you code:** This is not a class where you can just copy code from the internet and paste it in. You need to understand what you are doing
+
+- **Comment your code**
+  - Helps you remember what you were doing
+  - Helps me understand what you were trying (like showing your work in a math class)
+
+- **Let me know if there are bugs/errors early**: I use a ton of out-of-class technical demos. They can break. I want to fix things to remove impediments to your learning.
+
+---
+# Stuck while coding?
+
+You're gonna write a lot of code for this class, which means you're gonna troubleshoot a lot of bugs.
+
+- Some of these will be bugs of your own making, some will be bugs of open source tools
+
+1. Try to describe in plain words/simple pictures what you want code to do before you write it
+
+2. Break this description into smaller steps (1: Read in data, 2: Drop rows with NA County, etc.)
+
+3. Write code "modularly" (in pieces) to do each step, then you can troubleshoot piece-by-piece
+
+4. The `help` documentation for R functions is the best place to start for troubleshooting
+
+5. [Google is your friend.](http://xkcd.com/627/) Google is your friend. Google is your friend.<sup>1</sup>
+
+6. Ask for help from me, our CAT, SASC, and classmates on GitHub Discussions/Issues
+
+7. Search [stackoverflow](http://stackoverflow.com/) and include the `[r]` tag or your package, e.g. `[ggplot]`, `[data.table]`
+
+.footnote[<sup>1</sup> Generative AI ([ChatGPT](https://chat.openai.com/) and [GitHub CoPilot](https://github.com/features/copilot)) is a bit of a frenemy.]
+
+---
+# "Unhelpfully seeking help"
+
+> "If someone has the wit and knowledge to answer your question, they probably have other things they would like to do. Making your message clear, concise and user-friendly gives you the best hope of at least one of those strangers diverting their attention away from their life towards your problem."
+
+> - [The R Inferno Circle 9](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf)
+
+In short, write a minimal reproducible example (MREs) of your bug. See this [stackoverflow thread](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610) for a primer. 
+
+- We'll come back to MREs soon! 
+
+Lots of helpful (and a little rude) guides in the [University of British Columba Stat 545 course](https://stat545.stat.ubc.ca/notes/notes-a01/)
+
+---
+# Class outline
+
+### Three units:
+
+
+#### 1. Data science basics
+.pull-left[
+- Version control with Git and GitHub
+- R language basics
+- Data cleaning and wrangling
+]
+.pull-right[
+- Data acquisition and loading
+- Data visualization
+- Spatial analysis
+]
+
+#### 2. Causal Inference
+.pull-left[
+- Regression analysis
+- Regression discontinuity design
+]
+.pull-right[
+- Panel data and fixed effects
+- Difference-in-difference design
+]
+
+
+#### 3. Scaling up: Big data, ML, and cloud computation
+.pull-left[
+- Functions and iteration
+- Parallel programming
+]
+.pull-right[
+- Machine Learning techniques
+- Text analysis
+]
 
 ---
 class: inverse, center, middle
@@ -328,7 +347,7 @@ If you had trouble completing any of these steps, please raise your hand.
 
 I'll detail further software requirements as and when the need arises. However, to help smooth some software installation issues further down the road, please also do the following (depending on your OS):
 
-- **Windows:** Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/). I also recommend that you install [Chocolately](https://chocolatey.org/) and [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install).
+- **Windows:** I recommend that you install [Rtools](https://cran.r-project.org/bin/windows/Rtools/), [Chocolately](https://chocolatey.org/) and [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/install).
 - **Mac:** Install [Homebrew](https://brew.sh/). I also recommend that you configure/open your C++ toolchain (see [here](https://github.com/rmacoslib/r-macos-rtools#installer-package-for-macos-r-toolchain-).)
 - **Linux:** None (you should be good to go).
 
@@ -342,19 +361,18 @@ I'll detail further software requirements as and when the need arises. However, 
 ☑ Do you have the most recent version of RStudio?
   ```{r eval=FALSE}
   RStudio.Version()$version
-  ## Requires an interactive session but should return something like "[1] ‘1.4.1100’"
+  ## Requires an interactive session but should return something like "[1] ‘2024.12.0.46’"
   ```
 
 ☑ Have you updated all of your R packages? 
   ```{r eval=FALSE}
   update.packages(ask = FALSE, checkBuilt = TRUE)
   ```
-  
+
 ---
 # Checklist (cont.)
 
-Open up the [shell](http://happygitwithr.com/shell.html#shell).
-- Windows users, make sure that you installed a Bash-compatible version of the shell. If you installed [Git for Windows](https://gitforwindows.org), then you should be good to go.
+Navigate to the terminal tab in the RStudio console.
 
 ☑ Which version of Git have you installed?
   ```{bash, cache=FALSE}
@@ -373,21 +391,31 @@ Open up the [shell](http://happygitwithr.com/shell.html#shell).
 ---
 # Checklist (cont.)
 
-We will make sure that everything is working properly with your R and GitHub setup next lecture.
+Open up your computers and navigate to the in-class exercise repository: https://github.com/big-data-and-economics/exercises 
 
-For the rest of today's lecture, I want to go over some very basic ChatGPT and R concepts.
+1. Fork the repository to your own GitHub account in the upper-right corner of the page.
+2. Navigate to `Settings > Collaborator and teams`
+3. Click `Add people` to add my username (@kgcsport) to your forked repository
+4. Click on `01-intro-to-r` and download the `intro-to-r.R` script to a folder for this class on your computer.
+5. This is the in-class exercise for today, submission instructions are in the folder
 
 --
 
-</br>
+We will make sure that everything is working properly with your R and GitHub setup next lecture.
 
-PS — Just so you know where we're headed: We'll return to these R concepts (and delve much deeper) next week after a brief, but important detour to the lands of coding best practices and Git(Hub).
+For the rest of today's lecture, I want to go over some very basic R concepts.
+
+Open `intro-to-r.R` and fill in the code under each comment (marked `#`) as we go.
+
+--
+
+PS — Just so you know where we're headed: We'll return to these R concepts (and delve much deeper) after a brief, but important detour to the lands of coding best practices and Git(Hub).
 
 ---
 class: inverse, center, middle
 name: r4ds
 
-# R and Generative AI for data science
+# R for data science
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
@@ -413,58 +441,29 @@ programming languages and APIs.
 - (Learning multiple languages is a good idea, though.)
 
 ---
-# R code example (linear regression)
-
-```{r fit}
-fit = lm(mpg ~ wt, data = mtcars)
-summary(fit)
-```
-
----
-# Base R plot
-
-```{r mtcars_baseplot, dev="svg"}
-par(mar = c(4, 4, 1, .1)) ## Just for nice plot margins on this slide deck
-plot(mtcars$wt, mtcars$mpg)
-abline(fit, col = "red") # Add in the object fit from before! 
-```
-
----
-# ggplot2
-
-```{r mtcars_ggplot, dev="svg"}
-library(ggplot2)
-ggplot(data = mtcars, aes(x = wt, y = mpg)) + 
-  geom_smooth(method = "lm", col = "red") + 
-  geom_point() 
-```
-
----
 # Do $\uparrow$ in GDP cause life expectancy to $\uparrow$? 
 
-- Let's use our new-found R knowledge to try to separate correlation from causation for a critical question in economics:
+- Let's use R to try to look at a key question in economics:
   - Does increasing the economic pie (GDP) lead to longer lives (life expectancy)?
 
 - We can use the gapminder dataset to explore this question
 - The [gapminder](https://github.com/jennybc/gapminder) dataset contains panel data on life expectancy, population size, and GDP per capita for 142 countries since the 1950s
 - Any predictions about what we'll learn? 
 
-- Also, we can tap into generative AI to help us climb the steep learning curve of coding in a new language
-
 ---
 class: inverse, center, middle
 name: ggplot2
 
-# More ggplot2
+# ggplot2
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
 # Install and load
 
-Open up your laptops. For the remainder of this first lecture, we're going to play around with [ggplot2](https://ggplot2.tidyverse.org/) (i.e. livecoding) to explore our question about GDP and life expectancy. (Don't worry about working directories/file paths today, we'll cover that in the future.)
+For the remainder of this lecture, we're going to play around with [ggplot2](https://ggplot2.tidyverse.org/) to explore our question about GDP and life expectancy. 
 
-If you don't have them already, install the `ggplot2` and `gapminder` and `swirl` packages via either:
-- **Console:** Enter `install.packages(c("ggplot2", "gapminder","swirl"), dependencies=T)`.
+If you don't have them already, install the `ggplot2` and `gapminder` packages via either:
+- **Console:** Enter `install.packages(c("ggplot2", "gapminder"), dependencies=T)`.
 - **RStudio:** Click the "Packages" tab in the bottom-right window pane. Then click "Install" and search for these two packages.
   
 ![](pics/install.gif)
@@ -476,7 +475,6 @@ Once the packages are installed, load them into your R session with the `library
 ```{r pkg_load}
 library(ggplot2)
 library(gapminder) ## We're just using this package for the gapminder data
-library(swirl)
 ```
 
 Notice too that you don't need quotes around the package names any more. Reason: R now recognises these packages as defined objects with given names. 
@@ -502,58 +500,15 @@ PS — A convenient way to combine the package installation and loading steps is
 - We'll tackle the third today since it is the most visually interesting
 
 ---
-# Swirl installation
-
-- Swirl is an R package that teaches you R interactively
-
-- It's a great way to learn R if you're new to the language
-
-- Use this code to get it up and running
-
-```{r swirl_install,eval=FALSE}
-library(swirl)
-install_course_github('big-data-and-economics','ECON368-R-Swirls')
-swirl()
-```
-
-- Tell swirl what it should call you (e.g. "Wizard of R", probably best to put your real name though)
-
-- Then select the course `ECON368-R-Swirls` and the lesson `GGPlot Demo` (#13 last time I checked) and work through interactively
-
-- At the end it will ask you to save your progress on Google. Do so! It will open Google in your browser, hit submit
-  - It will also save a log file like 'swirl_log_author_Data Science for Economists_GGPlot2 Demo_.csv' in your working directory
-  - You submitted an encrypted version of this file to me via Google (I'm demo-ing a GitHub version currently)
-
----
-name: ai
-# Leverage ChatGPT and GitHub CoPilot
-
-- I'm going to ask you to use a number of new technical tools in this class
-
-- The documentation will be concise and oftentimes you won't know where to start
-
-  - For example, how in the world are you supposed to make a ggplot plot of the gapminder data if you've never used ggplot before?
-  - What if you've never even opened R? How do you even look at the gapminder data?
-
-- I strongly encourage you to use ChatGPT and GitHub CoPilot in all aspects of this class
-
-- ChatGPT is a large language model (LLM) developed by OpenAI
-
-- Create an account at http://chat.openai.com/
-
-- ChatGPT is excellent at producing basic code and helping resolve bugs
-
-- It serves as a bridge between the abstract ideas in your head and code you write
-
----
 # ChatGPT example
 
-First, submit a [prompt on Mentimeter](https://www.mentimeter.com/app/presentation/bldvy2hwjfb483btveenvon9k7mbtkdm/emjehaixxc7c) 
-that loads the gapminder data, displays some key checks, then makes a scatterplot of GDP per capita and life expectancy
+I need a volunteer. Please type a ChatGPT prompt into my computer that:
+
+>  Writes R code that loads the gapminder data, display some key checks, then make a scatterplot of GDP per capita and life expectancy
 
 --
 
-**Human:**
+**Potential prompt:**
 
 Write an R script that does the following:
 
@@ -601,6 +556,12 @@ This script assumes that the gapminder package is installed and loaded. It reads
 ***
 
 Exported on 1/8/2024.
+
+Tips on using generative AI for coding:
+
+- [Turing Institute](https://www.turing.ac.uk/blog/using-generative-ai-write-code-guide-researchers)
+- [Github Copilot in RStudio](https://github.blog/developer-skills/github/how-to-use-github-copilot-in-your-ide-tips-tricks-and-best-practices/)
+- [General Copilot tips](https://docs.github.com/en/copilot/using-github-copilot/best-practices-for-using-github-copilot)
 
 ---
 # How's the code run? 
@@ -653,28 +614,6 @@ ggplot(gapminder_df, aes(x = gdpPercap, y = lifeExp)) +
 ```
 
 ---
-# Tips for using ChatGPT
-
-- Think of it as a more interactive version of Googling for the solution to a bug
-  - It is not a replacement for you, the programmer
-  - Think through the basic coding tasks first, then ask AI to fill in the blanks
-
-- Be as specific as possible in your instructions
-  - If you know the name of the variables in your dataset, use them
-
-- Think of it as a more interactive version of Googling for the solution to a bug
-
-- Try things iteratively and in small steps
-  - If you're not sure how to do something, try to break it down into smaller steps
-  - This is a good tip for coding in general
-
-- Your brain is still the most powerful tool you have
-  - ChatGPT is a tool to help you, not replace you
-  - You will not get much mileage if you say, "Read in the gapminder dataset and do something interesting with it"
-
-- Often it only provides "skeleton code", so you'll need to fill in the blanks
-
----
 # Elements of ggplot2
 
 [Hadley Wickham's](http://hadley.nz/) ggplot2 is one of the most popular packages in the entire R canon. 
@@ -723,14 +662,12 @@ The aesthetic mappings here are pretty simple: They just define an x-axis (GDP p
 ---
 # 1. Aesthetic mappings (cont.)
 
-- Can you ask ChatGPT to add color the dots by continent? 
+- Can you vary the color of the dots by continent? Size by population? Try to think how you'd do that...
 
 ```{r aesthetics2, eval=FALSE}
 ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp)) + 
   geom_point()
 ```
-
-- Submit your guesses on [Mentimeter](https://www.mentimeter.com/app/presentation/bldvy2hwjfb483btveenvon9k7mbtkdm/cc861vpassv5).
 
 ---
 # 1. Aesthetic mappings (cont.)
@@ -743,26 +680,6 @@ ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp, size = pop, col = conti
 --
 
 - I've dropped the "mapping =" part of the ggplot call. `ggplot2` knows the order of the arguments.
-
----
-# 1. Aesthetic mappings (cont.)
-
-The aesthetics expect "long" data. This is distinct from the "wide" format, where each series has its own column.
-
---
-
-  #### Long will work
-```{r aesthetics_long,echo=FALSE}
-head(gapminder)
-```
-
-#### Wide would not work
-
-.scroll-box-12[
-```{r aesthetics_wide,echo=FALSE}
-gapminder %>% pivot_wider(id_cols=c(country,continent),names_from=year,values_from=c(lifeExp,gdpPercap)) 
-```
-]
 
 ---
 # 1. Aesthetic mappings (cont.)
@@ -810,7 +727,7 @@ p +
 ---
 # 2. Geoms (cont.)
 
-Aesthetics can be applied differentially across geoms.
+Aesthetics can be applied differentially across geoms. Here I add a "locally estimated scatterplot smoothing" or loess line to the plot.
 
 ```{r geoms2, dev='svg'}
 p + 
@@ -821,8 +738,7 @@ p +
 ---
 # 2. Geoms (cont.)
 
-The previous plot provides a good illustration of the power (or effect) that comes from assigning aesthetic mappings "globally" vs in the individual geom layers.
-- Compare: What happens if you run the below code chunk?
+The previous plot illustrates the power (or effect) that comes from assigning aesthetics "globally" vs in the individual geom layers. Compare to the code chunk below...
 
 ```{r geoms3, eval=FALSE}
 ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp, size = pop, col = continent)) +
@@ -833,7 +749,7 @@ ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp, size = pop, col = conti
 ---
 # 2. Geoms (cont.)
 
-The previous plot provides a good illustration of the power (or effect) that comes from assigning aesthetic mappings "globally" vs in the individual geom layers.
+The previous plot provides a good illustration of the power (or effect) of assigning aesthetic mappings "globally" vs by geom layer.
 - Compare: What happens if you run the below code chunk?
 
 ```{r geoms3-eval, warning=FALSE}
@@ -846,7 +762,7 @@ ggplot(data = gapminder, aes(x = gdpPercap, y = lifeExp, size = pop, col = conti
 # 3. Build your plot in layers
 
 We've already seen how we can chain (or "layer") consecutive plot elements using the `+` connector.
-- The fact that we can create and then re-use an intermediate plot object (e.g. "p") is testament to this.
+- The fact that we can create and re-use an intermediate plot object (e.g. "p") is testament to this.
 
 But it bears repeating: You can build out some truly impressive complexity and transformation of your visualization through this simple layering process.
 - You don't have to transform your original data; ggplot2 takes care of all of that.
@@ -855,7 +771,7 @@ But it bears repeating: You can build out some truly impressive complexity and t
 - **Bonus:** Maybe this will help make sense of the non-linear relationship between GDP per capita and life expectancy?
 
 ---
-# Build your plot in layers (cont.)
+# 3. Build your plot in layers (cont.)
 
 ```{r layers1}
 p2 =
@@ -882,17 +798,8 @@ p2
 ---
 # What else?
 
-We have barely scratched the surface of ggplot2's or ChatGPT's functionality... let alone talked about the entire ecosystem of packages that has been built around it. 
-- Here's are an additional example to whet your appetite
-
---
-
-Note that you will need to install and load some additional packages if you want to recreate the next two figures on your own machine. A quick way to do this:
-
-```{r pacinstall, collapse=TRUE}
-if (!require("pacman")) install.packages("pacman")
-pacman::p_load(hrbrthemes, gganimate)
-```
+We have barely scratched the surface of ggplot2's functionality... let alone talked about all the packages built around it. 
+- Here's are an additional example to whet your appetite<sup>1</sup>
 
 #### Animation! (See the next slide for the resulting GIF.)
 
@@ -911,6 +818,8 @@ ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
 ```
 
 - What is different about this code? 
+
+.footnote[<sup>1</sup> Note: Note that you will need to install and load some additional packages if you want to recreate the next two figures on your own machine.]
 
 ---
 # What else? (cont.)
@@ -933,7 +842,7 @@ ggplot(gapminder, aes(gdpPercap, lifeExp, size = pop, colour = country)) +
 Note that this animated plot provides a much more intuitive understanding of the underlying data. Just as [Hans Rosling](https://www.ted.com/talks/hans_rosling_the_best_stats_you_ve_ever_seen) intended.
 
 ---
-# But do GDPPC increases cause life expectancy to increase?
+# But is it causal?
 
 - We can't answer this question with a simple plot.
 - We also can't answer this question with a very fancy plot. 
@@ -941,20 +850,6 @@ Note that this animated plot provides a much more intuitive understanding of the
   > - A model
   > - A causal identification strategy
   > - More granular (bigger) data
-
----
-# What else? (cont.)
-
-You can do some reading and practice on your own. Pick any of the following (or choose among the litany of online resources) and work through their examples:
-- [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html) of *R for Data Science* by Hadley Wickham and Garett Grolemund.
-- [*Data Visualization: A Practical Guide*](https://socviz.co/makeplot.html) by Kieran Healy.
-- [Designing ggplots](https://designing-ggplots.netlify.com) by Malcom Barrett.
-
-For next class on GitHub, please complete the following:
-
-- Exercise 0 Part I
-- Work through Chapters 1-14 of https://happygitwithr.com/
-- Read through the [Git fundamentals](https://happygitwithr.com/git-intro) unit
 
 ---
 class: inverse, center, middle

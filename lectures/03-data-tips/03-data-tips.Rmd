@@ -36,7 +36,7 @@ knitr::opts_chunk$set(
   message=F
   )
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,arrow,datasauRus,gganimate,jsonlite)
+pacman::p_load(tidyverse,arrow,datasauRus,gganimate,jsonlite,gapminder)
 ```
 
 # Table of contents
@@ -240,6 +240,25 @@ knitr::include_graphics('pics/widedata.png')
   - Are you looking to measure the effect of air pollution on health?
   - Do you want to see how people change their commute patterns over time? When there is a road closure?
 
+---
+# `ggplot` wants long data
+
+The ggplot2 aesthetics expect "long" data. This is distinct from the "wide" format, where each series has its own column.
+
+--
+
+  #### Long will work
+```{r aesthetics_long,echo=FALSE}
+head(gapminder)
+```
+
+#### Wide would not work
+
+.scroll-box-12[
+```{r aesthetics_wide,echo=FALSE}
+gapminder %>% pivot_wider(id_cols=c(country,continent),names_from=year,values_from=c(lifeExp,gdpPercap)) 
+```
+]
 
 ---
 class: inverse, center, middle

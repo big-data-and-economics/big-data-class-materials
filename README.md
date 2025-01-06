@@ -62,50 +62,63 @@ Parts 2 and 3 will highlight examples of using big data to address social proble
 
 ### Week 1: Introduction to Data Science
 
-- Thursday (2025-01-09): Introduction ([.html][01-Intro.html], [.pdf][01-Intro.pdf], [.Rmd](lectures/01-intro/01-Intro.Rmd))
-    - Exercise due before class: [Start up exercise](TK)
-    - [Problem Set 1 assigned](https://)
+Thursday (2025-01-09): Introduction ([.html][01-Intro.html], [.pdf][01-Intro.pdf], [.Rmd](lectures/01-intro/01-Intro.Rmd))
+
+- Exercise due before class: [Start up exercise](https://github.com/big-data-and-economics/exercises/tree/main/00-startup)
+- In-class activity: [Intro-to-R](https://github.com/big-data-and-economics/exercises/tree/main/01-intro-to-r)
 
 ### Week 2: Git and Empirical Organization
 
-- Tuesday (2025-01-14): Git and Github ([.html][02-Git.html], [.pdf][02-Git.pdf], [.Rmd](lectures/02-git/02-Git.Rmd))
-    - Exercise due before class: [Introduction to Git][datacamp] and [Introduction to Github Concepts][datacamp]
+Tuesday (2025-01-14): Git and Github ([.html][02-Git.html], [.pdf][02-Git.pdf], [.Rmd](lectures/02-git/02-Git.Rmd))
 
-- Thursday (2025-01-16): Empirical Organization [.html][02-empirical-workflow.html], [.pdf][02-empirical-workflow.pdf], [.Rmd](lectures/02-empirical-workflow/02-empirical-workflow.Rmd)
-    - Exercise due before class: TK
+- Exercise due before class: [Introduction to Git][datacamp] and [Introduction to Github Concepts][datacamp]
+- In-class activity: [Git Basics](https://github.com/big-data-and-economics/exercises/tree/main/02-git-basics)
+- [Problem Set 1 assigned](https://github.com/big-data-and-economics/ps1-nlsy-income-mob)
+
+Thursday (2025-01-16): Empirical Organization [.html][02-empirical-workflow.html], [.pdf][02-empirical-workflow.pdf], [.Rmd](lectures/02-empirical-workflow/02-empirical-workflow.Rmd)
+
+- Exercise due before class: TK
+- In-class activity: [MRE](https://github.com/big-data-and-economics/exercises/tree/main/03-mre-exercise)
 
 ### Week 3: R Basics
 
-- Tuesday (2025-01-21): R Basics ([.html][04-rlang.html], [.pdf][04-rlang.pdf], [.Rmd](lectures/04-rlang/04-rlang.Rmd))
-    - Exercise due before class: [Introduction to R TK][datacamp]
-    - Problem Set 1 due before class
+Tuesday (2025-01-21): R Basics ([.html][04-rlang.html], [.pdf][04-rlang.pdf], [.Rmd](lectures/04-rlang/04-rlang.Rmd))
 
-- Thursday (2025-01-23): No class
-    - Exercise due by end of class: TK
+- Exercise due before class: [Introduction to R TK][datacamp]
+- Problem Set 1 due before class
+
+Thursday (2025-01-23): No class
+
+- Exercise due by end of class: TK
 
 ### Week 4: Tidyverse and Data Tips
 
-- Tuesday (2025-01-28): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse.pdf], [.Rmd](lectures/05-tidyverse/05-tidyverse.Rmd))
-    - Exercise due before class: [Introduction to tidyverse TK][datacamp]
+Tuesday (2025-01-28): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse.pdf], [.Rmd](lectures/05-tidyverse/05-tidyverse.Rmd))
 
-- Thursday (2025-01-30): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips.pdf], [.Rmd](lectures/03-data-tips/03-data-tips.Rmd))
+- Exercise due before class: [Introduction to tidyverse TK][datacamp]
+
+Thursday (2025-01-30): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips.pdf], [.Rmd](lectures/03-data-tips/03-data-tips.Rmd))
 
 ### Week 5: Acquiring Web Data
 
-- Tuesday (2025-02-04): Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd)),
-    - Class activity: APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd))
-    - Exercise due before class: [Introduction to APIs TK][datacamp]
+Tuesday (2025-02-04): Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd)),
 
-- Thursday (2025-02-06): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd)) 
-    - Exercise due before class: [Introduction to Web Scraping TK][datacamp]
+- Class activity: APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd))
+- Exercise due before class: [Introduction to APIs TK][datacamp]
+
+Thursday (2025-02-06): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd)) 
+
+- Exercise due before class: [Introduction to Web Scraping TK][datacamp]
 
 ### Week 6: Spatial Analysis
 
-- Tuesday (2025-02-11): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
-    - Exercise due before class: [Introduction to tidycensus TK][datacamp]
+Tuesday (2025-02-11): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
 
-- Thursday (2025-02-13): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
-    - Exercise due before class: [Introduction to tidycensus TK][datacamp]
+- Exercise due before class: [Introduction to tidycensus TK][datacamp]
+
+Thursday (2025-02-13): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
+
+- Exercise due before class: [Introduction to tidycensus TK][datacamp]
 
 ### Week 7: Winter Break
 
@@ -113,28 +126,34 @@ Parts 2 and 3 will highlight examples of using big data to address social proble
 
 ### Week 8: Causal Inference and Regression
 
-- Tuesday (2025-02-25): Causal Inference ([.html][10a-causal-inference.html], [.pdf][10a-causal-inference.pdf], [.Rmd](lectures/10a-causal-inference/10a-causal-inference.Rmd))
-    - Class activity: 
-    - Exercise due before class: TK
+Tuesday (2025-02-25): Causal Inference ([.html][10a-causal-inference.html], [.pdf][10a-causal-inference.pdf], [.Rmd](lectures/10a-causal-inference/10a-causal-inference.Rmd))
 
-- Thursday (2025-02-27): Regression Review ([.html][10-regression.html], [.pdf][10-regression.pdf], [.Rmd](lectures/10-regression/10-regression.Rmd))
-    - Class activity: 
-    - Exercise due before class: TK
+- Class activity: 
+- Exercise due before class: TK
+
+Thursday (2025-02-27): Regression Review ([.html][10-regression.html], [.pdf][10-regression.pdf], [.Rmd](lectures/10-regression/10-regression.Rmd))
+
+- Class activity: 
+- Exercise due before class: TK
 
 ### Week 9: Fixed Effects and Diff-in-diff
 
 Tuesday (2025-03-04): Fixed Effects ([.html][11-fixed-effects.html], [.pdf][11-fixed-effects.pdf], [.Rmd](lectures/11-fixed-effects/11-fixed-effects.pdf))
-    - Class activity: Panel data and TWFE ([.html][11a-panel-twfe.html], [.pdf][11a-panel-twfe.pdf], [.Rmd](lectures/11a-panel-twfe/11a-panel-twfe.Rmd))
+
+- Class activity: Panel data and TWFE ([.html][11a-panel-twfe.html], [.pdf][11a-panel-twfe.pdf], [.Rmd](lectures/11a-panel-twfe/11a-panel-twfe.Rmd))
+- Exercise due before class: TK 
 
 Thursday (2025-03-06): Difference-in-differences ([.html][11-diff-in-diff.html], [.pdf][11-diff-in-diff.pdf], [.Rmd](lectures/11-diff-in-diff/11-diff-in-diff.Rmd))
-    - Class activity: 
-    - Exercise due before class: TK
+
+- Class activity: 
+- Exercise due before class: TK
 
 ### Week 10: Regression Discontinuity Design
 
 Tuesday (2025-03-11): Regression Discontinuity Design ([.html][12-regression-discontinuity.html], [.pdf][12-regression-discontinuity.pdf], [.Rmd](lectures/12-regression-discontinuity/12-regression-discontinuity.Rmd))
-    - Class activity: 
-    - Exercise due before class: TK
+
+- Class activity: 
+- Exercise due before class: TK
 
 Thursday (2025-03-13): Catch-up day
 
@@ -143,14 +162,16 @@ Thursday (2025-03-13): Catch-up day
 ### Week 11: Bootstrapping
 
 Tuesday (2025-03-18): Bootstrapping ([.html](13-bootstrapping.html), [.pdf](13-bootstrapping.pdf), [.Rmd](lectures/13-bootstrapping/13-bootstrapping.Rmd))
-    - Class activity: Functions & Parallel Programming ([.html](13b-functions-parallel-programming.html), [.pdf](13b-functions-parallel-programming.pdf), [.Rmd](lectures/13b-functions-parallel/13b-functions-parallel-programming.Rmd))
+
+- Class activity: Functions & Parallel Programming ([.html](13b-functions-parallel-programming.html), [.pdf](13b-functions-parallel-programming.pdf), [.Rmd](lectures/13b-functions-parallel/13b-functions-parallel-programming.Rmd))
 
 Thursday (2025-03-20): Break
 
 ### Week 12: Introduction to Machine Learning
 
 Tuesday (2025-03-25): Intro to Machine Learning ([.html][14-intro-to-ml.html], [.pdf][14-intro-to-ml.pdf], [.Rmd](lectures/14-intro-to-ml/14-intro-to-ml.Rmd))
-    - Class activity: ISLR tidymodels lab ([.html](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html))
+
+- Class activity: ISLR tidymodels lab ([.html](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html))
 
 Thursday (2025-03-27): Tree-based methods ([.html][15-regression-trees.html], [.pdf][15-regression-trees.pdf], [.Rmd](lectures/15-regression-trees/15-regression-trees.Rmd)) 
 
@@ -173,48 +194,6 @@ Thursday (2025-04-10): Hackathon presentations
 - Regular expressions
 - Topics Modeling, LLMs
 - AI and bias
-
-| Date | Day | Topic | Do before class | Due | 
-|------|-----|-------|-----------------|-----|
-| **Data Science Basics** | | |
-| 2025-01-09  | Th | Introduction to Data Science ([.html][01-Intro.html], [.pdf][01-Intro.pdf], [.Rmd](lectures/01-intro/01-Intro.Rmd)) | [Read and Install Ch 1, 4-8 of happygitwihtr](https://happygitwithr.com/) | |
-| 2025-01-11  | T  | Git slides ([.html][02-Git.html], [.pdf][02-Git.pdf], [.Rmd](lectures/02-git/02-Git.Rmd)) | [Work through Ch 9-19 of happygitwithr](https://happygitwithr.com/connect-intro) | |
-| 2025-01-16  | Th | Git spillover day | [Work through Ch 9-19 of happygitwithr](https://happygitwithr.com/connect-intro) | [Complete exercise 0, start-up part 0](https://github.com/big-data-and-economics/exercises/tree/main/startup-part0) |
-| 2025-01-21  | T | Empirical Organization slides ([.html][02-empirical-workflow.html], [.pdf][02-empirical-workflow.pdf], [.Rmd](lectures/02-empirical-workflow/02-empirical-workflow.Rmd)) | [Read Code and Data for Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf), [Check out RStudio Projects tips](https://martinctc.github.io/blog/rstudio-projects-and-working-directories-a-beginner%27s-guide/) | [Complete exercise 0, start-up part 1](https://github.com/big-data-and-economics/exercises/tree/main/startup-part1) |
-| 2025-01-23 | Th | Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips.pdf], [.Rmd](lectures/03-data-tips/03-data-tips.Rmd)) | [Read Code and Data for Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) | [Exercise: Write MRE](https://github.com/big-data-and-economics/exercises/tree/main/03-mre-opatlas.md) |
-| 2025-01-28 | T | R Basics ([.html][04-rlang.html], [.pdf][04-rlang.pdf], [.Rmd](lectures/04-rlang/04-rlang.Rmd)) | | [Exercise: Download and Read Data](https://github.com/big-data-and-economics/exercises/blob/main/04-download-read-data/04-download-read-data.md) |
-| 2025-01-30 | Th | Class visit from Jacqueline Crucet | | Introduction to R Swirl |
-| 2025-02-04 | T | Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse.pdf], [.Rmd](lectures/05-tidyverse/05-tidyverse.Rmd)) | [Ch 1 DS4E](https://grantmcdermott.com/ds4e/tidyverse.html) | [Comment on GitHub Discussions with hackathon idea](https://github.com/orgs/big-data-and-economics/discussions) |
-| 2025-02-06 | Th | Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd)), APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd)) | [JSONView](https://jsonview.com/), [Sign-up](https://research.stlouisfed.org/useraccount/apikey) and register for Personal API keys from [FRED](https://research.stlouisfed.org/useraccount/apikey) and the [Census](https://api.census.gov/data/key_signup.html) | [Problem Set 1 Due 10/3 at 11am](https://github.com/big-data-and-economics/ps1-nlsy-income-mob), [datacamp dplyr Ch. 4][datacamp] |
-| 2025-02-11 | T | CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd))  | [SelectorGadget](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb) (Chrome), [ScrapeMate](https://addons.mozilla.org/en-US/firefox/addon/scrapemate/) (Firefox), [Review Cheatsheet on scraping with R](https://github.com/yusuzech/r-web-scraping-cheat-sheet/blob/master/README.md)| [datacamp importing data ch 3 and 4][datacamp] |
-| 2025-02-13 | Th | Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd)) | [Read Geographic Data in R Ch. 2](https://r.geocompx.org/spatial-class) | [datacamp web scraping data ch 1][datacamp] |
-| 2025-02-18 | T |  Winter Break | | |
-| 2025-02-20 | Th | Winter Break | | [datacamp census data ch 3, 4][datacamp] | 
-| **Causal Inference** | | |
-| 2025-02-25 | T | Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf]) | [Watch Geography of Upward Mobility in America starting at 39min](https://www.youtube.com/watch?v=P0NvsWDKwvs&t=2340s) | [datacamp census data ch 1, 2][datacamp]  |
-| 2025-02-27 | Th | Causal Inference ([.html][10a-causal-inference.html], [.pdf][10a-causal-inference.pdf]) | Read [Effect Ch 13](https://theeffectbook.net/ch-StatisticalAdjustment.html) or [Mixtape Ch 2](https://mixtape.scunning.com/02-probability_and_regression), [Watch Causal Effects of Neighborhoods](https://youtu.be/_7epNon8wi8?si=VM_f24hrwhVzwE9K) | [Problem Set 2 due 10/22 at 11:00:00am](https://github.com/big-data-and-economics/ps2-opportunity-atlas)  |
-| 2025-02-29 | Th | Regression Review ([.html][10-regression.html], [.pdf][10-regression.pdf]), Control variables ([.html][10-control-variables.html], [.pdf][10-control-variables.pdf]) | Read [Effect Ch 13](https://theeffectbook.net/ch-StatisticalAdjustment.html) or [Mixtape Ch 2](https://mixtape.scunning.com/02-probability_and_regression), [Watch Causal Effects of Neighborhoods](https://youtu.be/_7epNon8wi8?si=VM_f24hrwhVzwE9K) | Swirl Ordinary Least Squares Part 1 |
-| 2025-03-04 | T | Fixed Effects ([.html][11-fixed-effects.html], [.pdf][11-fixed-effects.pdf]), Panel data and two-way fixed effects ([.html][11a-panel-twfe.html], [.pdf][11a-panel-twfe.pdf]) | [Watch first 40min of Teachers and Charter Schools](https://youtu.be/iIIlb1hTbTc?si=rGHD2LCckhG7Rdwn) | Swirl Multivariate Regression |
-| 2025-03-06 | Th | Difference-in-differences ([.html][11-diff-in-diff.html], [.pdf][11-diff-in-diff.pdf])| Read [Effect Ch 18](https://theeffectbook.net/ch-DifferenceinDifference.html) | Swirl Fixed Effects | 
-| 2025-03-11 | T | Regression Discontinuity Design ([.html][12-regression-discontinuity.html], [.pdf][12-regression-discontinuity.pdf]) | Read [Effect Ch 20](https://theeffectbook.net/ch-RegressionDiscontinuity.html) or [Mixtape Ch 6](https://mixtape.scunning.com/06-regression_discontinuity) | Swirl Difference-in-differences |
-| 2025-03-13 | Th | RDD activity ([.html][12a-rdd-class-sizes.html], [.pdf][12a-rdd-class-sizes.pdf]) | Read [Effect Ch 20](https://theeffectbook.net/ch-RegressionDiscontinuity.html) or [Mixtape Ch 6](https://mixtape.scunning.com/06-regression_discontinuity) | [Problem Set 3 due 10/31 at 11:00:00am](https://github.com/big-data-and-economics/ps2-opportunity-atlas), [Problem Set 3 solutions](https://github.com/big-data-and-economics/ps3-opportunity-atlas-solutions), Swirl Regression Discontinuity |
-| **Machine Learning** | | |
-| 2025-03-11 | T | Bootstrapping ([.html](13-bootstrapping.html), [.pdf](13-bootstrapping.pdf), [.Rmd](lectures/13-bootstrapping/13-bootstrapping.Rmd)), Functions & Parallel Programming ([.html](13b-functions-parallel-programming.html), [.pdf](13b-functions-parallel-programming.pdf), [.Rmd](lectures/13b-functions-parallel/13b-functions-parallel-programming.Rmd)), Bootstrapping activity ([.html](13a-bootstrapping-practice.html), [.pdf](13a-bootstrapping-practice.pdf), [.Rmd](lectures/13a-bootstrapping-practice/13a-bootstrapping-practice.Rmd)) | [Refer to Chapters 2-4 of DS4E](https://grantmcdermott.com/ds4e/funcs-intro.html), [Chapter 9 of R for Data Science](https://bookdown.org/jgscott/DSGI/the-bootstrap.html) | [Datacamp Intermediate R, Ch. 1-2][datacamp] |
-| 2025-03-13 | Th | Data Management SBE module day | [Create Accsount with CITI](https://www.citiprogram.org/index.cfm?pageID=154&icat=0&clear=1&_ga=2.20841456.952132495.1724804102-445032611.1724804102) | [Datacamp Intermediate R, Ch. 3-5][datacamp] |
-| 2025-03-18 | T | Bootstrapping activity ([.html](13a-bootstrapping-practice.html), [.pdf](13a-bootstrapping-practice.pdf), [.Rmd](lectures/13a-bootstrapping-practice/13a-bootstrapping-practice.Rmd)) | [Refer to Chapters 2-4 of DS4E](https://grantmcdermott.com/ds4e/funcs-intro.html), [Chapter 9 of R for Data Science](https://bookdown.org/jgscott/DSGI/the-bootstrap.html) | [Problem Set 4 due 11/19 at 9:30am](https://github.com/big-data-and-economics/ps4-class-sizes), [Datacamp Parallel Programming in R, Ch 3][datacamp] |
-| 2025-03-20 | Th | Intro to Machine Learning ([.html](14-intro-to-ml.html), [.pdf](14-intro-to-ml.pdf), [.Rmd](lectures/14-intro-to-ml/14-intro-to-ml.Rmd)), ISLR tidymodels lab ([.html](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html)) | [Read Athey & Imbens (2019)](https://www.annualreviews.org/doi/full/10.1146/annurev-economics-080217-053433), [Mullainathan and Spiess (2017)](https://www.aeaweb.org/articles?id=10.1257%2Fjep.31.2.87&ref=ds-econ), [Refer to ISLR 8.1](https://drive.google.com/file/d/106d-rN7cXpyAkgrUqjcPONNCyO-rX7MQ/view) | [Inference for Numerical Data in R Bootstrapping chapter][datacamp] |
-| 2025-03-25 | T | Thanksgiving | | [Datacamp Regression Trees and Cross-Validation][datacamp] |
-| 2025-03-27 | Th | Thanksgiving | | |
-| 2025-04-01 | T | Regular expressions, WordClouds ([.html](18-regex-wordclouds.html), [.pdf](18-regex-wordclouds.pdf), [.Rmd](lectures/17a-lasso-application/17a-lasso-application.Rmd)), Tidy text activities ([.html](18a-tidytext-activity.html), [.pdf](18a-tidytext-activity.pdf), [.Rmd](lectures/18a-tidytext-activity/18a-tidytext-activity.Rmd)) | [Read Gentzkow (2019): Text as Data](https://bates.primo.exlibrisgroup.com/discovery/openurl?institution=01CBB_BCOLL&vid=01CBB_BCOLL:BATES&volume=57&date=2019&aulast=Gentzkow&issue=3&issn=0022-0515&spage=535&id=doi:10.1257%2Fjel.20181020&auinit=M&title=Journal%20of%20Economic%20Literature&atitle=Text%20as%20data&sid=google) |  Hack-a-thon kickoff, [Problem Set 5 due 12/3 by 11am](https://github.com/big-data-and-economics/ps5-hackathon-followup) |
-| 2025-04-03 | Th | Hack-a-thon presentations | | |
-| 2025-04-08 | T | Regular expressions, WordClouds ([.html](18-regex-wordclouds.html), [.pdf](18-regex-wordclouds.pdf), [.Rmd](lectures/17a-lasso-application/17a-lasso-application.Rmd)), Tidy text activities ([.html](18a-tidytext-activity.html), [.pdf](18a-tidytext-activity.pdf), [.Rmd](lectures/18a-tidytext-activity/18a-tidytext-activity.Rmd)) | [Read Gentzkow (2019): Text as Data](https://bates.primo.exlibrisgroup.com/discovery/openurl?institution=01CBB_BCOLL&vid=01CBB_BCOLL:BATES&volume=57&date=2019&aulast=Gentzkow&issue=3&issn=0022-0515&spage=535&id=doi:10.1257%2Fjel.20181020&auinit=M&title=Journal%20of%20Economic%20Literature&atitle=Text%20as%20data&sid=google) |  Hack-a-thon kickoff, [Problem Set 5 due 12/3 by 11am](https://github.com/big-data-and-economics/ps5-hackathon-followup) |
-| 2025-04-10 | Th | Hack-a-thon presentations | | |
-| If time | | Regression regularization/penalization ([.html](17-lasso.html), [.pdf](17-lasso.pdf), [.Rmd](lectures/17a-lasso-application/17a-lasso-application.Rmd)), Application ([.html](17a-lasso-application.html), [.pdf](17a-lasso-application.pdf), [.Rmd](lectures/17a-lasso-application/17a-lasso-application.Rmd)) | [Refer to ISLR Ch 6.1, 6.2](https://drive.google.com/file/d/106d-rN7cXpyAkgrUqjcPONNCyO-rX7MQ/view) | |
-| If time |  Tree-based methods ([.html](15-regression-trees.html), [.pdf](15-regression-trees.pdf), [.Rmd](lectures/15-regression-trees/15-regression-trees.Rmd)) | [Watch Improving Judicial Decisions](https://youtu.be/AuNzoCk_uxM?si=dFpn0aQel4amdH-_)
-| If time | Causal Forests ([.html](16-causal-forests.html), [.pdf](16-causal-forests.pdf), [.Rmd](lectures/16-causal-forests/16-causal-forests.Rmd)),  [Application: Causal forests with **grf**](https://grf-labs.github.io/grf/articles/grf.html) or [Hack-a-thon](https://github.com/big-data-and-economics/lewiston-hack-a-thon) ([.Rmd](https://github.com/big-data-and-economics/lewiston-hack-a-thon/blob/main/lecture/streetlights-and-crime.Rmd)) |  [Read ISLR 8.2](https://drive.google.com/file/d/106d-rN7cXpyAkgrUqjcPONNCyO-rX7MQ/view) | |
-| If time | | Sentiment Analysis ([.html](19-analysis-of-language.html), [.pdf](19-analysis-of-language.pdf), [.Rmd](lectures/19-analysis-of-language/19-analysis-of-language.Rmd)) | [Read Stephens-Davidowitz (2014)](https://www.sciencedirect.com/science/article/pii/S0047272714000929) | |
-| If time | | Topics Modeling, LLMs | [Read Ash and Hansen (2023): Text Algorithms](https://www.annualreviews.org/doi/pdf/10.1146/annurev-economics-082222-074352) | |
-| If time | | AI and bias | Read [Rambachan et al (2020)](https://www.jstor.org/stable/pdf/27042527.pdf) and [Cowgill et al. (2019)](https://conference.nber.org/confer/2019/YSAIf19/SSRN-id3361280.pdf) | |
 
 # Goals for this course
 
@@ -276,6 +255,13 @@ Still, any programming language is tough to learn and R has a few quirks that ma
 
 With that in mind, I expect students in this course to make ample use of the countless free resources on the internet to learn R. Here are a few that I recommend:
 
+### Getting help with coding/programming
+
+- [How to Ask for Programming Help](http://codingkilledthecat.wordpress.com/2012/06/26/how-to-ask-for-programming-help/)
+- [Stack Exchange's](https://codereview.stackexchange.com/help/how-to-ask)
+- [Matt Gemmell's 'What have you tried?'](http://mattgemmell.com/what-have-you-tried/)
+- [How to Ask Question's the Smart Way](http://www.catb.org/~esr/faqs/smart-questions.html) by Eric Raymond and Rick Moen (you may need thick skin)
+
 ### On R
 
 #### Demos
@@ -291,6 +277,7 @@ With that in mind, I expect students in this course to make ample use of the cou
 - [Advanced _R_](https://adv-r.hadley.nz/) by Hadley Wickham
 - [Geocomputation with _R_ by Robin Lovelace](https://geocompr.robinlovelace.net/) by Jakub Nowosad, and Jannes Muenchow
 - [R Programming for Data Science](https://bookdown.org/rdpeng/rprogdatascience/) by Roger D. Peng
+- [The R Inferno](https://www.burns-stat.com/pages/Tutor/R_inferno.pdf)
 
 #### Cheatsheets
 - [_Posit_ Cheatsheets](https://rstudio.com/resources/cheatsheets/)
@@ -349,6 +336,27 @@ Jangmin Song is our Course-Attached tutor. He will host office hours in the SASC
 You can also schedule private office hours at the Calendar Link: https://calendar.app.google/2Abyp3LqY3NPeg4u8. 
 
 He can help you troubleshoot *R*. He does not have solutions to the problem sets, but he can help you figure them out. 
+
+### Tips for using generative AI
+
+- Think of it as a more interactive version of Googling for the solution to a bug
+  - It is not a replacement for you, the programmer
+  - Think through the basic coding tasks first, then ask AI to fill in the blanks
+
+- Be as specific as possible in your instructions
+  - If you know the name of the variables in your dataset, use them
+
+- Think of it as a more interactive version of Googling for the solution to a bug
+
+- Try things iteratively and in small steps
+  - If you're not sure how to do something, try to break it down into smaller steps
+  - This is a good tip for coding in general
+
+- Your brain is still the most powerful tool you have
+  - ChatGPT is a tool to help you, not replace you
+  - You will not get much mileage if you say, "Read in the gapminder dataset and do something interesting with it"
+
+- Often it only provides "skeleton code", so you'll need to fill in the blanks
 
 ## GitHub Codespaces
 
