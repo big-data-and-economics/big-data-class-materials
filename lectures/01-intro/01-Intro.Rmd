@@ -230,15 +230,25 @@ name: syllabus
 ---
 # Tips for success in this class
 
-- **Start early:** This is a fast-paced class, and you will need to start assignments early to get help when you need it
+- **Start early:** This is a fast-paced class; you will need to start early to get help when you need it
 
-- **Try to understand the task before you code:** This is not a class where you can just copy code from the internet and paste it in. You need to understand what you are doing
+- **Ask and answer questions (respectfully) on GitHub Discussions:** 
+  - I will direct all emails about non-personal matters to GitHub Discussions
+  - Perhaps a classmate can answer (ideal) OR I can answer once for everyone (also valuable)
 
-- **Comment your code**
+- **Try to understand the task before you code:** 
+  - This is not a class where you can just copy code from the internet and paste it in. 
+  - This is a class where you know if you have the right answer _if_ you understand the task
+
+- **Check if the code you wrote does what you want before you submit it** 
+
+- **Comment your code:**
   - Helps you remember what you were doing
   - Helps me understand what you were trying (like showing your work in a math class)
 
-- **Let me know if there are bugs/errors early**: I use a ton of out-of-class technical demos. They can break. I want to fix things to remove impediments to your learning.
+- **Let me know about bugs/errors early**: Technical demos break. Flagging them helps me, your peers, and future cohorts.
+
+- **Listen and try things as I demonstrate them**: If you need me to slow down, ask
 
 ---
 # Stuck while coding?
@@ -264,7 +274,7 @@ You're gonna write a lot of code for this class, which means you're gonna troubl
 .footnote[<sup>1</sup> Generative AI ([ChatGPT](https://chat.openai.com/) and [GitHub CoPilot](https://github.com/features/copilot)) is a bit of a frenemy.]
 
 ---
-# "Unhelpfully seeking help"
+# Avoid: "Unhelpfully seeking help"
 
 > "If someone has the wit and knowledge to answer your question, they probably have other things they would like to do. Making your message clear, concise and user-friendly gives you the best hope of at least one of those strangers diverting their attention away from their life towards your problem."
 
