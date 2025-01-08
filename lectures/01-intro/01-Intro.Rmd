@@ -224,6 +224,13 @@ name: syllabus
 | Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
 
 ---
+# Like any coding language, R is hard
+
+```{r r-challenges, echo=F,out.width="55%",fig.cap="Taken from Lawlor et al. (2022)"}
+knitr::include_graphics('pics/r-challenges-lawlor-et-al-2022.jpg')
+```
+
+---
 # Tips for success in this class
 
 - **Start early:** This is a fast-paced class; you will need to start early to get help when you need it
@@ -253,6 +260,8 @@ You're gonna write a lot of code for this class, which means you're gonna troubl
 
 - Some of these will be bugs of your own making, some will be bugs of open source tools
 
+- A major learning objective in this class is to learn when to ask for help and how to ask for help
+
 1. Try to describe in plain words/simple pictures what you want code to do before you write it
 
 2. Break this description into smaller steps (1: Read in data, 2: Drop rows with NA County, etc.)
@@ -263,9 +272,11 @@ You're gonna write a lot of code for this class, which means you're gonna troubl
 
 5. [Google is your friend.](http://xkcd.com/627/) Google is your friend. Google is your friend.<sup>1</sup>
 
-6. Ask for help from me, our CAT, SASC, and classmates on GitHub Discussions/Issues
+6. Search [stackoverflow](http://stackoverflow.com/) and include the `[r]` tag or your package, e.g. `[ggplot]`, `[data.table]`
 
-7. Search [stackoverflow](http://stackoverflow.com/) and include the `[r]` tag or your package, e.g. `[ggplot]`, `[data.table]`
+7. Ask for help from classmates, our CAT, and me on GitHub Discussions/Issues or OH
+
+- If you ask for help in OH, I will ask if you tried for the first six steps. If you haven't, I will ask you to try them first.
 
 .footnote[<sup>1</sup> Generative AI ([ChatGPT](https://chat.openai.com/) and [GitHub CoPilot](https://github.com/features/copilot)) is a bit of a frenemy.]
 
