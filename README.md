@@ -438,6 +438,7 @@ Economics is at the forefront of developing statistical methods for analyzing da
 | 1 × GitHub participation                  | 5%     | Overall   |
 | Classroom participation                   | Bonus up to 2.5%    | Discretion  |
 | Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
+| Research seminar bonuses                  | Problem set bonus | 2 points |
 
 Finalized grades on each component will be posted to Lyceum. Where possible to give feedback privately, it will be posted to GitHub. '
 
@@ -552,9 +553,9 @@ Within your own private problem set repository, you can create an `Issues` tab w
 
 ### Presentations
 
-Each of you will give a 5-minute presentation summarizing a key lecture reading, or an (approved) software package/platform.
+Each of you will give a 10-minute presentation of either an MRE of a coding struggle you are having or on a coding skill.
 
-Please sign up [here](https://github.com/big-data-and-economics/presentations-fall2024) at the start of the semester. 
+Please sign up [here](https://github.com/big-data-and-economics/presentations-winter2025) at the start of the semester. 
 
 ### Final Project
 
@@ -638,6 +639,7 @@ There are several opportunities for bonus points during the semester:
 1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material. This can be to fix a typo or to fix a bug in the code.
 2. A 2.5% participation bonus on your final grade that I will award at my discretion.
 3. I offer a problem set bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
+4. I offer 2 bonus points on a problem set for attending an economics research seminar and writing a short summary in the GitHub discussions page.
 
 I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
 
