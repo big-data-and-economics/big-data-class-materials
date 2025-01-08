@@ -78,7 +78,6 @@ Tuesday (2025-01-14): Empirical Organization [.html][02-empirical-workflow.html]
 
 Thursday (2025-01-16): Git and Github ([.html][02-Git.html], [.pdf][02-Git.pdf], [.Rmd](lectures/02-git/02-Git.Rmd))
 
-- Exercise due before class: TK
 - Exercise due before class: [Introduction to Git][datacamp] and [Introduction to Github Concepts][datacamp]
 - In-class activity: [Git Basics](https://github.com/big-data-and-economics/exercises/tree/main/02-git-basics)
 
