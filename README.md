@@ -281,7 +281,7 @@ Still, any programming language is tough to learn and R has a few quirks that ma
 
 ![Taken from Lawlor et al. (2022) NIH.](img/r-challenges-lawlor-et-al-2022.jpg)
 
-The important to remember is that the goal is not to get rid of errors! The goal is to get comfortable solving them and finding ways to avoid the same mistake in the future. As XCKD's Randall Munroe put it:
+The important to remember is that the goal is not to get rid of errors! The goal is to get comfortable solving them and finding ways to avoid the same mistake in the future. As [XCKD's Randall Munroe](https://xkcd.com/627/) put it:
 
 ![Taken from XCKD](img/tech_support_cheat_sheet.png "Hey Megan, it's your father. How do I print out a flowchart?")
 
