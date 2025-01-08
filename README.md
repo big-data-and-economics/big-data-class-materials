@@ -281,6 +281,10 @@ Still, any programming language is tough to learn and R has a few quirks that ma
 
 ![Taken from Lawlor et al. (2022) NIH.](img/r-challenges-lawlor-et-al-2022.jpg)
 
+The important to remember is that the goal is not to get rid of errors! The goal is to get comfortable solving them and finding ways to avoid the same mistake in the future. As XCKD's Randall Munroe put it:
+
+![Taken from XCKD](img/tech_support_cheat_sheet.png "Hey Megan, it's your father. How do I print out a flowchart?")
+
 With that in mind, I expect students in this course to make ample use of the countless free resources on the internet to learn R. Here are a few that I recommend:
 
 ### Getting help with coding/programming
@@ -356,12 +360,10 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 
 #### Course-Attached Tutor
 
-Jangmin Song is our Course-Attached tutor. He will host office hours in the SASC and will be available for individual appointments. His hours are:
+Ethan Wu is our Course-Attached tutor. He will host office hours in the SASC and will be available for individual appointments. His hours are:
 
-- **Evening Help Session:** Tuesday 8-9pm
-- **Regular Office Hours:** Sunday 7-9pm
-
-You can also schedule private office hours at the Calendar Link: https://calendar.app.google/2Abyp3LqY3NPeg4u8. 
+- **Evening Help Session:** TK
+- **Regular Office Hours:** TK
 
 He can help you troubleshoot *R*. He does not have solutions to the problem sets, but he can help you figure them out. 
 
