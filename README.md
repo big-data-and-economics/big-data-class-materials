@@ -69,16 +69,18 @@ Thursday (2025-01-09): Introduction ([.html][01-Intro.html], [.pdf][01-Intro.pdf
 
 ### Week 2: Git and Empirical Organization
 
-Tuesday (2025-01-14): Git and Github ([.html][02-Git.html], [.pdf][02-Git.pdf], [.Rmd](lectures/02-git/02-Git.Rmd))
+Tuesday (2025-01-14): Empirical Organization [.html][02-empirical-workflow.html], [.pdf][02-empirical-workflow.pdf], [.Rmd](lectures/02-empirical-workflow/02-empirical-workflow.Rmd)
 
-- Exercise due before class: [Introduction to Git][datacamp] and [Introduction to Github Concepts][datacamp]
-- In-class activity: [Git Basics](https://github.com/big-data-and-economics/exercises/tree/main/02-git-basics)
+- Due before class: [Read Code and Data for the Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) by Gentzkow and Shapiro and share a story of a non-reproducible workflow that caused you problems on the [Discussions forum](https://github.com/orgs/big-data-and-economics/discussions/4)
+- In-class activity: [MRE](https://github.com/big-data-and-economics/exercises/tree/main/03-mre-exercise)
 - [Problem Set 1 assigned](https://github.com/big-data-and-economics/ps1-nlsy-income-mob)
 
-Thursday (2025-01-16): Empirical Organization [.html][02-empirical-workflow.html], [.pdf][02-empirical-workflow.pdf], [.Rmd](lectures/02-empirical-workflow/02-empirical-workflow.Rmd)
+
+Thursday (2025-01-16): Git and Github ([.html][02-Git.html], [.pdf][02-Git.pdf], [.Rmd](lectures/02-git/02-Git.Rmd))
 
 - Exercise due before class: TK
-- In-class activity: [MRE](https://github.com/big-data-and-economics/exercises/tree/main/03-mre-exercise)
+- Exercise due before class: [Introduction to Git][datacamp] and [Introduction to Github Concepts][datacamp]
+- In-class activity: [Git Basics](https://github.com/big-data-and-economics/exercises/tree/main/02-git-basics)
 
 ### Week 3: R Basics
 
@@ -400,10 +402,10 @@ Economics is at the forefront of developing statistical methods for analyzing da
 
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
-| 5 × problem sets                          | 20%    | Top 4  |
+| 4-5 × problem sets                        | 30%    | Top 3-4 (drop one)  |
 | 1 × presentation                          | 15%     | Top 1   |
 | N x In-class exercises                    | 15%    | Completion, drop two lowest |
-| N x Datacamp tutorials                    | 15%    | Completion, two makeups |
+| N x Out-of-class exercises                | 15%    | Completion, two drops |
 | 1 × Final Project                         | 30%    | Hackathon participation |
 | 1 × GitHub participation                  | 5%     | Overall   |
 | Classroom participation                   | Bonus up to 2.5%    | Discretion  |
@@ -423,9 +425,9 @@ Exercises will be graded on a 0, 1, 2 scale. A 0 means you did not turn in the a
 
 I will drop the lowest two in-class exercise grades. 
 
-#### Datacamp tutorials
+#### Out-of-class exercises
 
-During the semester, I sometimes use datacamp to help you learn R or Git skills outside of class. These tutorials are due by the start of the class period listed on the syllabus and are graded on completion. You will receive full credit for completing the tutorial.
+During the semester, I will use a variety of tools to get you (1) practicing R and Git skills outside of class and (2) thinking about the value of different data science skills ahead of the relevant class period. These will include short readings, datacamp assignments, and 
 
 I will allow you to makeup two Datacamp tutorials if you do not complete them on time.
 
