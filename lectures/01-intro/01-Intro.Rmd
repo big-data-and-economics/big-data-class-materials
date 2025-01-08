@@ -212,20 +212,16 @@ name: syllabus
 ---
 # Assignments and grading
 
-1. In-class exercises: low-stakes completion exercises
-
-2. Datacamp exercises to really dig into the thornier parts of R/git
-
-3. 5 (usually group) problem sets, drop the lowest, grade improvement allowed
-
-4. Coding presentation
-  
-4. GitHub Participation
-
-5. Final Project/Lewiston Hack-a-thon: 2-day data science competition at end of semester
-  - Prizes for "best" in various categories
-  - Either week before Thanksgiving or last week of class -- come ready to vote next class
-  - If falls through for some reason, final project will be a replication project
+| Component                                 | Weight | Graded |
+|-------------------------------------------|--------|--------|
+| 4-5 × (often group) problem sets          | 30%    | Top 3-4  |
+| 1 × presentation                          | 15%    | Top 1  |
+| N x In-class exercises                    | 15%    | Completion, drop two lowest |
+| N x Out-of-class exercises                | 15%    | Completion, two drops |
+| 1 × Final Project                         | 30%    | Hackathon participation |
+| 1 × GitHub participation                  | 5%     | Overall   |
+| Classroom participation                   | Bonus up to 2.5%    | Discretion  |
+| Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
 
 ---
 # Tips for success in this class
