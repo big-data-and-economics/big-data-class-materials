@@ -192,7 +192,7 @@ Tuesday (2025-03-25): Intro to Machine Learning ([.html][14-intro-to-ml.html], [
 
 Thursday (2025-03-27): Bootstrapping ([.html][13-bootstrapping.html], [.pdf][13-bootstrapping.pdf], [.Rmd](lectures/13-bootstrapping/13-bootstrapping.Rmd))
 
-- Exercise due before class: TK
+- Exercise due before class: [Read Brownstone & Valletta (2001)](https://www.aeaweb.org/articles?id=10.1257/jep.15.4.129) and give an intuitive use case for bootstrapping and multiple imputation (not the ones in the paper)
 - Class activity: Bootstrapping practice ([.html][13a-bootstrapping-practice.html], [.pdf][13a-bootstrapping-practice.pdf], [.Rmd](lectures/13a-bootstrapping-practice/13a-bootstrapping-practice.Rmd))
 
 ### Week 13: Text Analysis
