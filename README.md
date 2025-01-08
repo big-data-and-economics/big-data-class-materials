@@ -83,43 +83,51 @@ Thursday (2025-01-16): Git and Github ([.html][02-Git.html], [.pdf][02-Git.pdf],
 
 ### Week 3: R Basics
 
-Tuesday (2025-01-21): R Basics ([.html][04-rlang.html], [.pdf][04-rlang.pdf], [.Rmd](lectures/04-rlang/04-rlang.Rmd))
+Tuesday (2025-01-21): R bootcamp ([.html][04-rlang.html], [.pdf][04-rlang.pdf], [.Rmd](lectures/04-rlang/04-rlang.Rmd)) and (Git spillover)
 
-- Exercise due before class: [Introduction to R TK][datacamp]
-- Problem Set 1 due before class
+- Exercise due before class: TK
+- In-class exercise: [Authoring and Reproducible Research TK](https://stat545.stat.ubc.ca/notes/notes-a03/)
 
-Thursday (2025-01-23): No class
+Thursday (2025-01-23): Professor away, CAT leads class
 
-- Exercise due by end of class: TK
+- Exercise due before class: [Datacamp: Introduction to R][datacamp]
+- In-class exercise: [R tutorial led by CAT] 
 
 ### Week 4: Tidyverse and Data Tips
 
 Tuesday (2025-01-28): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse.pdf], [.Rmd](lectures/05-tidyverse/05-tidyverse.Rmd))
 
 - Exercise due before class: [Introduction to tidyverse TK][datacamp]
+- Problem Set 1 due before class
+- [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
 
 Thursday (2025-01-30): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips.pdf], [.Rmd](lectures/03-data-tips/03-data-tips.Rmd))
+- Exercise due before class: [Datacamp: Data Manipulation with dplyr][datacamp]
+- In-class activity: TK
 
 ### Week 5: Acquiring Web Data
 
 Tuesday (2025-02-04): Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd)),
 
-- Class activity: APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd))
 - Exercise due before class: [Introduction to APIs TK][datacamp]
+- Class activity: APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd))
 
 Thursday (2025-02-06): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd)) 
 
 - Exercise due before class: [Introduction to Web Scraping TK][datacamp]
+- Class activity: Scrape websites
 
 ### Week 6: Spatial Analysis
 
 Tuesday (2025-02-11): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
 
 - Exercise due before class: [Introduction to tidycensus TK][datacamp]
+- Class activity: TK
 
 Thursday (2025-02-13): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
 
-- Exercise due before class: [Introduction to tidycensus TK][datacamp]
+- Exercise due before class: [Review Opportunity Atlas](https://opportunityinsights.org/wp-content/uploads/2018/10/atlas_paper.pdf) and discuss the relevant causal questions that come from the data
+- Class activity: TK
 
 ### Week 7: Winter Break
 
@@ -129,8 +137,10 @@ Thursday (2025-02-13): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-o
 
 Tuesday (2025-02-25): Causal Inference ([.html][10a-causal-inference.html], [.pdf][10a-causal-inference.pdf], [.Rmd](lectures/10a-causal-inference/10a-causal-inference.Rmd))
 
-- Class activity: 
 - Exercise due before class: TK
+- Class activity: TK
+- Problem Set 2 due before class
+- Problem Set 3 assigned
 
 Thursday (2025-02-27): Regression Review ([.html][10-regression.html], [.pdf][10-regression.pdf], [.Rmd](lectures/10-regression/10-regression.Rmd))
 
@@ -146,15 +156,17 @@ Tuesday (2025-03-04): Fixed Effects ([.html][11-fixed-effects.html], [.pdf][11-f
 
 Thursday (2025-03-06): Difference-in-differences ([.html][11-diff-in-diff.html], [.pdf][11-diff-in-diff.pdf], [.Rmd](lectures/11-diff-in-diff/11-diff-in-diff.Rmd))
 
-- Class activity: 
 - Exercise due before class: TK
+- Class activity: TK
 
 ### Week 10: Regression Discontinuity Design
 
 Tuesday (2025-03-11): Regression Discontinuity Design ([.html][12-regression-discontinuity.html], [.pdf][12-regression-discontinuity.pdf], [.Rmd](lectures/12-regression-discontinuity/12-regression-discontinuity.Rmd))
 
-- Class activity: 
 - Exercise due before class: TK
+- Class activity: TK
+- Problem Set 3 due before class
+- Problem Set 4 assigned
 
 Thursday (2025-03-13): Catch-up day
 
@@ -162,9 +174,10 @@ Thursday (2025-03-13): Catch-up day
 
 ### Week 11: Bootstrapping
 
-Tuesday (2025-03-18): Bootstrapping ([.html](13-bootstrapping.html), [.pdf](13-bootstrapping.pdf), [.Rmd](lectures/13-bootstrapping/13-bootstrapping.Rmd))
+Tuesday (2025-03-18): Functions & Parallel Programming ([.html][13b-functions-parallel-programming.html], [.pdf][13b-functions-parallel-programming.pdf], [.Rmd](lectures/13b-functions-parallel/13b-functions-parallel-programming.Rmd))
 
-- Class activity: Functions & Parallel Programming ([.html](13b-functions-parallel-programming.html), [.pdf](13b-functions-parallel-programming.pdf), [.Rmd](lectures/13b-functions-parallel/13b-functions-parallel-programming.Rmd))
+- Exercise due before class: [Datacamp: Intermediate R][datacamp]
+- Class activity: TK
 
 Thursday (2025-03-20): Break
 
@@ -172,19 +185,33 @@ Thursday (2025-03-20): Break
 
 Tuesday (2025-03-25): Intro to Machine Learning ([.html][14-intro-to-ml.html], [.pdf][14-intro-to-ml.pdf], [.Rmd](lectures/14-intro-to-ml/14-intro-to-ml.Rmd))
 
+- Exercise due before class: TK
 - Class activity: ISLR tidymodels lab ([.html](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html))
+- Problem Set 4 due before class
+- Problem Set 5 assigned
 
-Thursday (2025-03-27): Tree-based methods ([.html][15-regression-trees.html], [.pdf][15-regression-trees.pdf], [.Rmd](lectures/15-regression-trees/15-regression-trees.Rmd)) 
+Thursday (2025-03-27): Bootstrapping ([.html][13-bootstrapping.html], [.pdf][13-bootstrapping.pdf], [.Rmd](lectures/13-bootstrapping/13-bootstrapping.Rmd))
+
+- Exercise due before class: TK
+- Class activity: Bootstrapping practice ([.html][13a-bootstrapping-practice.html], [.pdf][13a-bootstrapping-practice.pdf], [.Rmd](lectures/13a-bootstrapping-practice/13a-bootstrapping-practice.Rmd))
 
 ### Week 13: Text Analysis
 
-Tuesday (2025-04-01): Sentiment Analysis ([.html][19-analysis-of-language.html], [.pdf][19-analysis-of-language.pdf], [.Rmd](lectures/19-analysis-of-language/19-analysis-of-language.Rmd))
+Tuesday (2025-04-01): Tree-based methods ([.html][15-regression-trees.html], [.pdf][15-regression-trees.pdf], [.Rmd](lectures/15-regression-trees/15-regression-trees.Rmd)) 
+
+- Exercise due before class: TK
+- Class activity: TK
+
 
 Thursday (2025-04-03): Lasso and Ridge Regression ([.html][17-lasso.html], [.pdf][17-lasso.pdf], [.Rmd](lectures/17-lasso/17-lasso.Rmd))
+
+- Exercise due before class: TK
+- Class activity: TK
 
 ### Week 14: Hackathon!
 
 Tuesday (2025-04-08): Hackathon Kickoff and Catchup day
+- Problem Set 5 due before class
 
 Thursday (2025-04-10): Hackathon presentations
 
