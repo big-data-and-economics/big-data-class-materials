@@ -89,30 +89,6 @@ Source: [xkcd](http://xkcd.com/1513/)
 Also a small contribution from [here](https://garywoodfine.com/what-is-clean-code/) and other sundry internet pages
 
 ---
-# Jargon
-
-- There is a jargon in this class that won't make sense at first, I'll try to flag it as it comes
-
-- Here's a few terms:
-
-.hi[Local machine:] Your personal (or any) computer that isn't a server accessed via the internet
-
-.hi[Version Control:] Keep track of different iterations of a project/code
-
-.hi[Repository:] The location on GitHub of all project files and (commented) file revision history
-
-.hi[GUI:] A Graphical User Interface -- what you're used to pointing and clicking to navigate a computer and execute programs
-
-.hi[Command line:] Removes the "graphical" from GUI, instead you type all commands to navigate a computer and execute programs
-
-  - R operates via the Command line, RStudio is a GUI
-  - On Mac, this is called Terminal which uses Bash (Linux) commands
-  - If you installed Git for Windows, you got *Git Bash*, which uses Bash (Linux) commands
-  - You can also install Windows Subsystem for Linux to run Linux on a Windows machine
-
-.hi[Script:] A file that contains code that can be executed by a computer, i.e. `.R`, `.Rmd`, `.do`, `.py`, etc.
-
----
 # Reducing empirical chaos
 
 ## Sad story
@@ -212,8 +188,7 @@ name: clean_code
 
 8. Pair programming
 
-.footnote[<sup>1</sup> Handle in Git lecture notes.]
-
+.footnote[<sup>1</sup> Handled in Git lecture notes.]
 
 ---
 name: organization
@@ -253,12 +228,14 @@ Source: [xkcd](http://xkcd.com/1459/)
   - If that file is not in that directory, you will get a `FileNotFound` error
   - In **R**, you can see what directory you are in using the `getwd()` function
     - It is also above the console in RStudio
-    - You can change your working directory using the `setwd()` function (avoid this within scripts)
-    - Alternatively, you can double click the `.Rproj` file to set the working directory to the root of the project
+    - You can double click the `.Rproj` file to set the working directory to the root of the project
+    - You can also change your working directory using the `setwd()` function (avoid this within scripts)
 
-```{r directories,collapse=TRUE}
+```{r directories}
 getwd()
-#setwd('lectures/02-empirical-workflow')
+```
+```{r set-directory,eval=FALSE}
+setwd('lectures/02-empirical-workflow')
 ```
 
 ---
@@ -278,9 +255,9 @@ This is called an .hi[absolute path]:
 .hi[Relative paths] solve a lot of this:
   - The path to a file or directory starting from the current working directory
   - If my working directory is `/big-data-class-materials`, then I can write `lectures/02-empirical-workflow/02-empirical-workflow.Rmd`
-  - **This is portable** -- if I send this script to you and you have a copy of the `big-data-class-materials` repository, this script will work
+  - **This is portable**: if you have a copy of the `big-data-class-materials` repository, this script will work
 
-.footnote[<sup>1</sup> This is a Windows path, Mac and Linux paths use `/` instead of `\`.]
+.footnote[<sup>1</sup> This is a Windows path, Mac and Linux paths use `/` instead of `\`. See appendix for slides on how to move between them using `..`]
 
 ---
 # How I organize research projects
@@ -307,16 +284,7 @@ This is called an .hi[absolute path]:
           a. `presentations/slides` for slides
           b. `presentations/notes` for notes
 - I'll further more or less as needed
-- See GitHub folder for this lecture as an example
-
----
-# How I organize research projects
-
-<div align="center">
-<img src="pics/directory_structure.jpg">
-</div>
-
-Source: My computer
+- See [the `my_project` folder](https://github.com/big-data-and-economics/big-data-class-materials/tree/main/lectures/02-empirical-workflow/my_project) on GitHub (in the same folder as this lecture) as an example
 
 ---
 # What is the value of directories?
@@ -324,17 +292,11 @@ Source: My computer
 - All of the files in a directory are related to each other
 - Can reference a file within the `data/raw` folder, from the `code/build` folder without writing out the full path
 
-### Help! I am in code/, but I need data/raw/file.csv!
+- If you use `file.path()` or the **here** package, you can automate the slashes in your file paths
+  - `file.path('data', 'raw', 'file.csv')` will work on Windows, Mac, and Linux
+  - `here::here('data', 'raw', 'file.csv')` will do the same thing (see appendix for more on it)
 
-- You can use relative paths to navigate between directories
-- `..` means "go up one directory"
-  - `../data/raw` means "go up one directory, then down into `data/raw`"
-- `.` means "stay in the current directory"
-  - `./code/build` means "stay in the current directory, then down into `code/build`"
-- `../..` means "go up two directories"
-  - `../../data/raw` means "go up two directories, then down into `data/raw`
-
-Play around with them yourself!
+- Then you do not need to worry about shifting around directories 
 
 ---
 
@@ -355,22 +317,41 @@ Play around with them yourself!
 ---
 # What problems would this create?
 
+```{r not-rdbms,echo=FALSE}
+data.frame(
+  county = c(36037, 36038, 36039, 36040, NA, 37001, 37002, 37003, 37004,NA),
+  state = c("NY", "NY", "NY", NA, "NY", "VA", "VA", "VA", "VA","VA"),
+  cnty_pop = c(3817735, 422999, 324920, 143432, NA, 3228290, 449499, 383888, 483829,NA),
+  state_pop = c(43320903, 43320903, NA, 43320903, 43320903, 7173000, 7173000, 7173000, 7173000,7173000),
+  region_state = c(1, 1, 1, 1, 1, 3, 3, 3, 3,3),
+  region_county= c(1, 1, 1, 1, 1, 3, 3, 4, 3,3)
+)
+```
 
-<div align="center">
-<img src="pics/not_rdbms.jpg">
-</div>
+--
 
-Source: [Code and Data for the Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) (p. 19)
+### Why is RDBM better?
 
+.pull-left[
+```{r rdbms-county,echo=FALSE}
+data.frame(
+  county = c(36037, 36038, 36039, 36040, 37001, 37002, 37003, 37004),
+  state = c("NY", "NY", "NY", "NY", "VA", "VA", "VA", "VA"),
+  cnty_pop = c(3817735, 422999, 324920, 143432, 3228290, 449499, 383888, 483829)
+)
+```
+]
+.pull-right[
+```{r rdbms-state,echo=FALSE}
+data.frame(
+  state = c("NY", "VA"),
+  state_pop = c(43320903, 7173000),
+  region=c(1,3)
+)
+```
+]
 
----
-# What's RDBM look like?
-
-<div align="center">
-<img src="pics/rdbms.jpg">
-</div>
-
-Source: [Code and Data for the Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) (p. 19)
+Source: [Example from Code and Data for the Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) (p. 19)
 
 ---
 name: automation
@@ -391,7 +372,7 @@ name: automation
 ---
 # How to write scripts
 
-### Keep them modular
+#### Keep them modular
 - Each script should do one thing and one thing only
 - e.g. It takes an input in, it returns an output
 
@@ -399,7 +380,7 @@ name: automation
     - Taking in two files and merging them
     - Taking in a cleaned file and returning a figure
 
-### Have a main script that runs all scripts in order
+#### Have a main script that runs all scripts in order
 
 - A single script that shows the sequence of steps, i.e. "shows your work"
   - This script will run modular scripts in sequence to exactly reproduce your analysis
@@ -414,16 +395,17 @@ name: automation
 
 ---
 name: main-script
+class: white-slide
 # Main script 
 
+.scroll-output[
 ```{r main_script2, eval=FALSE}
-#File: main.Rmd or main.R
+#File: main.R.R
 #By: Kyle Coombs
 #What: Runs the project from start to finish in Python
-#Date: 2024-09-09
-
+#Date: 2024-09-0
 # Instructions:
-# Run this code from the root directory of your project where the housekeeping file, build, and analysis files are located
+# Run this code from the root directory of your project
 
 #Install packages with housekeeping. Also put together paths.
 source('housekeeping.R')
@@ -452,20 +434,21 @@ source(paste0(analysis,'/make_reg_figures.R'))
 source(paste0(analysis,'/make_sum_tables.R'))
 source(paste0(analysis,'/make_reg_tables.R'))
 ```
+]
 
 [Main script with functions](main-with-functions)
 
 ---
 # Main script as .Rmd
 
-- In this class, your problem sets will be .Rmd files that you knit
+- In this class, your problem sets will be `.Rmd` files that you knit
 
 - The `.Rmd` file will serve as your main script
 
 - You can `source()` modular code files in code chunks
 
-- It improves chances your code runs from start to finish instead of only when you are working interactively
-  - Means I can run your code more easily! 
+- It improves chances your code runs from start to finish instead of only when working interactively
+  - Means I can run (and grade) your code more easily! 
 
 ---
 # What's a housekeeping file?
@@ -521,21 +504,17 @@ suppressWarnings({
 name: abstraction
 # 4. Abstraction
 
-- What is abstraction? "reducing the complexity of something by hiding unnecessary details from the user"
+- .hi[Abstraction:] "reducing the complexity of something by hiding unnecessary details from the user" 
 
-- e.g. A dishwasher. All I need to know is how to put dirty dishes into the machine, and which button to press. I don't need to understand how the electrical wiring or plumbing work.
+- e.g. A dishwasher. I mainly need to know how to load it, put in soap, and press start. I don't need to understand the electrical wiring or plumbing.
 
 - In programming, abstraction is usually handled with functions
 
 - Abstraction is usually a good thing
 
-- But it can be taken to a harmful extreme: overly abstract code can be "impenetrable" which makes it difficult to modify or debug
+- But it you can go too far: overly abstract code can be "impenetrable" and difficult to modify or debug
 
----
-
-# Rules for Abstraction
-
-- Gentzkow & Shapiro give three rules for abstraction:
+#### Gentzkow & Shapiro give three rules for abstraction:
 
 1. Abstract to eliminate redundancy
 
@@ -611,7 +590,6 @@ rounded_157_nearest_7 <- round_to_nearest(157,base=7)
 The second approach is easier to read and understand what the code is doing!
 
 ---
-
 # Otherwise, don't abstract
 
 1. Write/use functions for tasks that are repeated
@@ -628,6 +606,10 @@ The second approach is easier to read and understand what the code is doing!
 name: documentation
 # 5. Documentation
 
+Documentation gives sufficient information to replicate work, but not so much that it is overwhelming<sup>1</sup>
+
+### Rules for documentation
+
 1. Don't write documentation you will not maintain
 
 2. Code should be self-documenting
@@ -638,7 +620,17 @@ name: documentation
 
 - It may not be helpful to have to rewrite comments every time you change the code
 
-- Code can be "self-documenting" by leveraging abstraction: name your functions and variables thoughtfully
+- Code can be "self-documenting" by naming functions and variables thoughtfully
+
+.footnote[<sup>1</sup> Anyone who has ever built IKEA furniture knows this all too well]
+
+#### Documentation in R
+
+- .hi[R Help System:] access using `?function_name`
+
+- .hi[Package vignettes:] access using `vignette("vignette_name")`
+
+- .hi[Cheatsheets:] access at [Posit Cheatsheets](https://posit.co/resources/cheatsheets/)
 
 ---
 # A README is documentation 
@@ -664,20 +656,41 @@ name: documentation
   - 9/23/2023 - KGC - added function `X` to do `Y`
 
 ---
+# Documentation and problem sets
 
-# Documentation in R
+Documentation inevitably creates a host of issues on assignments.
 
-- .hi[R Help System:] access using `?function_name`
+It is challenging to give narrative technical instructions: 
 
-- .hi[Package vignettes:] access using `vignette("vignette_name")`
+- The reader (you) still needs to engage thoughtfully with the task
+- The writer (me) needs to account for many misinterpretations!
 
-- .hi[Cheatsheets:] access at [Posit Cheatsheets](https://posit.co/resources/cheatsheets/)
+#### This is a feature, not a bug. 
+
+My assignments are a learning experience of the [robustness principle/Postel's law](https://en.wikipedia.org/wiki/Robustness_principle)<sup>1</sup> (for people): 
+
+> "Be conservative in what you send, be liberal in what you accept." - Jon Postel
+
+He was talking about internet protocols, but I see it as a general principle for communication:
+
+- Conservative: Make instructions instructions as clear s
+- Liberal: Give the benefit of the doubt and try to engage thoughtfully with documentation
+
+Basically, be empathetic and hold your own work to a higher standard. 
+
+I maintain this attitude when writing and grading. I ask you do the same when writing code. 
+
+P.S. I also give out bonus points for fixing typos on my assignments because it is so important!
+
+.footnote[<sup>1</sup> This quote was originally in reference to how to design programs that send and receive data.]
 
 ---
 name: time-task
-# 6a. Time management
+# 6. Time and task management
 
-- Time management is key to writing clean code<sup>2</sup>
+### Time management
+
+- Time management is key to writing clean code<sup>1</sup>
 
 - It is foolish to think that one can write clean code in a strained mental state
 
@@ -689,17 +702,13 @@ name: time-task
 
 .footnote[<sup>1</sup> Your professor needs this lecture too]
 
----
+### Task management
 
-# 6b. Task management
-
-- When collaborating on code, it is essential to not use email or Slack threads to discuss coding tasks
+- When collaborating on code, avoid email or Slack threads to discuss coding tasks
 
 - Rather, use a task management system that has dedicated messages for a particular point of discussion (bug in the code, feature to develop, etc.)
 
 - I use GitHub issues and milestones for all of my coding projects including [developing this class](https://github.com/orgs/big-data-and-economics/projects/2)
-
-- For my personal task management, I use GitHub Projects
 
 ---
 name: test-driven
@@ -743,28 +752,49 @@ stopifnot(x)
 y <- FALSE
 stopifnot(y)
 ```
+---
+
+# 8. Pair programming - work with a buddy
+
+- An essential part of clean code is reviewing code
+
+- An excellent way to review code is to do so at the time of writing
+
+- .hi[Pair programming] involves sitting two programmers at one computer
+
+- One programmer does the writing while the other reviews
+
+- This is a great way to spot silly typos and other issues that would extend development time
+
+- It's also a great way to quickly refactor code at the start
+
+- .hi[I strongly encourage you to do pair programming on problem sets in this course!]
+    - (Sometimes I will require it)
+
 
 ---
 name: mre
-# Minimal reproducible example
+# Minimal reproducible example<sup>1</sup>
 
 - Related to unit testing are minimal reproducible examples (aka MRE, reprex, minreps,...)
 
 - The best way to isolate bugs is a minimal reproducible example
 
-- If your code throws an error message, there's likely a ton of superfluous stuff in your code that is not causing the error
-  - But the superfluous stuff makes it harder to read!
+- If code throws an error, there's likely superfluous lines of code that are irrelevant to the error
+  - The superfluous stuff makes it harder to read and replicate the error
 
 - [Minimal reproducible examples](https://stackoverflow.com/help/minimal-reproducible-example) (reprex) are a great way to isolate the error
-    - .hi[Minimal]:: Use as little code as possible that still produces the same problem
-    - .hi[Complete]:: Provide all parts needed to reproduce your problem in the question itself
-    - .hi[Reproducible]:: Test the code you'll provide to make sure it reproduces the problem
+    - **Minimal** Use as little code as possible that still produces the same problem
+    - **Complete** Provide all parts needed to reproduce your problem in the question itself
+    - **Reproducible** Test the code you'll provide to make sure it reproduces the problem
 
 - That means you should be able to copy and paste the code and run it yourself
     - Name all packages and data needed to reproduce error
     - Cut out irrelevant packages, steps, and data that are not relevant to the error
 
 - Sometimes writing one will help you find the bug, sometimes it'll help a stranger find the bug in your code faster, and sometimes it'll identify a very real bug in the package itself
+
+.footnote[<sup>1</sup> Postel's Law in action.]
 
 ---
 
@@ -810,7 +840,7 @@ dput(iris[1:4,]) # copy/paste output of dput into your MRE
 ```
 
 ---
-# A great MRE
+# A complete MRE<sup>1</sup>
 .scroll-output[
 #### Summary 
 When I try to make a scatterplot with ggplot, I am told that `geom_point()` requires missing aesthetics `x` and `y`. But I specified `x` and `y` in the `ggplot()` function. Can you help resolve?
@@ -835,125 +865,43 @@ ggplot(data = dat, x = Sepal.Length, y = Sepal.Width) +
 
 ```
 
-#### Session Info
+#### Session Info (use `sessionInfo()` to generate this)
 
 ```{r session_info, echo=FALSE}
 sessionInfo()
 ```
 ]
 
----
-# Troubleshooting tips
-
-- Sometimes you've made several changes to your code and suddenly it stops running
-    - Was it the new `if` statement?
-    - That sick new vectorized function to replace the `for` loop?
-    - A stray typo?
-
-- How do you find the bug in hundreds of lines of code? 
-
-- Read your code to see if there is an obvious mistake
-
-- .hi[Binary search]: Comment<sup>1</sup> half your code, run the script, and see if the bug persists
-  - If it does, the bug is in the other half
-  - If it doesn't, the bug is in the commented half
-  - Repeat on each half until you narrow to set of lines
-  - If you can solve the bug from that line, great! 
-
-- If all else fails, make a .hi[Minimal reproducible example]!
-
-.footnote[<sup>1</sup> Comment in R with `#`. Comment in RMarkdown with `<!-- code -->`. Or highlight and press `Ctrl+Shift+C` in RStudio.]
-
----
-# Troubleshooting tips (cont.)
-
-- Step back and ask if you're solving the right problem
-  - e.g. I'm trying to make a plot, but I'm getting an error about a missing variable. Maybe I should check if I'm loading the right data
-  - e.g. I have to create a long data set and I have annual files, but my code is merging instead of appending...
-
-- Check for superfluous things you can remove
-  - e.g. Wait, I don't need to include absolute file paths, I can use relative paths
-
-- Try small fixes, then apply broadly
-  - e.g. I think the problem is with how I wrote my file paths, let me try to get just one file path to work
-
-- Change one thing at a time
-  - e.g. The problem is either with my `paste0()` statement or the `ggsave` function, let me try to get the `paste0()` statement to work first
-
----
-# Troubleshooting tips (cont.)
-
-- Embrace GitHub committing
-  - When you have code that works, stage, commit and push it -- even if it is only a small piece of the puzzle
-  - If it breaks, [revert](https://docs.github.com/en/desktop/managing-commits/reverting-a-commit-in-github-desktop)
-  - This minimizes how much you need to re-do/keep track of
-
-- Sometimes it is easier to change how you write something
-  - e.g. Rmarkdown doesn't like the character `#` in filepaths, but I can change the filepaths rather than trying to force Rmarkdown to accept it
-
-- There's more than one way to skin a cat
-  - e.g. If I can't get `read.csv()` to work, I'll try `read.table()`
-  - e.g. This `googlesheets4` package doesn't seem to work -- what about `gsheet` or `googledrive`?
-
-- With ChatGPT or Google, make very specific asks
-  - e.g. "How do I get a file named `/my/path/name/my_file.pdf` to appear when I knit `other/folder/name/file.Rmd`?"
-
----
-
-# 8. Pair programming - work with a buddy
-
-- An essential part of clean code is reviewing code
-
-- An excellent way to review code is to do so at the time of writing
-
-- .hi[Pair programming] involves sitting two programmers at one computer
-
-- One programmer does the writing while the other reviews
-
-- This is a great way to spot silly typos and other issues that would extend development time
-
-- It's also a great way to quickly refactor code at the start
-
-- .hi[I strongly encourage you to do pair programming on problem sets in this course!]
-    - (Sometimes I will require it)
+.footnote[<sup>1</sup> Every forum has its own approach to MREs. Sometimes session info is not initially needed!]
 
 ---
 # Try to write an MRE!
 
-- Sync your fork of the exercise repository and open the folder for [mre-exercise](https://github.com/big-data-and-economics/exercises/blob/main/mre-exercise)
+- Sync your fork of the exercise repository and open the folder for [mre-exercise](https://github.com/big-data-and-economics/exercises/tree/main/02-mre-exercise)
 - The file `mre-opatlas.Rmd` has a bug in it that has led to a host of problems when you look at the knit output, `mre-opatlas.md`
 - Try to write an MRE
-- I have already raised this as a poorly-written issue on GitHub. You can see the issue [here](https://github.com/big-data-and-economics/exercises/issues/6)
+- I have already raised this as a poorly-written issue on GitHub. You can see the issue [here](https://github.com/big-data-and-economics/exercises/issues/69)
 - Tips: https://aosmith16.github.io/spring-r-topics/slides/week09_reprex.html#1
-
-```{r mre, error=TRUE}
-# install.packages('ggplot2')
-library(ggplot2)
-opp_atlas <- read.csv('https://raw.githubusercontent.com/big-data-and-economics/exercises/main/mre-exercise/data/county_opatlas.csv?token=GHSAT0AAAAAACVGS6MILY55LOABVIMH4OX6ZXDI4DQ')
-opp_atlas_me = opp_atlas[opp_atlas$state_name=='Maine'] 
-
-opp_atlas_andro_mean = mean(opp_atlas_me[opp_atlas_me$county_name=='Androscoggin','kfr_p25'],na.rm=TRUE)
-
-ggplot(data=opp_atlas_me, aes(x=cohort, y=kfr_p25)) +
-    geom_point(aes(col=county_name)) +
-    geom_smooth(method='lm',se=FALSE) +
-    geom_hline(yintercept=opp_atlas_andro_mean, color='red') +
-    annotate('text', x=1985,y=opp_atlas_andro_mean-.005, label='Androscoggin', color='red') +
-    labs(title='Average income percentile of children born in 25th income percentile by cohort', x='Cohort', y='Income percentile',col='County')
-
-```
-
----
-class: inverse, center, middle
-
-# Next lecture: R basics, data wrangling, tidyverse and data.table
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
 class: inverse, center, middle
 name: appendix
 # Appendix
 
+---
+# Shifting directories
+
+### Help! I need to run code from `code`, but need a file in `data/raw/file.csv`!
+
+- You can use relative paths to navigate between directories
+- `..` means "go up one directory"
+  - `../data/raw` means "go up one directory, then down into `data/raw`"
+- `.` means "stay in the current directory"
+  - `./code/build` means "stay in the current directory, then down into `code/build`"
+- `../..` means "go up two directories"
+  - `../../data/raw` means "go up two directories, then down into `data/raw`
+
+Play around with them yourself!
 
 ---
 # Main script with functions
