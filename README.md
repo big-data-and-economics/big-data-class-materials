@@ -13,7 +13,7 @@ I am constantly trying to improve this course. Provide [feedback](https://docs.g
 
 # Office hours:
 My office hours are: 
-- Tuesdays 4:30pm-5:30pm
+- Tuesdays 3-4pm
 - Wednesdays 10:30am-11:30am
 
 My office is in Pettengill 161.
@@ -75,7 +75,6 @@ Tuesday (2025-01-14): Empirical Organization [.html][02-empirical-workflow.html]
 - In-class activity: [MRE](https://github.com/big-data-and-economics/exercises/tree/main/03-mre-exercise)
 - [Problem Set 1 assigned](https://github.com/big-data-and-economics/ps1-nlsy-income-mob)
 
-
 Thursday (2025-01-16): Git and Github ([.html][02-Git.html], [.pdf][02-Git.pdf], [.Rmd](lectures/02-git/02-Git.Rmd))
 
 - Exercise due before class: [Introduction to Git][datacamp] and [Introduction to Github Concepts][datacamp]
@@ -98,12 +97,13 @@ Thursday (2025-01-23): Professor away, CAT leads class
 Tuesday (2025-01-28): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse.pdf], [.Rmd](lectures/05-tidyverse/05-tidyverse.Rmd))
 
 - Exercise due before class: [Introduction to tidyverse TK][datacamp]
-- Problem Set 1 due before class
-- [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
+- In-class activity: TK 
 
 Thursday (2025-01-30): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips.pdf], [.Rmd](lectures/03-data-tips/03-data-tips.Rmd))
 - Exercise due before class: [Datacamp: Data Manipulation with dplyr][datacamp]
 - In-class activity: TK
+- Problem Set 1 due before class
+- [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
 
 ### Week 5: Acquiring Web Data
 
