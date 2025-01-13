@@ -224,6 +224,29 @@ Relevant repositories:
  questions
 
 
+---
+# Jargon
+
+- There is a jargon in this class that won't make sense at first, I'll try to flag it as it comes
+
+- Here's a few terms:
+
+.hi[Local machine:] Your personal (or any) computer that isn't a server accessed via the internet
+
+.hi[Version Control:] Keep track of different iterations of a project/code
+
+.hi[Repository:] The location on GitHub of all project files and (commented) file revision history
+
+.hi[GUI:] A Graphical User Interface -- where you point-and-click to do things, like RStudio
+
+.hi[Command line:] Removes the "graphical" from GUI, instead you type all commands to navigate a computer and execute programs
+
+  - R operates via the Command line, RStudio is a GUI
+  - On Mac, this is called Terminal which uses Bash (Linux) commands
+  - If you installed Git for Windows, you got *Git Bash*, which uses Bash (Linux) commands
+  - You can also install Windows Subsystem for Linux to run Linux on a Windows machine
+
+.hi[Script:] A file that contains code that can be executed by a computer, i.e. `.R`, `.Rmd`, `.do`, `.py`, etc.
 
 ---
 # Like any coding language, R is hard
