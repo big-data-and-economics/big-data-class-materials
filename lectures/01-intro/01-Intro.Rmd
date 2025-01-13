@@ -256,7 +256,7 @@ knitr::include_graphics('pics/r-challenges-lawlor-et-al-2022.jpg')
 ```
 
 ---
-# Tips for success in this class
+# Tips for success in this class<sup>1</sup>
 
 - **Start early:** This is a fast-paced class; you will need to start early to get help when you need it
 
@@ -301,9 +301,11 @@ You're gonna write a lot of code for this class, which means you're gonna troubl
 
 7. Ask for help from classmates, our CAT, and me on GitHub Discussions/Issues or OH
 
-- If you ask for help in OH, I will ask if you tried for the first six steps. If you haven't, I will ask you to try them first.
+- If you ask for help, I will ask if you tried the first six steps. If not, I will ask you to try them first.
 
-.footnote[<sup>1</sup> Generative AI ([ChatGPT](https://chat.openai.com/) and [GitHub CoPilot](https://github.com/features/copilot)) is a bit of a frenemy.]
+.footnote[<sup>1</sup> More in the appendix!
+
+  <sup>2</sup>Generative AI ([ChatGPT](https://chat.openai.com/) and [GitHub CoPilot](https://github.com/features/copilot)) is a bit of a frenemy.]
 
 ---
 # Avoid: "Unhelpfully seeking help"
@@ -894,22 +896,67 @@ Note that this animated plot provides a much more intuitive understanding of the
   > - More granular (bigger) data
 
 ---
-class: inverse, center, middle
-
-# Next lecture: Deep dive into Git(Hub).
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
-
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
-# If broken in the future, check the fix here: https://stackoverflow.com/questions/78928374/how-to-solve-pagedown-chrome-print-failed-to-generate-output-due-to-fail-to-open
-infile = list.files(pattern = '.html')
-pagedown::chrome_print(input = infile, timeout = 100)
-```
-
----
 name: appendix
 class: inverse, center, middle
 
 # Appendix 
+
+
+---
+# Troubleshooting tips
+
+- Sometimes you've made several changes to your code and suddenly it stops running
+    - Was it the new `if` statement?
+    - That sick new vectorized function to replace the `for` loop?
+    - A stray typo?
+
+- How do you find the bug in hundreds of lines of code? 
+
+- Read your code to see if there is an obvious mistake
+
+- .hi[Binary search]: Comment<sup>1</sup> half your code, run the script, and see if the bug persists
+  - If it does, the bug is in the other half
+  - If it doesn't, the bug is in the commented half
+  - Repeat on each half until you narrow to set of lines
+  - If you can solve the bug from that line, great! 
+
+- If all else fails, make a .hi[Minimal reproducible example]!
+
+.footnote[<sup>1</sup> Comment in R with `#`. Comment in RMarkdown with `<!-- code -->`. Or highlight and press `Ctrl+Shift+C` in RStudio.]
+
+---
+# Troubleshooting tips (cont.)
+
+- Step back and ask if you're solving the right problem
+  - e.g. I'm trying to make a plot, but I'm getting an error about a missing variable. Maybe I should check if I'm loading the right data
+  - e.g. I have to create a long data set and I have annual files, but my code is merging instead of appending...
+
+- Check for superfluous things you can remove
+  - e.g. Wait, I don't need to include absolute file paths, I can use relative paths
+
+- Try small fixes, then apply broadly
+  - e.g. I think the problem is with how I wrote my file paths, let me try to get just one file path to work
+
+- Change one thing at a time
+  - e.g. The problem is either with my `paste0()` statement or the `ggsave` function, let me try to get the `paste0()` statement to work first
+
+---
+# Troubleshooting tips (cont.)
+
+- Embrace GitHub committing
+  - When you have code that works, stage, commit and push it -- even if it is only a small piece of the puzzle
+  - If it breaks, [revert](https://intro2r.com/use_git.html#undo)
+  - This minimizes how much you need to re-do/keep track of
+
+- Sometimes it is easier to change how you write something
+  - e.g. Rmarkdown doesn't like the character `#` in filepaths, but I can change the filepaths rather than trying to force Rmarkdown to accept it
+
+- There's more than one way to skin a cat
+  - e.g. If I can't get `read.csv()` to work, I'll try `read.table()`
+  - e.g. This `googlesheets4` package doesn't seem to work -- what about `gsheet` or `googledrive`?
+
+- With ChatGPT or Google, make very specific asks
+  - e.g. "How do I get a file named `/my/path/name/my_file.pdf` to appear when I knit `other/folder/name/file.Rmd`?"
 
 ---
 # Some R basics
@@ -946,3 +993,9 @@ If you're coming from Stata, some additional things worth emphasizing:
   - Compare the cost of a [Stata/MP](https://www.stata.com/statamp/) license, nevermind the fact that you effectively pay per core...
 
 - You don't need to `tsset or xtset` your data. (Although you can too.)
+
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+infile = list.files(pattern = '.html')
+pagedown::chrome_print(input = infile, timeout = 100)
+```
