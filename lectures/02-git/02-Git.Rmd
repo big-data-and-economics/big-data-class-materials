@@ -69,7 +69,7 @@ name: prologue
 1. Introduce version control
 
 2. Learn the steps of a basic Git/GitHub workflow with Rstudio
-  - Create an SSH Key in RStudio if you did not complete the first exercise.
+  - Create a PAT in RStudio if you did not complete the first exercise.
   - Create a GitHub repository as a project in RStudio.
   - Implement a commit, push, and pull using GitHub.
   - Create a new branch in your repository.
@@ -93,7 +93,7 @@ We went through a software installation check during the previous lecture. By no
 
 ☑ Accepted an invitation to ECON 368 course repo.
 
-☑ Created an SSH key in RStudio and added it to your GitHub account.
+☑ Created a PAT in RStudio and added it to your GitHub account.
 
 
 </br>
@@ -181,91 +181,57 @@ I also want to bookmark a general point that we'll revisit many times during thi
 - Greatly reduces the cognitive overhead ("aggregation") associated with traditional workflows, where you have to juggle multiple programs and languages at the same time.
 
 ---
+# Two ways: PATs and SSH keys
 
-# First create an SSH-key
+- There are two ways to interact with GitHub from RStudio: Personal Access Tokens (PATs) and SSH-keys.
 
-Before we get started, raise your hand if you did not successfully create an SSH key on your local machine. You will need one today.
-
+- PATs are a way to authenticate yourself with GitHub. They are a bit easier to set up, but are less secure than SSH-keys.
+  - They rely on https authentication, roughly like adding username/password
+  - Two types of PATS: [fine-grained and classic](https://github.blog/security/application-security/introducing-fine-grained-personal-access-tokens-for-github/)
+  - We'll use the classic PATs today, fine-grained are more secure but require more setup
+  
 - SSH keys are a way to identify trusted computers, without involving passwords.
-- A private key on your computer that matches a public key to put on servers, GitHub, etc. 
+  - A private key on your computer that matches a public key to put on servers, GitHub, etc. 
   - Never reveal the private key, only the public
 
-#### SSH-Keys
-  - A key has a type of encryption, two examples:
-    - RSA (Rivest-Shamir-Adleman)
-    - ED25519 (Edwards-curve Digital Signature Algorithm)
+- Today I'm prioritizing a PAT approach as that is Git's latest recommendation. 
+  - They go back and forth on this often!
 
-- We will use ED25519, which is smaller, more secure and faster than RSA
-  - GitHub also recommends it
-
-- We will generate a key, then add the public key to GitHub SSH keys.
-  - I will show you the "hard" way first, then an "easier" way second (guess which we'll do?)
-
-- You can add a passphrase to your SSH-key, but you will need to remember that password every time you push/pull. (I often don't use a passphrase for my SSH-keys unless it is for a highly sensitive use case.)
+- Check the appendix for how to do get an SSH key
 
 ---
-# The hard way -- ssh-keygen
-- You can generate an SSH key via the terminal with the following command:
-```bash 
-ssh-keygen -t ed25519  -C "YOUR-EMAIL-ADDRESS OR OTHER COMMENT"
-```
-- You will be prompted to enter a file in which to save the key. Just hit enter to accept the default location.
-- You will then be prompted to enter a passphrase. You can either enter a passphrase or leave it blank. (If you leave it blank, you will not be prompted for a passphrase when you use the key.)
-- You should see something like this:
+# Setup a PAT and add to RStudio
 
-```bash
-Generating public/private ed25519 key pair.
-Enter file in which to save the key (/Users/you/.ssh/id_ed25519):
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /Users/you/.ssh/id_ed25519
-Your public key has been saved in /Users/you/.ssh/id_ed25519.pub.
-```
+1. Type `install.packages(c('gitcreds','usethis'))` in the R console to install the necessary packages.
+2. Go to the web page: https://github.com/settings/tokens or type `usethis::create_github_token()` in the R console.
+3. Click `Generate new token` and select `Generate new token (classic)`
+4. Name your token something like "RStudio PAT"
+5. Set it to expire on a Custom date: `04/18/2025` (so you have it for all of class, but don't forget to delete it)
+6. Give it scopes into `repo`, `gist`, `workflow`, and `user`
+7. Click `Generate token` and you'll see a string like: `ghp_asdfASDasdjfasdsdfaDSAF`
+8. Copy to your clipboard (and leave this page open)
+9. In RStudio, type `gitcreds::gitcreds_set()` and paste your token when prompted
+10. Save your PAT somewhere secure as well
+11. Close the page once you enter the token -- you can never see the PAT on GitHub again
 
----
-# Add SSH-key to ssh-agent, GitHub
-
-- Then you'll need to add the key to the ssh-agent:
-```bash
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
-```
-**Note**: This is OS-specific, see instructions [here](https://happygitwithr.com/ssh-keys.html)
-
-- Last you'll navigate to your ssh-key in your file system and copy the contents of the public key (id_ed25519.pub) to your clipboard.
-- Then you'll go to your GitHub account settings and add the public key to your account under SSH keys.
+**Caution**:
+- Never share your PAT with anyone.
+- Never put your PAT in code
+- If your PAT is ever compromised, delete it on GitHub, generate a new one, and update your RStudio PAT
 
 ---
-# Point-and-click with RStudio
-
-- You can also point-and-click with RStudio: `Tools -> Global Options -> Git/SVN -> Create RSA Key...`
-  - Guess which we're gonna do today?
-
-- If you already have an SSH key on your local machine, then you can skip this step.
-
-- Instead, RStudio will already see your key and you can click "View public key" to copy it to your clipboard and add to GitHub
-
----
-# A gif how-to
-
-<div align="center">
-<img src="pics/ssh-keygen.gif" height=500>
-</div>
-
----
-
 # Link a GitHub repo to an RStudio Project 
 
 The starting point for our workflow is to link a GitHub repository (i.e. "repo") to an RStudio Project. Here are the steps we're going to follow:
 
 1. Create the repo on GitHub and initialize with a README.
-2. Copy the SSH link (the green "Code" button).<sup>1</sup>
+2. Copy the HTTPS link (the green "Code" button).<sup>1</sup>
 3. Open up RStudio.
 4. Navigate to `File -> New Project -> Version Control -> Git`.
 5. Paste your copied link into the "Repository URL:" box.
 6. Choose the project path ("Create project as subdirectory of:") and click `Create Project`.
 
-.footnote[<sup>1</sup> Do not use the HTTPS link. It will cause problems with RStudio and you will only be able to use GitHub Desktop.]
+.footnote[<sup>1</sup> If you set up an SSH key, you would copy the SSH link instead to use the more secure protocol.]
 
 --
 
@@ -709,7 +675,7 @@ The GitHub + RStudio Project combo is ideal for new users.
 - RStudio's Git integration and built-in GUI cover all the major operations.
 - RStudio Projects FTW.
 
-However, I want to go over Git <a href="http://happygitwithr.com/ssh-keys.html#shell" target="_blank">shell</a> commands so that you can internalise the basics.
+However, I want to go over Git [shell](https://happygitwithr.com/shell) commands so that you can internalise the basics.
 - The shell is more powerful and flexible. Does some things that the RStudio Git GUI can't.
 - Potentially more appropriate for projects that aren't primarily based in R. (Although, no real harm in using RStudio Projects to clone a non-R repo.)
 - Also, I don't want to screen record more
@@ -1035,8 +1001,75 @@ Repeat steps 3—7 (but especially steps 3 and 4) often.
 class: inverse, center, middle
 name: faq
 
-# Appendix: FAQ
+# Appendix
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+
+---
+# Creating an SSH-key
+
+Before we get started, raise your hand if you did not successfully create an SSH key on your local machine. You will need one today.
+
+#### SSH-Keys
+  - A key has a type of encryption, two examples:
+    - RSA (Rivest-Shamir-Adleman)
+    - ED25519 (Edwards-curve Digital Signature Algorithm)
+
+- We will use ED25519, which is smaller, more secure and faster than RSA
+  - GitHub also recommends it
+
+- We will generate a key, then add the public key to GitHub SSH keys.
+  - I will show you the "hard" way first, then an "easier" way second (guess which we'll do?)
+
+- You can add a passphrase to your SSH-key, but you will need to remember that password every time you push/pull. (I often don't use a passphrase for my SSH-keys unless it is for a highly sensitive use case.)
+
+---
+# The hard way -- ssh-keygen
+- You can generate an SSH key via the terminal with the following command:
+```bash 
+ssh-keygen -t ed25519  -C "YOUR-EMAIL-ADDRESS OR OTHER COMMENT"
+```
+- You will be prompted to enter a file in which to save the key. Just hit enter to accept the default location.
+- You will then be prompted to enter a passphrase. You can either enter a passphrase or leave it blank. (If you leave it blank, you will not be prompted for a passphrase when you use the key.)
+- You should see something like this:
+
+```bash
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/Users/you/.ssh/id_ed25519):
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /Users/you/.ssh/id_ed25519
+Your public key has been saved in /Users/you/.ssh/id_ed25519.pub.
+```
+
+---
+# Add SSH-key to ssh-agent, GitHub
+
+- Then you'll need to add the key to the ssh-agent:
+```bash
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+```
+**Note**: This is OS-specific, see instructions [here](https://happygitwithr.com/ssh-keys.html)
+
+- Last you'll navigate to your ssh-key in your file system and copy the contents of the public key (id_ed25519.pub) to your clipboard.
+- Then you'll go to your GitHub account settings and add the public key to your account under SSH keys.
+
+---
+# Point-and-click with RStudio
+
+- You can also point-and-click with RStudio: `Tools -> Global Options -> Git/SVN -> Create RSA Key...`
+  - Guess which we're gonna do today?
+
+- If you already have an SSH key on your local machine, then you can skip this step.
+
+- Instead, RStudio will already see your key and you can click "View public key" to copy it to your clipboard and add to GitHub
+
+---
+# A gif how-to
+
+<div align="center">
+<img src="pics/ssh-keygen.gif" height=500>
+</div>
 
 ---
 
