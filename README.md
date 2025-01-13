@@ -296,12 +296,15 @@ With that in mind, I expect students in this course to make ample use of the cou
 
 ### On R
 
+#### Videos
+- [R crash course](https://www.youtube.com/watch?v=eR-XRSKsuR4)
+- [Bates Alumni Eli Mokas and Ian Ramsay's RStudio Tutorial](https://www.youtube.com/watch?v=Ih84O1vfH8Y&t=3391s)
+
 #### Demos
 
 - [Dozens of free R Courses by Harvard](https://pll.harvard.edu/subject/r)
 - [learnr package](https://rstudio.github.io/learnr/) developed by Garrick Aden-Buie, Barret Schloerke, JJ Allaire, and Alexander Rossell Hayes is a great way to Learn R by making interactive demos in RMarkdown
 - [Awesome R Learning Resources](https://github.com/iamericfletcher/awesome-r-learning-resources) provides all kinds of resources and is maintained by Eric Fletcher
-- [Bates Alumni Eli Mokas and Ian Ramsay's RStudio Tutorial](https://www.youtube.com/watch?v=Ih84O1vfH8Y&t=3391s)
 - [R Intro](https://rawgit.com/grantmcdermott/R-intro/master/rIntro.html) by Grant McDermott and Ed Rubins
 
 #### Textbooks
