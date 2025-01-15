@@ -114,17 +114,16 @@ Thursday (2025-02-06): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.
 
 - Exercise due before class: [Introduction to Web Scraping TK][datacamp]
 - Class activity: Scrape websites
-- Problem Set 1 due before class
-- [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
 
 ### Week 6: Spatial Analysis
 
-Tuesday (2025-02-11): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
-
+Tuesday (2025-02-11): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
 - Exercise due before class: [Introduction to tidycensus TK][datacamp]
-- Class activity: TK
+- Class activity: Code review
+- Problem Set 1 due before class
+- [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
 
-Thursday (2025-02-13): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
+Thursday (2025-02-13): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
 
 - Exercise due before class: [Review Opportunity Atlas](https://opportunityinsights.org/wp-content/uploads/2018/10/atlas_paper.pdf) and discuss the relevant causal questions that come from the data
 - Class activity: TK
