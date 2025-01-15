@@ -103,30 +103,29 @@ Thursday (2025-01-30): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tip
 - Exercise due before class: [Datacamp: Data Manipulation with dplyr][datacamp]
 - In-class activity: TK
 
-### Week 5: Acquiring Web Data
+### Week 6: Spatial Analysis
 
 Tuesday (2025-02-04): Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd)),
 
 - Exercise due before class: [Introduction to APIs TK][datacamp]
 - Class activity: APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd))
 
-Thursday (2025-02-06): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd)) 
-
-- Exercise due before class: [Introduction to Web Scraping TK][datacamp]
-- Class activity: Scrape websites
-
-### Week 6: Spatial Analysis
-
-Tuesday (2025-02-11): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
-- Exercise due before class: [Introduction to tidycensus TK][datacamp]
+Thursday (2025-02-06): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
+- Exercise due before class: [Review Opportunity Atlas](https://opportunityinsights.org/wp-content/uploads/2018/10/atlas_paper.pdf) and discuss the relevant causal questions that come from the data
 - Class activity: Code review
 - Problem Set 1 due before class
 - [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
 
-Thursday (2025-02-13): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
+### Week 5: Acquiring Web Data
 
-- Exercise due before class: [Review Opportunity Atlas](https://opportunityinsights.org/wp-content/uploads/2018/10/atlas_paper.pdf) and discuss the relevant causal questions that come from the data
-- Class activity: TK
+Tuesday (2025-02-11): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
+- Exercise due before class: [Introduction to tidycensus TK][datacamp]
+- Class activity: Make maps!
+
+Thursday (2025-02-13): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd)) 
+
+- Exercise due before class: [Introduction to Web Scraping TK][datacamp]
+- Class activity: Scrape websites
 
 ### Week 7: Winter Break
 
