@@ -102,8 +102,6 @@ Tuesday (2025-01-28): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse
 Thursday (2025-01-30): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips.pdf], [.Rmd](lectures/03-data-tips/03-data-tips.Rmd))
 - Exercise due before class: [Datacamp: Data Manipulation with dplyr][datacamp]
 - In-class activity: TK
-- Problem Set 1 due before class
-- [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
 
 ### Week 5: Acquiring Web Data
 
@@ -116,6 +114,8 @@ Thursday (2025-02-06): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.
 
 - Exercise due before class: [Introduction to Web Scraping TK][datacamp]
 - Class activity: Scrape websites
+- Problem Set 1 due before class
+- [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
 
 ### Week 6: Spatial Analysis
 
