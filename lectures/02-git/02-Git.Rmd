@@ -639,30 +639,6 @@ git config --global pull.ff only  # fast-forward only
 - As always, get more advice from [Jenny Bryan](happygitwithr.com)
 
 ---
-
-# Aside: Line endings and different OSs
-
-### Problem
-
-During your collaboration, you may have encountered a situation where Git is highlighting differences on seemingly unchanged sentences.
-- If that is the case, check whether your partner is using a different OS to you.
-
-The "culprit" is the fact that Git evaluates an invisible character at the end of every line. This is how Git tracks changes. (More info [here](https://help.github.com/articles/dealing-with-line-endings/) and [here](https://en.wikipedia.org/wiki/Newline).)
-- For Linux and MacOS, that ending is "LF"
-- For Windows, that ending is "CRLF" (of course it is...)
-
-### Solution
-
-Open up the shell and enter
-
-```bash
-$ git config --global core.autocrlf input
-```
-
-(Windows users: Change `input` to `true`).
-
-
----
 class: inverse, center, middle
 name: shell
 
@@ -1072,6 +1048,30 @@ ssh-add ~/.ssh/id_ed25519
 <div align="center">
 <img src="pics/ssh-keygen.gif" height=500>
 </div>
+
+
+---
+
+# Aside: Line endings and different OSs
+
+### Problem
+
+During your collaboration, you may have encountered a situation where Git is highlighting differences on seemingly unchanged sentences.
+- If that is the case, check whether your partner is using a different OS to you.
+
+The "culprit" is the fact that Git evaluates an invisible character at the end of every line. This is how Git tracks changes. (More info [here](https://help.github.com/articles/dealing-with-line-endings/) and [here](https://en.wikipedia.org/wiki/Newline).)
+- For Linux and MacOS, that ending is "LF"
+- For Windows, that ending is "CRLF" (of course it is...)
+
+### Solution
+
+Open up the shell and enter
+
+```bash
+$ git config --global core.autocrlf input
+```
+
+(Windows users: Change `input` to `true`).
 
 ---
 
