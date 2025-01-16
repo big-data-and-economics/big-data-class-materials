@@ -430,7 +430,7 @@ Need to specify how to reconcile divergent branches.
 - For your purposes, I recommend you enter the following in your Terminal (next to Console in RStudio):
 
 ```bash
-git config pull.rebase false  # merge instead of rebase
+git config --global pull.rebase false  # merge instead of rebase
 ```
 
 - This will change your `.gitconfig` file, which sets the settings of git and can be accessed with `usethis::edit_git_config()` in RStudio
