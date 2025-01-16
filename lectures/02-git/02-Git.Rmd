@@ -42,17 +42,19 @@ opts_chunk$set(
 
 3. [Git(Hub) + RStudio](#rstudio)
 
-4. [Git from the shell](#shell)
+4. [Merge conflicts](#merge)
 
-5. [Merge conflicts](#merge)
+5. [Gitignore](#gitignore)
 
-6. [Branches and forking](#branches)
+6. [Git from the shell](#shell)
 
-7. [Other tips](#other)
+7. [Branches and forking](#branches)
 
-8. [Summary](#summary)
+8. [Other tips](#other)
 
-9. [Appendix: FAQ](#faq)
+9. [Summary](#summary)
+
+10.  [Appendix: FAQ](#faq)
 
 
 ---
@@ -87,7 +89,7 @@ We went through a software installation check during the previous lecture. By no
 
 ☑ Installed [RStudio](https://www.rstudio.com/products/rstudio/download/preview/).
 
-☑ Installed [Git](https://git-scm.com/downloads) and [GitHub Desktop](https://desktop.github.com/).
+☑ Installed [Git](https://git-scm.com/downloads).
 
 ☑ Created an account on [GitHub](https://github.com/) 
 
@@ -352,64 +354,6 @@ RStudio Projects are great.
 
 <!-- Add section .gitignore here? Tell them to include .DS_Store if on a MAC. -->
 
-
----
-
-# .gitignore
-
-A .gitignore file tells Git what to — *wait for it* — ignore.
-
-This is especially useful if you want to exclude whole folders or a class of files (e.g. based on size or type).
-- Proprietary data files should be ignored from the beginning if you intend to make a repo public at some point.
-- Very large individual files (>100 MB) exceed GitHub's maximum allowable size and should be ignored regardless. See <a href="https://help.github.com/articles/working-with-large-files/" target="_blank">here</a> and <a href="https://help.github.com/articles/versioning-large-files/" target=_"blank">here</a>.
-
-I typically add compiled datasets to my .gitignore in the early stages of a project.
-- Reduces redundant version control history, so I only save the raw data and the code used to compile it
-- Simple to remove from my .gitignore once the project is being finalised (e.g. paper is being submitted).
-  
----
-
-# .gitignore (cont.)
-
-You can create a .gitignore file in multiple ways.
-
-- A .gitignore file was automatically generated if you cloned your repo with an RStudio Project.
-- You could also have the option of adding one when you first create a repo on GitHub.
-- Or, you can create one with your preferred text editor. (Must be saved as ".gitignore".)
-
-Once the .gitignore file is created, simply add in lines of text corresponding to the files that should be ignored.
-
-- To ignore a single a file: `FILE-I-WANT-TO-IGNORE.csv`
-- To ignore a whole folder (and all of its contents, subfolders, etc.): `FOLDER-NAME/**`
-- The standard shell commands and special characters apply.
-  - E.g. Ignore all CSV files in the repo: `*.csv`
-  - E.g. Ignore all files beginning with "test": `test*`
-  - E.g. Don't ignore a  particular file: `!somefile.txt`
-
----
-# Let's ignore some file types!
-
-- Open up your `.gitignore` file in RStudio.
-
-- Add the following line of text: `*.csv` to your `.gitignore`
-
-- Save the file and run the following code in your R console:
-
-```{r download,eval=FALSE}
-download.file('https://tinyurl.com/econ368ignore',destfile='my_data.csv')
-```
-
-- Check your git tab in Rstudio
-
-1. The `.gitignore` file should be in need of staging
-2. The `my_data.csv` file should not appear despite being in your working directory
-
-- Why not?
-
---
-
-Because we told Git to ignore all CSV files in the `.gitignore` file!
-
 ---
 class: inverse, center, middle
 name: merge
@@ -436,6 +380,56 @@ Turn to the person next to you. You are now partners. (Congratulations.)
 Did P1 encounter a `merge conflict` error? 
 - Good, that's what we were trying to trigger.
 - Now, let's learn how to fix them.
+
+---
+# Did you not get a merge conflict?
+
+- Some of you may have encountered a divergent branch:
+
+.scroll-box-10[
+```bash
+Hint: You have divergent branches and need to specify how to reconcile them.
+Hint: You can do so by running one of the following commands sometime before
+Hint: your next pull:
+Hint: 
+Hint:   git config pull.rebase false  # merge
+Hint:   git config pull.rebase true   # rebase
+Hint:   git config pull.ff only       # fast-forward only
+Hint: 
+Hint: You can replace "git config" with "git config --global" to set a default
+Hint: preference for all repositories. You can also pass --rebase, --no-rebase,
+Hint: or --ff-only on the command line to override the configured default per
+Hint: invocation.
+Git failed with a fatal error.
+Git failed with a fatal error.
+Need to specify how to reconcile divergent branches.
+```
+]
+
+- Per an [update in 2022](https://github.com/desktop/desktop/pull/14439), you should not be getting this message as a fatal error
+  - If you got this error, you likely do not have the latest version of Git installed as requested. Fix this.
+
+- Note that GitHub issues and pull requests were used by professionals to improve the product over time
+
+---
+# Divergent branches
+
+- We'll get into branches below, but essentially this is because `git pull` does two things:
+
+  - `git fetch` which downloads the latest changes from the remote repo
+  - `git merge` which merges the changes into your local repo
+
+- For your purposes, I recommend you enter the following in your Terminal (next to Console in RStudio):
+
+```bash
+git config --global pull.ff merge # fast-forward and merge
+```
+
+- This will change your `.gitconfig` file, which sets the settings of git and can be accessed with `usethis::edit_git_config()` in RStudio
+
+- Solution pulled from [GitHub Desktop issues](https://github.com/desktop/desktop/issues/14431)
+
+- As always, get more advice from [Jenny Bryan](happygitwithr.com)
 
 ---
 
@@ -588,55 +582,65 @@ Caveats
 
 - Jenny Bryan has a great section on [Git Workflows](https://happygitwithr.com/workflows-intro) to help you use Git productively
 
----
-# Did you not get a merge conflict?
-
-- Some of you may have encountered a divergent branch:
-
-.scroll-box-8[
-```bash
-Hint: You have divergent branches and need to specify how to reconcile them.
-Hint: You can do so by running one of the following commands sometime before
-Hint: your next pull:
-Hint: 
-Hint:   git config pull.rebase false  # merge
-Hint:   git config pull.rebase true   # rebase
-Hint:   git config pull.ff only       # fast-forward only
-Hint: 
-Hint: You can replace "git config" with "git config --global" to set a default
-Hint: preference for all repositories. You can also pass --rebase, --no-rebase,
-Hint: or --ff-only on the command line to override the configured default per
-Hint: invocation.
-Git failed with a fatal error.
-Git failed with a fatal error.
-Need to specify how to reconcile divergent branches.
-```
-]
-
-- Per an [update in 2022](https://github.com/desktop/desktop/pull/14439), you should not be getting this message as a fatal error
-  - If you got this error, you likely do not have the latest version of Git installed as requested. Fix this.
-
-- Note that GitHub issues and pull requests were used by professionals to improve the product over time
 
 ---
-# Divergent branches
+name: gitignore
 
-- We'll get into branches below, but essentially this is because `git pull` does two things:
+# .gitignore
 
-  - `git fetch` which downloads the latest changes from the remote repo
-  - `git merge` which merges the changes into your local repo
+Go back to your own RStudio projec for us to play with `.gitignore` files.
 
-- For your purposes, I recommend you enter the following in your Terminal (next to Console in RStudio):
+A .gitignore file tells Git what to — *wait for it* — ignore.
 
-```bash
-git config --global pull.ff only  # fast-forward only
+This is especially useful if you want to exclude whole folders or a class of files (e.g. based on size or type).
+- Proprietary data files should be ignored from the beginning if you intend to make a repo public at some point.
+- Very large individual files (>100 MB) exceed GitHub's maximum allowable size and should be ignored regardless. See <a href="https://help.github.com/articles/working-with-large-files/" target="_blank">here</a> and <a href="https://help.github.com/articles/versioning-large-files/" target=_"blank">here</a>.
+
+I typically add compiled datasets to my .gitignore in the early stages of a project.
+- Reduces redundant version control history, so I only save the raw data and the code used to compile it
+- Simple to remove from my .gitignore once the project is being finalised (e.g. paper is being submitted).
+  
+---
+# .gitignore (cont.)
+
+You can create a .gitignore file in multiple ways.
+
+- A .gitignore file was automatically generated if you cloned your repo with an RStudio Project.
+- You could also have the option of adding one when you first create a repo on GitHub.
+- Or, you can create one with your preferred text editor. (Must be saved as ".gitignore".)
+
+Once the .gitignore file is created, simply add in lines of text corresponding to the files that should be ignored.
+
+- To ignore a single a file: `FILE-I-WANT-TO-IGNORE.csv`
+- To ignore a whole folder (and all of its contents, subfolders, etc.): `FOLDER-NAME/**`
+- The standard shell commands and special characters apply.
+  - E.g. Ignore all CSV files in the repo: `*.csv`
+  - E.g. Ignore all files beginning with "test": `test*`
+  - E.g. Don't ignore a  particular file: `!somefile.txt`
+
+---
+# Let's ignore some file types!
+
+- Open up your `.gitignore` file in RStudio.
+
+- Add the following line of text: `*.csv` to your `.gitignore`
+
+- Save the file and run the following code in your R console:
+
+```{r download,eval=FALSE}
+download.file('https://tinyurl.com/econ368ignore',destfile='my_data.csv')
 ```
 
-- This will change your `.gitconfig` file, which sets the settings of git and can be accessed with `usethis::edit_git_config()` in RStudio
+- Check your git tab in Rstudio
 
-- Solution pulled from [GitHub Desktop issues](https://github.com/desktop/desktop/issues/14431)
+1. The `.gitignore` file should be in need of staging
+2. The `my_data.csv` file should not appear despite being in your working directory
 
-- As always, get more advice from [Jenny Bryan](happygitwithr.com)
+- Why not?
+
+--
+
+Because we told Git to ignore all CSV files in the `.gitignore` file!
 
 ---
 class: inverse, center, middle
