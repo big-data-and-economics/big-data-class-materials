@@ -103,7 +103,7 @@ Thursday (2025-01-30): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tip
 - Exercise due before class: [Datacamp: Introduction to Importing Data in R][datacamp]
 - In-class activity: [Download various data]
 
-### Week 6: Spatial Analysis
+### Week 5: Spatial Analysis
 
 Tuesday (2025-02-04): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
 - Exercise due before class: [Review Opportunity Atlas](https://opportunityinsights.org/wp-content/uploads/2018/10/atlas_paper.pdf) and discuss the relevant causal questions that come from the data
@@ -115,7 +115,7 @@ Thursday (2025-02-06): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spa
 - Exercise due before class: [Introduction to tidycensus TK][datacamp]
 - Class activity: Make maps!
 
-### Week 5: Acquiring Web Data
+### Week 6: Acquiring Web Data
 
 Tuesday (2025-02-11): Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd))
 - Exercise due before class: [Introduction to APIs TK][datacamp]
