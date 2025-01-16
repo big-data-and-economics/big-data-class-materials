@@ -73,54 +73,53 @@ Tuesday (2025-01-14): Empirical Organization [.html][02-empirical-workflow.html]
 
 - Due before class: [Read Code and Data for the Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) by Gentzkow and Shapiro and share a story of a non-reproducible workflow that caused you problems on the [Discussions forum](https://github.com/orgs/big-data-and-economics/discussions/4)
 - In-class activity: [MRE](https://github.com/big-data-and-economics/exercises/tree/main/02-mre-exercise)
-- [Problem Set 1 assigned](https://github.com/big-data-and-economics/ps1-nlsy-income-mob)
 
 Thursday (2025-01-16): Git and Github ([.html][02-Git.html], [.pdf][02-Git.pdf], [.Rmd](lectures/02-git/02-Git.Rmd))
 
 - Exercise due before class: [Introduction to Git][datacamp] and [Introduction to Github Concepts][datacamp]
 - In-class activity: [Git Basics](https://github.com/big-data-and-economics/exercises/tree/main/03-git-basics)
+- [Problem Set 1 assigned](https://github.com/big-data-and-economics/ps1-nlsy-income-mob), Fork, clone, and make at least one commit by next class. 
 
 ### Week 3: R Basics
 
 Tuesday (2025-01-21): R bootcamp ([.html][04-rlang.html], [.pdf][04-rlang.pdf], [.Rmd](lectures/04-rlang/04-rlang.Rmd)) and (Git spillover)
 
-- Exercise due before class: TK
-- In-class exercise: [Authoring and Reproducible Research TK](https://stat545.stat.ubc.ca/notes/notes-a03/)
+- Exercise due before class: [Datacamp Introduction to R: R Basics and Data frames][datacamp], 
+- In-class exercise: [Authoring and Reproducible Research](https://stat545.stat.ubc.ca/notes/notes-a03/)
 
 Thursday (2025-01-23): Professor away, CAT leads class
 
-- Exercise due before class: [Datacamp: Introduction to R][datacamp]
-- In-class exercise: [R tutorial led by CAT] 
+- Exercise due before class: [Reporting with RMarkdown](https://app.datacamp.com/learn/courses/reporting-with-rmarkdown)
+- In-class exercise: [R tutorial on Rmarkdowns led by CAT](https://stat545.stat.ubc.ca/notes/notes-a03/)
 
 ### Week 4: Tidyverse and Data Tips
 
 Tuesday (2025-01-28): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse.pdf], [.Rmd](lectures/05-tidyverse/05-tidyverse.Rmd))
 
-- Exercise due before class: [Introduction to tidyverse TK][datacamp]
-- In-class activity: TK 
+- Exercise due before class: [Datacamp: Introduction to Tidyverse][datacamp] 
+- In-class activity: 
 
 Thursday (2025-01-30): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips.pdf], [.Rmd](lectures/03-data-tips/03-data-tips.Rmd))
-- Exercise due before class: [Datacamp: Data Manipulation with dplyr][datacamp]
-- In-class activity: TK
+- Exercise due before class: [Datacamp: Introduction to Importing Data in R][datacamp]
+- In-class activity: [Download various data]
 
 ### Week 6: Spatial Analysis
 
-Tuesday (2025-02-04): Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd)),
-
-- Exercise due before class: [Introduction to APIs TK][datacamp]
-- Class activity: APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd))
-
-Thursday (2025-02-06): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
+Tuesday (2025-02-04): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
 - Exercise due before class: [Review Opportunity Atlas](https://opportunityinsights.org/wp-content/uploads/2018/10/atlas_paper.pdf) and discuss the relevant causal questions that come from the data
 - Class activity: Code review
 - Problem Set 1 due before class
 - [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
 
-### Week 5: Acquiring Web Data
-
-Tuesday (2025-02-11): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
+Thursday (2025-02-06): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
 - Exercise due before class: [Introduction to tidycensus TK][datacamp]
 - Class activity: Make maps!
+
+### Week 5: Acquiring Web Data
+
+Tuesday (2025-02-11): Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd))
+- Exercise due before class: [Introduction to APIs TK][datacamp]
+- Class activity: APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd))
 
 Thursday (2025-02-13): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd)) 
 
