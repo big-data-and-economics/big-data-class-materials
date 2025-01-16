@@ -112,13 +112,13 @@ Tuesday (2025-02-04): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-op
 - [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
 
 Thursday (2025-02-06): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
-- Exercise due before class: [Introduction to tidycensus TK][datacamp]
+- Exercise due before class: [Analyzing Census Data in R: Chapter 1 and 4][datacamp]
 - Class activity: Make maps!
 
 ### Week 6: Acquiring Web Data
 
 Tuesday (2025-02-11): Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd))
-- Exercise due before class: [Introduction to APIs TK][datacamp]
+- Exercise due before class: [Introduction to APIs][datacamp]
 - Class activity: APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd))
 
 Thursday (2025-02-13): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd)) 
