@@ -3,14 +3,14 @@ header-includes:
 - \usepackage{fancyhdr}
 - \usepackage[margin=1in,headheight=70pt,headsep=0.3in,includehead]{geometry}
 - \pagestyle{fancy}
-- \fancyhead[L]{Winter 2024}
+- \fancyhead[L]{Winter 2025}
 - \fancyfoot[C]{\thepage}
 output: pdf_document
 bibliography: syllabus_bigdata.bib
 colorlinks: true
 ---
 
-# ECON/DCS 368: Big Data and Economics/Data Science for Economists
+# ECON/DCS 368: Data Science for Economists
 *Professor Kyle Coombs (he/him/his)*  
 Winter 2024
 
@@ -174,17 +174,11 @@ Prerequisites: ECON 255 and ECON 260 or ECON 270 The course assumes background i
 
 There is no teaching assistant for this course. The course does have a Course-Attached Tutor (CAT), who is a student who has taken the course before and is available to help you with the course. The CAT for this course is Charlie Berman. He will hold office hours and review sessions. The CAT will also grade your problem sets and final project.
 
-
 #### Course-Attached Tutor
 
-Charlie Berman is our Course-Attached tutor. He will host office hours in the SASC and will be available for individual appointments. His hours are:
+There is a CAT every semester. See the course materials GitHub repository for the CAT's contact information.
 
-- **SASC Drop-in Hours**: MTR 2:30-4
-- **Evening Help Session:** R 7:30-9 (room assignment to come)
-
-You can also schedule private office hours at the Calendar Link: https://calendar.app.google/2Abyp3LqY3NPeg4u8. 
-
-He can help you troubleshoot *R*. He does not have solutions to the problem sets, but he can help you figure them out. 
+The CAT can help you troubleshoot *R*. He does not have solutions to the problem sets, but he can help you figure them out. 
 
 ## Student Academic Support Center
 Scheduled hours for R held in the Student Academic Support Center (SASC) of the Library are:
@@ -196,18 +190,40 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 - Thursday - 12-4pm, 6-7:30pm
 - Friday - 11am-12pm
 
-
 ## Grading policy
 
 | Component                                 | Weight | Graded |
 |-------------------------------------------|--------|--------|
-| 6 × problem sets (12.5% each)               | 50%    | Top 5  |
-| 1 × 5-minute presentation                 | 5%     | Top 1   |
+| 4-5 × problem sets                        | 30%    | Top 3-4 (drop one)  |
+| 1 × presentation                          | 15%    | Top 1   |
+| N x In-class exercises                    | 10%    | Completion, drop two lowest |
+| N x Out-of-class exercises                | 15%    | Completion, two drops |
+| 1 × Final Project                         | 25%    | Hackathon rubric |
 | 1 × GitHub participation                  | 5%     | Overall   |
-| 1 × group final project                   | 30%-40%    | [In parts](https://github.com/big-data-and-economics/final-project) |
-| 1 x Lewiston Hackathon                    | 0%-10%    | Optional  |
 | Classroom participation                   | Bonus up to 2.5%    | Discretion  |
 | Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
+| Research seminar bonuses                  | Problem set bonus | 2 points |
+
+Finalized grades on each component will be posted to Lyceum. Where possible to give feedback privately, it will be posted to GitHub. '
+
+
+### Exercises
+
+There are two types of exercises in this course: in-class exercises and Datacamp exercises.
+
+#### In-class exercises
+
+These exercises are short coding assignments that you will start in class. They are designed to help you practice the skills we are learning in class and are due by the next class.
+
+Exercises will be graded on a 0, 1, 2 scale. A 0 means you did not turn in the assignment. A 1 means you turned in the assignment, but put in minimal effort. A 2 means you turned in the assignment with clear effort. 
+
+I will drop the lowest two in-class exercise grades. 
+
+#### Out-of-class exercises
+
+During the semester, I will use a variety of tools to get you (1) practicing R and Git skills outside of class and (2) thinking about the value of different data science skills ahead of the relevant class period. These will include short readings, datacamp assignments, and 
+
+I will allow you to makeup two Datacamp tutorials if you do not complete them on time.
 
 ### Problem sets
 
@@ -299,33 +315,7 @@ Please sign up [here](https://github.com/big-data-and-economics/presentations-te
 
 ### Final Project
 
-You will write a final project over the course of the semester as part of a group. Further details are available [here](https://github.com/big-data-and-economics/final-project). If you participate in the Hack-a-thon, your final project will be worth 30 percent of your grade. If you do not participate in the Hack-a-thon, your final project will be worth 40 percent of your grade.
-
-### Lewiston Hack-a-thon
-
-This semester, we will be working with the City of Lewiston to help them solve a problem using data. Specifically, we will help the city understand how to use existing administrative data to complement, and at times substitute, for survey data. 
-
-We will specifically be engaging in a Hack-a-thon. A hack-a-thon is a short (often 24 hours), intense period of collaboration between a group of people to solve a problem. Scheduling is still in the works.
-
-The Hack-a-thon is planned to be optional and replace a quarter of the final project grade.
-
-#### Data Requests
-
-Several weeks before the hack-a-thon, we will brainstorm datasets that your group would like the City of Lewiston to provide for you. You will then write a short report on how you would use those datasets to solve a problem. 
-
-#### What you will do
-
-- Compete in groups of 3-4 to each propose solutions to the same problem
-- Present your solution to a group from the City of Lewiston
-- Write a short report on your solution
-- Maintain all code and necessary documentation to the City of Lewiston in a GitHub repository
-- Provide any additional documentation the City of Lewiston requests
-
-Your solution may include a variety of things, including:
-
-- A data visualization
-- Suggestions of new databases to maintain
-- Examples from similar cities that have tackled these problems
+The final project will be an intensive and quick turnaround data task. When possible, it will be a hackathon with a local organization with details to be announced. When not possible, it will be a challenge task I present. 
 
 ### GitHub participation
 
@@ -370,7 +360,6 @@ Furthermore, I want you to take ownership over your learning. You get more out o
 
 There are several opportunities for bonus points during the semester:
 
-
 1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material. This can be to fix a typo or to fix a bug in the code.
 2. A 2.5% participation bonus on your final grade that I will award at my discretion.
 3. I will offer a 2.5% participation bonus to the person with most "good faith" posts/answers in GitHub Issues and Discussions within this organization. "Good faith" means:
@@ -384,7 +373,6 @@ The intent of this bonus is to encourage you to work together to solve technical
 4. I offer a bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
 
 I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
-
 
 ### Extensions
 
