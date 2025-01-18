@@ -387,39 +387,7 @@ He can help you troubleshoot *R*. He does not have solutions to the problem sets
   - You will not get much mileage if you say, "Read in the gapminder dataset and do something interesting with it"
 
 - Often it only provides "skeleton code", so you'll need to fill in the blanks
-
-## GitHub Codespaces
-
-Having trouble with R on your computer? 
-
-### Do _NOT_ use a school computer as these do not have Git or GitHub integrated. 
-
-To get you up and running and writing R code in no time, I have containerized this workshop such that you have a ready out of the box R coding environment.
-
-For some problem sets, I will explicitly request that you work with GitHub Codespaces to minimize the amount of time you spend troubleshooting your local R installation and package versions. No more, "but it works on my computer" when I ask you why your code isn't running! On occasion, I may ask you to work on your own computer because I want you to learn how to troubleshoot on your own machine. 
-
-#### Dev Containers in GitHub Codespaces
-
-Click the green "<> Code" button at the top right on this repository page, and then select "Create codespace on main". (GitHub Codespaces is available with [GitHub Enterprise](https://github.com/enterprise) and [GitHub Education](https://education.github.com/).)
-
-To open RStudio Server, click the Forwarded Ports "Radio" icon at the bottom of the VS Code Online window.
-
-![Forwarded Ports](img/forwarded_ports.png)
-
-In the Ports tab, click the Open in Browser "World" icon that appears when you hover in the "Local Address" column for the Rstudio row.
-
-![Ports](img/ports.png)
-
-This will launch RStudio Server in a new window. Log in with the username: `rstudio` and password: `rstudio`. 
-
-* NOTE: Sometimes, the RStudio window may fail to open with a timeout error. If this happens, try again, or restart the Codepace.
-
-In RStudio, use the File menu to open the file `test.Rmd`. Use the "Knit" submenu to "Knit as HTML" and view the rendered "R Notebook" Markdown document.
-
-* Note: You may be prompted to install an updated version of the `markdown` package. Select "Yes".
-
-* Note: Pushing/pulling will work a bit differently. In practice, you will use the <picture> <source media="(prefers-color-scheme: light)" srcset="/img/298785_git_branch_icon.png"> <source media="(prefers-color-scheme: dark)" srcset="/img/298785_git_branch_icon_white.png"> <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="/img/298785_git_branch_icon_white.png"></picture> icon for "Source Control" on the RHS bar where you can stage things, commit, and push them. You will need to do this to turn in your problem set. See documentation from GitHub on [Source Control and Codespaces](https://docs.github.com/en/Codespaces/developing-in-Codespaces/using-source-control-in-your-codespace)
-
+- 
 # Other details
 
 This is an undergraduate course taught by [Kyle Coombs](https://kylecoombs.com/). Here is the course description, right out of the [syllabus](syllabus/syllabus.md):
@@ -655,6 +623,39 @@ Please flag with Bates Reach and email me with the subject "[ECON 368] _subject 
 #### Group assignments
 
 If you are asking for an extension on a group assignment include all group partners on the email. Do not email me individually and ask for an extension on behalf of your group. This practice will ensure that all group members are aware of the request. 
+
+
+## GitHub Codespaces
+
+Having trouble with R on your computer? 
+
+### Do _NOT_ use a school computer as these do not have Git or GitHub integrated. 
+
+To get you up and running and writing R code in no time, I have containerized this workshop such that you have a ready out of the box R coding environment.
+
+For some problem sets, I will explicitly request that you work with GitHub Codespaces to minimize the amount of time you spend troubleshooting your local R installation and package versions. No more, "but it works on my computer" when I ask you why your code isn't running! On occasion, I may ask you to work on your own computer because I want you to learn how to troubleshoot on your own machine. 
+
+#### Dev Containers in GitHub Codespaces
+
+Click the green "<> Code" button at the top right on this repository page, and then select "Create codespace on main". (GitHub Codespaces is available with [GitHub Enterprise](https://github.com/enterprise) and [GitHub Education](https://education.github.com/).)
+
+To open RStudio Server, click the Forwarded Ports "Radio" icon at the bottom of the VS Code Online window.
+
+![Forwarded Ports](img/forwarded_ports.png)
+
+In the Ports tab, click the Open in Browser "World" icon that appears when you hover in the "Local Address" column for the Rstudio row.
+
+![Ports](img/ports.png)
+
+This will launch RStudio Server in a new window. Log in with the username: `rstudio` and password: `rstudio`. 
+
+* NOTE: Sometimes, the RStudio window may fail to open with a timeout error. If this happens, try again, or restart the Codepace.
+
+In RStudio, use the File menu to open the file `test.Rmd`. Use the "Knit" submenu to "Knit as HTML" and view the rendered "R Notebook" Markdown document.
+
+* Note: You may be prompted to install an updated version of the `markdown` package. Select "Yes".
+
+* Note: Pushing/pulling will work a bit differently. In practice, you will use the <picture> <source media="(prefers-color-scheme: light)" srcset="/img/298785_git_branch_icon.png"> <source media="(prefers-color-scheme: dark)" srcset="/img/298785_git_branch_icon_white.png"> <img alt="Text changing depending on mode. Light: 'So light!' Dark: 'So dark!'" src="/img/298785_git_branch_icon_white.png"></picture> icon for "Source Control" on the RHS bar where you can stage things, commit, and push them. You will need to do this to turn in your problem set. See documentation from GitHub on [Source Control and Codespaces](https://docs.github.com/en/Codespaces/developing-in-Codespaces/using-source-control-in-your-codespace)
 
 # FAQ
 
