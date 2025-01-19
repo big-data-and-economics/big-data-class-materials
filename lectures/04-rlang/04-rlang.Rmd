@@ -87,25 +87,11 @@ name: prologue
 <html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ---
+# Goal
 
-# Agenda
-
-- We're going to spent a lot of time live coding together. This is deliberate. 
-
-- You're also going to try code I will/have not covered in class -- also deliberate
-
-- I want you to try R commands — and navigate RStudio — without copy+paste.
-  - Slightly more painful in the beginning, but much better payoff in the long-run.
-
-#### Goal:
-
-- Today's goal is to make sure you know how to do basic skills in R
+- The goal of these slides is to make sure you know how to do basic skills in R
 
 - These skills may seem simple, but are a critical foundation for the rest of the course
-
-- There will also be some review from PS1
-  - This is intentional: it is easier to understand a concept you see in multiple contexts
-  - It also proves to you that you can figure a lot out on your own
 
 #### Not the goal: Fluency
 
@@ -150,6 +136,11 @@ name: intro
 - This is where you can type in code and have it run immediately
 - Or, when you run code from the Source Editor, it will show up here
 - It will also show any output or errors
+
+---
+# Console gif
+
+![Console gif](pics/console_type.gif)
 
 ---
 
@@ -216,6 +207,11 @@ mean(dat=="heads")
     - To Files Pane Location
 
 ---
+# Files tab
+
+![Files Tab](pics/files_pane.gif)
+
+---
 
 # Help Tab
 
@@ -235,6 +231,11 @@ help(plot)
 
 - Of course, plenty of materials also available across the internet!
   - And Gen AI can be helpful, but remember it's not always right
+
+---
+# Open file into source
+
+![Open file](pics/open_file.gif)
 
 ---
 
@@ -271,7 +272,13 @@ log(exp(1))
 (1+1)^9
 ```
 
-More fun comamnds and tricks in the [appendix](#appendix)
+More fun commands and tricks in the [appendix](#appendix)
+
+
+---
+# Gif of source pane
+
+![Running Code](pics/run_code.gif)
 
 ---
 
@@ -324,6 +331,7 @@ More fun comamnds and tricks in the [appendix](#appendix)
 library(vtable)
 vtable(iris)
 ```
+
 
 ---
 
@@ -605,126 +613,11 @@ df2 = data.frame(x = rnorm(10), y = runif(10))
 
 ---
 
-# dplyr
-
-- In this course, we'll be working with data largely using the **dplyr** package, which is a part of the **tidyverse**
-- **dplyr** is a collection of verbs for manipulating data, all strung together with the pipe `%>%` (which technically **dplyr** just borrows from **magrittr**)
-- **dplyr** has lots of functions in it. Today we'll cover just five: `pull()`, `filter()`, `%>%`, `select()`, and `mutate()`.
-- For all of these, don't forget that if you want to take the data frame you've changed and *keep* that change, you have to re-assign the object with `<-` or `=`!
-- If you already know a different way of doing things in R, I **strongly recommend** using the **dplyr** commands, if only for this class, as it will make it much easier to follow along with the material, and it's good to learn to pick up new things (and also in my experience you guys end up making things waaaay harder on yourselves by avoiding the switch)
-
----
-
-# pull()
-
-- Pull just takes a vector back out of a data set, just like `$` or `[[]]`
-- So why use it? It plays well with the pipe (upcoming)
-- Also, it's flexible. It takes a variable name, a variable name as a string, or a column number
-
-```{r, echo = TRUE, eval = FALSE}
-mtcars$cyl
-pull(mtcars, cyl)
-pull(mtcars, 'cyl')
-pull(mtcars, 2)
-mtcars %>% pull(cyl)
-```
-
----
-
-# filter()
-
-- `filter()` picks just some of the *rows* of your data
-- Important for analyzing a subset of your data!
-- Give it a logical statement that's `TRUE` for the rows you want. `==` checks for equality!
-
-```{r, echo = TRUE}
-filter(mtcars, cyl == 4 & am == 1)
-```
-
----
-
-# The pipe
-
-- The pipe `%>%` is important for making your code readable, and minimizing balanced-parentheses errors
-- It takes whatever is on its left and makes it the first argument of the function on the right
-- So whatever object you're working with you take, ship it along to the next function, process, then ship along again, then ship along again! Like a conveyer belt
-- Notice that all **dplyr** functions take the data frame as the first argument, making it easy to chain them
-- "Ships along" anything, including vectors or single numbers, not just data frames! Track what the object being shipped is in each step.
-
-
----
-
-# The pipe
-
-- See how clean it can make the code!
-
-```{r, echo = TRUE}
-mean(mtcars[mtcars$am == 1,]$cyl, na.rm = TRUE)
-```
-
-vs.
-
-```{r, echo = TRUE}
-mtcars %>%
-  filter(am == 1) %>%
-  pull(cyl) %>%
-  mean(na.rm = TRUE)
-```
-
----
-
-# select()
-
-- `select()` is like `filter()`, but instead of picking rows it picks columns
-- Unlike `pull()` it doesn't give you a vector - it gives you back a data frame with fewer columns
-
-```{r, echo = TRUE}
-mtcars %>%
-  select(mpg, cyl) %>%
-  summary()
-```
-
----
-
-# mutate()
-
-- `mutate()` creates a new column using the old ones. You can assign multiple columns at once!
-- The syntax is `NewVariableName = FunctionOfOldVariables`
-- Don't forget to save the object!
-
-```{r, echo = TRUE}
-mtcars <- mtcars %>%
-  mutate(high_mpg = mpg > median(mpg))
-mtcars %>%
-  pull(high_mpg) %>%
-  table()
-```
----
-
 # Basics of R
 
 - This has been a lot of information!
 - To really learn it you'll have to get used to applying it yourself
-- For that we will be using the **swirl** package which will walk us through using these commands!
-
----
-
-# Swirl
-
-- Open up R and install Swirl with `install.packages('swirl')`
-- Then, load up swirl with `library(swirl)`
-- Download the Swirl course for this class (the first time you use it) with `install_course_github('big-data-and-economics','ECON368-R-Swirls')`
-  - If you already have installed, you need to first `uninstall_course('ECON368-R-Swirls')` to refresh your installation
-- Then start swirl with `swirl()` and pick ECON368-R-Swirls, and the Introduction to R lesson. Let's work through this!
-- This is your in-class assignment, due before Thursday
-
----
-
-class: inverse, center, middle
-
-# Next lecture(s): Working with data!
-
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
+- We'll do this for next two weeks
 
 ---
 name: appendix

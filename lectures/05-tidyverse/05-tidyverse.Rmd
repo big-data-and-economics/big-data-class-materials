@@ -259,6 +259,7 @@ Practice these commands together using the `starwars` data frame that comes pre-
 starwars
 ```
 
+
 ---
 name: filter
 
@@ -275,6 +276,40 @@ starwars %>%
 We can chain multiple commands with the pipe `%>%` as we've seen<sup>1</sup>.
 
 .footnote[<sup>1</sup> Pipes were invented by Doug McIlroy in 1964, are widely used in Unix shells (e.g. bash) and other programming languages (e.g. `F#`). They pass the preceding object as the first argument to the following function. In R, they allow you to chain together code in a way that reads from left to right.]
+
+
+---
+
+# The pipe
+
+- The pipe `%>%` is important for making your code readable, and minimizing balanced-parentheses errors
+
+- It takes whatever is on its left and makes it the first argument of the function on the right
+
+- So whatever object you're working with you take, ship it along to the next function, process, then ship along again, then ship along again! Like a conveyer belt
+
+- Notice that all **dplyr** functions take the data frame as the first argument, making it easy to chain them
+
+- "Ships along" anything, including vectors or single numbers, not just data frames! Track what the object being shipped is in each step.
+
+---
+
+# The pipe
+
+- See how clean it can make the code!
+
+```{r, echo = TRUE}
+mean(starwars[starwars$species == "Human" & starwars$height>=190,]$height, na.rm = TRUE)
+```
+
+vs.
+
+```{r, echo = TRUE}
+starwars %>% # Specify data
+  filter(species == "Human", height >= 190) %>% # Specify filter
+  pull(height) %>% # Specify the column you want
+  mean(na.rm = TRUE) # Calculate the mean
+```
 
 ---
 

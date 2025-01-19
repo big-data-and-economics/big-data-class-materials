@@ -77,25 +77,11 @@ name: prologue
 &lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
 
 ---
+# Goal
 
-# Agenda
-
-- We're going to spent a lot of time live coding together. This is deliberate. 
-
-- You're also going to try code I will/have not covered in class -- also deliberate
-
-- I want you to try R commands — and navigate RStudio — without copy+paste.
-  - Slightly more painful in the beginning, but much better payoff in the long-run.
-
-#### Goal:
-
-- Today's goal is to make sure you know how to do basic skills in R
+- The goal of these slides is to make sure you know how to do basic skills in R
 
 - These skills may seem simple, but are a critical foundation for the rest of the course
-
-- There will also be some review from PS1
-  - This is intentional: it is easier to understand a concept you see in multiple contexts
-  - It also proves to you that you can figure a lot out on your own
 
 #### Not the goal: Fluency
 
@@ -140,6 +126,11 @@ name: intro
 - This is where you can type in code and have it run immediately
 - Or, when you run code from the Source Editor, it will show up here
 - It will also show any output or errors
+
+---
+# Console gif
+
+![Console gif](pics/console_type.gif)
 
 ---
 
@@ -207,6 +198,11 @@ mean(dat=="heads")
     - To Files Pane Location
 
 ---
+# Files tab
+
+![Files Tab](pics/files_pane.gif)
+
+---
 
 # Help Tab
 
@@ -227,6 +223,11 @@ help(plot)
 
 - Of course, plenty of materials also available across the internet!
   - And Gen AI can be helpful, but remember it's not always right
+
+---
+# Open file into source
+
+![Open file](pics/open_file.gif)
 
 ---
 
@@ -264,7 +265,13 @@ log(exp(1))
 (1+1)^9
 ```
 
-More fun comamnds and tricks in the [appendix](#appendix)
+More fun commands and tricks in the [appendix](#appendix)
+
+
+---
+# Gif of source pane
+
+![Running Code](pics/run_code.gif)
 
 ---
 
@@ -318,6 +325,7 @@ More fun comamnds and tricks in the [appendix](#appendix)
 library(vtable)
 vtable(iris)
 ```
+
 
 ---
 
@@ -755,168 +763,11 @@ df2 = data.frame(x = rnorm(10), y = runif(10))
 
 ---
 
-# dplyr
-
-- In this course, we'll be working with data largely using the **dplyr** package, which is a part of the **tidyverse**
-- **dplyr** is a collection of verbs for manipulating data, all strung together with the pipe `%&gt;%` (which technically **dplyr** just borrows from **magrittr**)
-- **dplyr** has lots of functions in it. Today we'll cover just five: `pull()`, `filter()`, `%&gt;%`, `select()`, and `mutate()`.
-- For all of these, don't forget that if you want to take the data frame you've changed and *keep* that change, you have to re-assign the object with `&lt;-` or `=`!
-- If you already know a different way of doing things in R, I **strongly recommend** using the **dplyr** commands, if only for this class, as it will make it much easier to follow along with the material, and it's good to learn to pick up new things (and also in my experience you guys end up making things waaaay harder on yourselves by avoiding the switch)
-
----
-
-# pull()
-
-- Pull just takes a vector back out of a data set, just like `$` or `[[]]`
-- So why use it? It plays well with the pipe (upcoming)
-- Also, it's flexible. It takes a variable name, a variable name as a string, or a column number
-
-
-``` r
-mtcars$cyl
-pull(mtcars, cyl)
-pull(mtcars, 'cyl')
-pull(mtcars, 2)
-mtcars %&gt;% pull(cyl)
-```
-
----
-
-# filter()
-
-- `filter()` picks just some of the *rows* of your data
-- Important for analyzing a subset of your data!
-- Give it a logical statement that's `TRUE` for the rows you want. `==` checks for equality!
-
-
-``` r
-filter(mtcars, cyl == 4 &amp; am == 1)
-```
-
-```
-##                 mpg cyl  disp  hp drat    wt  qsec vs am gear carb
-## Datsun 710     22.8   4 108.0  93 3.85 2.320 18.61  1  1    4    1
-## Fiat 128       32.4   4  78.7  66 4.08 2.200 19.47  1  1    4    1
-## Honda Civic    30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
-## Toyota Corolla 33.9   4  71.1  65 4.22 1.835 19.90  1  1    4    1
-## Fiat X1-9      27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
-## Porsche 914-2  26.0   4 120.3  91 4.43 2.140 16.70  0  1    5    2
-## Lotus Europa   30.4   4  95.1 113 3.77 1.513 16.90  1  1    5    2
-## Volvo 142E     21.4   4 121.0 109 4.11 2.780 18.60  1  1    4    2
-```
-
----
-
-# The pipe
-
-- The pipe `%&gt;%` is important for making your code readable, and minimizing balanced-parentheses errors
-- It takes whatever is on its left and makes it the first argument of the function on the right
-- So whatever object you're working with you take, ship it along to the next function, process, then ship along again, then ship along again! Like a conveyer belt
-- Notice that all **dplyr** functions take the data frame as the first argument, making it easy to chain them
-- "Ships along" anything, including vectors or single numbers, not just data frames! Track what the object being shipped is in each step.
-
-
----
-
-# The pipe
-
-- See how clean it can make the code!
-
-
-``` r
-mean(mtcars[mtcars$am == 1,]$cyl, na.rm = TRUE)
-```
-
-```
-## [1] 5.076923
-```
-
-vs.
-
-
-``` r
-mtcars %&gt;%
-  filter(am == 1) %&gt;%
-  pull(cyl) %&gt;%
-  mean(na.rm = TRUE)
-```
-
-```
-## [1] 5.076923
-```
-
----
-
-# select()
-
-- `select()` is like `filter()`, but instead of picking rows it picks columns
-- Unlike `pull()` it doesn't give you a vector - it gives you back a data frame with fewer columns
-
-
-``` r
-mtcars %&gt;%
-  select(mpg, cyl) %&gt;%
-  summary()
-```
-
-```
-##       mpg             cyl       
-##  Min.   :10.40   Min.   :4.000  
-##  1st Qu.:15.43   1st Qu.:4.000  
-##  Median :19.20   Median :6.000  
-##  Mean   :20.09   Mean   :6.188  
-##  3rd Qu.:22.80   3rd Qu.:8.000  
-##  Max.   :33.90   Max.   :8.000
-```
-
----
-
-# mutate()
-
-- `mutate()` creates a new column using the old ones. You can assign multiple columns at once!
-- The syntax is `NewVariableName = FunctionOfOldVariables`
-- Don't forget to save the object!
-
-
-``` r
-mtcars &lt;- mtcars %&gt;%
-  mutate(high_mpg = mpg &gt; median(mpg))
-mtcars %&gt;%
-  pull(high_mpg) %&gt;%
-  table()
-```
-
-```
-## .
-## FALSE  TRUE 
-##    17    15
-```
----
-
 # Basics of R
 
 - This has been a lot of information!
 - To really learn it you'll have to get used to applying it yourself
-- For that we will be using the **swirl** package which will walk us through using these commands!
-
----
-
-# Swirl
-
-- Open up R and install Swirl with `install.packages('swirl')`
-- Then, load up swirl with `library(swirl)`
-- Download the Swirl course for this class (the first time you use it) with `install_course_github('big-data-and-economics','ECON368-R-Swirls')`
-  - If you already have installed, you need to first `uninstall_course('ECON368-R-Swirls')` to refresh your installation
-- Then start swirl with `swirl()` and pick ECON368-R-Swirls, and the Introduction to R lesson. Let's work through this!
-- This is your in-class assignment, due before Thursday
-
----
-
-class: inverse, center, middle
-
-# Next lecture(s): Working with data!
-
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+- We'll do this for next two weeks
 
 ---
 name: appendix
@@ -1694,7 +1545,7 @@ df2$x[1]
 ```
 
 ```
-## [1] -0.291172
+## [1] -0.3779136
 ```
 --
 
