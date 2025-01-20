@@ -38,14 +38,15 @@ knitr::opts_chunk$set(
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(tidyverse,arrow,datasauRus,gganimate,jsonlite,gapminder)
 ```
-
+<!--Reorganize? So empirical workflow is overarching and then downloading, file formats, compression, data checks are sub items?-->
 # Table of contents
 
 - [Prologue](#prologue)
 - [Empirical Workflow](#empirical-workflow)
-- [Downloading data](#downloading-data)
-- [File formats](#file-formats)
-- [Archiving & file compression](#archiving)
+  - [Downloading data](#downloading-data)
+  - [File formats](#file-formats)
+  - [Archiving & file compression](#archiving)
+  - [Data checks](#data-checks)
 - [Dictionaries](#dictionaries) (if time)
 - [Big Data file types](#big-data) (if time)
 
@@ -71,9 +72,6 @@ Today we'll focus on grappling with data
   - Dictionaries (hash tables)
 
   - Big Data file types
-
----
-# Student Presentation
 
 ---
 # Why do we need to do this?
@@ -122,7 +120,7 @@ ggplot(datasaurus_dozen, aes(x = x, y = y))+
 ---
 # Not every odd dataset is wrong
 
-- Sometimes bizarre looking dataaset is real (see the [Japan Phillips curve](https://twitter.com/BaldwinRE/status/1372920323943886849/photo/1))
+- Sometimes bizarre looking dataset is real (see the [Japan Phillips curve](https://twitter.com/BaldwinRE/status/1372920323943886849/photo/1))
 
 - For example, sometimes there are real outliers in the data 
   - You'll need to decide what to do about them
@@ -275,7 +273,7 @@ name: empirical-workflow
 
 - The cause of most of your errors is due to a poorly designed .hi[Empirical Workflow]
 
-- .[Empirical Workflow]: A fixed set of routines you always follow to identify the most common errors
+- .hi[Empirical Workflow]: A fixed set of routines you always follow to identify the most common errors
 	- Think of it as your morning routine: alarm goes off, go to wash up, make your coffee/tea, put pop tart in toaster, contemplate your existence in the universe until **ding**, eat pop tart repeat *ad infinitum*
 
 - Finding weird errors is a different task; empirical workflows catch typical and common errors
@@ -285,8 +283,7 @@ name: empirical-workflow
 ---
 # Why do we use checklists?
 
-- My weekly routine usually involves driving from Melrose, MA to Lewiston, ME by 11am
-  - Last year it was 9:30am -- the checklist was extra important then
+- My weekly Tuesday routine involves driving from Melrose, MA to Lewiston, ME by class start
 
 - I need to make sure I have everything I need for the next two days (minimum)
 
@@ -300,7 +297,7 @@ name: empirical-workflow
 
 ☐ Prep breakfast
 
-☐ Bring my fiance coffee in bed (bonus item)
+☐ Bring my spouse coffee in bed (bonus item)
 
 ☐ Pour tea into travel mug
 
@@ -462,19 +459,6 @@ ggplot(data=resumes,aes(y=ofjobs,x=race)) +
     - Codebooks
     - Intuition
     - Emails to the source/creator of data
-
----
-# Wait, how does ggplot work?
-
-See slides from [Lecture 1](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/01-intro/01-Intro.html#55) for a full explanations
-
-- Basically, it is a useful data visualization tool that allows you to specify the data and the type of plot you want to make
-
-- **Pro tip:** It works best when your are organized "long" instead of wide
-
-- If you'd like to present on ggplot in class this month (instead of the topic you signed up for), let me know!
-
-- Charlie will do a short session on it as well
 
 ---
 class: inverse, center, middle
@@ -906,18 +890,6 @@ THese are all found on the webpage: https://www.census.gov/programs-surveys/ces/
 
 ---
 class: inverse, center, middle
-
-# Next lecture: Coding in R
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
-
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
-infile=knitr::current_input() %>% str_replace('.Rmd','.html')
-#infile = list.files(pattern = '.html')
-pagedown::chrome_print(input = infile, timeout = 100)
-```
-
----
-class: inverse, center, middle
 name: appendix
 
 # Appendix
@@ -976,3 +948,9 @@ rm('county_outcomes.csv') # remove the file
 ```
 
 I don't evaluate the code because it will make knitting take awhile, but try it yourself
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+infile=knitr::current_input() %>% str_replace('.Rmd','.html')
+#infile = list.files(pattern = '.html')
+pagedown::chrome_print(input = infile, timeout = 100)
+```

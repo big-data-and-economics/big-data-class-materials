@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Big Data and Economics</title>
+    <title>Data Science for Economists</title>
     <meta charset="utf-8" />
     <meta name="author" content="Kyle Coombs" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -15,7 +15,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Big Data and Economics
+# Data Science for Economists
 ]
 .subtitle[
 ## Lecture 3: Data tips
@@ -75,9 +75,6 @@ Today we'll focus on grappling with data
   - Big Data file types
 
 ---
-# Student Presentation
-
----
 # Why do we need to do this?
 
 - We summarize data because we can't look at every data point and see a pattern
@@ -89,14 +86,12 @@ Today we'll focus on grappling with data
 ---
 # DataSarus Dozen
 
-- A more ambitious example is the [Datasaurus Dozen](https://www.autodeskresearch.com/publications/samestats) dataset.
-
 &lt;img src="03-data-tips_files/figure-html/datasaurus_dozen-1.gif" style="display: block; margin: auto;" /&gt;
 
 ---
 # Not every odd dataset is wrong
 
-- Sometimes bizarre looking dataaset is real (see the [Japan Phillips curve](https://twitter.com/BaldwinRE/status/1372920323943886849/photo/1))
+- Sometimes bizarre looking dataset is real (see the [Japan Phillips curve](https://twitter.com/BaldwinRE/status/1372920323943886849/photo/1))
 
 - For example, sometimes there are real outliers in the data 
   - You'll need to decide what to do about them
@@ -110,6 +105,154 @@ Today we'll focus on grappling with data
 - Throughout this course we'll think about how to deal with these issues
 
 - Today we're making sure you have safeguards in place so you don't write an entire paper only to discover your dataset looks like a T-rex
+
+---
+# Types of data
+
+1. "Long" data (a.k.a. "Big-N" data because `\(N\)` very, very large [and may not all fit onto a single hard drive!], government tax records, Medicare claims data, etc.)
+
+2. "Wide" data (a.k.a. "Big-K" data because `\(K&gt;N\)`, customer data sets where each click is a variable)
+
+3. "Wild" data (unstructured; happenstance; collected without a particular intention; e.g. twitter, contrast with Census surveys)
+
+4. "Big Data" is a catch-all for any combination of the above data types that is hard to analyze with classical methods like OLS regression
+  - Too many variables
+  - Too many observations
+  - Needs special wrangling or analysis
+
+---
+# Long data
+&lt;img src="pics/longdata.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+- Main application: *identifying causal effects*
+- Example: effects of improving schools on income
+
+---
+# Wide data
+
+&lt;img src="pics/widedata.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+- Main application: *prediction*
+- Example: predicting income to target ads from tons of information like location, links clicked, etc.
+
+---
+# Wild Data
+
+.scroll-box-12[
+```html
+&lt;caption&gt;List of men's Olympic records in athletics
+&lt;/caption&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;th scope="col" width="12%"&gt;Event
+&lt;/th&gt;
+&lt;th class="unsortable" width="5%"&gt;Record
+&lt;/th&gt;
+&lt;th scope="col" width="10%"&gt;Athlete(s)
+&lt;/th&gt;
+&lt;th scope="col" width="15%"&gt;Nation
+&lt;/th&gt;
+&lt;th scope="col" width="10%"&gt;Games
+&lt;/th&gt;
+&lt;th scope="col" width="5%"&gt;Date
+&lt;/th&gt;
+&lt;th scope="col" class="unsortable" width="3%"&gt;Ref(s)
+&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;
+&lt;th scope="row"&gt;&lt;span data-sort-value="00100&amp;#160;!"&gt;&lt;a href="/wiki/100_metres" title="100 metres"&gt;100 metres&lt;/a&gt;&lt;/span&gt;
+&lt;/th&gt;
+&lt;td align="right"&gt;9.63&amp;#160;
+&lt;/td&gt;
+&lt;td&gt;&lt;span data-sort-value="Bolt, Usain"&gt;&lt;span class="vcard"&gt;&lt;span class="fn"&gt;&lt;a href="/wiki/Usain_Bolt" title="Usain Bolt"&gt;Usain Bolt&lt;/a&gt;&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;
+&lt;/td&gt;
+&lt;td&gt;&lt;span class="mw-image-border" typeof="mw:File"&gt;&lt;span&gt;&lt;img alt="" src="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/22px-Flag_of_Jamaica.svg.png" decoding="async" width="22" height="11" class="mw-file-element" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/33px-Flag_of_Jamaica.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_Jamaica.svg/44px-Flag_of_Jamaica.svg.png 2x" data-file-width="1200" data-file-height="600" /&gt;&lt;/span&gt;&lt;/span&gt;&amp;#160;&lt;a href="/wiki/Jamaica_at_the_2012_Summer_Olympics" title="Jamaica at the 2012 Summer Olympics"&gt;Jamaica&lt;/a&gt;&amp;#160;&lt;span style="font-size:90%;"&gt;(JAM)&lt;/span&gt;
+&lt;/td&gt;
+&lt;td&gt;&lt;span data-sort-value="2012&amp;#160;!"&gt;&lt;a href="/wiki/Athletics_at_the_2012_Summer_Olympics_%E2%80%93_Men%27s_100_metres" title="Athletics at the 2012 Summer Olympics – Men&amp;#39;s 100 metres"&gt;2012 London&lt;/a&gt;&lt;/span&gt;
+&lt;/td&gt;
+&lt;td&gt;&lt;span data-sort-value="000000002012-08-05-0000" style="white-space:nowrap"&gt;August 5, 2012&lt;/span&gt;
+&lt;/td&gt;
+&lt;td align="center"&gt;&lt;sup id="cite_ref-9" class="reference"&gt;&lt;a href="#cite_note-9"&gt;&amp;#91;9&amp;#93;&lt;/a&gt;&lt;/sup&gt;
+&lt;/td&gt;&lt;/tr&gt;
+```]
+
+---
+# Why does data type matter?
+
+--
+
+1. Data type determines how much memory is required to store information
+
+2. Data type determines what method you can use to read and analyze the data
+
+--
+
+  - A difference-in-difference model requires a different data shape than a regression discontinuity model
+  - You cannot have a wide data set with one row per unit and one column per year
+
+---
+# The data you need depend on the question you're asking
+
+- Any dataset, no matter how big, has simplified the world in some way
+
+- You want the simplification to match the question
+
+- How do you record where a person is? 
+  - County? Lots of people have same location. 
+  - IP address? Changes frequently 
+  - GPS coordinates? Too precise, and changes every second!
+
+- Your question and theory should guide your data collection
+  - Are you curious about the effect of local government policies or firms on people?
+  - Are you looking to measure the effect of air pollution on health?
+  - Do you want to see how people change their commute patterns over time? When there is a road closure?
+
+---
+# `ggplot` wants long data
+
+The ggplot2 aesthetics expect "long" data. This is distinct from the "wide" format, where each series has its own column.
+
+--
+
+  #### Long will work
+
+```
+## # A tibble: 6 × 6
+##   country     continent  year lifeExp      pop gdpPercap
+##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+## 1 Afghanistan Asia       1952    28.8  8425333      779.
+## 2 Afghanistan Asia       1957    30.3  9240934      821.
+## 3 Afghanistan Asia       1962    32.0 10267083      853.
+## 4 Afghanistan Asia       1967    34.0 11537966      836.
+## 5 Afghanistan Asia       1972    36.1 13079460      740.
+## 6 Afghanistan Asia       1977    38.4 14880372      786.
+```
+
+#### Wide would not work
+
+.scroll-box-12[
+
+```
+## # A tibble: 142 × 26
+##    country     continent lifeExp_1952 lifeExp_1957 lifeExp_1962 lifeExp_1967
+##    &lt;fct&gt;       &lt;fct&gt;            &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+##  1 Afghanistan Asia              28.8         30.3         32.0         34.0
+##  2 Albania     Europe            55.2         59.3         64.8         66.2
+##  3 Algeria     Africa            43.1         45.7         48.3         51.4
+##  4 Angola      Africa            30.0         32.0         34           36.0
+##  5 Argentina   Americas          62.5         64.4         65.1         65.6
+##  6 Australia   Oceania           69.1         70.3         70.9         71.1
+##  7 Austria     Europe            66.8         67.5         69.5         70.1
+##  8 Bahrain     Asia              50.9         53.8         56.9         59.9
+##  9 Bangladesh  Asia              37.5         39.3         41.2         43.5
+## 10 Belgium     Europe            68           69.2         70.2         70.9
+## # ℹ 132 more rows
+## # ℹ 20 more variables: lifeExp_1972 &lt;dbl&gt;, lifeExp_1977 &lt;dbl&gt;,
+## #   lifeExp_1982 &lt;dbl&gt;, lifeExp_1987 &lt;dbl&gt;, lifeExp_1992 &lt;dbl&gt;,
+## #   lifeExp_1997 &lt;dbl&gt;, lifeExp_2002 &lt;dbl&gt;, lifeExp_2007 &lt;dbl&gt;,
+## #   gdpPercap_1952 &lt;dbl&gt;, gdpPercap_1957 &lt;dbl&gt;, gdpPercap_1962 &lt;dbl&gt;,
+## #   gdpPercap_1967 &lt;dbl&gt;, gdpPercap_1972 &lt;dbl&gt;, gdpPercap_1977 &lt;dbl&gt;,
+## #   gdpPercap_1982 &lt;dbl&gt;, gdpPercap_1987 &lt;dbl&gt;, gdpPercap_1992 &lt;dbl&gt;, …
+```
+]
 
 ---
 class: inverse, center, middle
@@ -126,7 +269,7 @@ name: empirical-workflow
 
 - The cause of most of your errors is due to a poorly designed .hi[Empirical Workflow]
 
-- .[Empirical Workflow]: A fixed set of routines you always follow to identify the most common errors
+- .hi[Empirical Workflow]: A fixed set of routines you always follow to identify the most common errors
 	- Think of it as your morning routine: alarm goes off, go to wash up, make your coffee/tea, put pop tart in toaster, contemplate your existence in the universe until **ding**, eat pop tart repeat *ad infinitum*
 
 - Finding weird errors is a different task; empirical workflows catch typical and common errors
@@ -136,8 +279,7 @@ name: empirical-workflow
 ---
 # Why do we use checklists?
 
-- My weekly routine usually involves driving from Melrose, MA to Lewiston, ME by 11am
-  - Last year it was 9:30am -- the checklist was extra important then
+- My weekly Tuesday routine involves driving from Melrose, MA to Lewiston, ME by class start
 
 - I need to make sure I have everything I need for the next two days (minimum)
 
@@ -151,7 +293,7 @@ name: empirical-workflow
 
 ☐ Prep breakfast
 
-☐ Bring my fiance coffee in bed (bonus item)
+☐ Bring my spouse coffee in bed (bonus item)
 
 ☐ Pour tea into travel mug
 
