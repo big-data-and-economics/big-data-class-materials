@@ -362,8 +362,8 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 
 Ethan Wu is our Course-Attached tutor. He will host office hours in the SASC and will be available for individual appointments. His hours are:
 
-- **Evening Help Session:** TK
-- **Regular Office Hours:** TK
+- **Evening Help Session:** Thursdays at 6:30pm in PGill 227
+- **Regular Office Hours:** By appointment
 
 He can help you troubleshoot *R*. He does not have solutions to the problem sets, but he can help you figure them out. 
 
