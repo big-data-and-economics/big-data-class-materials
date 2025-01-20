@@ -85,23 +85,24 @@ Thursday (2025-01-16): Git and Github ([.html][02-Git.html], [.pdf][02-Git.pdf],
 Tuesday (2025-01-21): R bootcamp ([.html][04-rlang.html], [.pdf][04-rlang.pdf], [.Rmd](lectures/04-rlang/04-rlang.Rmd)) and (Git spillover)
 
 - Exercise due before class: [Datacamp Introduction to R: R Basics and Data frames][datacamp], 
-- In-class exercise: [Authoring and Reproducible Research](https://stat545.stat.ubc.ca/notes/notes-a03/)
+- In-class exercise: [Authoring and Reproducible Research](https://github.com/big-data-and-economics/exercises/tree/main/04-modular-data)
 
 Thursday (2025-01-23): Professor away, CAT leads class
 
 - Exercise due before class: [Reporting with RMarkdown](https://app.datacamp.com/learn/courses/reporting-with-rmarkdown)
-- In-class exercise: [R tutorial on Rmarkdowns led by CAT](https://stat545.stat.ubc.ca/notes/notes-a03/)
+- In-class exercise: [R tutorial on Rmarkdowns led by CAT](https://github.com/big-data-and-economics/exercises/tree/main/05-first-rmarkdown)
 
 ### Week 4: Tidyverse and Data Tips
 
-Tuesday (2025-01-28): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse.pdf], [.Rmd](lectures/05-tidyverse/05-tidyverse.Rmd))
+Tuesday (2025-01-28): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips.pdf], [.Rmd](lectures/03-data-tips/03-data-tips.Rmd))
+- Exercise due before class: [Review the DataVizChecklist by Nick Huntington-Klein](https://nickch-k.github.io/DataVizChecklist/), then post your own data visualization checklist to the [Discussions forum](https://github.com/orgs/big-data-and-economics/discussions/11)
+- **Optional:** [Datacamp: Introduction to Importing Data in R, Chapter 2: readr and data.table][datacamp]
+- In-class activity: [Data checks](https://github.com/big-data-and-economics/exercises/tree/main/06-data-checks)
+
+Thursday (2025-01-30): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse.pdf], [.Rmd](lectures/05-tidyverse/05-tidyverse.Rmd))
 
 - Exercise due before class: [Datacamp: Introduction to Tidyverse][datacamp] 
-- In-class activity: 
-
-Thursday (2025-01-30): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips.pdf], [.Rmd](lectures/03-data-tips/03-data-tips.Rmd))
-- Exercise due before class: [Datacamp: Introduction to Importing Data in R][datacamp]
-- In-class activity: [Download various data]
+- In-class activity: [Tidying data](https://github.com/big-data-and-economics/exercises/tree/main/07-tidying-data)
 
 ### Week 5: Spatial Analysis
 
