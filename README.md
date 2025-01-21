@@ -82,20 +82,20 @@ Thursday (2025-01-16): Git and Github ([.html][02-Git.html], [.pdf][02-Git.pdf],
 
 ### Week 3: R Basics
 
-Tuesday (2025-01-21): R bootcamp ([.html][04-rlang.html], [.pdf][04-rlang.pdf], [.Rmd](lectures/04-rlang/04-rlang.Rmd)) and (Git spillover)
+Tuesday (2025-01-21): R basics ([.html][04-rlang.html], [.pdf][04-rlang.pdf], [.Rmd](lectures/04-rlang/04-rlang.Rmd)) and (Git spillover)
 
 - Exercise due before class: [Datacamp Introduction to R: R Basics and Data frames][datacamp], 
-- In-class exercise: [Authoring and Reproducible Research](https://github.com/big-data-and-economics/exercises/tree/main/04-modular-data)
+- In-class exercise: [File paths and modular files](https://github.com/big-data-and-economics/exercises/tree/main/04-modular-code)
 
 Thursday (2025-01-23): Professor away, CAT leads class
 
-- Exercise due before class: [Reporting with RMarkdown](https://app.datacamp.com/learn/courses/reporting-with-rmarkdown)
+- Exercise due before class: [Datacamp: Reporting with RMarkdown](https://app.datacamp.com/learn/courses/reporting-with-rmarkdown), [Watch STAT545 video on RMarkdown's](https://www.youtube.com/watch?v=ZzDSkBgt9xQ) -- no deliverable
 - In-class exercise: [R tutorial on Rmarkdowns led by CAT](https://github.com/big-data-and-economics/exercises/tree/main/05-first-rmarkdown)
 
 ### Week 4: Tidyverse and Data Tips
 
 Tuesday (2025-01-28): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips.pdf], [.Rmd](lectures/03-data-tips/03-data-tips.Rmd))
-- Exercise due before class: [Review the DataVizChecklist by Nick Huntington-Klein](https://nickch-k.github.io/DataVizChecklist/), then post your own data visualization checklist to the [Discussions forum](https://github.com/orgs/big-data-and-economics/discussions/11)
+- Exercise due before class: Post a data quality/visualization checklist to the [Discussions forum](https://github.com/orgs/big-data-and-economics/discussions/11), [Watch STAT545 video on Reading/Writing data](https://www.youtube.com/watch?v=2nHuNu6Zaqk)
 - **Optional:** [Datacamp: Introduction to Importing Data in R, Chapter 2: readr and data.table][datacamp]
 - In-class activity: [Data checks](https://github.com/big-data-and-economics/exercises/tree/main/06-data-checks)
 
