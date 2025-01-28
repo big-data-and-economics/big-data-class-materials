@@ -47,8 +47,8 @@ pacman::p_load(tidyverse,arrow,datasauRus,gganimate,jsonlite,gapminder)
   - [File formats](#file-formats)
   - [Archiving & file compression](#archiving)
   - [Data checks](#data-checks)
-- [Dictionaries](#dictionaries) (if time)
 - [Big Data file types](#big-data) (if time)
+- [Dictionaries](#dictionaries) (if time)
 
 ---
 class: inverse, center, middle
@@ -171,7 +171,7 @@ knitr::include_graphics('pics/widedata.png')
 ---
 # Wild Data
 
-.scroll-box-12[
+.scroll-output[
 ```html
 <caption>List of men's Olympic records in athletics
 </caption>
@@ -222,7 +222,7 @@ knitr::include_graphics('pics/widedata.png')
   - You cannot have a wide data set with one row per unit and one column per year
 
 ---
-# The data you need depend on the question you're asking
+# What question are you asking?
 
 - Any dataset, no matter how big, has simplified the world in some way
 
@@ -237,26 +237,6 @@ knitr::include_graphics('pics/widedata.png')
   - Are you curious about the effect of local government policies or firms on people?
   - Are you looking to measure the effect of air pollution on health?
   - Do you want to see how people change their commute patterns over time? When there is a road closure?
-
----
-# `ggplot` wants long data
-
-The ggplot2 aesthetics expect "long" data. This is distinct from the "wide" format, where each series has its own column.
-
---
-
-  #### Long will work
-```{r aesthetics_long,echo=FALSE}
-head(gapminder)
-```
-
-#### Wide would not work
-
-.scroll-box-12[
-```{r aesthetics_wide,echo=FALSE}
-gapminder %>% pivot_wider(id_cols=c(country,continent),names_from=year,values_from=c(lifeExp,gdpPercap)) 
-```
-]
 
 ---
 class: inverse, center, middle
@@ -322,143 +302,26 @@ name: empirical-workflow
     - It'll make you a better coauthor
 
 ---
-# Play along at home
-
-#### On your computer
-
-- Everyone sync your fork of the class exercises repository<sup>1</sup>
-
-- Double-click `exercises.Rproj` on your computer to open RStudio at the correct working directory
-
-- Run the housekeeping file to install the relevant packages
-
-- Alternatively, you can open a codespace in your `exercises` repo
-
-- We will tackle the class exercise after class, but you'll take what we do in class to fill it in
-
-- We're going to explore a mangled version of the dataset from the Bertrand and Mullainathan (2004) resume audit study
-
-- Suspend some disbelief, please as I mangled the data to make it more interesting
-
-.footnote[<sup>1</sup> **Note**: I put data files on Github. This is bad practice for large files, but fine for small ones.]
-
----
 # Simple data checklist items
 
 - Simple, yet non-negotiable, programming commands and exercises to check for data errors
 
 #### 1. Read the documentation
-#### 2. Look at the data ("Real eyes realize real lies"<sup>1</sup>)
-#### 3. Look at summaries and frequency tables of variables
-#### 4. Plot histograms of key variables
-#### 5. Visualize by key groups
-#### 6. Check sum stats by key groups
-#### 7. Check if the data are the right "size"
+#### 2. Download the data and documentation
+#### 3. Open the data
+#### 4. Look at the data ("Real eyes realize real lies"<sup>1</sup>)
+#### 5. Look at summaries and frequency tables of variables
+#### 6. Plot histograms of key variables
+#### 7. Visualize by key groups
+#### 8. Check sum stats by key groups
+#### 9. Check if the data are the right "size"
 
-- There are many more potential checklist items: you'll develop your own with experience
+- There are many more potential checklist: you'll develop your own with experience
 
 - First, above all else, read any documentation associated with the file
-  - Codebooks, READMEs, etc. -- check out `data/README.txt.` for this dataset
-  - They're not riveting, but they clarify tons of small things
-  - Your first problem set doesn't come with one -- you're gonna build it!
+  - Codebooks, READMEs, etc. -- they're not riveting, but they clarify little things that can save you hours of work
 
 .footnote[<sup>1</sup> Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
-
----
-# 2. Look at the data
-
-- Open the raw data and look at it: 
-
-```{r open-data,cache=FALSE}
-resumes <- read_csv('data/lakisha_aer.csv',
-  show_col_types= FALSE) # Don't tell me the column types
-head(resumes,10)
-```
-
----
-# Drop junk rows
-
-- Oh weird, the first few rows are junk, let's skip them and give more informative names
-
-```{r skip-rows}
-resumes <- read_csv('data/lakisha_aer.csv',
-  skip=4, # skip some rows
-  col_names=c('firstname','gender','race','call','ofjobs'), # Column names
-  show_col_types = FALSE) # Don't tell me the column types
-head(resumes)
-```
-
----
-# 3. Look at summaries of variables
-
-Do factor variables have multiple spellings?
-
-```{r factor}
-table(resumes$race,resumes$gender)
-```
-
----
-# 3a. Skim again
-
-The `skimr` package is great!
-.scroll-box-20[
-```{r continuous}
-skimr::skim(resumes)
-```
-]
-
-- What's -99?
-
----
-# 4. Visualize the raw data
-
-- Go beyond the eyeball and graph the data
-```{r funky_data1, dev="svg"}
-# ggplot is a great tool for visualizing data
-ggplot(data=resumes,mapping=aes(x=ofjobs))+
-  geom_histogram()
-```
-
-- Wait a minute! What's going on with the -99 values?
-
----
-# 5. Visualize by group
-```{r funky_data2, dev="svg",fig.width=6,fig.height=3.5}
-resumes <-  mutate(resumes,race=ifelse(race=='cauc' | race=='Caucasian','White',
-    ifelse(race=="BLACK" | race=="afam", "Black",race))) # change the data up
-ggplot(data=resumes,aes(x=ofjobs,fill=race))+
-    geom_histogram(alpha=0.25) # alpha makes bars see through! 
-```
-
-- Oh! I bet -99 means NA or missing
-- This only occurs for fake black name applicant profiles
-- That could be bad news for an RCT...
-
----
-# 6. Visualize summaries by group
-
-```{r funky_data3, dev="svg"}
-ggplot(data=resumes,aes(y=ofjobs,x=race)) + 
-  geom_bar(stat='summary',fun='mean')
-```
-
-- Yep, the job counts differ meaningfully by race -- uh oh.
-
----
-# 7. Are the data the right-size?
-
-- Check if the data are the right-size
-
-- If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
-
-- If not, find out why! 
-  - Maybe there are 1020 because DC is (rightfully) included
-  - Alternatively, data are missing for a few states in a few years and dropped entirely
-
-- Search for outliers or oddities and work out possible explanations using:
-    - Codebooks
-    - Intuition
-    - Emails to the source/creator of data
 
 ---
 class: inverse, center, middle
@@ -467,7 +330,7 @@ name: downloading-data
 # Downloading data
 
 ---
-# Downloading data
+# 1. Downloading data
 
 
 - Often it is good practice to have a script that downloads the data for you
@@ -505,10 +368,10 @@ readr::read_csv(
 ---
 class: inverse, center, middle
 name: file-formats
-# File formats
+# Reading file formats
 
 ---
-# File extensions
+# 3. Reading file extensions
 
 - A file extension is the part of the file name after the period `.dta`, `.csv`, `.tab`, etc.
 
@@ -555,6 +418,224 @@ The following file extensions are not tied to a specific software program
 - Here's a more [complete list](https://en.wikipedia.org/wiki/List_of_file_formats) of almost every file extension (note: missed Stata's `.do` and `.dta` formats).
 
 - Another great discussion about file formats is [here](https://opendata.stackexchange.com/questions/1208/a-python-guide-for-open-data-file-formats) on stackexchange
+
+---
+# Proprietary file extensions
+
+The following file extensions typically require additional software to read, edit, or convert to another format
+
+| File extension                     | Description |
+|------------------------------------|-------------|
+| DB                                 | A common file extension for tabular data for SQLite |
+| SQLITE                             | Another common file extension for tabular data for SQLite |
+| XLS, XLSX                          | Tab-delimited tabular data for Microsoft Excel |
+| RDA, RDATA                         | Tabular file format for R |
+| MAT                                | ... for Matlab |
+| SAS7BDAT                           | ... for SAS |
+| SAV                                | ... for SPSS |
+| DTA                                | ... for Stata |
+
+
+---
+# Other file types that aren't data
+
+- There are many file types that don't correspond to readable data. For example, script files (e.g. `.R`, `.py`, `.jl`, `.sql`, `.do`, `.cpp`, `.f90`, ...) are text files with convenient extensions to help the user remember which programming language the code is in
+
+- As a rule of thumb, if you don't recognize the extension of a file, it's best to inspect the file in a text editor (though pay attention to the size of the file as this can also help you discern whether it's code or data)
+
+---
+# Tips for opening files with r
+
+- If you're working with tabular data, you can use the `read_csv()` function from the **readr** (tidyverse) package or `fread` from **data.table**
+- If you're working with a proprietary file format, you can use the `read_*()` functions from the **haven** package
+- If you're reading in any table format, `read_table()` might work!
+- If you're working with a JSON file, you can use the **jsonlite** package
+- When in doubt, Google/ChatGPT "How do I open file .XXX in R?"
+  - I bet you someone has already needed to solve this problem
+
+```{r read-types,warning=FALSE,message=FALSE,cache=FALSE}
+df_csv   <- read_csv('data/lakisha_aer.csv')
+df_fread   <- data.table::fread('data/lakisha_aer.tab')
+df_stata <- haven::read_dta('data/lakisha_aer.dta')
+df_xlsx <- readxl::read_xlsx('data/lakisha_aer.xlsx')
+```
+
+---
+# Help! This file froze my computer!
+
+- Sometimes we'll be reading quite large files
+  - These can be too big to fit in memory
+
+- Consult the codebook for the necessary columns
+- Or read in a single row to see the column names:
+
+```{r read-in-1-row,cache=FALSE}
+df <- read_csv('data/lakisha_aer.csv',n_max=1)
+print(names(df))
+```
+
+---
+
+# Help! This file froze my computer!
+
+Once you know your columns, read those in:
+
+```{r read-in-columns,warning=FALSE,message=FALSE,cache=FALSE}
+read_csv('data/lakisha_aer.csv',
+  col_select=c('firstname', 'race', 'gender','call','ofjobs'))
+```
+
+---
+class: inverse, center, middle
+name: archiving
+# Archiving & file compression
+
+---
+# Archiving & file compression
+
+Because data can be big and bulky, it is often easier to store and share the data in compressed form
+
+| File extension                     | Description |
+|------------------------------------|-------------|
+| ZIP                                | The most common format for file compression |
+| Z                                  | Alternative to ZIP; uses a slightly different format for compression |
+| 7Z                                 | Alternative to ZIP; uses [7-Zip](http://www.7-zip.org/) software for compression |
+| GZ                                 | Another alternative to ZIP (primarily used in Linux systems), using what's called `gzip` |
+| TAR                                | So-called "tarball" which is a way to collect many files into one archive file. TAR stands for "Tape ARchive" |
+| TAR.GZ; TGZ                        | A compressed version of a tarball (compression via `gzip`) |
+| TAR.BZ2; .TB2; .TBZ; .TBZ2         | Compressed tarball (via `bzip2`) |
+
+![Tarball vs. TGZ](Targzip.svg)
+```{r,include=F}
+#Image source: By Th0msn80 - Own work, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=4316146
+```
+
+---
+# Can I just read a zip directly in?
+
+- Yes, but it's a little more complicated
+- And you can may still want to read in a few rows or columns like before
+
+```{r read-in-zip,warning=FALSE,message=FALSE}
+read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv'))  # Unzip the file
+  head(5) # pipe to a read csv
+```
+
+Check appendix for what happens with "bigger" files when you attempt this.
+
+---
+# How do I zip a file?
+
+- You can zip a file using the `zip` command in the R terminal
+
+- It allows you to zip one or many files
+
+```{r zip-file,eval=FALSE}
+zip(zipfile='data/lakisha_aer_one.zip',
+  files='lakisha_aer.csv',
+  exdir='data') # extract to a directory
+
+zip(zipfile='data/lakisha_aer.zip',
+  files=c('lakisha_aer.rds','lakisha_aer.csv',
+    'lakisha_aer.tsv','lakisha_aer.xlsx',
+    'lakisha_aer.dta','lakisha_aer.json'))
+```
+
+---
+# 4. Look at the data
+
+- Open the raw data and look at it: 
+
+```{r open-data,cache=FALSE}
+resumes <- read_csv('data/lakisha_aer.csv',
+  show_col_types= FALSE) # Don't tell me the column types
+head(resumes,10)
+```
+
+---
+# Drop junk rows
+
+- Oh weird, the first few rows are junk, let's skip them and give more informative names
+
+```{r skip-rows}
+resumes <- read_csv('data/lakisha_aer.csv',
+  skip=4, # skip some rows
+  col_names=c('firstname','gender','race','call','ofjobs'), # Column names
+  show_col_types = FALSE) # Don't tell me the column types
+head(resumes)
+```
+
+---
+# 5. Look at summaries of variables
+
+Do factor variables have multiple spellings?
+
+```{r factor}
+table(resumes$race,resumes$gender)
+```
+
+---
+# 6. Visualize the raw data
+
+- Go beyond the eyeball and graph the data
+```{r funky_data1, dev="svg"}
+# ggplot is a great tool for visualizing data
+ggplot(data=resumes,mapping=aes(x=ofjobs))+
+  geom_histogram()
+```
+
+- Wait a minute! What's going on with the -99 values?
+
+---
+# 7. Visualize by group
+```{r funky_data2, dev="svg",fig.width=6,fig.height=3.5}
+resumes <-  mutate(resumes,race=ifelse(race=='cauc' | race=='Caucasian','White',
+    ifelse(race=="BLACK" | race=="afam", "Black",race))) # change the data up
+ggplot(data=resumes,aes(x=ofjobs,fill=race))+
+    geom_histogram(alpha=0.25) # alpha makes bars see through! 
+```
+
+- Oh! I bet -99 means NA or missing
+- This only occurs for fake black name applicant profiles
+- That could be bad news for an RCT...
+
+---
+# 8. Visualize summaries by group
+
+```{r funky_data3, dev="svg"}
+ggplot(data=resumes,aes(y=ofjobs,x=race)) + 
+  geom_bar(stat='summary',fun='mean')
+```
+
+- Yep, the job counts differ meaningfully by race -- uh oh.
+
+---
+# 9. Are the data the right-size?
+
+- Check if the data are the right-size
+
+- If you have a panel dataset is 50 states over 20 years, check if there are 1000 observations
+
+- If not, find out why! 
+  - Maybe there are 1020 because DC is (rightfully) included
+  - Alternatively, data are missing for a few states in a few years and dropped entirely
+
+- Search for outliers or oddities and work out possible explanations using:
+    - Codebooks
+    - Intuition
+    - Emails to the source/creator of data
+
+---
+class: inverse, center, middle
+name: big-data
+# Big Data File Types
+
+---
+# General Types of Data
+
+- When you think of data, you probably think of rows and columns, like a matrix or a spreadsheet 
+
+- But it turns out there are other ways to store data, and you should know their similarities and differences to tabular data
 
 ---
 # Examples JSON
@@ -659,133 +740,37 @@ resumes_json <- read_json('data/lakisha_aer.json',
 head(resumes_json)
 ```
 
----
-# Proprietary file extensions
-
-The following file extensions typically require additional software to read, edit, or convert to another format
-
-| File extension                     | Description |
-|------------------------------------|-------------|
-| DB                                 | A common file extension for tabular data for SQLite |
-| SQLITE                             | Another common file extension for tabular data for SQLite |
-| XLS, XLSX                          | Tab-delimited tabular data for Microsoft Excel |
-| RDA, RDATA                         | Tabular file format for R |
-| MAT                                | ... for Matlab |
-| SAS7BDAT                           | ... for SAS |
-| SAV                                | ... for SPSS |
-| DTA                                | ... for Stata |
 
 ---
-# Tips for opening files with r
+# Big Data file types
 
-- If you're working with tabular data, you can use the `read_csv()` function from the **readr** (tidyverse) package or `fread` from **data.table**
-- If you're working with a proprietary file format, you can use the `read_*()` functions from the **haven** package
-- If you're reading in any table format, `read_table()` might work!
-- If you're working with a JSON file, you can use the **jsonlite** package
-- When in doubt, Google/ChatGPT "How do I open file .XXX in R?"
-  - I bet you someone has already needed to solve this problem
+- Big Data file systems like Hadoop and Spark often use the same file types as R, SQL, Python, and Julia
 
-```{r read-types,warning=FALSE,message=FALSE,cache=FALSE}
-df_csv   <- read_csv('data/lakisha_aer.csv')
-df_fread   <- data.table::fread('data/lakisha_aer.tab')
-df_stata <- haven::read_dta('data/lakisha_aer.dta')
-df_xlsx <- readxl::read_xlsx('data/lakisha_aer.xlsx')
-```
+- That is, `CSV` and `TSV` files are the workhorse
+
+- Because of the nature of distributed file systems (which we will discuss in much greater detail next time), it is often the case that JSON and XML are not good choices because they can't be broken up across machines 
+
+- Note: there is a distinction between JSON files and JSON records; see the second link at the end of this document for further details
 
 ---
-# Help! This file froze my computer!
+# Big Data File Types
 
-- Sometimes we'll be reading quite large files
-  - These can be too big to fit in memory
+## Sequence
 
-Just read in a single row to see the column names:
+- Sequence files are dictionaries that have been optimized for Hadoop and friends
 
-```{r read-in-1-row,cache=FALSE}
-# I need to sete an environment variable to increase the size of the connection
-# R will complain if you try to read in a file that's too big
-# This will reset when I close this session.
-df <- read_csv('data/lakisha_aer.csv',n_max=1)
-```
+- The advantage to taking the dictionary approach is that the files can easily be coupled and decoupled
 
-- You can and should also consult the codebook (remember those?)
+## Avro
 
----
+- Avro is an evolved version of Sequence---it contains more capability to store complex objects natively
 
-# Help! This file froze my computer!
+## Parquet
 
-Once you know your columns, read those in:
+- Parquet is a format that allows Hadoop and friends to partition the data column-wise (rather than row-wise)
 
-```{r read-in-columns,warning=FALSE,message=FALSE,cache=FALSE}
-read_csv('data/lakisha_aer.csv',
-  col_select=c('firstname', 'race', 'gender','call','ofjobs'))
-```
+- Other formats in this vein are RC (Record Columnar) and ORC (Optimized Record Columnar)
 
----
-class: inverse, center, middle
-name: archiving
-# Archiving & file compression
-
----
-# Archiving & file compression
-
-Because data can be big and bulky, it is often easier to store and share the data in compressed form
-
-| File extension                     | Description |
-|------------------------------------|-------------|
-| ZIP                                | The most common format for file compression |
-| Z                                  | Alternative to ZIP; uses a slightly different format for compression |
-| 7Z                                 | Alternative to ZIP; uses [7-Zip](http://www.7-zip.org/) software for compression |
-| GZ                                 | Another alternative to ZIP (primarily used in Linux systems), using what's called `gzip` |
-| TAR                                | So-called "tarball" which is a way to collect many files into one archive file. TAR stands for "Tape ARchive" |
-| TAR.GZ; TGZ                        | A compressed version of a tarball (compression via `gzip`) |
-| TAR.BZ2; .TB2; .TBZ; .TBZ2         | Compressed tarball (via `bzip2`) |
-
-![Tarball vs. TGZ](Targzip.svg)
-```{r,include=F}
-#Image source: By Th0msn80 - Own work, CC BY 3.0, https://commons.wikimedia.org/w/index.php?curid=4316146
-```
-
----
-# Can I just read a zip directly in?
-
-- Yes, but it's a little more complicated
-- And you can may still want to read in a few rows or columns like before
-
-```{r read-in-zip,warning=FALSE,message=FALSE}
-read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv'))  # Unzip the file
-  head(5) # pipe to a read csv
-```
-
-Check appendix for what happens with "bigger" files when you attempt this.
-
----
-# How do I zip a file?
-
-- You can zip a file using the `zip` command in the R terminal
-
-- It allows you to zip one or many files
-
-```{r zip-file,eval=FALSE}
-zip(zipfile='lakisha_aer_one.zip',
-  files='lakisha_aer.csv')
-
-zip(zipfile='lakisha_aer.zip',
-  files=c('lakisha_aer.rds','lakisha_aer.csv','lakisha_aer.tsv','lakisha_aer.xlsx','lakisha_aer.dta','lakisha_aer.json'))
-```
-
----
-# Other file types that aren't data
-
-- There are many file types that don't correspond to readable data. For example, script files (e.g. `.R`, `.py`, `.jl`, `.sql`, `.do`, `.cpp`, `.f90`, ...) are text files with convenient extensions to help the user remember which programming language the code is in
-
-- As a rule of thumb, if you don't recognize the extension of a file, it's best to inspect the file in a text editor (though pay attention to the size of the file as this can also help you discern whether it's code or data)
-
----
-# General Types of Data
-
-- When you think of data, you probably think of rows and columns, like a matrix or a spreadsheet 
-
-- But it turns out there are other ways to store data, and you should know their similarities and differences to tabular data
 
 ---
 class: inverse, center, middle
@@ -836,40 +821,12 @@ print(phone_numbers_list)
 
 - So I could have a dictionary of data frames, a dictionary of arrays, ...
 
+
 ---
 class: inverse, center, middle
-name: big-data
-# Big Data File Types
+name: appendix
 
----
-# Big Data file types
-
-- Big Data file systems like Hadoop and Spark often use the same file types as R, SQL, Python, and Julia
-
-- That is, `CSV` and `TSV` files are the workhorse
-
-- Because of the nature of distributed file systems (which we will discuss in much greater detail next time), it is often the case that JSON and XML are not good choices because they can't be broken up across machines 
-
-- Note: there is a distinction between JSON files and JSON records; see the second link at the end of this document for further details
-
----
-# Big Data File Types
-
-## Sequence
-
-- Sequence files are dictionaries that have been optimized for Hadoop and friends
-
-- The advantage to taking the dictionary approach is that the files can easily be coupled and decoupled
-
-## Avro
-
-- Avro is an evolved version of Sequence---it contains more capability to store complex objects natively
-
-## Parquet
-
-- Parquet is a format that allows Hadoop and friends to partition the data column-wise (rather than row-wise)
-
-- Other formats in this vein are RC (Record Columnar) and ORC (Optimized Record Columnar)
+# Appendix
 
 ---
 # Useful Links
@@ -877,22 +834,6 @@ name: big-data
 - [A beginner's guide to Hadoop storage formats](https://blog.matthewrathbone.com/2016/09/01/a-beginners-guide-to-hadoop-storage-formats.html)
 
 - [Hadoop File Formats: It's not just CSV anymore](https://community.hds.com/community/products-and-solutions/pentaho/blog/2017/11/07/hadoop-file-formats-its-not-just-csv-anymore)
-
----
-# Your challenge
-
-- With time left, try to download each of the following files to a folder and read in five columns of your choosing:
-  - https://www2.census.gov/ces/opportunity/tract_covariates.csv
-  - https://www2.census.gov/ces/opportunity/county_outcomes.zip
-  - https://www2.census.gov/ces/opportunity/tract_outcomes.zip (challenge)
-
-THese are all found on the webpage: https://www.census.gov/programs-surveys/ces/data/public-use-data/opportunity-atlas-data-tables.html
-
----
-class: inverse, center, middle
-name: appendix
-
-# Appendix
 
 ---
 # What if there is only one file in the zip?
