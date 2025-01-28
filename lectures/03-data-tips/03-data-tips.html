@@ -190,7 +190,7 @@ Today we'll focus on grappling with data
   - You cannot have a wide data set with one row per unit and one column per year
 
 ---
-# The data you need depend on the question you're asking
+# What question are you asking?
 
 - Any dataset, no matter how big, has simplified the world in some way
 
@@ -205,55 +205,6 @@ Today we'll focus on grappling with data
   - Are you curious about the effect of local government policies or firms on people?
   - Are you looking to measure the effect of air pollution on health?
   - Do you want to see how people change their commute patterns over time? When there is a road closure?
-
----
-# `ggplot` wants long data
-
-The ggplot2 aesthetics expect "long" data. This is distinct from the "wide" format, where each series has its own column.
-
---
-
-  #### Long will work
-
-```
-## # A tibble: 6 × 6
-##   country     continent  year lifeExp      pop gdpPercap
-##   &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
-## 1 Afghanistan Asia       1952    28.8  8425333      779.
-## 2 Afghanistan Asia       1957    30.3  9240934      821.
-## 3 Afghanistan Asia       1962    32.0 10267083      853.
-## 4 Afghanistan Asia       1967    34.0 11537966      836.
-## 5 Afghanistan Asia       1972    36.1 13079460      740.
-## 6 Afghanistan Asia       1977    38.4 14880372      786.
-```
-
-#### Wide would not work
-
-.scroll-box-12[
-
-```
-## # A tibble: 142 × 26
-##    country     continent lifeExp_1952 lifeExp_1957 lifeExp_1962 lifeExp_1967
-##    &lt;fct&gt;       &lt;fct&gt;            &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
-##  1 Afghanistan Asia              28.8         30.3         32.0         34.0
-##  2 Albania     Europe            55.2         59.3         64.8         66.2
-##  3 Algeria     Africa            43.1         45.7         48.3         51.4
-##  4 Angola      Africa            30.0         32.0         34           36.0
-##  5 Argentina   Americas          62.5         64.4         65.1         65.6
-##  6 Australia   Oceania           69.1         70.3         70.9         71.1
-##  7 Austria     Europe            66.8         67.5         69.5         70.1
-##  8 Bahrain     Asia              50.9         53.8         56.9         59.9
-##  9 Bangladesh  Asia              37.5         39.3         41.2         43.5
-## 10 Belgium     Europe            68           69.2         70.2         70.9
-## # ℹ 132 more rows
-## # ℹ 20 more variables: lifeExp_1972 &lt;dbl&gt;, lifeExp_1977 &lt;dbl&gt;,
-## #   lifeExp_1982 &lt;dbl&gt;, lifeExp_1987 &lt;dbl&gt;, lifeExp_1992 &lt;dbl&gt;,
-## #   lifeExp_1997 &lt;dbl&gt;, lifeExp_2002 &lt;dbl&gt;, lifeExp_2007 &lt;dbl&gt;,
-## #   gdpPercap_1952 &lt;dbl&gt;, gdpPercap_1957 &lt;dbl&gt;, gdpPercap_1962 &lt;dbl&gt;,
-## #   gdpPercap_1967 &lt;dbl&gt;, gdpPercap_1972 &lt;dbl&gt;, gdpPercap_1977 &lt;dbl&gt;,
-## #   gdpPercap_1982 &lt;dbl&gt;, gdpPercap_1987 &lt;dbl&gt;, gdpPercap_1992 &lt;dbl&gt;, …
-```
-]
 
 ---
 class: inverse, center, middle
@@ -333,11 +284,10 @@ name: empirical-workflow
 #### 8. Check sum stats by key groups
 #### 9. Check if the data are the right "size"
 
-- There are many more potential checklist items: you'll develop your own with experience
+- There are many more potential checklist: you'll develop your own with experience
 
 - First, above all else, read any documentation associated with the file
-  - Codebooks, READMEs, etc. -- check out `data/README.txt.` for this dataset
-  - They're not riveting, but they clarify tons of small things
+  - Codebooks, READMEs, etc.: not riveting, but they clarify little things and save hours of work
 
 .footnote[&lt;sup&gt;1&lt;/sup&gt; Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
 
@@ -348,7 +298,7 @@ name: downloading-data
 # Downloading data
 
 ---
-# 1. Downloading data
+# 2. Downloading data
 
 
 - Often it is good practice to have a script that downloads the data for you
@@ -408,7 +358,7 @@ name: file-formats
 # Reading file formats
 
 ---
-# 2. File extensions
+# 3. Reading file extensions
 
 - A file extension is the part of the file name after the period `.dta`, `.csv`, `.tab`, etc.
 
@@ -570,42 +520,45 @@ Because data can be big and bulky, it is often easier to store and share the dat
 
 
 ---
-# Can I just read a zip directly in?
-
-- Yes, but it's a little more complicated
-- And you can may still want to read in a few rows or columns like before
+# Unzipping in two-steps
 
 
 ``` r
-read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv'))  # Unzip the file
+# unzip('data/lakisha_aer.zip',exdir='data') # already done
+read_csv('data/lakisha_aer.csv') %&gt;% head(5)
 ```
 
 ```
-## # A tibble: 4,873 × 5
-##    firstname       gender       race       call       ofjobs
-##    &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt;
-##  1 firstname row 1 gender row 1 race row 1 call row 1     NA
-##  2 firstname row 2 gender row 2 race row 2 call row 2     NA
-##  3 firstname row 3 gender row 3 race row 3 call row 3     NA
-##  4 Allison         female       cauc       no              2
-##  5 Kristen         female       cauc       no              3
-##  6 Lakisha         female       afam       no              1
-##  7 Latonya         female       afam       no              4
-##  8 Carrie          female       cauc       no              3
-##  9 Jay             male         cauc       no              2
-## 10 Jill            female       cauc       no              2
-## # ℹ 4,863 more rows
+## # A tibble: 5 × 5
+##   firstname       gender       race       call       ofjobs
+##   &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt;
+## 1 firstname row 1 gender row 1 race row 1 call row 1     NA
+## 2 firstname row 2 gender row 2 race row 2 call row 2     NA
+## 3 firstname row 3 gender row 3 race row 3 call row 3     NA
+## 4 Allison         female       cauc       no              2
+## 5 Kristen         female       cauc       no              3
 ```
+
+#### Make that a one-step process?&lt;sup&gt;1&lt;/sup&gt;
+
 
 ``` r
+read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv')) %&gt;% # Unzip the file
   head(5) # pipe to a read csv
 ```
 
 ```
-## [1] 5
+## # A tibble: 5 × 5
+##   firstname       gender       race       call       ofjobs
+##   &lt;chr&gt;           &lt;chr&gt;        &lt;chr&gt;      &lt;chr&gt;       &lt;dbl&gt;
+## 1 firstname row 1 gender row 1 race row 1 call row 1     NA
+## 2 firstname row 2 gender row 2 race row 2 call row 2     NA
+## 3 firstname row 3 gender row 3 race row 3 call row 3     NA
+## 4 Allison         female       cauc       no              2
+## 5 Kristen         female       cauc       no              3
 ```
 
-Check appendix for what happens with "bigger" files when you attempt this.
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Check appendix for what happens with "bigger" files when you attempt this.]
 
 ---
 # How do I zip a file?
@@ -627,7 +580,7 @@ zip(zipfile='data/lakisha_aer.zip',
 ```
 
 ---
-# 2. Look at the data
+# 4. Look at the data
 
 - Open the raw data and look at it: 
 
@@ -681,7 +634,7 @@ head(resumes)
 ```
 
 ---
-# 3. Look at summaries of variables
+# 5. Look at summaries of variables
 
 Do factor variables have multiple spellings?
 
@@ -700,7 +653,7 @@ table(resumes$race,resumes$gender)
 ```
 
 ---
-# 4. Visualize the raw data
+# 6. Visualize the raw data
 
 - Go beyond the eyeball and graph the data
 
@@ -715,7 +668,7 @@ ggplot(data=resumes,mapping=aes(x=ofjobs))+
 - Wait a minute! What's going on with the -99 values?
 
 ---
-# 5. Visualize by group
+# 7. Visualize by group
 
 ``` r
 resumes &lt;-  mutate(resumes,race=ifelse(race=='cauc' | race=='Caucasian','White',
@@ -731,7 +684,7 @@ ggplot(data=resumes,aes(x=ofjobs,fill=race))+
 - That could be bad news for an RCT...
 
 ---
-# 6. Visualize summaries by group
+# 8. Visualize summaries by group
 
 
 ``` r
@@ -744,7 +697,7 @@ ggplot(data=resumes,aes(y=ofjobs,x=race)) +
 - Yep, the job counts differ meaningfully by race -- uh oh.
 
 ---
-# 7. Are the data the right-size?
+# 9. Are the data the right-size?
 
 - Check if the data are the right-size
 

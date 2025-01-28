@@ -319,7 +319,7 @@ name: empirical-workflow
 - There are many more potential checklist: you'll develop your own with experience
 
 - First, above all else, read any documentation associated with the file
-  - Codebooks, READMEs, etc. -- they're not riveting, but they clarify little things that can save you hours of work
+  - Codebooks, READMEs, etc.: not riveting, but they clarify little things and save hours of work
 
 .footnote[<sup>1</sup> Attributed to Ray Charles, Woody Guthrie, Tupac Shakur, Machine Head, and others]
 
@@ -330,7 +330,7 @@ name: downloading-data
 # Downloading data
 
 ---
-# 1. Downloading data
+# 2. Downloading data
 
 
 - Often it is good practice to have a script that downloads the data for you
@@ -511,17 +511,21 @@ Because data can be big and bulky, it is often easier to store and share the dat
 ```
 
 ---
-# Can I just read a zip directly in?
+# Unzipping in two-steps
 
-- Yes, but it's a little more complicated
-- And you can may still want to read in a few rows or columns like before
+```{r unzip-file,warning=FALSE,message=FALSE}
+# unzip('data/lakisha_aer.zip',exdir='data') # already done
+read_csv('data/lakisha_aer.csv') %>% head(5)
+```
+
+#### Make that a one-step process?<sup>1</sup>
 
 ```{r read-in-zip,warning=FALSE,message=FALSE}
-read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv'))  # Unzip the file
+read_csv(unz('data/lakisha_aer.zip','lakisha_aer.csv')) %>% # Unzip the file
   head(5) # pipe to a read csv
 ```
 
-Check appendix for what happens with "bigger" files when you attempt this.
+.footnote[<sup>1</sup> Check appendix for what happens with "bigger" files when you attempt this.]
 
 ---
 # How do I zip a file?
