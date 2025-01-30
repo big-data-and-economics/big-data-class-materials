@@ -102,7 +102,7 @@ Tuesday (2025-01-28): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips
 Thursday (2025-01-30): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse.pdf], [.Rmd](lectures/05-tidyverse/05-tidyverse.Rmd))
 
 - Exercise due before class: [Datacamp: Introduction to Tidyverse][datacamp] 
-- In-class activity: [Tidying data](https://github.com/big-data-and-economics/exercises/tree/main/07-tidying-data)
+- In-class activity: [Tidying data](https://github.com/big-data-and-economics/exercises/tree/main/07-tidyverse)
 
 ### Week 5: Spatial Analysis
 
