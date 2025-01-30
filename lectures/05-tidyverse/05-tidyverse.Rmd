@@ -154,7 +154,7 @@ name: basics
 
 # Tidyverse vs. base R
 
-There is often a direct correspondence between a **tidyverse** command and its **base R** equivalent. 
+There is often a direct correspondence between **tidyverse** and **base R** functions. 
 
 These generally follow a `tidyverse::snake_case` vs `base::period.case` rule:
 
@@ -171,7 +171,7 @@ If you call up the above examples, you'll see that the tidyverse alternative:
   - Better documentation
   - More consistent syntax
 
---
+They are often interchangeable, so many coders will use a mix of both.
 
 **Remember:** There are (almost) always multiple ways to achieve a single goal in R.
 
@@ -189,7 +189,7 @@ library(tidyverse)
 We have actually loaded a number of packages (which could also be loaded individually): **ggplot2**, **tibble**, **dplyr**, etc.
 
 - We can also see information about the package versions and some [namespace conflicts](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/04-rlang/04-rlang.html#83). 
-<!-- TK : change lecture notes to mine -->
+
 ---
 
 # Tidyverse packages (cont.)
@@ -217,10 +217,10 @@ Today, however, I'm only really going to focus on two packages:
 2. [**tidyr**](https://tidyr.tidyverse.org/)
 
 These are the workhorse packages for cleaning and wrangling data.
-- Data cleaning and wrangling occupies an inordinate amount of time, no matter where you are in your research career.
+- Cleaning and wrangling take an inordinate amount of time, no matter your experience level.
 - I cannot underscore this enough
-- This course can add structure to the cleaning and wrangling, but it is still a time-consuming process.
-- It can be a real bummer, so pick data projects that you are excited about.
+- This course adds structure to the cleaning and wrangling, but it is still time-consuming.
+- So pick data projects that you are excited about.
 
 ---
 class: inverse, center, middle
@@ -553,8 +553,6 @@ One of the mainstays of the dplyr package is merging data with the family [join 
 
 Joins are how you get .hi[Relational Database Managment] (RDBM) to work in R. 
 
-(See visual depictions of the different join operations [here](https://r4ds.had.co.nz/relational-data.html).)
-
 ---
 
 # Joins (cont.)
@@ -787,7 +785,6 @@ And GitHub CoPilot, ChatGPT and other AI tools are also your friends if you use 
 - `expand`: Create a complete set of combinations from a set of factors.
 
 - `nest` and `unnest`: Combine columns into lists within a single cell or split a column of lists into separate rows.
-  - Try with the `starwars` data frame: `unnest(starwars, films,names_sep='')`
 
 - And much, much more
 
@@ -817,16 +814,6 @@ name: summary
 
 Other useful items include: pipes (`%>%`), grouping (`group_by`), joining functions (`left_join`, `inner_join`, etc.).
 
----
-# Datacamp!
-
-- Navigate to datacamp (link on class materials ReadMe and GitHub discussions)
-
----
-class: inverse, center, middle
-
-# Next lecture: Scraping data!
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile = list.files(pattern = '.html')
