@@ -108,12 +108,12 @@ Thursday (2025-01-30): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyvers
 
 Tuesday (2025-02-04): Opportunity Atlas ([.html][09-oppatlas.html], [.pdf][09-oppatlas.pdf], [.Rmd](lectures/09-oppatlas/09-oppatlas.html))
 - Exercise due before class: [Review Opportunity Atlas](https://opportunityinsights.org/wp-content/uploads/2018/10/atlas_paper.pdf) and/or [Watch this lecture](https://www.youtube.com/watch?v=P0NvsWDKwvs) and discuss the questions on the [Discussions forum](https://github.com/orgs/big-data-and-economics/discussions/14)
-- Class activity: Code review
+- Class activity: [Code review](https://github.com/big-data-and-economics/exercises/tree/main/08-code-review)
 - Problem Set 1 due before class
 - [Problem Set 2](https://github.com/big-data-and-economics/ps2-opportunity-atlas) assigned
 
 Thursday (2025-02-06): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spatial.pdf], [.Rmd](lectures/08-spatial/08-spatial.Rmd))
-- Exercise due before class: [Analyzing Census Data in R: Chapter 1 and 4][datacamp]
+- Exercise due before class: [Analyzing Census Data in R: Chapter 1 and 4][datacamp] and [Request and activiate Census Data API Key](https://api.census.gov/data/key_signup.html) (If you encounter issues, let me know in GitHub Discussions.)
 - Class activity: Make maps!
 
 ### Week 6: Acquiring Web Data
