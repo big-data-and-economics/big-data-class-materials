@@ -525,12 +525,6 @@ knitr::include_graphics('pics/spatial_correlation_decay.png')
 
 - We will build this toolkit in the next few lectures
 
----
-class: inverse, center, middle
-
-# Next lecture: Spatial Analysis and Opportunity Atlas
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
-
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile=knitr::current_input() %>% str_replace(".Rmd", ".html")
 #infile = list.files(pattern = '.html')
