@@ -119,12 +119,12 @@ Thursday (2025-02-06): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spa
 ### Week 6: Acquiring Web Data
 
 Tuesday (2025-02-11): Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd))
-- Exercise due before class: [Introduction to APIs][datacamp]
+- Exercise due before class: [Data camp: Intermediate Importing Data in R - Chapter 4](https://app.datacamp.com/learn/courses/intermediate-importing-data-in-r)
 - Class activity: APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd))
 
 Thursday (2025-02-13): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd)) 
 
-- Exercise due before class: [Introduction to Web Scraping TK][datacamp]
+- Exercise due before class: [Data camp: Intermediate Importing Data in R - Chapter 3](https://app.datacamp.com/learn/courses/intermediate-importing-data-in-r)
 - Class activity: Scrape websites
 
 ### Week 7: Winter Break
@@ -825,4 +825,4 @@ The material in this repository is made available under the [MIT license](http:/
 [18a-tidytext-activity.pdf]: https://big-data-and-economics.github.io/big-data-class-materials/lectures/18a-tidytext-activity/18a-tidytext-activity.pdf
 [19-analysis-of-language.html]: https://big-data-and-economics.github.io/big-data-class-materials/lectures/19-analysis-of-language/19-analysis-of-language.html
 [19-analysis-of-language.pdf]: https://big-data-and-economics.github.io/big-data-class-materials/lectures/19-analysis-of-language/19-analysis-of-language.pdf
-[datacamp]: https://app.datacamp.com/groups/data-science-for-economists-cbea5c56-a6bb-4a1b-9722-68855b001485/assignments
+[datacamp]: https://app.datacamp.com/groups/data-science-for-economists-winter-2025/assignments
