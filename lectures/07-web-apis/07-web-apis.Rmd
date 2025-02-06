@@ -404,6 +404,18 @@ There are many options for median household income. I've narrowed to `B19013_001
 
 Here's an API call run through **tidycensus** is using to get Median Household Income in the Past 12 Months (inflation-adjusted dollars) from 5-year American Community Survey for each county in Maine in 2017:
 
+First, you need an API key and to register it in your computer.
+
+### Census API key
+
+We'll still be accessing some data from the US Census Bureau through the [tidycensus package](https://walkerke.github.io/tidycensus/). This will require a Census API key, which you can request [here](https://api.census.gov/data/key_signup.html). Once that's done, you can set it using the `tidycensus::census_api_key()` function. I recommend using the "install = TRUE" option to save your key for future usage. See the function's help file for more information.
+
+```{r, eval=FALSE}
+tidycensus::census_api_key("PLACE_YOUR_API_KEY_HERE", install = TRUE)
+```
+
+Then, you can easily ask for stuff!
+
 ```{r tidycensus}
 #library(tidycensus) # Already loaded
 get_acs(geography = "county", 
@@ -412,22 +424,6 @@ get_acs(geography = "county",
   year = 2017, 
   show_call = TRUE,
   survey='acs5')
-```
-
-### Spoiler: Tigerfiles and mapping
-
-The **tidycensus** functions let you easily map the data you've downloaded by having an option `geometry = TRUE`. This will return a `sf` object that you can plot using `ggplot2`. We'll get into `sf` objects in the future, but for now just know that they are a special type of data frame that is used for spatial data.
-
-I don't show output here to save sapce, but you can run the following code to see the geometry of the counties in Maine:
-
-```{r tidycensus_geometry, eval=FALSE}
-#library(tidycensus) # Already loaded
-get_acs(geography = "county", 
-  state="ME", 
-  variables = "B19013_001E",
-  year = 2017, 
-  survey='acs5',
-  geometry = TRUE) 
 ```
 
 ### Challenge: 
