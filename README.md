@@ -496,15 +496,16 @@ suppressWarnings({
 })
 ```
 
-##### Submission process
+##### Resubmission process
 
 To be eligible to resubmit to improve your grade, you must have submitted an initial version of the problem set on time.
 
 1. View my feedback on the `feedback` branch of your problem set repository. 
-2. Fix your problem set answers and comment your code as needed to explain the change. Write "CORRECTED" in all caps next to any changes. 
-3. Push changes to the `main` branch of your problem set repository.
-4. Navigate to the `Issues` tab of your problem set repository and create a new issue titled "Resubmission for Problem Set X". Briefly describe your changes in the body of the issue and tag my username, @kgcsport. 
-5. **Deadline for resubmissions**: All resubmissions must be pushed within one week of the solutions being posted.
+2. Fix your problem set answers and comment your code as needed to explain the change. Write "# CORRECTED" in all caps next to any changes (commented out)
+3. Make sure your problem set knits from raw data to final answers without any errors as do my solutions. 
+4. Push changes to the `main` branch of your problem set repository.
+5. Navigate to the `Issues` tab of your problem set repository and create a new issue titled "Resubmission for Problem Set X". Briefly describe your changes in the body of the issue and tag my username, @kgcsport. 
+6. **Deadline for resubmissions**: All resubmissions must be pushed within one week of the solutions being posted.
 
 Within your own private problem set repository, you can create an `Issues` tab within the Settings tab for interfacing only with me and any group partners.
 
