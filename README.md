@@ -521,6 +521,8 @@ If you would like reconsideration, please raise an `Issue` in your private probl
 
 Within your own private problem set repository, you can create an `Issues` tab within the Settings tab for interfacing only with me and any group partners.
 
+#### If you ask for a regrade, you forgo the opportunity to resubmit and improve your grade. 
+
 ### Presentations
 
 Each of you will give a 10-minute presentation of either an MRE of a coding struggle you are having or on a coding skill.
