@@ -611,7 +611,7 @@ There are several opportunities for bonus points during the semester:
 1. A 2.5% bonus on your final grade for issuing a *pull request* to any open source material. This can be to fix a typo or to fix a bug in the code.
 2. A 2.5% participation bonus on your final grade that I will award at my discretion.
 3. I offer a problem set bonus point for each typo corrected on problem sets *and* solutions. This is capped at 10 points per student per problem set. You must pull request and/or raise an Issue on the corresponding GitHub repository to get credit.
-4. I offer 2 bonus points on a problem set for attending an economics research seminar and writing a short summary in the GitHub discussions page.
+4. I offer a make-up of an out-of-class or in-class exercise for attending an economics research seminar and writing a short summary in the GitHub discussions page.
 
 I have given instructions on how to execute a pull request of a *specific* commit (instead of your entire commit history) in the [FAQ](#pull-request-of-a-specific-commit).
 
