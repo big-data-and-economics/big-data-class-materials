@@ -120,7 +120,7 @@ Thursday (2025-02-06): Spatial Analysis ([.html][08-spatial.html], [.pdf][08-spa
 
 Tuesday (2025-02-11): Scraping in Research ([.html][06a-scraping-in-research.html], [.pdf][06a-scraping-in-research.pdf], [.Rmd](lectures/06a-scraping-in-research/06a-scraping-in-research.Rmd))
 - Exercise due before class: [Data camp: Intermediate Importing Data in R - Chapter 4](https://app.datacamp.com/learn/courses/intermediate-importing-data-in-r)
-- Class activity: APIs ([.html][07-web-apis.html], [.pdf][07-web-apis.pdf], [.Rmd](lectures/07-web-apis/07-web-apis.Rmd))
+- Class activity: [APIs](https://github.com/big-data-and-economics/exercises/tree/main/10-web-apis) 
 
 Thursday (2025-02-13): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd)) 
 

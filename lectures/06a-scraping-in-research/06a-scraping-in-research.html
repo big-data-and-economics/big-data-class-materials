@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>Big Data and Economics</title>
+    <title>Data Science for Economists</title>
     <meta charset="utf-8" />
     <meta name="author" content="Kyle Coombs (he/him/his)" />
     <script src="libs/header-attrs/header-attrs.js"></script>
@@ -15,7 +15,7 @@
 class: center, middle, inverse, title-slide
 
 .title[
-# Big Data and Economics
+# Data Science for Economists
 ]
 .subtitle[
 ## Lecture 6a: Web Data in Research
@@ -310,81 +310,6 @@ name: client-side-scraping
 - To be clear, that's all still tricky! 
 
 ---
-# Easy API: New York City Open Data
-
-- NYC OpenData provides a ton of data on New York City
-
-- It offers it as something easy to download
-
-- It also offers it as 
-
----
-# Trees of NYC
-
-&lt;img src="pics/trees.gif" width="100%" style="display: block; margin: auto;" /&gt;
-
----
-# Read the trees JSON
-
-
-``` r
-# library(jsonlite) ## Already loaded
-nyc_trees = 
-  fromJSON("https://data.cityofnewyork.us/resource/nwxe-4ae8.json") %&gt;%
-  as_tibble()
-nyc_trees
-```
-
-```
-## # A tibble: 1,000 × 45
-##    tree_id block_id created_at        tree_dbh stump_diam curb_loc status health
-##    &lt;chr&gt;   &lt;chr&gt;    &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt; 
-##  1 180683  348711   2015-08-27T00:00… 3        0          OnCurb   Alive  Fair  
-##  2 200540  315986   2015-09-03T00:00… 21       0          OnCurb   Alive  Fair  
-##  3 204026  218365   2015-09-05T00:00… 3        0          OnCurb   Alive  Good  
-##  4 204337  217969   2015-09-05T00:00… 10       0          OnCurb   Alive  Good  
-##  5 189565  223043   2015-08-30T00:00… 21       0          OnCurb   Alive  Good  
-##  6 190422  106099   2015-08-30T00:00… 11       0          OnCurb   Alive  Good  
-##  7 190426  106099   2015-08-30T00:00… 11       0          OnCurb   Alive  Good  
-##  8 208649  103940   2015-09-07T00:00… 9        0          OnCurb   Alive  Good  
-##  9 209610  407443   2015-09-08T00:00… 6        0          OnCurb   Alive  Good  
-## 10 192755  207508   2015-08-31T00:00… 21       0          OffsetF… Alive  Fair  
-## # ℹ 990 more rows
-## # ℹ 37 more variables: spc_latin &lt;chr&gt;, spc_common &lt;chr&gt;, steward &lt;chr&gt;,
-## #   guards &lt;chr&gt;, sidewalk &lt;chr&gt;, user_type &lt;chr&gt;, problems &lt;chr&gt;,
-## #   root_stone &lt;chr&gt;, root_grate &lt;chr&gt;, root_other &lt;chr&gt;, trunk_wire &lt;chr&gt;,
-## #   trnk_light &lt;chr&gt;, trnk_other &lt;chr&gt;, brch_light &lt;chr&gt;, brch_shoe &lt;chr&gt;,
-## #   brch_other &lt;chr&gt;, address &lt;chr&gt;, zipcode &lt;chr&gt;, zip_city &lt;chr&gt;,
-## #   cb_num &lt;chr&gt;, borocode &lt;chr&gt;, boroname &lt;chr&gt;, cncldist &lt;chr&gt;, …
-```
-
----
-# "Map" the trees
-
-
-``` r
-nyc_trees %&gt;% 
-  select(longitude, latitude, stump_diam, spc_common, spc_latin, tree_id) %&gt;% 
-  mutate_at(vars(longitude:stump_diam), as.numeric) %&gt;% 
-  ggplot(aes(x=longitude, y=latitude, size=stump_diam)) + 
-  geom_point(alpha=0.5) +
-  scale_size_continuous(name = "Stump diameter") +
-  labs(
-    x = "Longitude", y = "Latitude",
-    title = "Sample of New York City trees",
-    caption = "Source: NYC Open Data"
-    )
-```
-
----
-# "Map" the trees
-
-- Don't worry, better looking maps to come
-
-&lt;img src="06a-scraping-in-research_files/figure-html/nyc3_actual-1.png" style="display: block; margin: auto;" /&gt;
-
-
----
 # You've likely used FRED before
 
 &lt;div style="display: flex; justify-content: center;"&gt;
@@ -403,7 +328,10 @@ nyc_trees %&gt;%
   - Fake example: `asdfjaw523a3523414at43sad`
   - FRED gives you one for free if you [register an API key](https://research.stlouisfed.org/useraccount/apikey)
 
-.scroll-box-16[
+---
+# FRED API Json
+
+.scroll-output[
 ```json
 {"realtime_start":"2024-02-03","realtime_end":"2024-02-03","observation_start":"1600-01-01","observation_end":"9999-12-31","units":"lin","output_type":1,"file_type":"json","order_by":"observation_date","sort_order":"asc","count":94,"offset":0,"limit":100000,"observations":
 [{"realtime_start":"2024-02-03","realtime_end":"2024-02-03","date":"1929-01-01","value":"1202.659"},

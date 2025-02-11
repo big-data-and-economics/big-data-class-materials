@@ -36,6 +36,7 @@ knit: (function(inputFile, encoding) {
  rmarkdown::render(inputFile, encoding = encoding, 
  output_format = 'all') 
  })
+
 ---
 <!-- demos: httr -->
 ```{r setup, include=FALSE}
