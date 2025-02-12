@@ -98,7 +98,7 @@ Tuesday (2025-01-28): Data Tips ([.html][03-data-tips.html], [.pdf][03-data-tips
 - Exercise due before class: Post a data quality/visualization checklist to the [Discussions forum](https://github.com/orgs/big-data-and-economics/discussions/11), [Watch STAT545 video on Reading/Writing data](https://www.youtube.com/watch?v=2nHuNu6Zaqk)
 - **Optional:** [Datacamp: Introduction to Importing Data in R, Chapter 2: readr and data.table][datacamp]
 - In-class activity: [Data checks](https://github.com/big-data-and-economics/exercises/tree/main/06-data-checks)
-
+Hel
 Thursday (2025-01-30): Tidyverse ([.html][05-tidyverse.html], [.pdf][05-tidyverse.pdf], [.Rmd](lectures/05-tidyverse/05-tidyverse.Rmd))
 
 - Exercise due before class: [Datacamp: Introduction to Tidyverse][datacamp] 
