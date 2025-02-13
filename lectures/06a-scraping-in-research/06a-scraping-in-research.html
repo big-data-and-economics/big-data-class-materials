@@ -966,6 +966,48 @@ name: server-side-scraping
 ```
 
 ---
+# Inspect elements and `rvest`
+
+- [Selector gadget](https://selectorgadget.com/) is a Chrome extension that helps you find the CSS selectors you need
+- It will highlight the elements you want to scrape and give you the CSS selector
+- You can then use this selector in the `html_elements()` function to pick out those elements from the HTML
+
+- In R, we can use the `rvest` package to read into the HTML document into R and then parse the relevant nodes.
+  - A typical workflow is: `read_html(URL) %&gt;% html_elements(CSS_SELECTORS) %&gt;% html_table()`.
+  - You might need other functions depending on the content type (e.g. `html_text`).
+
+
+---
+# Inspect elements gif
+
+![Inspect elements gif](pics/wikipedia_scrape.gif)
+
+---
+# Scraping Wikipedia
+
+- The hard part is getting the CSS selector. After that the code is pretty simple
+- You will just need to use some other packages like `janitor`, `dplyr`, and `tidyr` to clean the table up a bit for use
+
+
+``` r
+read_html("http://en.wikipedia.org/wiki/Men%27s_100_metres_world_record_progression") %&gt;% 
+  html_element("div+ .wikitable :nth-child(1)") %&gt;% ## select table element
+  html_table()  %&gt;%                                    ## convert to data frame
+  head(5)
+```
+
+```
+## # A tibble: 5 × 5
+##    Time Athlete       Nationality    `Location of races`     Date              
+##   &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;          &lt;chr&gt;                   &lt;chr&gt;             
+## 1  10.8 Luther Cary   United States  Paris, France           July 4, 1891      
+## 2  10.8 Cecil Lee     United Kingdom Brussels, Belgium       September 25, 1892
+## 3  10.8 Étienne De Ré Belgium        Brussels, Belgium       August 4, 1893    
+## 4  10.8 L. Atcherley  United Kingdom Frankfurt/Main, Germany April 13, 1895    
+## 5  10.8 Harry Beaton  United Kingdom Rotterdam, Netherlands  August 28, 1895
+```
+
+---
 # Stability and CSS scraping
 
 - Websites change over time 
@@ -973,6 +1015,26 @@ name: server-side-scraping
 - That can break your scraping code
 
 - This makes scraping as much of an "art" as it is a science
+
+---
+# Wayback Machine: Internet Archive
+
+- If you go to several federal government websites (https://www.usaid.gov/), you'll see a blank page or a memo that says the page has been taken down.
+
+- That data is no longer visible to the public. But you may need it for research
+
+- The [Wayback Machine](https://archive.org/web/) is a digital archive of the World Wide Web and other information on the Internet
+  - It allows users to go "back in time" and see how websites looked in the past
+  - It has archived over 500 billion web pages
+
+- Sometimes scraping it is tricky though, so be patient!
+
+- There are packages like `ArchiveRetriever` that help leverage its API
+
+---
+# Wayback Machine with USAID
+
+![Scrape USAID](pics/wayback-usaid.gif)
 
 ---
 class: inverse, center, middle
