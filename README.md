@@ -125,7 +125,7 @@ Tuesday (2025-02-11): Scraping in Research ([.html][06a-scraping-in-research.htm
 Thursday (2025-02-13): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.Rmd](lectures/06-web-css/06-web-css.Rmd)) 
 
 - Exercise due before class: [Data camp: Intermediate Importing Data in R - Chapter 3](https://app.datacamp.com/learn/courses/intermediate-importing-data-in-r)
-- Class activity: Scrape websites
+- Class activity: [Scrape websites](https://github.com/big-data-and-economics/exercises/tree/main/11-web-scraping)
 
 ### Week 7: Winter Break
 
@@ -135,8 +135,8 @@ Thursday (2025-02-13): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.
 
 Tuesday (2025-02-25): Causal Inference ([.html][10a-causal-inference.html], [.pdf][10a-causal-inference.pdf], [.Rmd](lectures/10a-causal-inference/10a-causal-inference.Rmd))
 
-- Exercise due before class: TK
-- Class activity: TK
+- Exercise due before class: [Watch Econometrics: Inference and Identification](https://www.youtube.com/watch?v=18VpjvKKrJQ) and respond to discussion questions in #26
+- Class activity: [Identification puzzles](TK)
 - Problem Set 2 due before class
 - Problem Set 3 assigned
 
