@@ -135,7 +135,7 @@ Thursday (2025-02-13): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.
 
 Tuesday (2025-02-25): Causal Inference ([.html][10a-causal-inference.html], [.pdf][10a-causal-inference.pdf], [.Rmd](lectures/10a-causal-inference/10a-causal-inference.Rmd))
 
-- Exercise due before class: [Watch Econometrics: Inference and Identification](https://www.youtube.com/watch?v=18VpjvKKrJQ) and respond to discussion questions in #26
+- Exercise due before class: [Watch Econometrics: Inference and Identification](https://www.youtube.com/watch?v=18VpjvKKrJQ) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/26)
 - Class activity: [Identification puzzles](TK)
 - Problem Set 2 due before class
 - Problem Set 3 assigned
