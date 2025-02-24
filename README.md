@@ -161,12 +161,15 @@ Thursday (2025-03-06): Fixed Effects ([.html][11-fixed-effects.html], [.pdf][11-
 
 Tuesday (2025-03-11):  Difference-in-differences ([.html][11-diff-in-diff.html], [.pdf][11-diff-in-diff.pdf], [.Rmd](lectures/11-diff-in-diff/11-diff-in-diff.Rmd))
 
+- Problem Set 3 due before class
+- Problem Set 4 assigned
 - Exercise due before class: TK
 - Class activity: TK
 
 Thursday (2025-03-13): Regression Discontinuity Design ([.html][12-regression-discontinuity.html], [.pdf][12-regression-discontinuity.pdf], [.Rmd](lectures/12-regression-discontinuity/12-regression-discontinuity.Rmd))
-- Problem Set 3 due before class
-- Problem Set 4 assigned
+
+- Exercise due before class: TK
+- Class activity: TK
 
 ## Machine Learning
 
