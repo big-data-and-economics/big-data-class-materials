@@ -136,82 +136,78 @@ Thursday (2025-02-13): CSS ([.html][06-web-css.html], [.pdf][06-web-css.pdf], [.
 Tuesday (2025-02-25): Causal Inference ([.html][10a-causal-inference.html], [.pdf][10a-causal-inference.pdf], [.Rmd](lectures/10a-causal-inference/10a-causal-inference.Rmd))
 
 - Exercise due before class: [Watch Econometrics: Inference and Identification](https://www.youtube.com/watch?v=18VpjvKKrJQ) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/26)
-- Class activity: [Identification puzzles](TK)
+- Class activity: [Causality and simulations](https://github.com/big-data-and-economics/exercises/tree/main/12-causal-inference)
 - Problem Set 2 due before class
 - Problem Set 3 assigned
 
-Thursday (2025-02-27): Regression Review ([.html][10-regression.html], [.pdf][10-regression.pdf], [.Rmd](lectures/10-regression/10-regression.Rmd))
+Thursday (2025-02-27): Regression ([.html][10-regression.html], [.pdf][10-regression.pdf], [.Rmd](lectures/10-regression/10-regression.Rmd))
 
-- Class activity: 
-- Exercise due before class: TK
+- Class activity: [Regression](https://github.com/big-data-and-economics/exercises/tree/main/13-regressions)
+- Exercise due before class: [Watch Regression and The Error Term](https://www.youtube.com/watch?v=0Aukw3CdB-Q) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/27)
 
 ### Week 9: Fixed Effects and Diff-in-diff
 
-Tuesday (2025-03-04): Fixed Effects ([.html][11-fixed-effects.html], [.pdf][11-fixed-effects.pdf], [.Rmd](lectures/11-fixed-effects/11-fixed-effects.pdf))
+Tuesday (2025-03-04): Control Variables ([.html][10-control-variables.html], [.pdf][10-control-variables.pdf], [.Rmd](lectures/10--control-variables/10-control-variables.Rmd))
+
+- Class activity: [Coins as control variables](TK)
+- Exercise due before class: TK
+
+Thursday (2025-03-06): Fixed Effects ([.html][11-fixed-effects.html], [.pdf][11-fixed-effects.pdf], [.Rmd](lectures/11-fixed-effects/11-fixed-effects.pdf))
 
 - Class activity: Panel data and TWFE ([.html][11a-panel-twfe.html], [.pdf][11a-panel-twfe.pdf], [.Rmd](lectures/11a-panel-twfe/11a-panel-twfe.Rmd))
 - Exercise due before class: TK 
 
-Thursday (2025-03-06): Difference-in-differences ([.html][11-diff-in-diff.html], [.pdf][11-diff-in-diff.pdf], [.Rmd](lectures/11-diff-in-diff/11-diff-in-diff.Rmd))
-
-- Exercise due before class: TK
-- Class activity: TK
-
 ### Week 10: Regression Discontinuity Design
 
-Tuesday (2025-03-11): Regression Discontinuity Design ([.html][12-regression-discontinuity.html], [.pdf][12-regression-discontinuity.pdf], [.Rmd](lectures/12-regression-discontinuity/12-regression-discontinuity.Rmd))
+Tuesday (2025-03-11):  Difference-in-differences ([.html][11-diff-in-diff.html], [.pdf][11-diff-in-diff.pdf], [.Rmd](lectures/11-diff-in-diff/11-diff-in-diff.Rmd))
 
 - Exercise due before class: TK
 - Class activity: TK
+
+Thursday (2025-03-13): Regression Discontinuity Design ([.html][12-regression-discontinuity.html], [.pdf][12-regression-discontinuity.pdf], [.Rmd](lectures/12-regression-discontinuity/12-regression-discontinuity.Rmd))
 - Problem Set 3 due before class
 - Problem Set 4 assigned
-
-Thursday (2025-03-13): Catch-up day
 
 ## Machine Learning
 
 ### Week 11: Bootstrapping
 
-Tuesday (2025-03-18): Functions & Parallel Programming ([.html][13b-functions-parallel-programming.html], [.pdf][13b-functions-parallel-programming.pdf], [.Rmd](lectures/13b-functions-parallel/13b-functions-parallel-programming.Rmd))
+Tuesday (2025-03-18): Catch-up, data simulations, and/or review
+
+Thursday (2025-03-20): Break
+
+### Week 12:  Hackathon!
+
+Tuesday (2025-03-25): Hackathon Kickoff and Catchup day
+- Problem Set 4 due before class
+
+Thursday (2025-03-27): Hackathon presentations
+- Problem Set 5 assigned
+
+### Week 13: Introduction to Machine Learning
+
+Tuesday (2025-04-01): Functions & Parallel Programming ([.html][13b-functions-parallel-programming.html], [.pdf][13b-functions-parallel-programming.pdf], [.Rmd](lectures/13b-functions-parallel/13b-functions-parallel-programming.Rmd))
 
 - Exercise due before class: [Datacamp: Intermediate R][datacamp]
 - Class activity: TK
 
-Thursday (2025-03-20): Break
-
-### Week 12: Introduction to Machine Learning
-
-Tuesday (2025-03-25): Intro to Machine Learning ([.html][14-intro-to-ml.html], [.pdf][14-intro-to-ml.pdf], [.Rmd](lectures/14-intro-to-ml/14-intro-to-ml.Rmd))
-
-- Exercise due before class: TK
-- Class activity: ISLR tidymodels lab ([.html](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html))
-- Problem Set 4 due before class
-- Problem Set 5 assigned
-
-Thursday (2025-03-27): Bootstrapping ([.html][13-bootstrapping.html], [.pdf][13-bootstrapping.pdf], [.Rmd](lectures/13-bootstrapping/13-bootstrapping.Rmd))
+Thursday (2025-04-03): Bootstrapping ([.html][13-bootstrapping.html], [.pdf][13-bootstrapping.pdf], [.Rmd](lectures/13-bootstrapping/13-bootstrapping.Rmd))
 
 - Exercise due before class: [Read Brownstone & Valletta (2001)](https://www.aeaweb.org/articles?id=10.1257/jep.15.4.129) and give an intuitive use case for bootstrapping and multiple imputation (not the ones in the paper)
 - Class activity: Bootstrapping practice ([.html][13a-bootstrapping-practice.html], [.pdf][13a-bootstrapping-practice.pdf], [.Rmd](lectures/13a-bootstrapping-practice/13a-bootstrapping-practice.Rmd))
 
-### Week 13: Text Analysis
+### Week 14: Machine Learning
 
-Tuesday (2025-04-01): Tree-based methods ([.html][15-regression-trees.html], [.pdf][15-regression-trees.pdf], [.Rmd](lectures/15-regression-trees/15-regression-trees.Rmd)) 
-
-- Exercise due before class: TK
-- Class activity: TK
-
-
-Thursday (2025-04-03): Lasso and Ridge Regression ([.html][17-lasso.html], [.pdf][17-lasso.pdf], [.Rmd](lectures/17-lasso/17-lasso.Rmd))
+Tuesday (2025-04-08): Intro to Machine Learning ([.html][14-intro-to-ml.html], [.pdf][14-intro-to-ml.pdf], [.Rmd](lectures/14-intro-to-ml/14-intro-to-ml.Rmd))
 
 - Exercise due before class: TK
-- Class activity: TK
+- Class activity: ISLR tidymodels lab ([.html](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html))
 
-### Week 14: Hackathon!
+Thursday (2025-04-10): Tree-based methods ([.html][15-regression-trees.html], [.pdf][15-regression-trees.pdf], [.Rmd](lectures/15-regression-trees/15-regression-trees.Rmd)) 
 
-Tuesday (2025-04-08): Hackathon Kickoff and Catchup day
 - Problem Set 5 due before class
-
-Thursday (2025-04-10): Hackathon presentations
+- Exercise due before class: TK
+- Class activity: TK
 
 ## If time
 
