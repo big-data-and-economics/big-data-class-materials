@@ -255,7 +255,7 @@ This is an extremely challenging course. To help you succeed, I have outlined ex
 - Check the [calendar](#lectures) within 24 hours of each lecture to see any materials you need to download/review
 - Fork the main problem set repository within 48 hours of the problem set being posted
 - Open problem set data and code within 48 hours of the problem set being posted
-- Work on problem sets in groups, but turn in your own code
+- Work on problem sets in groups, but turn in your own code (unless it is a group assignment)
 - Post questions to [GitHub Discussions](https://github.com/orgs/big-data-and-economics/discussions) or page-specific `Issues` unless it is of a private matter (e.g. grades, extensions)
     - There is a GitHub `Issues` tab within every problem set that I create, please post questions about problem sets directly to the tab for each problem set
     - If I receive an email with a question that will benefit everyone, I will ask you to post it to GitHub Issues/Discussions
@@ -472,6 +472,14 @@ Your problem sets are (generally) graded on four criteria:
 
 I will provide feedback and a grade in a `feedback` branch of your problem set repository. That will let me add feedback without overwriting your work in the `main` branch. 
 
+#### Group assignments
+
+On group assignments, I expect everyone to collaborate. Your group will receive one grade. Part of the course is about learning to collaborate on open-ended challenging problems. This sets you up to effectively tackle the hackathon efficiently at the end of the semester.
+
+If there has been a clear disparity in effort as made clear by the repository commit history, I will reach out to the group members to clarify whether the disparity is due to working together in person or if there was a meaningful difference in contributions. If I deem there has been a meaningful difference in contributions, only the group members who actively participated will be eligible for resubmission and gaining points back as detailed below. 
+
+If I get sufficient evidence that a group member did not contribute to any portion of the problem set, that group member will receive a zero.
+
 #### Solutions 
 
 The solutions are made public within a week of the problem set being posted.
@@ -507,6 +515,8 @@ To be eligible to resubmit to improve your grade, you must have submitted an ini
 6. **Deadline for resubmissions**: All resubmissions must be pushed within one week of the solutions being posted.
 
 Within your own private problem set repository, you can create an `Issues` tab within the Settings tab for interfacing only with me and any group partners.
+
+On group assignments, only students that actively participated will be eligible for resubmission and gaining points back. 
 
 ##### Requests for reconsideration
 
@@ -626,7 +636,6 @@ Please flag with Bates Reach and email me with the subject "[ECON 368] _subject 
 #### Group assignments
 
 If you are asking for an extension on a group assignment include all group partners on the email. Do not email me individually and ask for an extension on behalf of your group. This practice will ensure that all group members are aware of the request. 
-
 
 ## GitHub Codespaces
 
