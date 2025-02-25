@@ -407,20 +407,6 @@ feols(amount ~ sw(dimes+pennies,dimes), data = coins2) %>%
 - So when we remove quarters, dimes inherit a larger relationship with the amount of money than with pennies
 
 ---
-
-# **Tough** Concept Checks
-
-
-
-- Describe the steps necessary to estimate the effect of $Education$ on $Income$ while controlling for $Segregation$ (a continuous variable). There are three "explain/regress" steps and two "subtract" steps.
-
-- [Selene is a huge bore at parties, but sometimes brings her girlfriend Donna who is super fun. If you regress $PartyFunRating$ on $SeleneWasThere$ but not $DonnaWasThere$, what would the coefficient on $SeleneWasThere$ look like and why?](https://www.mentimeter.com/app/presentation/blrayh9sk94urms6ndeb8vrscrixy2vi/xwodym4ee5u4)
-
-- [If we estimate the same $\hat{\beta}_1$ with or without some $Z$ added as a control, does that mean we have no endogeneity problem? What *does* it mean exactly?](https://www.mentimeter.com/app/presentation/blrayh9sk94urms6ndeb8vrscrixy2vi/ksziz1og2cso)
-
-Go to: Menti.com: 9111 2607
-
----
 # Summary
 
 - We can remove endogeneity by adding omitted variables into our regression model if:

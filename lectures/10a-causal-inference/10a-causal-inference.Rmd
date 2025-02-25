@@ -332,12 +332,7 @@ $$
 
 1. .hi[Causal inference:].super[.pink[†]] Estimate the true, population model that explains .pink[how] $\color{#e64173}{y}$ .pink[changes when we change] $\color{#e64173}{x_j}$—focuses on $\color{#e64173}{\beta_j}$. Accuracy of $\hat{y}$ is not important. (So $R^2$ concerns can often take a hike.)
 
-.footnote[
-.pink[†] Often called *causal identification*.
-]
-
----
-# Why Causality?
+#### Why Causality?
 
 - Many interesting questions to answer with data are causal
 
@@ -345,11 +340,9 @@ $$
 
 - Nearly every *why* question is causal and what we want to know! 
 
-- Also, this is economists' comparative advantage! 
-
-  - Plenty fields do statistics. But few make causal inference standard training for students
-  
-- This understanding of causality makes economists useful! *This* is one big reason why tech companies have whole economics departments
+.footnote[
+.pink[†] Often called *causal identification*.
+]
 
 ---
 name: challenges
@@ -401,7 +394,7 @@ Many of these challenges relate to .hi-slate[exogeneity], _i.e._, $\color{#314f4
 
 - Unless your name is Evelyn Quan, Marty McFly, Loki, or Miles Morales, this sort of multiversal experimentation is not possible
 
-- You're stuck with the rest of in 2024, using an extremely clever, but limited causal infernce toolbox that relies on .hi[exogeneity]
+- You're stuck with the rest, using an extremely clever, but limited causal infernce toolbox that relies on .hi[exogeneity]
 
 ---
 # What is exogeneity? 
