@@ -9,7 +9,7 @@
 
 I am constantly trying to improve this course. Provide [feedback](https://docs.google.com/forms/d/e/1FAIpQLScZyphM1fwb6GBH7HtGx4H_hwW6sGGVfZ3MXFnFLNlawQoOsQ/viewform?usp=sf_link).
 
-- Class Hours: T/Th 11am-12:20pm
+- Class Hours: T/Th 9:30am-11am
 
 # Office hours:
 My office hours are: 
