@@ -288,8 +288,6 @@ Some less obvious:
 - Colds tend to clear up a few days after you take Emergen-C
 - The performance of the economy tends to be lower or higher depending on the president's political party
 
-Find more at https://www.tylervigen.com/spurious-correlations
-
 .footnote[*This case of mistaken causality is the basis of the film Rock-a-Doodle which I understand is extremely entertaining.]
 
 ---
@@ -790,6 +788,42 @@ theme_void() +
 theme(legend.position = "none") +
 coord_equal()
 ```
+
+---
+name: real
+
+## Real-world experiments
+
+RCTs and certain policy changes yield .hi-slate[real experiments] to isolate causal effects.
+
+.hi-slate[Characteristics]
+
+- .purple[Feasible]—we can actually (potentially) run the experiment.
+- .purple[Compare individuals] randomized into treatment against individuals randomized into control.
+- .purple[Require "good" randomization] to get *all else equal* (exogeneity).
+
+--
+
+*Note:* Your experiment's results are only as good as your randomization.
+
+---
+class: white-slide
+count: false
+
+.hi-slate[Unfortunate randomization]
+```{R, fertilizer_plot3_bad, echo = F}
+ggplot(data = fert_df,
+  aes(x, y)
+) +
+geom_tile(aes(fill = q), color = "white", size = 0.2) +
+# geom_text(aes(label = trt)) +
+geom_emoji(data = filter(fert_df, x < xd/3 | y <= yd/3 | (x == xd & y == yd)), emoji = "1f4a9") +
+scale_fill_viridis(option = "magma", direction = -1) +
+theme_void() +
+theme(legend.position = "none") +
+coord_equal()
+```
+
 ---
 
 We can estimate the .hi[causal effect] of fertilizer on crop yield by comparing the average yield in the treatment group (💩) with the control group (no 💩).
@@ -916,43 +950,6 @@ $$
 - .purple[New] school built: people near school get more education
   - .purple[Difference-in-differences]
 
----
-layout: true
-# Causality
----
-name: real
-
-## Real-world experiments
-
-RCTs and certain policy changes yield .hi-slate[real experiments] to isolate causal effects.
-
-.hi-slate[Characteristics]
-
-- .purple[Feasible]—we can actually (potentially) run the experiment.
-- .purple[Compare individuals] randomized into treatment against individuals randomized into control.
-- .purple[Require "good" randomization] to get *all else equal* (exogeneity).
-
---
-
-*Note:* Your experiment's results are only as good as your randomization.
-
----
-class: white-slide
-count: false
-
-.hi-slate[Unfortunate randomization]
-```{R, fertilizer_plot3_bad, echo = F}
-ggplot(data = fert_df,
-  aes(x, y)
-) +
-geom_tile(aes(fill = q), color = "white", size = 0.2) +
-# geom_text(aes(label = trt)) +
-geom_emoji(data = filter(fert_df, x < xd/3 | y <= yd/3 | (x == xd & y == yd)), emoji = "1f4a9") +
-scale_fill_viridis(option = "magma", direction = -1) +
-theme_void() +
-theme(legend.position = "none") +
-coord_equal()
-```
 ---
 layout: true
 # Causality
@@ -1086,7 +1083,7 @@ If we observe $\color{#e64173}{y_{1,i}}$, then we cannot observe $\color{#6A5ACD
 <br>If we observe $\color{#6A5ACD}{y_{0,i}}$, then we cannot observe $\color{#e64173}{y_{1,i}}$.
 ---
 
-So a dataset that we actually observe for 6 people will look something like
+So a dataset that we actually observe for will look something like
 .pull-left[
 ```{R, ideal_data_obs, echo = F}
 obs_df <- ideal_df
@@ -1251,16 +1248,8 @@ name: inference
   - Assume a prior distribution for $\beta$ and update it
   - Generates a "credibility" interval
 
----
-class: inverse, center, middle
-
-# Next lecture: Regression analysis
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
-
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
-infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
-#print(infile)
+infile=knitr::current_input() %>% str_replace(".Rmd", ".html")
+#infile = list.files(pattern = '.html')
 pagedown::chrome_print(input = infile, timeout = 100)
 ```
-
-
