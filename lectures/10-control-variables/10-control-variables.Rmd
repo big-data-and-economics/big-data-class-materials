@@ -21,14 +21,7 @@ output:
 options(htmltools.dir.version = FALSE) 
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, fig.width = 8, fig.height = 6,cache=TRUE)
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse, fixest, ggthemes, gganimate, scales, Cairo, magick, emo)
-library(tidyverse)
-library(ggthemes)
-library(gganimate)
-library(fixest)
-library(scales)
-library(Cairo)
-library(magick)
+pacman::p_load(tidyverse, fixest, ggthemes, gganimate, scales, Cairo, magick, emo,knitr)
 theme_metro <- function(x) {
   theme_classic() + 
   theme(panel.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
@@ -165,10 +158,7 @@ $$IceCreamEating = \beta_0 + \beta_1ShortsWearing + \beta_2Temperature + \vareps
 - (of course, we have no way of checking if that's true - it's based on what we think the data generating process looks like)
 
 ---
-
 # How?
-
-- How does this actually work?
 
 - Controlling for a variable works by *removing variation in $X$ and $Y$ that is explained by the control variable*
 
@@ -192,7 +182,7 @@ name: coin-values
 
 - One thing we do know is that the collector always had at least as many dimes as quarters
 
-- My friend Szymon Sacher suggested this example (he'll be presenting here in two weeks!)
+- My friend Szymon Sacher suggested this example
 
 ---
 # Example: coin value
@@ -202,11 +192,12 @@ set.seed(12315)
 ```
 
 ```{r, echo = TRUE}
-coins <- tibble(quarters = sample(0:10,1000,replace=TRUE),
-            pennies=sample(0:10, 1000, replace=TRUE),
-            nickels=sample(0:10, 1000, replace= TRUE)) %>%
-  mutate(dimes = quarters + sample(0:10,1000,replace=TRUE)) %>%
-  mutate(amount = 0.25*quarters + 0.10*dimes + 0.01*pennies + 0.05*nickels)
+coins <- tibble(quarters = sample(0:10,10000,replace=TRUE), # sample generates a random amount of coins.
+            pennies=sample(0:10, 10000, replace=TRUE),
+            nickels=sample(0:10, 10000, replace= TRUE),
+            error=rnorm(10000,0,.1)) %>%
+  mutate(dimes = quarters + sample(0:10,10000,replace=TRUE)) %>%
+  mutate(amount = 0.25*quarters + 0.10*dimes + 0.01*pennies + 0.05*nickels + error)
 
 coins
 ```
@@ -214,11 +205,10 @@ coins
 ---
 # Straight-forward regression
 
-If we just regress, we immediately see the values
-
 ```{r all-coins, echo=TRUE}
-allcoins <- feols(amount~ quarters + dimes + nickels+pennies, data = coins) 
-etable(allcoins,fitstat=~n,digits=2,se.below=TRUE)
+allcoins <- feols(amount~ quarters + dimes + nickels+pennies, 
+  data = coins) 
+etable(allcoins,fitstat=~n,digits=2,se.below=TRUE,depvar=FALSE) %>% kable(format="markdown")
 ```
 
 ---
@@ -228,7 +218,7 @@ The coefficient on dimes changes a lot! Why?
 
 ```{r no-quarters, echo=TRUE}
 noquarters <- feols(amount~ dimes + nickels+pennies, data = coins) 
-etable(allcoins,noquarters,fitstat=~n,digits=2,se.below=TRUE)
+etable(allcoins,noquarters,fitstat=~n,digits=2,se.below=TRUE,depvar=FALSE) %>% kable(format="markdown")
 ```
 
 ---
@@ -241,70 +231,27 @@ etable(allcoins,noquarters,fitstat=~n,digits=2,se.below=TRUE)
 - So the coefficient on dimes was biased
 
 ---
-# Concept check
+# Residualize variation from quarters
 
-- What happens if I drop nickels and pennies as well?
-
---
-
-```{r only-dimes, echo=TRUE}
-onlydimes <- feols(amount~ dimes, data = coins)
-etable(allcoins,noquarters,onlydimes,fitstat=~n,digits=2,se.below=TRUE)
-```
-
-- A small change in the coefficient on dimes because the other coins are unrelated by definition
-
-- Pennies and nickels are just like any old random error term
-
----
-# See it directly
-
-Let's drop nickels and pennies cause they're small, unrelated to quarters and dimes by construction, and we're just trying to illustrate a point
-
-Let's subtract out the part of dimes that is related to quarters (on average)
+1. Average of `amount` and `dimes` by quarters, i.e. the part *explained by `quarters`*
+2. Subtract from `amount` and `dimes`, to get the residual *not explained by `quarters`*
 
 ```{r, echo = TRUE}
 coins <- coins %>%
   group_by(quarters) %>% 
-  mutate(amount_mean = mean(amount), dimes_mean = mean(dimes)) 
-head(coins)
+  mutate(amount_mean = mean(amount), dimes_mean = mean(dimes),
+    amount_res=amount-amount_mean,dimes_res=dimes-dimes_mean) 
+head(select(coins,quarters,matches('dimes|amount')))
 ```
 
 ---
-
-# Example: Residualize
-
-Now, `amount_mean` and `dimes_mean` are the respective means for each amount of quarters, i.e. the part of `amount` and `dimes` *explained by `quarters`*. So subtract those parts out to get *residuals* `amount_res` and `dime_res`!
-
-```{r residualize, echo = TRUE}
-coins <- coins %>%
-  mutate(amount_res = amount - amount_mean, dimes_res = dimes - dimes_mean)
-head(coins)
-```
-
----
-
-# Example: Regression residuals
-
-What do we get now?
+# Residuals regression is unbiased
 
 ```{r residuals, echo = TRUE}
 residuals <- feols(amount_res ~ dimes_res, data = coins) 
-etable(allcoins, noquarters,onlydimes,residuals,dict=c('dimes_res'='dimes'),fitstat=~n,digits=2,se.below=TRUE)
+etable(allcoins, noquarters,residuals,
+  dict=c('dimes_res'='dimes'),fitstat=~n,digits=2,se.below=TRUE,depvar=FALSE) %>% kable(format="markdown")
 ```
-
----
-
-# Example
-
-Let's quickly check what happens when we exclude nickels and pennies
-
-```{r quartersdimes, echo = TRUE}
-quartersdimes <- feols(amount ~ quarters + dimes, data = coins) 
-etable(allcoins,noquarters,onlydimes,residuals,quartersdimes,dict=c('dimes_res'='dimes'),fitstat=~n,digits=2,se.below=TRUE)
-```
-
-Not quite identical due to issues using "count" data in a linear model, but close enough for our purposes
 
 ---
 
@@ -369,7 +316,7 @@ animate(p,nframes=200)
 
 # A Continuous Control
 
-```{r, out.width="800px"}
+```{r, out.width="700px"}
 knitr::include_graphics("linear_control.gif")
 ```
 
@@ -386,27 +333,6 @@ knitr::include_graphics("linear_control.gif")
 - Often in econometrics we focus on getting *one* parameter, $\hat{\beta}_1$, exactly right and don't focus on parameters we haven't put much effort into identifying
 
 ---
-# What if pennies were omitted?
-
-- What if pennies were the omitted variable?
-```{r echo=FALSE}
-coins2 <- tibble(quarters = sample(0:10,1000,replace=TRUE),
-            pennies=sample(0:10, 1000, replace=TRUE),
-            nickels=sample(0:10, 1000, replace= TRUE)) %>%
-  mutate(dimes = pennies + sample(0:10,1000,replace=TRUE)) %>%
-  mutate(amount = 0.25*quarters + 0.10*dimes + 0.01*pennies + 0.05*nickels)
-
-feols(amount ~ sw(dimes+pennies,dimes), data = coins2) %>%
-    etable(headers=(c('penniesdimes','onlydimes')),fitstat=~n,digits=2)
-```
-
-- Huh? The bias is so much smaller! 
-
-- This is because the quarters explain a larger share of the variation in amount than the pennies do
-
-- So when we remove quarters, dimes inherit a larger relationship with the amount of money than with pennies
-
----
 # Summary
 
 - We can remove endogeneity by adding omitted variables into our regression model if:
@@ -418,12 +344,6 @@ feols(amount ~ sw(dimes+pennies,dimes), data = coins2) %>%
 - This is fairly common, but often inadequate approach to causal inference
 
 - Sometimes it is the best we can do though! 
-
----
-class: inverse, center, middle
-
-# Next week: Fixed Effects/Diff-in-diff
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
