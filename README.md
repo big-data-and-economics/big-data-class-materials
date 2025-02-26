@@ -140,33 +140,33 @@ Tuesday (2025-02-25): Causal Inference ([.html][10a-causal-inference.html], [.pd
 - Problem Set 2 due before class
 - Problem Set 3 assigned
 
-Thursday (2025-02-27): Regression ([.html][10-regression.html], [.pdf][10-regression.pdf], [.Rmd](lectures/10-regression/10-regression.Rmd))
+Thursday (2025-02-27): Control Variables ([.html][10-control-variables.html], [.pdf][10-control-variables.pdf], [.Rmd](lectures/10-control-variables/10-control-variables.Rmd))
 
-- Class activity: [Regression](https://github.com/big-data-and-economics/exercises/tree/main/13-regressions)
 - Exercise due before class: [Watch Regression and The Error Term](https://www.youtube.com/watch?v=0Aukw3CdB-Q) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/27)
+- Class activity: [Control variables and omitted variable bias](https://github.com/big-data-and-economics/exercises/tree/main/13-control-variables)
 
 ### Week 9: Fixed Effects and Diff-in-diff
 
-Tuesday (2025-03-04): Control Variables ([.html][10-control-variables.html], [.pdf][10-control-variables.pdf], [.Rmd](lectures/10--control-variables/10-control-variables.Rmd))
+Tuesday (2025-03-04): Fixed Effects ([.html][11-fixed-effects.html], [.pdf][11-fixed-effects.pdf], [.Rmd](lectures/11-fixed-effects/11-fixed-effects.pdf))
 
-- Class activity: [Coins as control variables](TK)
-- Exercise due before class: TK
+- Exercise due before class: [Watch Fixed Effects](https://youtu.be/Z1QmFuPV9JA?si=CUXGCygsABmdWEhk) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/33)
+- Class activity: [Panel data and TWFE][11a-panel-twfe.html] 
 
-Thursday (2025-03-06): Fixed Effects ([.html][11-fixed-effects.html], [.pdf][11-fixed-effects.pdf], [.Rmd](lectures/11-fixed-effects/11-fixed-effects.pdf))
+Thursday (2025-03-06): Difference-in-differences ([.html][11-diff-in-diff.html], [.pdf][11-diff-in-diff.pdf], [.Rmd](lectures/11-diff-in-diff/11-diff-in-diff.Rmd))
 
-- Class activity: Panel data and TWFE ([.html][11a-panel-twfe.html], [.pdf][11a-panel-twfe.pdf], [.Rmd](lectures/11a-panel-twfe/11a-panel-twfe.Rmd))
-- Exercise due before class: TK 
+- Exercise due before class: [Watch Diff-in-diff lecture](TK) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/37)
+- Class activity: [Difference-in-difference exercise](TK)
 
 ### Week 10: Regression Discontinuity Design
 
-Tuesday (2025-03-11):  Difference-in-differences ([.html][11-diff-in-diff.html], [.pdf][11-diff-in-diff.pdf], [.Rmd](lectures/11-diff-in-diff/11-diff-in-diff.Rmd))
+Tuesday (2025-03-11):  Regression Discontinuity Design ([.html][12-regression-discontinuity.html], [.pdf][12-regression-discontinuity.pdf], [.Rmd](lectures/12-regression-discontinuity/12-regression-discontinuity.Rmd))
 
 - Problem Set 3 due before class
 - Problem Set 4 assigned
-- Exercise due before class: TK
-- Class activity: TK
+- Exercise due before class: [RDD lecture](TK) and respond to discussion questions in [Discussion post](TK)
+- Class activity: [RDD and class sizes][12a-rdd-class-sizes.html]
 
-Thursday (2025-03-13): Regression Discontinuity Design ([.html][12-regression-discontinuity.html], [.pdf][12-regression-discontinuity.pdf], [.Rmd](lectures/12-regression-discontinuity/12-regression-discontinuity.Rmd))
+Thursday (2025-03-13): Catch-up, potentially power tests/experimental design
 
 - Exercise due before class: TK
 - Class activity: TK
@@ -175,7 +175,7 @@ Thursday (2025-03-13): Regression Discontinuity Design ([.html][12-regression-di
 
 ### Week 11: Bootstrapping
 
-Tuesday (2025-03-18): Catch-up, data simulations, and/or review
+Tuesday (2025-03-18): Catch-up, potentially rental assistance topic discussion
 
 Thursday (2025-03-20): Break
 

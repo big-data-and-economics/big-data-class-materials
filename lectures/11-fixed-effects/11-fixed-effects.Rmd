@@ -899,10 +899,7 @@ etable(de_mean, pro)
 
 - Why can't we use individual-person fixed effects to study the impact of race on traffic stops?
 
-- The within $R^2$ from is .3, and the overall $R^2$ is .5. Interpret these two numbers in sentences
-
 - In a sentence, interpret the slope coefficient in the estimated model $(Y_{it} - \bar{Y}_i) = 1 + .5(X_{it} - \bar{X}_i)$ where $Y$ is "school funding per child" and $X$ is "population growth", and $i$ is city
-
 
 ---
 class: inverse, center, middle
