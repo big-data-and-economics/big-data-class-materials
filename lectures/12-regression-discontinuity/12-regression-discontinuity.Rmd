@@ -154,11 +154,11 @@ We call these continuous variables "Running variables" because we *run along the
 
 1. Line up in height order
 
-2. Those below 5'6" get a pill to increase their height
+2. Those below 5'6" get a pill to increase their basketball ability
 
 3. Those above 5'6" don't
 
-4. We want to know the effect of the pill on height
+4. We want to know the effect of the pill on free throw percentage
 
 - Can we compare the average height of the treated and untreated groups after a year?
 
