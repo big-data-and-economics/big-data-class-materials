@@ -142,7 +142,7 @@ Tuesday (2025-02-25): Causal Inference ([.html][10a-causal-inference.html], [.pd
 
 Thursday (2025-02-27): Control Variables ([.html][10-control-variables.html], [.pdf][10-control-variables.pdf], [.Rmd](lectures/10-control-variables/10-control-variables.Rmd))
 
-- Exercise due before class: [Watch Regression and The Error Term](https://www.youtube.com/watch?v=0Aukw3CdB-Q) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/27)
+- Exercise due before class: [Watch Regression and The Error Term](https://www.youtube.com/watch?v=0Aukw3CdB-Q) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/30)
 - Class activity: [Control variables and omitted variable bias](https://github.com/big-data-and-economics/exercises/tree/main/13-control-variables)
 
 ### Week 9: Fixed Effects and Diff-in-diff
