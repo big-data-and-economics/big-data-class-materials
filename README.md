@@ -150,12 +150,12 @@ Thursday (2025-02-27): Control Variables ([.html][10-control-variables.html], [.
 Tuesday (2025-03-04): Fixed Effects ([.html][11-fixed-effects.html], [.pdf][11-fixed-effects.pdf], [.Rmd](lectures/11-fixed-effects/11-fixed-effects.pdf))
 
 - Exercise due before class: [Watch Fixed Effects](https://youtu.be/Z1QmFuPV9JA?si=CUXGCygsABmdWEhk) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/33)
-- Class activity: [Panel data and TWFE][11a-panel-twfe.html] 
+- Class activity: [Fixed Effects and Panel Data](https://github.com/big-data-and-economics/exercises/tree/main/15-fixed-effects)
 
 Thursday (2025-03-06): Difference-in-differences ([.html][11-diff-in-diff.html], [.pdf][11-diff-in-diff.pdf], [.Rmd](lectures/11-diff-in-diff/11-diff-in-diff.Rmd))
 
-- Exercise due before class: [Watch Diff-in-diff lecture](TK) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/37)
-- Class activity: [Difference-in-difference exercise](TK)
+- Exercise due before class: [Watch Diff-in-diff lecture](https://www.youtube.com/watch?v=hu2nDbnpALA) and read [Baker's Diff-in-diff methodology](https://andrewcbaker.netlify.app/2019/09/25/difference-in-differences-methodology/) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/36)
+- Class activity: [Difference-in-difference exercise](https://github.com/big-data-and-economics/exercises/tree/main/16-diff-in-diff)
 
 ### Week 10: Regression Discontinuity Design
 
