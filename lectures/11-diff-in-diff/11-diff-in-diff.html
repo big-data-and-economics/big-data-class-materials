@@ -46,13 +46,9 @@ name: toc
 - [Prologue](#prologue)
 
 - [Difference what with who?](#what-it-did)
-  - [Effect of time](#effect-of-time)
 
 - [Example: Earned Income Tax Credit](#EITC)
 
-- [Many groups](#manygroups)
-
-- [Example: Pandemic Unemployment Assistance](#pua)
 
 ---
 name: prologue
@@ -60,33 +56,11 @@ class: inverse, center, middle
 # Prologue
 
 ---
-# Plan for the day
-
-- By the end of the day you will:
-
-  - Understand how difference-in-differences uses variation in time and treatment to identify causal effects
-  
-  - Be able to implement difference-in-differences models in R
-  
-  - Create pretty event study plots of your results
-
----
 # Attribution
 
 - These slides are adapted from work by Nick Huntington-Klein, Ed Rubin, and Scott Cunningham
 
 - They're both superb econometric instructors and I highly recommend their work
-
----
-# Questions
-
-- Any questions?
-
-- Anything you want to talk through? 
-
-- There are some sneaky data tricks to the problem set that a few of you have started to uncover
-
-- It is due Monday, so get on it if you're behind
 
 ---
 # Check-in on causality
@@ -116,6 +90,76 @@ class: inverse, center, middle
 name: causal-inference-review
 
 # Causal Inference Review
+
+---
+# An old causality problem: Cholera
+
+- DiD is an old method with its first documented use by John Snow in 1854 to identify that cholera was transmitted through water&lt;sup&gt;1&lt;/sup&gt;
+
+- Cholera was a big problem in London in the 1800s
+
+- Many were convinced that _miasma_ was the cause of cholera
+
+- John Snow was a doctor in London in the 1800s
+
+- He thought it might be due to contaminated water. But how to prove it?
+
+- An experiment was out of the question, ethically and practically
+
+- So he needed some other variation in water quality
+
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Unlike Jon Snow, who knows nothing, John Snow knew quite a lot.]
+
+---
+# A natural experiment
+
+- There were three water companies in London: Lambeth, Southwark and Vauxhall (SV)
+
+- In 1849, Parliament passed a bill requiring all water companies to move their pumps further up the Thames
+
+- Natural experiment: Lambeth water company moves its pipes between 1849 and 1854; Southwart and Vauxhall (SV) water company delayed
+
+- John Snow went door-to-door collecting info where people got their water in 1849 and counted cholera cases in 1849 and 1854
+
+
+|supplier         |  1849|  1854|  diff|
+|:----------------|-----:|-----:|-----:|
+|Non-Lambeth Only | 134.9| 146.6|  11.7|
+|Lambeth + Others | 130.1|  84.9| -45.2|
+
+- Let's think about how John Snow could have estimated the effect of the water pump move on death rates
+
+---
+# Let's consider the counterfactual
+
+Let's look at .purle[observed] and .blue[counterfactual] death rates per 10K people (a subscript 1 indicates having a pump moved)
+
+.pull-left[.center[
+.purple[Death.sub[1,Lambeth]] = .purple[85]
+&lt;br&gt;.blue[Death.sub[0,Lambeth]] = .blue[145]
+]]
+.pull-right[
+.purple[Death.sub[1,SV]] = .purple[75]
+&lt;br&gt;.blue[Death.sub[0,SV]] = .blue[135]
+]
+
+--
+
+The change in death rates differs between the companies
+--
+&lt;br&gt; `\(\quad\quad\tau\)`.sub[Lambeth] = .purple[Death.sub[1,Lambeth]] - .blue[Death.sub[0,Lambeth]] = -60
+--
+&lt;br&gt; `\(\quad\quad\tau\)`.sub[SV] = .purple[Death.sub[1,SV]] - .blue[Death.sub[0,SV]] = -60
+
+--
+
+What happens if we just compare what we can observe, Lambeth to SV?
+  - Well Lambeth served the upper income areas (western London), so they might be healthier
+
+Okay, but why not compare Lambeth before vs. Lambeth after?
+  - London was actively fighting cholera, so attribution of deaths to the pump move is difficult
+
+Both of these are examples of selection bias
 
 ---
 # Selection bias
@@ -151,119 +195,24 @@ Sounds a bit like omitted-variable bias, right? That's cause they're all forms o
  Our .purple[treatment] variable is correlated with something that makese the two groups different.
 
 ---
-# Hypothetical example
-
-**Example:** Imagine we have two people—Al and Bri—and a single binary treatment, college. We interested in the effect of college on earnings.
+# John Snow got pre-period data
 
 .pull-left[.center[
-.purple[Earn.sub[1,Al]] = .purple[$60]
-&lt;br&gt;.blue[Earn.sub[0,Al]] = .blue[$30K]
+.purple[Death.sub[1,Lambeth].super[Post]] = .purple[85]
+&lt;br&gt;.red[Death.sub[0,Lambeth].super[Pre]] = .red[130]
 ]]
 .pull-right[
-.purple[Earn.sub[1,Bri]] = .purple[$80K]
-&lt;br&gt;.blue[Earn.sub[0,Bri]] = .blue[$50K]
+.blue[Death.sub[0,SV].super[Post]] = .blue[147]
+&lt;br&gt;.red[Death.sub[0,SV].super[Pre]] = .red[135]
 ]
-
---
-
-The change in earnings is $30K for both of them
---
-&lt;br&gt; `\(\quad\quad\tau\)`.sub[Al] = .purple[Earn.sub[1,Al]] - .blue[Earn.sub[0,Al]] = .purple[$60K] - .blue[$30K] = $30K
---
-&lt;br&gt; `\(\quad\quad\tau\)`.sub[Bri] = .purple[Earn.sub[1,Bri]] - .blue[Earn.sub[0,Bri]] = .purple[$80K] - .blue[$50K] = $30K
-
---
-
-but any real-world estimate would have serious selection issues since .blue[Earn.sub[0,Al]] ≠ .blue[Earn.sub[0,Bri].]
----
-# Hypothetical example
-
-**Example:** Imagine we have two people—Al and Bri—and a single binary treatment, college. We interested in the effect of college on earnings.
-
-.pull-left[.center[
-.purple[Earn.sub[1,Al]] = .purple[$60]
-&lt;br&gt;.blue[Earn.sub[0,Al]] = .blue[$30K]
-]]
-.pull-right[
-.purple[Earn.sub[1,Bri]] = .purple[$80K]
-&lt;br&gt;.blue[Earn.sub[0,Bri]] = .blue[$50K]
-]
-
-The selection bias...
-
---
-
-If Bri attended college (D.sub[Bri]=1) and Al did not (D.sub[Al]=0):
-&lt;br&gt;
-`\(\quad\quad\hat{\tau}\)` = .purple[Earn.sub[1,Bri]] - .blue[Earn.sub[0,Al]] = .purple[$80K] - .blue[$30K] = $50K
-
---
-
-If Al attended college (D.sub[Al]=1) and Bri did not (D.sub[Bri]=0):
-&lt;br&gt;
-`\(\quad\quad\hat{\tau}\)` = .purple[Earn.sub[1,Al]] - .blue[Earn.sub[0,Bri]] = .purple[$60K] - .blue[$50K] = $10K
-
----
-# What if we saw pre-treatment
-
-- Think in the case of Bri and Al, but we now observe pre-college earnings
-
-.pull-left[.center[
-.purple[Earn.sub[1,Al].super[Post]] = .purple[$60K]
-&lt;br&gt;.red[Earn.sub[0,Al].super[Pre]] = .red[$20K]
-]]
-.pull-right[
-.blue[Earn.sub[0,Bri].super[Post]] = .blue[$50K]
-&lt;br&gt;.red[Earn.sub[0,Bri].super[Pre]] = .red[$40K]
-] 
-
-### Bridge from fixed effects
-
-- It is now possible to apply fixed effects. Why? 
 
 --
 
 - We can take the average of observations and subtract it from each observation
 
-- Individual fixed effect for Al on his post-college observation:  
+- Individual fixed effect for Lambeth on their post-treatment observation:  
 
-.purple[Earn.sub[1,Al].super[Post]] - Avg Earn.sub[Al] = .purple[$60K] - $40K = $20K
-
----
-# Bridge from fixed effects
-
-- If we have individual fixed effects, we adjust for **average** differences between individuals (hometown, family, education, race, etc.)
-
-- If treatment is randomly assigned within the fixed effect, i.e. over time within an individual, we're done! 
-
-- But what if Al graduated during a recession? Is the timing of college .hi-slate[exogenous]? 
-
---
-
-- No! Recessions `\(\downarrow\)` earnings and his education is correlated with recession timing
-
-- Okay, what if I restrict my sample to just college goers (Al). Can I just use a fixed effect for time to wash out the effect of the recession **on Al**?
-
---
-
-- Again, no! That would wash out all the variation in the treatment effect
-
----
-# Compare to Bri
-
-- We've already seen we cannot just use .purple[Earn.sub[1,Al]]-.purple[Earn.sub[0,Bri]] due to selection bias
-
-- But we know that before college, their earnings differ by $20K
-
-- Let's adjust for that difference and see what happens
-
---
-
-.purple[Earn.sub[1,Al].super[Post]] - .blue[Earn.sub[0,Bri].super[Post]] - (.red[Earn.sub[0,Al].super[Pre]] - .red[Earn.sub[0,Bri].super[Pre]]) = $60K-$50K - ($20K-$40K) = $30K
-
---
-
-- The actual effect was $30K! (I forced it to work that way, life is more complicated -- sorry.)
+.purple[Death.sub[1,Lambeth].super[Post]] - Avg Death.sub[Lambeth] = .purple[85] - 107.5 = .purple[-22.5]
 
 - This is a method called difference-in-differences
 
@@ -271,102 +220,25 @@ If Al attended college (D.sub[Al]=1) and Bri did not (D.sub[Bri]=0):
 2. Difference in the groups' means after treatment
 3. Difference in these differences
 
----
-name: what-it-did
-class: inverse, center, middle
-
-# Difference what with who?
 
 ---
-# Difference-in-Differences
+# Bridge from fixed effects
 
-- Today we will talk about difference-in-differences (DiD), which is a way of using within variation in a more deliberate way in order to identify the effect we want
+- Note that we used group averages to demean the data of *between* variation, leaving us just *within* variation
 
-- At its simplest, we need a treatment that *goes into effect* at a particular time, and we need a group that is *treated* and a group that is *not*
+- That's a fixed effect! 
+  - The year fixed effect removes the variation both groups experience over time
+  - The group fixed effect removes the variation within each group in each periods
 
 - The untreated group, or control group, is our .hi-slate[counterfactual]
 
 - Then, we compare the within-variation for the treated group vs. the within-variation for the untreated group
 
-- Voila, we have an effect!
+- Voila, we have an effect as long as the *within* variation left over is as good as randomly assigned, we'll have causality
 
----
-# Difference-in-Differences
+- Put another way, as long as nothing else affects the outcome for the treated group between the pre- and post-periods, we'll have causality
 
-- Because the requirements to use it are so low, DiD is used a *lot*
-
-- Any time a policy is enacted but isn't enacted everywhere at once? DiD!
-
-- Plus, the logic is pretty straightforward
-
-- The question DiD tries to answer is "what was the effect of (some policy) on the people who were affected by it?"
-
-- We have some data on the people who were affected both before the policy went into effect and after
-
-- However, we can't just compare before and after, because things usually change over time for other reasons
-
-- So we compare to people who weren't affected by the policy
-
----
-# An old method
-
-- DiD is an old method with its first documented use by John Snow in 1854 to identify that cholera was transmitted through water&lt;sup&gt;1&lt;/sup&gt;
-
-- Cholera was a big problem in London in the 1800s. It causes severe diarrhea and vomiting, and eventually death
-  - It was spread due to victims' waste finding its way into the Thames, the main water supply
-
-- There were two water companies, Lambeth and Southwark and Vauxhall (SV)
-
-- Lambeth moved its water pump higher upstream, while SV did not
-
-- John Snow went door-to-door collecting info where people got their water in 1849 and counted cholera cases in 1849 and 1854
-
-.footnote[&lt;sup&gt;1&lt;/sup&gt; Unlike Jon Snow, who knows nothing, John Snow knew quite a lot.]
-
----
-# Cholera spread
-
-- The analysis was not perfect, but it was convincing
-
-
-|supplier         |  1849|  1854|  diff|
-|:----------------|-----:|-----:|-----:|
-|Non-Lambeth Only | 134.9| 146.6|  11.7|
-|Lambeth + Others | 130.1|  84.9| -45.2|
-
-- Resulting difference was -56.9 per 10K
-
-- He did not calculate it, but he used it to argue that the water was the cause of the cholera
-
----
-# Check back on Bri and Al
-
-
-.pull-left[.center[
-.purple[Earn.sub[1,Al].super[Post]] = .purple[$60K]
-&lt;br&gt;.red[Earn.sub[0,Al].super[Pre]] = .red[$20K]
-]]
-.pull-right[
-.blue[Earn.sub[0,Bri].super[Post]] = .blue[$50K]
-&lt;br&gt;.red[Earn.sub[0,Bri].super[Pre]] = .red[$40K]
-]
-
-
-&lt;img src="11-diff-in-diff_files/figure-html/aidelaide-1.png" style="display: block; margin: auto;" /&gt;
-
----
-# Check back on Bri and Al
-
-.pull-left[.center[
-.purple[Earn.sub[1,Al].super[Post]] = .purple[$60K]
-&lt;br&gt;.red[Earn.sub[0,Al].super[Pre]] = .red[$20K]
-]]
-.pull-right[
-.blue[Earn.sub[0,Bri].super[Post]] = .blue[$50K]
-&lt;br&gt;.red[Earn.sub[0,Bri].super[Pre]] = .red[$40K]
-]
-
-&lt;img src="11-diff-in-diff_files/figure-html/aidelaide-diff-1.png" style="display: block; margin: auto;" /&gt;
+- Note: other irrelevant things can change, but as long as the treatment is the only thing that changes, we'll be good
 
 ---
 
@@ -386,16 +258,45 @@ DiD = (.blue[**TA**] - .red[**TB**]) - (.blue[UA] - .red[UB]) = .hi-purple[Treat
 (Abbreviations for Untreated and Treated Before/After to save space)
 
 ---
+# Visualizing Lambeth vs SV
 
-# Concept Checks: 
 
-- Why do we need a control group? What does this let us do?
+|supplier         |  1849|  1854|  diff|
+|:----------------|-----:|-----:|-----:|
+|Non-Lambeth Only | 134.9| 146.6|  11.7|
+|Lambeth + Others | 130.1|  84.9| -45.2|
 
-- What do we need to assume is true about our control group?
+&lt;img src="11-diff-in-diff_files/figure-html/snow-data-3-1.png" style="display: block; margin: auto;" /&gt;
 
-- In 2015, a new, higher minimum wage went into effect in Seattle, but this increase did not occur in some of the areas surrounding Seattle. 
+---
+# Visualizing Lambeth vs SV
 
-  - How might you use DiD to estimate the effect of this minimum wage change on employment levels?
+
+|supplier         |  1849|  1854|  diff|
+|:----------------|-----:|-----:|-----:|
+|Non-Lambeth Only | 134.9| 146.6|  11.7|
+|Lambeth + Others | 130.1|  84.9| -45.2|
+
+&lt;img src="11-diff-in-diff_files/figure-html/snow-diff-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Difference-in-Differences
+
+- Because the requirements to use it are so low, DiD is used a *lot*
+
+- At its simplest, we need a treatment that *goes into effect* at a particular time, and we need a group that is *treated* and a group that is *not*
+
+- Any time a policy is enacted but isn't enacted everywhere at once? DiD!
+
+- Plus, the logic is pretty straightforward
+
+- The question DiD tries to answer is "what was the effect of (some policy) on the people who were affected by it?"
+
+- We have some data on the people who were affected both before the policy went into effect and after
+
+- However, we can't just compare before and after, because things usually change over time for other reasons
+
+- So we compare to people who weren't affected by the policy
 
 ---
 
@@ -415,11 +316,13 @@ where `\(After_t\)` is a binary variable for being in the post-treatment period,
 
 
 ```
-##   Person   Time Earnings After Treated
-## 1     Al Before       20 FALSE   FALSE
-## 2     Al  After       30  TRUE   FALSE
-## 3    Bri Before       40 FALSE    TRUE
-## 4    Bri  After       80  TRUE    TRUE
+## # A tibble: 4 × 6
+##    year supplier         treatment           deathrate After Treated
+##   &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;                   &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt;  
+## 1  1849 Non-Lambeth Only Dirty                   135.  FALSE FALSE  
+## 2  1849 Lambeth + Others Mix Dirty and Clean     130.  FALSE TRUE   
+## 3  1854 Non-Lambeth Only Dirty                   147.  TRUE  FALSE  
+## 4  1854 Lambeth + Others Mix Dirty and Clean      84.9 TRUE  TRUE
 ```
 
 ---
@@ -459,129 +362,6 @@ where `\(After_t\)` is a binary variable for being in the post-treatment period,
 
 - If you don't have a before/after, or you don't have a control group, that same setup may tell you something interesting but it won't be DID!
 
----
-name: EITC
-class: inverse, center, middle
-# Example: Earned Income Tax Credit
-
----
-
-# Earned Income Tax Credit
-
-- The Earned Income Tax Credit (EITC) is a refundable tax credit for low-income workers
-
-- Many argue it is the most effective anti-poverty program in the US at it increases the incentive to work
-
-- Key features:  
-  - Initially increases as earned income increases before leveling off at a threshold, at next threshold it declines as income increases further
-  - Increases with number of children
-  - Phaseout differs by filing status (single vs. married)
-
-- It was introduced in 1975 and expanded in 1986, 1990, and 1993 (we'll focus on 1993)
-
-- Policy details vary, so we're gonna focus on single mothers vs. single women without kids to keep it simple
-
----
-class: white-slide
-&lt;img src="img/eitc.jpg" width="1067" style="display: block; margin: auto;" /&gt;
-
----
-# Earned Income Tax Credit demo
-
-Navigate to the [Difference-in-differences activity under lecture 11a-panel-twfe](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/11a-panel-twfe/11a-panel-twfe.html#Difference-in-differences)
-
-1. Check the top of the activity for the packages to load
-
-2. Work through the activity
-
-We'll check back in in ~20 minutes
-
----
-
-# Earned Income Tax Credit
-
-- EITC was increased in 1993. This may increase chances single mothers (treated) work, but likely not affect single non-moms (control)
-
-- Question: Does this program incentivize single mothers to work more? 
-
-
-```r
-eitc &lt;- read_csv('http://nickchk.com/eitc.csv') %&gt;%
-  mutate(after = year &gt;= 1994,
-         treated = children &gt; 0)
-eitc %&gt;% 
-  group_by(after, treated) %&gt;%
-  summarize(proportion_working = mean(work))
-```
-
-```
-## # A tibble: 4 × 3
-## # Groups:   after [2]
-##   after treated proportion_working
-##   &lt;lgl&gt; &lt;lgl&gt;                &lt;dbl&gt;
-## 1 FALSE FALSE                0.575
-## 2 FALSE TRUE                 0.446
-## 3 TRUE  FALSE                0.573
-## 4 TRUE  TRUE                 0.491
-```
-
-- Caveat: This is not a bulletproof causal inference design
-
----
-
-# Example
-
-- We can do it by just comparing the points, like we did with Al and Bri
-
-- This will give us the DID estimate: The EITC increase increases the probability of working by 4.7 percentage points
-
-- But not standard errors, or the ability to include controls easily
-
-
-```r
-means &lt;- eitc %&gt;% 
-  group_by(after, treated) %&gt;%
-  summarize(proportion_working = mean(work)) %&gt;%
-  pull(proportion_working)
-(means[4] - means[2]) - (means[3] - means[1])
-```
-
-```
-## [1] 0.04687313
-```
-
----
-
-# Let's try OLS!
-
-`\(\text{Work}_{it} = \text{Has Kids}_i + (\text{Year} \geq {1994})_t + \text{Has Kids}_i \times (\text{Year} \geq {1994})_t + \varepsilon_{it}\)`
-
-
-```r
-etable(feols(work ~ after*treated, data = eitc), digits = 3,fitstat=c('n','r2'))
-```
-
-```
-##                         feols(work ~ af..
-## Dependent Var.:                      work
-##                                          
-## Constant                 0.575*** (0.009)
-## afterTRUE                  -0.002 (0.013)
-## treatedTRUE             -0.129*** (0.012)
-## afterTRUE x treatedTRUE   0.047** (0.017)
-## _______________________ _________________
-## S.E. type                             IID
-## Observations                       13,746
-## R2                                0.01260
-## ---
-## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-```
-##### Concept Check: menti.com, code 9338 7492
-
-1. [Interpret the coefficients in a sentence each.](https://www.mentimeter.com/app/presentation/n/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/edit?question=bh6cx73mmcb4)
-
-2. [What assumptions provide a causal interpretation?](https://www.mentimeter.com/app/presentation/n/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/edit?question=ed2zbgizwj2y)
-
 
 ---
 
@@ -600,13 +380,11 @@ etable(feols(work ~ after*treated, data = eitc), digits = 3,fitstat=c('n','r2'))
 
 # Prior Trends
 
-- Let's see how that EITC example looks in the leadup to 1994
+- Let's look at an example involving an expasnion of the EITC in 1993
 
-- They look like the gap between them is pretty constant before 1994! They move up and down but the *gap* stays the same. That's good.
+- Looks like the gap between them is pretty constant before 1994! They move up and down but the *gap* stays the same. That's good.
 
 &lt;img src="11-diff-in-diff_files/figure-html/prior-trends-1.png" style="display: block; margin: auto;" /&gt;
-
-
 ---
 
 # Prior Trends
@@ -614,7 +392,7 @@ etable(feols(work ~ after*treated, data = eitc), digits = 3,fitstat=c('n','r2'))
 - Formally, prior trends being the same tells us nothing about parallel trends
 
 - But it can be suggestive if the gap was closing *anyway*
-  - For example, what if you compare earnings to Bri's boss
+  - For example, what if you compare cholera rates between Lambeth users and Denmark, which was relatively cholera-free due to a quarantine
 
 &lt;img src="11-diff-in-diff_files/figure-html/prior-trends-df-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -777,16 +555,6 @@ $$
 
 ---
 
-# Concept Checks
-
-## menti.com 9338 7492
-
-- [Go back to the Seattle minimum wage effect example from the first Concept Check slide. Clearly state what the parallel trends assumption means in this context.](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/ge23j87q8w3t)
-
-- [It's possible (although perhaps unlikely) that parallel trends can hold even if it looks like the treatment and control groups were trending apart before treatment went into effect. How is this possible?](https://www.mentimeter.com/app/presentation/bl58pbw4w33qk7tiwpz23j9tj5e2yqfv/2xe6yspgyyow)
-
----
-
 # Before we finish, a warning!
 
 - DID is so nice and simple that it feels like you can get real flexible with it
@@ -806,28 +574,115 @@ $$
 
   3. See slides by [Andrew Baker](https://andrewcbaker.netlify.app/did#1) for an example explanation of the problem
 
-- If you need to control for stuff to support parallel trends, *just tossing in controls doesn't work quite so well with TWFE*
+---
+# TWFE with Het. Treatment Timing
 
+Let's create a simple example with three groups and different treatment times:
+
+
+``` r
+# Create example data
+set.seed(123)
+n_periods &lt;- 10; n_groups &lt;- 3; n_obs &lt;- n_periods * n_groups
+
+twfe_data &lt;- data.frame(id = rep(1:n_groups, each = n_periods),
+  time = rep(1:n_periods, times = n_groups)) %&gt;% 
+  mutate( # Group 1 never treated, Group 2 treated at t=5, Group 3 treated at t=8
+    treated = (id == 2 &amp; time &gt;= 5) | (id == 3 &amp; time &gt;= 8),
+    # True treatment effects: Group 2: effect = 2, Group 3: effect = 4
+    true_effect = case_when(
+      id == 2 &amp; treated ~ 2,
+      id == 3 &amp; treated ~ 4,
+      TRUE ~ 0
+    ),
+    # Generate outcome with: Group fixed effects (id), Time fixed effects (time), Treatment effects, and some noise
+    y = id + time + true_effect + rnorm(n_obs)
+  )
+```
+
+---
+# TWFE with Het. Treatment Timing
+
+Treatment effects were:
+
+1. Group 2: 2 after t=5
+2. Group 3: 4 after t=8
+
+
+``` r
+# Run TWFE regression
+twfe_model &lt;- feols(y ~ treated | id + time, data = twfe_data)
+etable(twfe_model) %&gt;% kable(format="markdown")
+```
+
+
+
+|                |twfe_model    |
+|:---------------|:-------------|
+|Dependent Var.: |y             |
+|                |              |
+|treatedTRUE     |3.628 (1.554) |
+|Fixed-Effects:  |------------- |
+|id              |Yes           |
+|time            |Yes           |
+|_______________ |_____________ |
+|S.E.: Clustered |by: id        |
+|Observations    |30            |
+|R2              |0.93918       |
+|Within R2       |0.49396       |
+
+What's going on?
+
+---
+# TWFE with Het. Treatment Timing
+
+&lt;img src="11-diff-in-diff_files/figure-html/twfe-wrong-plot-1.png" style="display: block; margin: auto;" /&gt;
+
+The TWFE estimate is biased because:
+
+1. Early treated units (Group 2) become controls for later treated units (Group 3)
+2. The treatment effects are different across groups (2 vs 4)
+3. TWFE weights these comparisons incorrectly
+
+This is known as the "forbidden comparison" problem in staggered DiD.
+
+---
+# Different comparisons
+
+&lt;img src="11-diff-in-diff_files/figure-html/comparisons-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Bacon-Decomposition
+
+
+``` r
+bgd &lt;- bacon(y ~ treated, data = twfe_data, id = "id", time = "time")
+```
+
+```
+##                       type  weight avg_est
+## 1 Earlier vs Later Treated 0.18182 1.78361
+## 2 Later vs Earlier Treated 0.13636 5.73666
+## 3     Treated vs Untreated 0.68182 3.69853
+```
+
+
+```
+## [1] 3.628289
+```
+
+&lt;img src="11-diff-in-diff_files/figure-html/bacon-decomp-plot-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Fixes
 
-- There are tons of fixes -- it is a bit of a cottage industry in econometrics and there's often package implementations in R, Stata, etc.
-  - A few are even implemented in **fixest**, the package we're using for fixed effects
+- There are many fixes for this problem
 
-- The open source implementations are amazing and you can do a lot with them
+- Many go beyond the scope of the class
 
-- That way you just need to get the data and understand the research design
+- But you have the starting tools to understand them
 
-- You can leave the nuanced programming and linear algebra to the original authors
-
-- Asjad Naqvi hosts a [list of tons of these packages](https://asjadnaqvi.github.io/DiD/docs/02_R/)
-
----
-class: inverse, center, middle
-
-# Next lecture: Regression Discontinuity Design
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+- Also, many are written up to implement using R, Stata, Python, etc. 
 
 
     </textarea>
