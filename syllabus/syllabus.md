@@ -234,7 +234,7 @@ Throughout the course you will engage in problem sets that deal with actual data
 - With rare exceptions: You will not be given code to copy and paste to accomplish these data cleaning tasks, but instead given a set of instructions and asked to figure out how to write code yourself
 - You are encouraged to work together on problem sets, but you must write up your own answers (unless it is a group assignment)
 - All problem sets will be completed and turned in as GitHub repositories
-- I will drop the two lowest problem set grades
+- I will drop the lowest problem set grade
 
 #### What you will turn in:
 
