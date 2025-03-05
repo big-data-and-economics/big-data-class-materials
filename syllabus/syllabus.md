@@ -204,7 +204,7 @@ Scheduled hours for R held in the Student Academic Support Center (SASC) of the 
 | Open source material contribution         | Bonus up to 2.5%    | Provide evidence  |
 | Research seminar bonuses                  | Problem set bonus | 2 points |
 
-Finalized grades on each component will be posted to Lyceum. Where possible to give feedback privately, it will be posted to GitHub. '
+Finalized grades on each component will be posted to Lyceum. Where possible to give feedback privately, it will be posted to GitHub. 
 
 
 ### Exercises
