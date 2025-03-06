@@ -452,31 +452,31 @@ class: inverse, center, middle
 - Let's make some quick example data to show this off, with the first treated period being period 7 and the treated groups being 1 and 9, and a true effect of 3
 
 
-
-
-```r
-did_data &lt;- tibble(group = sort(rep(1:10, 10)),
-                   time = rep(1:10, 10)) %&gt;%
-  mutate(CurrentlyTreated  = group %in% c(1,9) &amp; time &gt;= 7) %&gt;%
-  mutate(Outcome = group + time + 3*CurrentlyTreated + rnorm(100))
+``` r
+set.seed(123)
+did_data &lt;- tibble(group = sort(rep(1:3000, 10)),
+                   time = rep(1:10, 3000)) %&gt;%
+  mutate(treat=group %in% c(1,9), 
+    post=time&gt;=6,
+    y=group + time + 3*treat*post + rnorm(30000))
 did_data
 ```
 
 ```
-## # A tibble: 100 × 4
-##    group  time CurrentlyTreated Outcome
-##    &lt;int&gt; &lt;int&gt; &lt;lgl&gt;              &lt;dbl&gt;
-##  1     1     1 FALSE               1.50
-##  2     1     2 FALSE               2.43
-##  3     1     3 FALSE               3.70
-##  4     1     4 FALSE               5.75
-##  5     1     5 FALSE               4.57
-##  6     1     6 FALSE               6.47
-##  7     1     7 TRUE               11.1 
-##  8     1     8 TRUE               12.6 
-##  9     1     9 TRUE               12.6 
-## 10     1    10 TRUE               13.6 
-## # ℹ 90 more rows
+## # A tibble: 30,000 × 5
+##    group  time treat post      y
+##    &lt;int&gt; &lt;int&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;dbl&gt;
+##  1     1     1 TRUE  FALSE  1.44
+##  2     1     2 TRUE  FALSE  2.77
+##  3     1     3 TRUE  FALSE  5.56
+##  4     1     4 TRUE  FALSE  5.07
+##  5     1     5 TRUE  FALSE  6.13
+##  6     1     6 TRUE  TRUE  11.7 
+##  7     1     7 TRUE  TRUE  11.5 
+##  8     1     8 TRUE  TRUE  10.7 
+##  9     1     9 TRUE  TRUE  12.3 
+## 10     1    10 TRUE  TRUE  13.6 
+## # ℹ 29,990 more rows
 ```
 
 ---
@@ -484,25 +484,72 @@ did_data
 # Multiple treatment groups
 
 
-```r
+``` r
 # Put group first so the clustering is on group
-many_periods_did &lt;- feols(Outcome ~ CurrentlyTreated | group + time, data = did_data)
-etable(many_periods_did)
+etable(feols(y ~ post*treat | group + time, data = did_data))
 ```
 
 ```
-##                       many_periods_did
-## Dependent Var.:                Outcome
+##                      feols(y ~ post ..
+## Dependent Var.:                      y
 ##                                       
-## CurrentlyTreatedTRUE 3.095*** (0.4991)
+## postTRUE x treatTRUE 3.114*** (0.2430)
 ## Fixed-Effects:       -----------------
 ## group                              Yes
 ## time                               Yes
 ## ____________________ _________________
 ## S.E.: Clustered              by: group
-## Observations                       100
-## R2                             0.96131
-## Within R2                      0.34238
+## Observations                    30,000
+## R2                              1.0000
+## Within R2                      0.00179
+## ---
+## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Event study plot
+
+
+``` r
+est_did = feols(y ~ i(time, treat, 5) | group + time, data = did_data)
+iplot(est_did, xlab = "Time", ylab = "Treatment Effect", main = "Event Study Plot")
+```
+
+&lt;img src="11-diff-in-diff_files/figure-html/event-study-iplot-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Staggered Treatment
+
+- Let's say we have a treatment that starts at different times for different groups
+
+
+``` r
+# Create example data
+set.seed(123)
+# Treatment is 3 and starts at different times with 1000 units for each group
+staggered_data &lt;- tibble(
+  id = rep(1:3000, each = 10),time = rep(1:10, times = 3000),
+  cohort = case_when(id &lt;= 1000 ~ 5,id &lt;= 2000 ~ 8,TRUE ~ 1000),
+  treated = time&gt;=cohort,
+  time_to_treat=ifelse(cohort&lt;1000,time-cohort,-1000),
+  y = id + time + 3*treated + rnorm(3000,0,5)
+)
+etable(feols(y ~ treated | id + time, data = staggered_data))
+```
+
+```
+##                 feols(y ~ treat..
+## Dependent Var.:                 y
+##                                  
+## treatedTRUE     3.015*** (0.1021)
+## Fixed-Effects:  -----------------
+## id                            Yes
+## time                          Yes
+## _______________ _________________
+## S.E.: Clustered            by: id
+## Observations               30,000
+## R2                        0.99997
+## Within R2                 0.02913
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
@@ -529,6 +576,17 @@ $$
 --
 
 - They're in the fixed effects! We don't need to include them separately
+---
+# Cool event study plot
+
+
+``` r
+est_did = feols(y ~ i(time_to_treat,ref=c(-1,-1000)) | id + time, data = staggered_data)
+iplot(est_did, xlab = "Relative Time", ylab = "Treatment Effect", 
+  main = "Event Study Plot")
+```
+
+&lt;img src="11-diff-in-diff_files/figure-html/event-study-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 # Downers and Assumptions
@@ -542,7 +600,6 @@ $$
 --
 
 - DID and TWFE give a causal effect as long as *the only reason the gap changed* was the treatment
-  - e.g. If Al's earnings were going up $40K *anyway*, then we'd mistakenly attribute $30K of that to college
 
 - For TWFE to have a causal effect with panel data, we assume no endogenous variation across time within unit
   - It gets even messier if we have staggered rollout of treatment
@@ -582,20 +639,20 @@ Let's create a simple example with three groups and different treatment times:
 
 ``` r
 # Create example data
+n_periods &lt;- 10; n_groups &lt;- 10; n_obs &lt;- n_periods * n_groups
 set.seed(123)
-n_periods &lt;- 10; n_groups &lt;- 3; n_obs &lt;- n_periods * n_groups
-
 twfe_data &lt;- data.frame(id = rep(1:n_groups, each = n_periods),
   time = rep(1:n_periods, times = n_groups)) %&gt;% 
-  mutate( # Group 1 never treated, Group 2 treated at t=5, Group 3 treated at t=8
-    treated = (id == 2 &amp; time &gt;= 5) | (id == 3 &amp; time &gt;= 8),
-    # True treatment effects: Group 2: effect = 2, Group 3: effect = 4
+  mutate( # Group 1 never treated, Cohort 2 treated at t=5, Cohort 3 treated at t=8
+    cohort=case_when(id&lt;3 ~ 1, id&lt;5 ~ 2, id&lt;8 ~ 3, TRUE ~ 1),
+    treated = (cohort == 2 &amp; time &gt;= 5) | (cohort == 3 &amp; time &gt;= 8),
+    # True treatment effects: Cohort 2: effect = 2, Cohort 3: effect = 4
     true_effect = case_when(
-      id == 2 &amp; treated ~ 2,
-      id == 3 &amp; treated ~ 4,
+      cohort == 2 &amp; treated ~ 4,
+      cohort == 3 &amp; treated ~ 2,
       TRUE ~ 0
     ),
-    # Generate outcome with: Group fixed effects (id), Time fixed effects (time), Treatment effects, and some noise
+    # Generate outcome with: Cohort fixed effects (id), Time fixed effects (time), Treatment effects, and some noise
     y = id + time + true_effect + rnorm(n_obs)
   )
 ```
@@ -605,8 +662,8 @@ twfe_data &lt;- data.frame(id = rep(1:n_groups, each = n_periods),
 
 Treatment effects were:
 
-1. Group 2: 2 after t=5
-2. Group 3: 4 after t=8
+1. Cohort 2: 4 after t=5
+2. Cohort 3: 2 after t=8
 
 
 ``` r
@@ -640,7 +697,7 @@ What's going on?
 
 The TWFE estimate is biased because:
 
-1. Early treated units (Group 2) become controls for later treated units (Group 3)
+1. Early treated units (Cohort 2) become controls for later treated units (Cohort 3)
 2. The treatment effects are different across groups (2 vs 4)
 3. TWFE weights these comparisons incorrectly
 

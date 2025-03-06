@@ -591,15 +591,13 @@ class: inverse, center, middle
 
 - Let's make some quick example data to show this off, with the first treated period being period 7 and the treated groups being 1 and 9, and a true effect of 3
 
-```{r setseed}
-set.seed(10600)
-```
-
 ```{r fake-data, echo = TRUE}
-did_data <- tibble(group = sort(rep(1:10, 10)),
-                   time = rep(1:10, 10)) %>%
-  mutate(CurrentlyTreated  = group %in% c(1,9) & time >= 7) %>%
-  mutate(Outcome = group + time + 3*CurrentlyTreated + rnorm(100))
+set.seed(123)
+did_data <- tibble(group = sort(rep(1:3000, 10)),
+                   time = rep(1:10, 3000)) %>%
+  mutate(treat=group %in% c(1,9), 
+    post=time>=6,
+    y=group + time + 3*treat*post + rnorm(30000))
 did_data
 ```
 
@@ -609,8 +607,34 @@ did_data
 
 ```{r many-periods, echo = TRUE}
 # Put group first so the clustering is on group
-many_periods_did <- feols(Outcome ~ CurrentlyTreated | group + time, data = did_data)
-etable(many_periods_did)
+etable(feols(y ~ post*treat | group + time, data = did_data))
+```
+
+---
+# Event study plot
+
+```{r event-study-iplot, echo = TRUE}
+est_did = feols(y ~ i(time, treat, 5) | group + time, data = did_data)
+iplot(est_did, xlab = "Time", ylab = "Treatment Effect", main = "Event Study Plot")
+```
+
+---
+# Staggered Treatment
+
+- Let's say we have a treatment that starts at different times for different groups
+
+```{r staggered-treatment, echo = TRUE,warning=FALSE}
+# Create example data
+set.seed(123)
+# Treatment is 3 and starts at different times with 1000 units for each group
+staggered_data <- tibble(
+  id = rep(1:3000, each = 10),time = rep(1:10, times = 3000),
+  cohort = case_when(id <= 1000 ~ 5,id <= 2000 ~ 8,TRUE ~ 1000),
+  treated = time>=cohort,
+  time_to_treat=ifelse(cohort<1000,time-cohort,-1000),
+  y = id + time + 3*treated + rnorm(3000,0,5)
+)
+etable(feols(y ~ treated | id + time, data = staggered_data))
 ```
 
 ---
@@ -635,6 +659,14 @@ $$
 --
 
 - They're in the fixed effects! We don't need to include them separately
+---
+# Cool event study plot
+
+```{r event-study, echo = TRUE}
+est_did = feols(y ~ i(time_to_treat,ref=c(-1,-1000)) | id + time, data = staggered_data)
+iplot(est_did, xlab = "Relative Time", ylab = "Treatment Effect", 
+  main = "Event Study Plot")
+```
 
 ---
 # Downers and Assumptions
@@ -648,7 +680,6 @@ $$
 --
 
 - DID and TWFE give a causal effect as long as *the only reason the gap changed* was the treatment
-  - e.g. If Al's earnings were going up $40K *anyway*, then we'd mistakenly attribute $30K of that to college
 
 - For TWFE to have a causal effect with panel data, we assume no endogenous variation across time within unit
   - It gets even messier if we have staggered rollout of treatment
@@ -687,20 +718,20 @@ Let's create a simple example with three groups and different treatment times:
 
 ```{r twfe-wrong, echo=TRUE}
 # Create example data
+n_periods <- 10; n_groups <- 10; n_obs <- n_periods * n_groups
 set.seed(123)
-n_periods <- 10; n_groups <- 3; n_obs <- n_periods * n_groups
-
 twfe_data <- data.frame(id = rep(1:n_groups, each = n_periods),
   time = rep(1:n_periods, times = n_groups)) %>% 
-  mutate( # Group 1 never treated, Group 2 treated at t=5, Group 3 treated at t=8
-    treated = (id == 2 & time >= 5) | (id == 3 & time >= 8),
-    # True treatment effects: Group 2: effect = 2, Group 3: effect = 4
+  mutate( # Group 1 never treated, Cohort 2 treated at t=5, Cohort 3 treated at t=8
+    cohort=case_when(id<3 ~ 1, id<5 ~ 2, id<8 ~ 3, TRUE ~ 1),
+    treated = (cohort == 2 & time >= 5) | (cohort == 3 & time >= 8),
+    # True treatment effects: Cohort 2: effect = 2, Cohort 3: effect = 4
     true_effect = case_when(
-      id == 2 & treated ~ 2,
-      id == 3 & treated ~ 4,
+      cohort == 2 & treated ~ 4,
+      cohort == 3 & treated ~ 2,
       TRUE ~ 0
     ),
-    # Generate outcome with: Group fixed effects (id), Time fixed effects (time), Treatment effects, and some noise
+    # Generate outcome with: Cohort fixed effects (id), Time fixed effects (time), Treatment effects, and some noise
     y = id + time + true_effect + rnorm(n_obs)
   )
 ```
@@ -710,8 +741,8 @@ twfe_data <- data.frame(id = rep(1:n_groups, each = n_periods),
 
 Treatment effects were:
 
-1. Group 2: 2 after t=5
-2. Group 3: 4 after t=8
+1. Cohort 2: 4 after t=5
+2. Cohort 3: 2 after t=8
 
 ```{r twfe-wrong-2, echo=TRUE}
 # Run TWFE regression
@@ -726,21 +757,24 @@ What's going on?
 
 ```{r twfe-wrong-plot, echo=FALSE}
 # Plot the data
-ggplot(twfe_data, aes(x = time, y = y, color = factor(id))) +
+group_df <- twfe_data %>% 
+  group_by(cohort,time) %>% 
+  summarize(y=mean(y)) 
+
+ggplot(group_df,aes(x = time, y = y, color = factor(cohort))) +
   geom_line() + geom_point() +
   geom_vline(xintercept = c(4.5, 7.5), linetype = "dashed") +
   scale_color_brewer(palette = "Set1") +
   labs(
     title = "Heterogeneous Treatment Effects",
-    subtitle = "Group 2 treated at t=5 (effect=2), Group 3 treated at t=8 (effect=4)",
-    color = "Group"
-  ) +
+    subtitle = "Cohort 2 treated at t=5 (effect=2), Cohort 3 treated at t=8 (effect=4)",
+    color = "Cohort") +
   theme_metro()
 ```
 
 The TWFE estimate is biased because:
 
-1. Early treated units (Group 2) become controls for later treated units (Group 3)
+1. Early treated units (Cohort 2) become controls for later treated units (Cohort 3)
 2. The treatment effects are different across groups (2 vs 4)
 3. TWFE weights these comparisons incorrectly
 
@@ -751,19 +785,19 @@ This is known as the "forbidden comparison" problem in staggered DiD.
 
 ```{r comparisons, echo=FALSE}
 rbind(
-    twfe_data |> subset(id %in% c(1,2)) |> transform(role = ifelse(id==2, "Treatment", "Control"), comp = "1.1. Early vs Untreated"),
-    twfe_data |> subset(id %in% c(1,3)) |> transform(role = ifelse(id==3, "Treatment", "Control"), comp = "1.2. Late vs Untreated"),
-    twfe_data |> subset(id %in% c(2,3) & time<8) |> transform(role = ifelse(id==2, "Treatment", "Control"), comp = "2.1. Early vs Late"),
-    twfe_data |> subset(id %in% c(2:3) & time>4) |> transform(role = ifelse(id==3, "Treatment", "Control"), comp = "2.2. Late vs Early (bad comparison)")
+    group_df |> subset(cohort %in% c(1,2)) |> transform(role = ifelse(cohort==2, "Treatment", "Control"), comp = "1.1. Early vs Untreated"),
+    group_df |> subset(cohort %in% c(1,3)) |> transform(role = ifelse(cohort==3, "Treatment", "Control"), comp = "1.2. Late vs Untreated"),
+    group_df |> subset(cohort %in% c(2,3) & time<8) |> transform(role = ifelse(cohort==2, "Treatment", "Control"), comp = "2.1. Early vs Late"),
+    group_df |> subset(cohort %in% c(2:3) & time>4) |> transform(role = ifelse(cohort==3, "Treatment", "Control"), comp = "2.2. Late vs Early (bad comparison)")
 ) |>
-    ggplot(aes(time, y, group = id, col = factor(id), lty = role)) +
+    ggplot(aes(time, y, group = cohort, col = factor(cohort), lty = role)) +
     geom_point() + geom_line() + 
     facet_wrap(~comp) +
     scale_x_continuous(breaks = scales::pretty_breaks()) +
     scale_linetype_manual(values = c("Control" = 5, "Treatment" = 1)) + 
     labs(title = "Different comparisons",
-         subtitle = "Group 2 treated at t=5 (effect=2), Group 3 treated at t=8 (effect=4)",
-         color = "Group", 
+         subtitle = "Cohort 2 treated at t=5 (effect=2), Cohort 3 treated at t=8 (effect=4)",
+         color = "Cohort", 
          lty="Role") +
     theme_metro()
 ```
