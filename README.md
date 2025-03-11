@@ -155,7 +155,7 @@ Tuesday (2025-03-04): Fixed Effects ([.html][11-fixed-effects.html], [.pdf][11-f
 Thursday (2025-03-06): Difference-in-differences ([.html][11-diff-in-diff.html], [.pdf][11-diff-in-diff.pdf], [.Rmd](lectures/11-diff-in-diff/11-diff-in-diff.Rmd))
 
 - Exercise due before class: [Watch Diff-in-diff lecture](https://www.youtube.com/watch?v=hu2nDbnpALA) and read [Baker's Diff-in-diff methodology](https://andrewcbaker.netlify.app/2019/09/25/difference-in-differences-methodology/) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/36)
-- Class activity: [Difference-in-difference exercise](https://github.com/big-data-and-economics/exercises/tree/main/16-diff-in-diff)
+- Class activity: [Difference-in-difference exercise](https://github.com/big-data-and-economics/exercises/tree/main/15-diff-in-diff)
 
 ### Week 10: Regression Discontinuity Design
 
@@ -163,13 +163,13 @@ Tuesday (2025-03-11):  Regression Discontinuity Design ([.html][12-regression-di
 
 - Problem Set 3 due before class
 - Problem Set 4 assigned
-- Exercise due before class: [RDD lecture](TK) and respond to discussion questions in [Discussion post](TK)
-- Class activity: [RDD and class sizes][12a-rdd-class-sizes.html]
+- Exercise due before class: [RDD lecture](https://www.youtube.com/watch?v=yo3axaZBm_g) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/39)
+- Class activity: [RDD and class sizes](https://github.com/big-data-and-economics/exercises/tree/main/16-regression-discontinuity)
 
 Thursday (2025-03-13): Catch-up, potentially power tests/experimental design
 
-- Exercise due before class: TK
-- Class activity: TK
+- Exercise due before class: [Watch Power and the Statistical Test](https://www.youtube.com/watch?v=kuQ5cjlCQ1Y) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/42)
+- Class activity: [Power Analysis](https://github.com/big-data-and-economics/exercises/tree/main/17-power-analysis)
 
 ## Machine Learning
 
