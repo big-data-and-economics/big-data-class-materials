@@ -3,7 +3,7 @@
   <head>
     <title>Data Science for Economists</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Kyle Coombs, adapted from Nick Huntington-Klein" />
+    <meta name="author" content="Kyle Coombs, adapted from Nick Huntington-Klein + Raj Chetty" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
@@ -21,7 +21,7 @@ class: center, middle, inverse, title-slide
 ## Regression Discontinuity
 ]
 .author[
-### Kyle Coombs, adapted from Nick Huntington-Klein
+### Kyle Coombs, adapted from Nick Huntington-Klein + Raj Chetty
 ]
 .date[
 ### Bates College | <a href="https://github.com/big-data-and-economics">ECON/DCS 368</a>
@@ -59,9 +59,10 @@ pre[class] {
 
 - [RDD Challenges](#rdd-challenges)
 
-- [Fuzzy RDD](#fuzzy-rdd) (if time)
+- [Appendix](#appendix)
 
-- [How the pros do it](#how-the-pros-do-it) (if time)
+  - [Fuzzy RDD](#fuzzy-rdd) (if time)
+  - [How the pros do it](#how-the-pros-do-it) (if time)
 
 ---
 name: prologue
@@ -73,32 +74,20 @@ class: inverse, center, middle
 
 # Prologue
 
-- We've just finished covering difference-in-differences, which is one way of estimating a causal effect using observational data
+- We've covering difference-in-differences, which is one way of estimating a causal effect using observational data
 
 - DID is *very* widely applicable, but it relies on strong assumptions like parallel trends
 
-- Today we'll cover another causal inference method that uses observational data: Regression Discontinuity
+- Today we'll cover another causal inference method: Regression Discontinuity
   - This method can sometimes be easier to defend
   - But it is rarer to find situations where it applies
   - There's also plenty of room for "snake oil" here as with all causal inference
 
-- Today I'm intentionally using simulated data to illustrate concepts because this approach looks so different in different applications
+- Today I intentionally use simulated data to illustrate concepts to simplify the presentation
 
 - But the fundamentals are the same no matter what you're studying and I don't want that lost in the econometric sauce
 
 - As always, there's a ton here and we're just scratching the surface
-
----
-# Questions
-
-- Any questions?
-
-- Feel free to interrupt with questions during lecture if needed
-
----
-# Attribution
-
-- Most of these slides are borrowed from Nick Huntington-Klein slides on RDD and Raj Chetty's course of Big Data and Economics
 
 ---
 name: rdd
@@ -107,14 +96,23 @@ class: inverse, center, middle
 # Regression Discontinuity
 
 ---
+# Line up in height order
 
-# Regression Discontinuity
+1. Line up in height order
 
-- Regression discontinuity design (RDD) is currently the darling of the econometric world for estimating causal effects without running an experiment
+2. Those below the median height get a pill to increase their basketball ability
 
-- It doesn't apply everywhere, but when it does, it's very easy to buy the identification assumptions
+3. Those above the median height don't
 
-- Not that it doesn't have its own issues, of course, but it's pretty good!
+4. We want to know the effect of the pill on free throw percentage
+
+- Can we compare the average height of the treated and untreated groups after a year?
+
+--
+
+- Nope! Heights and the rate of growth is different for other reasons than the pill
+
+- But what if we compared people right around 5'6"? They're basically the same, except for random chance
 
 ---
 
@@ -124,7 +122,7 @@ The basic idea is this:
 
 - We look for a treatment that is assigned on the basis of being above/below a *cutoff value* of a continuous variable
 
-- For example, if you get above a certain test score they let you into a "gifted and talented" program
+- For example, if your GPA exceeds a 3.0 in Florida, you're more likely to attend college (Zimmerman, 2014),
 
 - Or if you are just on one side of a time zone line, your day starts one hour earlier/later
 
@@ -137,30 +135,11 @@ The basic idea is this:
 We call these continuous variables "Running variables" because we *run along them* until we hit the cutoff
 
 ---
-# Line up in height order
-
-1. Line up in height order
-
-2. Those below 5'6" get a pill to increase their height
-
-3. Those above 5'6" don't
-
-4. We want to know the effect of the pill on height
-
-- Can we compare the average height of the treated and untreated groups after a year?
-
---
-
-- Nope! Heights and the rate of growth is different for other reasons than the pill
-
-- But what if we compared people right around 5'6"? They're basically the same, except for random chance
-
----
-# Running var triggers treatment
+# Running variables
 
 There is a relationship between an outcome (Y) and a running variable (X)
 
-There is also a treatment that triffers if `\(X&lt; c\)`, a cutoff.
+There is also a treatment that triggers if `\(X&lt; c\)`, a cutoff.
 
 - Let's do the wrong thing
 
@@ -174,18 +153,8 @@ There is also a treatment that triffers if `\(X&lt; c\)`, a cutoff.
 
 - The running variable is omitted, so we have endogeneity! 
 
----
-# Endogenous running variables
-
-- The key to RDD is that the running variable is *endogenous* - it's not randomly assigned
-
-- For example, people with higher test scores are better equipped to succeed in academia as are people in gift-and-talented programs
-
-- Similarly, you might wonder how Medicare affects health outcomes, but older people have worse health outcomes than young people
-
-- School enrollment increases both education resources AND class sizes at cutoff points
-
-- Shoot! Our treatment is endogenous! We have endogeneity if we omit the running variable from our model
+  - e.g. Older people receive Medicare, but they're also more likely to be sick
+  - Shoot! Our treatment is endogenous! We have to control for the running variable
 
 ---
 # Regression Discontinuity
@@ -194,12 +163,16 @@ There is also a treatment that triffers if `\(X&lt; c\)`, a cutoff.
 
 - If we can control for the running variable *everywhere except the cutoff*, then...
 
-- We will be controlling for the running variable, removing endogeneity
+  - We will be controlling for the running variable, removing endogeneity
 
-- But leaving variation at the cutoff open, allowing for variation in treatment
+  - But leaving variation at the cutoff open, allowing for variation in treatment
 
-- We focus on just the variation around the treatment, narrowing the range of the running variable we use so sharply that it's basically controlled for. 
+- We focus on variation around the treatment, zooming in so sharply that it's basically controlled for. 
   - Then the effect of cutoff on treatment is like an experiment!
+
+- How so? 
+
+  - If your `\(GPA&gt;3\)`, you're more likely to attend college, but also more likely to excel otherwise
 
 ---
 
@@ -207,14 +180,14 @@ There is also a treatment that triffers if `\(X&lt; c\)`, a cutoff.
 
 - The idea is that *right around the cutoff*, treatment is randomly assigned
 
-- If you have a test score of 89.9 (not high enough for gifted-and-talented), you're basically the same as someone who has a test score of 90.0 (just barely high enough)
+- If you have a GPA over 2.99 (below standard FIU admission), you're basically the same as someone who has a GPA of 3.01 (just barely high enough)
 
 - So if we just focus around the cutoff, we remove endogeneity because it's basically random which side of the line you're on
 
 - But we get variation in treatment!
 
 - This specifically gives us the effect of treatment *for people who are right around the cutoff* a.k.a. a "local average treatment effect" 
-  - we still won't know the effect of being put in gifted-and-talented for someone who gets a 30
+  - We don't know the effect of being in college for someone with a GPA of 2.0
 
 ---
 # Terminology
@@ -247,64 +220,54 @@ There is also a treatment that triffers if `\(X&lt; c\)`, a cutoff.
 
 # Regression Discontinuity
 
-![](12-regression-discontinuity_files/figure-html/rdd-gif-1.gif)&lt;!-- --&gt;
-
----
-
-# Concept Checks
-
-- [Can you think of an example of a treatment that is assigned at least partially on a cutoff?](https://www.mentimeter.com/app/presentation/bl3969oqed38kkigk4v1qhzhsz22re8a/98biciiz6rj2)
-
-- [Why is it important to look as narrowly as possible around the cutoff? What does this gain over comparing the entire treated and untreated groups?](https://www.mentimeter.com/app/presentation/bl3969oqed38kkigk4v1qhzhsz22re8a/1rjcjy9g2hnk)
+&lt;img src="12-regression-discontinuity_files/figure-html/rdd-gif-1.gif" style="display: block; margin: auto;" /&gt;
 
 ---
 name: fitlines
 # Fitting Lines in RDD
 
-- Looking purely just at the cutoff and making no use of the space *away* from the cutoff throws out a lot of useful information
+- Looking only at the cutoff ignores useful information from data further away
 
-- We know that the running variable is related to outcome, so we can probably improve our *prediction* of what the value on either side of the cutoff should be if we *use data away from the cutoff to help with prediction* than if we *just use data near the cutoff*, which is what that animation does
+- Data away from the cutoff helps predict values at the cutoff more accurately
 
-- We can do this with good ol' OLS.
+- Simplest approach uses OLS with an interaction term
 
-- The bin plot we did can help us pick a functional form for the slope
+`$$Y = \beta_0 + \beta_1Treated + \beta_2XCentered + \beta_3Treated\times XCentered + \varepsilon$$`
 
----
+--
 
-# Fitting Lines in RDD
+- First, we need to *transform our data*:
+  - Create a "Treated" variable when treatment is applied (one side of cutoff)
+  - Then, we are going to want a bunch of things to change at the cutoff. 
 
-
-
-- To be clear, producing the line(s) below is our goal. How can we do it?
-
-- The true model I've made is an RDD effect of 0.7, with a slope of 1 to the left of the cutoff and a slope of 1.5 to the right
-
-![](12-regression-discontinuity_files/figure-html/fitting-1.png)&lt;!-- --&gt;
-
----
-
-# Regression in RDD
-
-- First, we need to *transform our data*
-
-- Need a "Treated" variable that's `TRUE` when treatment is applied (one side of cutoff)
-
-- Then, we are going to want a bunch of things to change at the cutoff. 
-
-- This will be easier if the running variable is *centered around the cutoff*.&lt;sup&gt;1&lt;/sup&gt;
+- This will be easier if the running variable is *centered around the cutoff*.
 
 - So we'll turn our running variable `\(X\)` into `\(X - cutoff\)` and call that `\(XCentered\)`
 
 
-```r
+``` r
 cutoff = .5
-
 df &lt;- df %&gt;%
-  mutate(treated = X &gt;= .5,
-         X_centered = X - .5)
+  mutate(treated = X &gt;= cutoff,
+         X_centered = X - cutoff) # center at cutoff
 ```
 
-.footnote[&lt;sup&gt;1&lt;/sup&gt; If `\(X\)` is not centered, you can still back out the treatment effect, but you'll need to adjust standard errors and point estimates for the fact that the running variable is not centered. You save yourself a ton of time and headaches by just centering it.]
+---
+# Centering the Running Variable
+
+Why do we center the running variable (subtract the cutoff)?
+
+1. **Direct Treatment Effect Interpretation**
+  - Without centering: intercept = outcome at X = 0 (usually meaningless)
+  - With centering: intercept = treatment effect at the cutoff
+  
+2. **Numerical Stability with Polynomials**
+  - Uncentered `\(X^2\)`: values get very large
+  - Centered `\((X-c)^2\)`: values stay closer to zero
+  
+3. **Clearer Interactions**
+  - `\(\beta_1\)`: "jump" exactly at cutoff
+  - `\(\beta_3\)`: how treatment effect changes away from cutoff
 
 ---
 
@@ -312,14 +275,15 @@ df &lt;- df %&gt;%
 
 - Let the slope vary to either side, i.e. fit a different regression on each side of the cutoff
 
-- We can do this by interacting both slope and intercept with `\(Treated\)`!
-  - `\(\beta_1\)` estimates the intercept jump at treatment (RDD effect), `\(\beta_3\)` is the slope change.&lt;sup&gt;2&lt;/sup&gt;
+- We can do this by interacting both running variable and intercept with `\(Treated\)`!
+  - `\(\beta_1\)` estimates the intercept jump at treatment (RDD effect), `\(\beta_3\)` is the slope change.&lt;sup&gt;1&lt;/sup&gt;
 
 `$$Y = \beta_0 + \beta_1Treated + \beta_2XCentered + \beta_3Treated\times XCentered + \varepsilon$$`
 
 
+
 ``` r
-etable(feols(Y ~ treated*X_centered, data = df,fitstat='N',vcov='HC1'))
+etable(feols(Y ~ treated*X_centered, data = df,fitstat='N',vcov='HC1')) # True treatment is 0.7
 ```
 
 ```
@@ -337,83 +301,66 @@ etable(feols(Y ~ treated*X_centered, data = df,fitstat='N',vcov='HC1'))
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
-.footnote[&lt;sup&gt;2&lt;/sup&gt; Sometimes the change in slope is the effect of interest -- this is called a "regression kink" design, which measures how the relationship between `\(X\)` and `\(Y\)` changes at the cutoff.]
+.footnote[&lt;sup&gt;1&lt;/sup&gt; Sometimes the change in slope is the effect of interest -- this is called a "regression kink" design, which measures how the relationship between `\(X\)` and `\(Y\)` changes at the cutoff.]
+
+---
+# Fitting Lines in RDD
+
+- Visualizations can help! What's going on here?
+
+&lt;img src="12-regression-discontinuity_files/figure-html/linear-fit-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Non-linearities
+
+- Key Point: The functional form matters! 
+
+&lt;img src="12-regression-discontinuity_files/figure-html/quad-fit-1.png" style="display: block; margin: auto;" /&gt;
+
 
 ---
 
 # Polynomial Terms
 
-- We don't need to stop at linear slopes!
-
-- Just like we brought in our knowledge of binary and interaction terms to understand the linear slope change, we can bring in polynomials too. Add a square maybe!
-
-- Don't get too wild with cubes, quartics, etc. - polynomials tend to be at their "weirdest" near the edges, and we don't want super-weird predictions right at the cutoff. It could give us a mistaken result!
-
-- A square term should be enough
-
----
-
-# Polynomial Terms
-
-- How do we do this? Interactions again. Take *any* regression equation...
-
-`$$Y = \beta_0 + \beta_1X + \beta_2X^2 + \varepsilon$$`
-
-- And just center the `\(X\)` (let's call it `\(XC\)`, add on a set of the same terms multiplied by `\(Treated\)` (don't forget `\(Treated\)` by itself - that's `\(Treated\)` times the interaction!))
+- We can add quadratic (or higher-order) terms to better fit curved relationships
+- Key points:
+  1. Center X (as before)
+  2. Add squared terms: `\((X-c)^2\)`
+  3. Interact everything with treatment
+- Keep it simple: you could overfit with more complex polynomials
+  - Squares are usually enough -- though there's a subfield dedicated to optimizing polynomial terms
+  - The "jump" at cutoff is still our RDD estimate
 
 `$$Y = \beta_0 + \beta_1XC + \beta_2XC^2 + \beta_3Treated + \beta_4Treated\times XC + \beta_5Treated\times XC^2 + \varepsilon$$`
 
-- The coefficient on `\(Treated\)` remains our "jump at the cutoff" - our RDD estimate!
 
-
-```r
+``` r
 etable(feols(Y ~ X_centered*treated + I(X_centered^2)*treated, data = df,vcov='HC1'))
 ```
 
 ```
-##                              feols(Y ~ X_cent..
-## Dependent Var.:                               Y
-##                                                
-## Constant                       -0.0340 (0.0400)
-## X_centered                     0.6990. (0.3700)
-## Treated                      0.7677*** (0.0603)
-## X_centered square              -0.5722 (0.7205)
-## X_centered x Treated            0.7509 (0.5621)
-## Treated x X_centered squared     0.5319 (1.076)
-## ____________________________ __________________
-## S.E. type                    Heteroskedas.-rob.
-## Observations                              1,000
-## R2                                      0.84779
-## Adj. R2                                 0.84702
+##                              feols(Y ~ X_..
+## Dependent Var.:                           Y
+##                                            
+## Constant                       -0.03 (0.04)
+## X_centered                     0.70. (0.37)
+## Treated                      0.77*** (0.06)
+## X_centered square              -0.57 (0.72)
+## X_centered x Treated            0.75 (0.56)
+## Treated x X_centered squared     0.53 (1.1)
+## ____________________________ ______________
+## S.E. type                    Heterosk.-rob.
+## Observations                          1,000
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
 
 ---
-
-# Fitting Quadratic Lines in RDD
-
-- Sometimes it can be hard to tell if a quadratic (or higher-order) term is really necessary
-- Visualizations can help!
-
-&lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="img/regressiondiscontinuity-linearrdd-1.png" alt="A linear slope makes the jump much bigger than it really is! (From the Effect Chapter 20)" width="65%" /&gt;
-&lt;p class="caption"&gt;A linear slope makes the jump much bigger than it really is! (From the Effect Chapter 20)&lt;/p&gt;
-&lt;/div&gt;
-
----
-
-# Concept Checks
-
-- [Why might we want to use a polynomial term in our RDD model?](https://www.mentimeter.com/app/presentation/bl3969oqed38kkigk4v1qhzhsz22re8a/mineasatkyea)
-
-- [What relationship are we assuming between the outcome variable and the running variable if we choose not to include `\(XCentered\)` in our model at all (i.e. a "zero-order polynomial")?](https://www.mentimeter.com/app/presentation/bl3969oqed38kkigk4v1qhzhsz22re8a/qvcfi9ndkua1)
-
----
 name: careful
 # Careful with higher order polynomials
 
-- Sometimes higher order polynoials can be a little too flexible and make it look like there's an effect where there isn't one
+- Sometimes higher order polynomials can be a little too flexible and make it look like there's an effect where there isn't one
 - "Overfitting" where your model too flexibly follows the data points can lie to you! 
 
 .pull-left[
@@ -454,55 +401,13 @@ name: assumptions
 
 # Graphically
 
-![](12-regression-discontinuity_files/figure-html/rdd-graph-1.gif)&lt;!-- --&gt;
-
----
-# Robust standard errors
-
-- Oftentimes the error term is likely correlated with the running variable
-
-- That means people tend to use "robust" standard errors, `vcov='HC1'` in R or `, r` in Stata
-
-- Other times, it makes sense to clustered standard errors by the running variable
-
-&lt;img src="12-regression-discontinuity_files/figure-html/robust-standard-errors-1.png" width="90%" /&gt;
-
-```
-## $x
-## [1] "X"
-## 
-## $y
-## [1] "Y"
-## 
-## $title
-## [1] "Heterogeneous errors"
-## 
-## attr(,"class")
-## [1] "labels"
-```
-
+&lt;img src="12-regression-discontinuity_files/figure-html/rdd-graph-1.gif" style="display: block; margin: auto;" /&gt;
 
 ---
 name: rdd-challenges
 class: inverse, center, middle
 
 # RDD Challenges
-
----
-
-# Other Difficulties
-
-Assumptions, limitations, and diagnostics!
-
-- Windows
-
-- Granular running variables
-
-- Manipulated running variables
-
-- Fuzzy regression discontinuity
-
-- How pros do it
 
 ---
 
@@ -524,6 +429,19 @@ Assumptions, limitations, and diagnostics!
 
 - Pay attention to the sample sizes, accuracy (true value .7) and standard errors!
 
+
+
+
+``` r
+m1 &lt;- feols(Y~treated*X_centered, data = df)
+m2 &lt;- feols(Y~treated*X_centered, data = df %&gt;% filter(abs(X_centered) &lt; .25))
+m3 &lt;- feols(Y~treated*X_centered, data = df %&gt;% filter(abs(X_centered) &lt; .1))
+m4 &lt;- feols(Y~treated*X_centered, data = df %&gt;% filter(abs(X_centered) &lt; .05))
+m5 &lt;- feols(Y~treated*X_centered, data = df %&gt;% filter(abs(X_centered) &lt; .01))
+
+etable(list('All'=m1,'|X|&lt;.25'=m2,'|X|&lt;.1'=m3,'|X|&lt;.05'=m4,'|X|&lt;.01'=m5),
+  fitstat='N',vcov='HC1',keep='Treated$',se.below=TRUE) # robust standard errors
+```
 
 ```
 ##                       All   |X|&lt;.25    |X|&lt;.1   |X|&lt;.05   |X|&lt;.01
@@ -564,9 +482,7 @@ Assumptions, limitations, and diagnostics!
 
 - What if the running variable is *manipulated*?
 
-  - Imagine you're a teacher grading the gifted-and-talented exam. You see someone with an 89 and think "aww, they're so close! I'll just give them an extra point..."
-
-  - Or, a school knows that if they have 41 students in a grade, they have to hire another teacher. So they just... don't admit more students
+  - Imagine you're a teacher you learn a "B-student" needs a B+ for a 3.0 and admitted to FIU, you might fudge the numbers a bit
 
 - Suddenly, that treatment is a lot less randomly assigned around the cutoff!
 
@@ -574,96 +490,24 @@ Assumptions, limitations, and diagnostics!
 
   - i.e. if there's a big cluster of observations to one side of the cutoff and a seeming gap missing on the other side
 
----
-
-# Looking for Lumping
-
-- Here's an example from the real world in medical research - statistically, p-values *should* be uniformly distributed
-
-- But it's hard to get insignificant results published. So people "p-hack" until they find significance and we have selection into publication based on `\(p &lt; .05\)`. 
-
-![p-value graph from Perneger &amp; Combescure, 2017](img/p_value_distribution.png)
+- "Bin" the running variable and plot a histogram of it to check for clustering at the cutoff
 
 ---
 
-# Looking for Lumping
-
-- We can look for lumping graphically by just plotting a binned histogram and looking for a jump in *number of observations* at the cutoff
-
-- The first one looks pretty good. We have one that looks not-so-good on the right
-
-![](12-regression-discontinuity_files/figure-html/lump_bad-1.png)&lt;!-- --&gt;
-
----
-# McCrary Test
-
-- A more formal way to check for manipulation is the McCrary test
-
-- The null hypothesis that the running variable is continuous at the cutoff
-
-- Intuitively, it assesses how likely the density of the running variable (number of observations) would be to occur if the running variable were continuous at the cutoff
-
-- If really unlikely, we might reject that null, suggesting manipulation
-
-- It can also be implemented easily with the **rddensity** package in R
-
----
-# rddensity() output
-
-Null hypothesis is that the running variable is continuous at the cutoff (i.e. no manipulation) for various bandwidths/window lengths
+# Testing for Manipulation
+- McCrary test checks if people manipulate the running variable
+- Key idea: The density should be smooth at the cutoff: sharp change = 🚩 
 
 
-```r
-#library(rddensity) # Already loaed
-mccrary &lt;- rddensity(df$X_centered,c=0)
-summary(mccrary)
-```
-
-```
-## 
-## Manipulation testing using local polynomial density estimation.
-## 
-## Number of obs =       1000
-## Model =               unrestricted
-## Kernel =              triangular
-## BW method =           estimated
-## VCE method =          jackknife
-## 
-## c = 0                 Left of c           Right of c          
-## Number of obs         501                 499                 
-## Eff. Number of obs    185                 161                 
-## Order est. (p)        2                   2                   
-## Order bias (q)        3                   3                   
-## BW est. (h)           0.175               0.169               
-## 
-## Method                T                   P &gt; |T|             
-## Robust                -1.59               0.1118              
-## 
-## 
-## P-values of binomial tests (H0: p=0.5).
-## 
-## Window Length              &lt;c     &gt;=c    P&gt;|T|
-## 0.029     + 0.029          30      20    0.2026
-## 0.045     + 0.044          47      30    0.0675
-## 0.061     + 0.060          70      47    0.0415
-## 0.077     + 0.075          87      65    0.0882
-## 0.094     + 0.091         103      86    0.2444
-## 0.110     + 0.106         122     101    0.1803
-## 0.126     + 0.122         140     122    0.2936
-## 0.143     + 0.138         152     141    0.5592
-## 0.159     + 0.153         169     155    0.4702
-## 0.175     + 0.169         185     161    0.2162
-```
-
----
-# rdplotdensity() implementation
-
-
-```r
+``` r
+mccrary &lt;- rddensity(df$X_centered)
 rdplotdensity(mccrary,df$X_centered)
 ```
 
-![](12-regression-discontinuity_files/figure-html/rdplot-1.png)&lt;!-- --&gt;
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="12-regression-discontinuity_files/figure-html/rdplot-1.png" alt="McCrary test implemented with `rdplot` from the `rddensity` package" height="40%" /&gt;
+&lt;p class="caption"&gt;McCrary test implemented with `rdplot` from the `rddensity` package&lt;/p&gt;
+&lt;/div&gt;
 
 ```
 ## $Estl
@@ -674,7 +518,7 @@ rdplotdensity(mccrary,df$X_centered)
 ## Order of derivative estimated            (v=)    1
 ## Polynomial order for confidence interval (q=)    3
 ## Kernel function                                  triangular
-## Scaling factor                                   0.500500500500501
+## Scaling factor                                   0.501501501501502
 ## Bandwidth method                                 user provided
 ## 
 ## Use summary(...) to show estimates.
@@ -687,7 +531,7 @@ rdplotdensity(mccrary,df$X_centered)
 ## Order of derivative estimated            (v=)    1
 ## Polynomial order for confidence interval (q=)    3
 ## Kernel function                                  triangular
-## Scaling factor                                   0.498498498498498
+## Scaling factor                                   0.4994994994995
 ## Bandwidth method                                 user provided
 ## 
 ## Use summary(...) to show estimates.
@@ -695,13 +539,17 @@ rdplotdensity(mccrary,df$X_centered)
 ## $Estplot
 ```
 
-![](12-regression-discontinuity_files/figure-html/rdplot-2.png)&lt;!-- --&gt;
+&lt;div class="figure" style="text-align: center"&gt;
+&lt;img src="12-regression-discontinuity_files/figure-html/rdplot-2.png" alt="McCrary test implemented with `rdplot` from the `rddensity` package" height="40%" /&gt;
+&lt;p class="caption"&gt;McCrary test implemented with `rdplot` from the `rddensity` package&lt;/p&gt;
+&lt;/div&gt;
+
 
 
 ---
-# Looking for Lumping
+# Placbo Tests for Lumping
 
-- Another thing we can do is do a "placebo test"
+.pull-left[
 
 - Check if variables *other than treatment or outcome* vary at the cutoff
 
@@ -709,23 +557,36 @@ rdplotdensity(mccrary,df$X_centered)
 
 - If we get a significant jump, that's bad! That tells us that *other things are changing at the cutoff* which implies some sort of manipulation (or just super lousy luck)
 
-- If all placebo tests are passed, that's good news, but doesn't mean prove zero manipulation
+- If all placebo tests are passed, that's great, but doesn't prove zero manipulation
+]
+
+.pull-right[
+&lt;img src="img/placebos-zimmerman2014.jpg" alt="Placebo balance tests from Zimmerman (2014)" style="width:80%"&gt;
+&lt;div class="footnote" style="font-size:80%"&gt;Placebo balance tests from Zimmerman (2014)&lt;/div&gt;
+]
 
 ---
 
-# Concept Checks
+# That's it!
 
-- [Why does using a narrow window make the effect estimate noisier?](https://www.mentimeter.com/app/presentation/bl3969oqed38kkigk4v1qhzhsz22re8a/3wbmqrt4dow6)
+- That's what we have for RDD
 
-- [Intuitively, why would we be skeptical that a regression discontinuity run on a very granular running variable is valid?](https://www.mentimeter.com/app/presentation/bl3969oqed38kkigk4v1qhzhsz22re8a/bg1vqz24cpws)
+- Go explore the regression discontinuity activity on class sizes
 
-- [Why might bunching of observations on one side of the cutoff be a sign of manipulation?](https://www.mentimeter.com/app/presentation/bl3969oqed38kkigk4v1qhzhsz22re8a/jxmprymy381h)
+- There's more neat details in the appendix -- check it out if you're curious!
+  - If we have time, I'll show you how to do this stuff!
+
+---
+name: appendix
+class: inverse, center, middle
+
+# Appendix
 
 ---
 name: fuzzy-rdd
 class: inverse, center, middle
 
-# Fuzzy Regression Discontinuity
+# Fuzzy Regression Discontinuity and RDD Standard Errors
 
 ---
 
@@ -760,7 +621,7 @@ class: inverse, center, middle
 First let's make some fake data:
 
 
-```r
+``` r
 set.seed(1000)
 df &lt;- tibble(X = runif(1000)) %&gt;%
   mutate(treatassign = .05 + .3*(X &gt; .5)) %&gt;%
@@ -777,7 +638,7 @@ df &lt;- tibble(X = runif(1000)) %&gt;%
 
 - Notice that the y-axis here isn't the outcome, it's "proportion treated"
 
-![](12-regression-discontinuity_files/figure-html/fuzzy-rdd-1.png)&lt;!-- --&gt;
+&lt;img src="12-regression-discontinuity_files/figure-html/fuzzy-rdd-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -820,15 +681,31 @@ etable(predict_treatment, without_fuzzy, fuzzy_rdd,
 ## ---
 ## Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ```
+
 ---
+# Standard Errors in RDD
 
-# Concept Checks
+- Oftentimes the error term is likely correlated with the running variable
 
-- [If the treatment variable is fuzzily assigned, do we underestimate with a sharp RDD?](https://www.mentimeter.com/app/presentation/bl3969oqed38kkigk4v1qhzhsz22re8a/mbca6662tdvd)
+- People tend to use "robust" standard errors, `vcov='HC1'` in R or `, r` in Stata
 
---
+- Other times, it makes sense to clustered standard errors by a running variable bin
 
-- Yes, but [how do we know that, if our treatment variable is fuzzily assigned, we will *underestimate* the effect if we just run a regular RDD, rather than overestimate it?](https://www.mentimeter.com/app/presentation/bl3969oqed38kkigk4v1qhzhsz22re8a/gjmr13xpn7gc)
+&lt;img src="12-regression-discontinuity_files/figure-html/robust-standard-errors-1.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+```
+## $x
+## [1] "X"
+## 
+## $y
+## [1] "Y"
+## 
+## $title
+## [1] "Heterogeneous errors"
+## 
+## attr(,"class")
+## [1] "labels"
+```
 
 ---
 name: how-the-pros-do-it
@@ -883,7 +760,7 @@ class: inverse, center, middle
 # rdrobust
 
 
-```r
+``` r
 summary(rdrobust(df$Y, df$X, c = .5))
 ```
 
@@ -917,7 +794,7 @@ summary(rdrobust(df$Y, df$X, c = .5))
 # rdrobust
 
 
-```r
+``` r
 summary(rdrobust(df$Y, df$X, c = .5, fuzzy = df$treatment))
 ```
 
@@ -964,25 +841,12 @@ summary(rdrobust(df$Y, df$X, c = .5, fuzzy = df$treatment))
 - We can even have it automatically make plots of our RDD! Same syntax
 
 
-```r
+``` r
 rdplot(df$Y, df$X, c = .5)
 ```
 
-![](12-regression-discontinuity_files/figure-html/rdrobust-plots-1.png)&lt;!-- --&gt;
+&lt;img src="12-regression-discontinuity_files/figure-html/rdrobust-plots-1.png" style="display: block; margin: auto;" /&gt;
 
----
-
-# That's it!
-
-- That's what we have for RDD
-
-- Go explore the regression discontinuity activity on class sizes
-
----
-class: inverse, center, middle
-
-# Next lecture: Bootstrapping
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
 
 
     </textarea>
