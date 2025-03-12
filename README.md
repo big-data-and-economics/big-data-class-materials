@@ -168,7 +168,7 @@ Tuesday (2025-03-11):  Regression Discontinuity Design ([.html][12-regression-di
 
 Thursday (2025-03-13): Catch-up, potentially power tests/experimental design
 
-- Exercise due before class: [Watch Power and the Statistical Test](https://www.youtube.com/watch?v=kuQ5cjlCQ1Y) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/42)
+- Exercise due before class: [Watch Power and the Statistical Test](https://www.youtube.com/watch?v=kuQ5cjlCQ1Y) and respond to discussion questions in [Discussion post](https://github.com/orgs/big-data-and-economics/discussions/43)
 - Class activity: [Power Analysis](https://github.com/big-data-and-economics/exercises/tree/main/17-power-analysis)
 
 ## Machine Learning
