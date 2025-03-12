@@ -44,7 +44,7 @@ Economics is at the forefront of developing statistical methods for analyzing da
 After this course is done, you should know how to:
 1. Organize empirical projects that are replicable, reproducible, and collaborative using Clean Code principles
 2. Acquire, clean, and wrangle many data formats including CSV, JSON, XML, DTA, Shapefiles, and more using APIs
-3. Use data to generate key insights about economic opportunity, inequality, and racial discrimination
+3. Use data to generate key insights about economic opportunity and inequality
 4. Understand the differences between prediction, causality, and description, and when to apply each
 5. Demonstrate facility with R, RStudio, GitHub, and computer file management
 
