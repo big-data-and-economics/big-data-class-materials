@@ -189,7 +189,7 @@ class: inverse, center, middle
 ---
 class: white-slide
 
-```{r, sample_size, echo = F}
+```{r sample_size, echo = F}
 xd <- 9
 yd <- 6
 sample_size <- xd * yd
@@ -199,7 +199,7 @@ periods <- 2
 ```
 
 .hi-slate[`r sample_size` households of varying starting rents (the color of the squares)]
-```{r, house_plot1, echo = F}
+```{r house_plot1, echo = F}
 set.seed(123)
 house_df <- expand.grid(x = 1:xd, y = 1:yd) %>%
   mutate(
@@ -236,7 +236,7 @@ class: white-slide
 count: false
 
 .hi-orange[Randomly assign treatment] in period 1
-```{r, house_plot2, echo = F}
+```{r house_plot2, echo = F}
 house_plot +
   geom_emoji(data = filter(house_did,trt==1,after==0), emoji = emoji_type)
 ```
@@ -255,7 +255,9 @@ Give to the rest in period 2
 - Easiest way is to do a two-sample t-test
 
 ```{r balance_test, echo = F}
-house_df %>% select(rent,income,age,family_size,years_in_residence,black) %>% 
+# This is sloppy
+house_did %>% filter(after==0) %>% 
+  select(rent,income,age,family_size,years_in_residence,black) %>% 
   map(~ t.test(.x ~ house_df$trt)) %>% 
   map_dfr(~ tidy(.), .id = "variable") %>% 
   mutate(estimate = -round(estimate,2),
@@ -360,7 +362,7 @@ bind_rows(
 ```
 
 ---
-# Standard deviation: Variability of the outcome
+# Standard deviation: Variability
 
 ```{r densities-sd,echo=FALSE}
 # Create two groups with different means
@@ -386,7 +388,7 @@ bind_rows(
 ---
 # Sample Size:
 
-```{r sample_size,echo=FALSE}
+```{r sample_size-check,echo=FALSE}
 tibble(
   id = 1:10, 
   trt = rep(c(0,1), each=5),
@@ -426,7 +428,7 @@ alpha0.05 <- ggplot(data.frame(t_values, t_dist), aes(x = t_values, y = t_dist))
             aes(x = t_values, y = t_dist), fill = "darkcyan", alpha = 0.8) +
   geom_vline(xintercept = c(-critical_value, critical_value), linetype = "dashed", color = "grey") +
   labs(x = "t", y = NULL, title = "Type I error rate α = 0.05") +
-  theme_minimal() +
+  theme_metro() +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
 
 alpha0.001 <- ggplot(data.frame(t_values, t_dist), aes(x = t_values, y = t_dist)) +
@@ -437,7 +439,7 @@ alpha0.001 <- ggplot(data.frame(t_values, t_dist), aes(x = t_values, y = t_dist)
             aes(x = t_values, y = t_dist), fill = "darkcyan", alpha = 0.8) +
   geom_vline(xintercept = c(-critical_value_0.001, critical_value_0.001), linetype = "dashed", color = "grey") +
   labs(x = "t", y = NULL, title = "Type I error rate α = 0.001") +
-  theme_minimal() +
+  theme_metro() +
   theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
 
 grid.arrange(alpha0.05, alpha0.001, nrow = 1)
@@ -468,7 +470,8 @@ $$
 Thankfully, you don't have to do this by hand! `pwr` is a package that can help you calculate power for a variety of tests (but not all of them).
 
 ```{r pwr, echo = T}
-pwr::pwr.t.test(d = 0.5, power = 0.8, sig.level = 0.05, type = "two.sample", alternative = "two.sided")
+pwr::pwr.t.test(d = 0.5, power = 0.8, sig.level = 0.05, 
+  type = "two.sample", alternative = "two.sided")
 ```
 
 - A software called G*Power can do a lot more, but it is limited by what is pre-programmed
@@ -476,7 +479,7 @@ pwr::pwr.t.test(d = 0.5, power = 0.8, sig.level = 0.05, type = "two.sample", alt
 - But what happens when it gets more complex?
 
 ---
-# Power Analysis for more Complex Designs
+# Power Analysis with complexity
 
 - So before we did a two-way t-test and got a difference of
 
@@ -499,16 +502,13 @@ feols(rent ~ after*trt | hh + t, data = house_did,cluster=~hh) %>%
 
 - The calculation is going to more complex
 
----
+- What if we just simulated a bunch of fake datasets and saw how often we commit a type II error?
 
+- We could set the standard deviation, effect size, sample size, and significance level ($\alpha$)
 
+- We could then simulate a bunch of fake datasets and see how often we reject the null hypothesis
 
-
-
-
-
----
-
+- This is a simulation!
 
 ---
 name: simulation-ai
@@ -517,13 +517,168 @@ class: inverse, center, middle
 # Simulation
 
 ---
-
 # Simulation Basics in R
 
 - Simulations are a powerful tool for modeling complex systems and testing hypotheses.
+
 - In R, you can generate random data using functions like `rnorm()`, `runif()`, and `rbinom()`.
+
 - Simulations often involve running multiple iterations to assess variability and robustness.
+
 - Results can be analyzed using summary statistics, visualizations, and statistical tests.
+
+- I've literally been using them all semester
+
+---
+# Simple Simulation Example
+
+Here I make a dataset of 1000 observations using `tibble()` and define various parameters of the model. Let me grab the p-value from the model.
+
+```{r sim_example, echo = T}
+# Load libraries
+set.seed(123)
+n <- 54
+effect_size <- -.5
+untreated_before_mean <- 10
+treated_before_mean <- 11
+untreated_after_mean <- 12
+treated_after_mean <- treated_before_mean+effect_size
+sigma <- 5
+alpha <- 0.05
+
+# Make a tibble (or data.frame) to contain our data
+tib <- tibble(
+  # Create 54 units observed over 2 periods
+  unit = rep(1:n, each = 2),
+  time = rep(1:2, n),
+  # Treatment indicator for 27 units
+  treatment = rep(c(0,1), each = n/2)[unit],
+  # Post period indicator
+  post = time == 2
+) %>%
+  # Create the outcome with treatment effect
+  mutate(
+    # Defining untreated and treated units from the averages
+    # With standard errors that vary by unit
+    Y = case_when(treatment==1 & post==1 ~ treated_after_mean,
+               treatment==1 & post==0 ~ treated_before_mean,
+               treatment==0 & post==1 ~ untreated_after_mean,
+               treatment==0 & post==0 ~ untreated_before_mean)+ 
+               rnorm(n*2, mean=0, sd=sigma)
+  )
+
+# Fit the model
+model <- feols(Y ~ treatment*post, data = tib, cluster = ~unit)
+
+# Get the p-value
+p_value <- tidy(model) %>% filter(term=="treatment:postTRUE") %>% pull(p.value)
+
+# Print the p-value
+sig <- ifelse(p_value < alpha, "Significant", "Not Significant")
+
+# Print the results
+cat("P-value:", p_value, "\n")
+cat("Significance:", sig, "\n")
+```
+
+---
+# Simulate it 2000 times!
+
+R has a bunch of great ways to iterate, there's `for` loops, `lapply` and `purrr::map`. I'll cover them more latter, for now let's use a `for` loop to simulate it 2000 times!<sup>1</sup>
+
+```{r sim_2000, echo = T}
+# initialize a vector to store the p-values
+coef_results <- c()
+sig_results <- c()
+
+for (i in 1:20) {
+  tib <- tibble(
+    unit = rep(1:n, each = 2),
+    time = rep(1:2, n),
+    treatment = rep(c(0,1), each = n/2)[unit],
+    post = time == 2
+  ) %>%
+    mutate(
+      Y = case_when(treatment==1 & post==1 ~ treated_after_mean,
+                treatment==1 & post==0 ~ treated_before_mean,
+                treatment==0 & post==1 ~ untreated_after_mean,
+                treatment==0 & post==0 ~ untreated_before_mean)+ 
+                rnorm(n*2, mean=0, sd=sigma)
+    )
+  
+  model <- feols(Y ~ treatment*post, data = tib, cluster = 'unit')
+  
+  coef_results[i] <- tidy(model) %>% filter(term=="treatment:postTRUE") %>% pull(estimate)
+  sig_results[i] <- tidy(model) %>% filter(term=="treatment:postTRUE") %>% pull(p.value) <= alpha
+}
+
+```
+
+The mean of the statistically significant results is `r mean(sig_results, na.rm=FALSE)`, meaning we have `mean(sig_results, na.rm=FALSE)*100`% statistical power.
+
+.footnote[<sup>1</sup> `for` loops are the worst way to do things in `R`, but this syntax is the most intuitive.]
+
+---
+# Check the distribution of coefficients
+
+```{r sim_2000_plot, echo = F}
+results_tibble <- tibble(coef = coef_results,
+                         sig = sig_results)
+ggplot(results_tibble, aes(x = coef)) + 
+  geom_density() + 
+  geom_vline(xintercept = effect_size, color = "red") +
+  # Prettify!
+  theme_metro() + 
+  labs(x = 'Coefficient', y = 'Density')
+```
+
+---
+# What are are stat. significant?
+
+```{r sim_2000_sig_plot, echo = F}
+ggplot(results_tibble, aes(x = sig)) + 
+  geom_bar() + 
+  theme_metro() + 
+  labs(x = 'Coefficient', y = 'Count') + 
+  scale_x_discrete(labels = c('Insignificant','Significant'))
+```
+
+---
+# Then fiddle with the parameters
+
+- How does power change with sample size?
+
+- How does power change with the effect size?
+
+- How does power change with the significance level?
+
+- How does power change with the standard deviation of the outcome?
+
+- How does power change with the standard deviation of the predictor?
+
+- What if we added square terms? Or made it an RDD design or a diff-in-diff design?
+
+- How does power change with the number of covariates?
+
+- How does power change with the number of clusters?
+
+---
+# Note: Always set your seed!
+
+- The seed is the starting point for the random number generator
+
+- If you don't set it, you'll get a different answer every time you run the code
+
+- This is why we set the seed to 123
+
+```{r set_seed, echo = T}
+set.seed(123)
+print(rnorm(10))
+set.seed(123)
+print(rnorm(10))
+```
+
+- Got the same thing!
 
 ---
 
@@ -532,6 +687,24 @@ class: inverse, center, middle
 - AI can enhance simulation by automating the writing and execution of simulation code.
 - With carefully worded instructions, AI can generate complex simulations efficiently.
 - This approach can improve the robustness and reliability of research findings by exploring a wider range of scenarios.
+- I might ask it:
+
+> I want to simulate a diff-in-diff design with a treatment effect of -0.5, a sample size of 54, and a significance level of 0.05. How many times will I reject the null hypothesis if I run this simulation 2000 times?
+
+- It could return code or a simulation function
+
+---
+# Now go try this yourself!
+
+- Go out and simulate the power of your favorite design!
+
+- This is a great way to understand the power of your design!
+
+- It's also a great way to understand the behavior of your estimator
+
+- And it's a great way to understand the behavior of your data
+
+- Or really to understand any tricky bit of econometrics or data analysis
 
 ```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
 infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
