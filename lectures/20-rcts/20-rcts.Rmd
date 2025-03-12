@@ -1,0 +1,540 @@
+---
+title: "Data Science for Economists"
+subtitle: "Randomized Controlled Trials and Simulations"
+author: Kyle Coombs
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts,css/my-css.css] 
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      highlightSpans: true
+      countIncrementalSlides: false
+---
+
+```{css, echo=FALSE}
+@media print {
+  .has-continuation {
+    display: block !important;
+  }
+}
+pre {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+pre[class] {
+  max-height: 100px;
+}
+```
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE) 
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, cache=TRUE, fig.width = 8, fig.height = 6, fig.align='center')
+if (!require("pacman")) install.packages("pacman")
+devtools::install_github("dill/emoGG")
+pacman::p_load(
+  tidyverse, gganimate, estimatr, magick, directlabels, ggthemes, fixest, jtools,
+  rdrobust, rddensity, scales, Cairo, broom, here, emoGG, latex2exp, ggplot2,
+  viridis, extrafont, gridExtra, kableExtra, data.table, dplyr, lubridate,
+  magrittr, knitr, parallel, transformr
+)
+
+# Define pink color
+red_pink <- "#e64173"
+turquoise <- "#20B2AA"
+grey_light <- "grey70"
+grey_mid <- "grey50"
+grey_dark <- "grey20"
+purple <- "#6A5ACD"
+# Dark slate grey: #314f4f
+# Knitr options
+# A blank theme for ggplot
+theme_empty <- theme_bw() + theme(
+  line = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  plot.margin = structure(c(0, 0, -0.5, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_simple <- theme_bw() + theme(
+  line = element_blank(),
+  panel.grid = element_blank(),
+  rect = element_blank(),
+  strip.text = element_blank(),
+  axis.text.x = element_text(size = 18, family = "STIXGeneral"),
+  axis.text.y = element_blank(),
+  axis.ticks = element_blank(),
+  plot.title = element_blank(),
+  axis.title = element_blank(),
+  # plot.margin = structure(c(0, 0, -1, -1), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_math <- theme_void() + theme(
+  text = element_text(family = "MathJax_Math"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes_serif <- theme_void() + theme(
+  text = element_text(family = "MathJax_Main"),
+  axis.title = element_text(size = 22),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = "grey70",
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_axes <- theme_void() + theme(
+  text = element_text(family = "Fira Sans Book"),
+  axis.title = element_text(size = 18),
+  axis.title.x = element_text(hjust = .95, margin = margin(0.15, 0, 0, 0, unit = "lines")),
+  axis.title.y = element_text(vjust = .95, margin = margin(0, 0.15, 0, 0, unit = "lines")),
+  axis.line = element_line(
+    color = grey_light,
+    size = 0.25,
+    arrow = arrow(angle = 30, length = unit(0.15, "inches")
+  )),
+  plot.margin = structure(c(1, 0, 1, 0), unit = "lines", valid.unit = 3L, class = "unit"),
+  legend.position = "none"
+)
+theme_metro <- function(x) {
+  theme_classic() + 
+  theme(panel.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
+        plot.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
+        text = element_text(size = 16),
+        axis.title.x = element_text(hjust = 1),
+        axis.title.y = element_text(hjust = 1, angle = 0))
+}
+theme_void_metro <- function(x) {
+  theme_void() + 
+  theme(panel.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
+        plot.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
+        text = element_text(size = 16))
+}
+theme_metro_regtitle <- function(x) {
+  theme_classic() + 
+  theme(panel.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
+        plot.background = element_rect(color = '#FAFAFA',fill='#FAFAFA'),
+        text = element_text(size = 16))
+}
+
+setFixest_dict(c('above_cutTRUE'='Above Cut','treatmentTRUE'='Treatment','treatedTRUE'='Treated','X_center:treatmentTRUE'='X_center x Treatment','treatedTRUE:I(X_centered^2)'='Treated x X_centered squared'))
+setFixest_etable(digits=2,fitstat="n")
+```
+
+# Table of contents
+
+- [Introduction to RCTs](#rcts)
+- [Direct Rental Assistance Example](#rental-assistance)
+- [Power Analysis](#power-analysis)
+- [Simulation](#simulation)
+
+---
+name: rcts
+class: inverse, center, middle
+
+# Introduction to RCTs
+
+---
+
+# Introduction to RCTs
+
+- Randomized Controlled Trials (RCTs) are a gold standard in research for establishing causal relationships.
+- They allow researchers to control potential outcomes by randomly assigning subjects to treatment and control groups.
+- This randomization helps ensure that any differences in outcomes can be attributed to the treatment itself.
+
+---
+name: rental-assistance
+class: inverse, center, middle
+
+# Direct Rental Assistance Example
+
+---
+
+# Direct Rental Assistance Example
+
+- On problem set, several of note DRA could help people have more control over their rent and ability to move.
+
+- That is a great idea and better yet it is empirically testable.
+
+- Let's say we give every low-income household in the U.S. direct rental assistance.
+
+- We can't just give it to all of them and look at what they do:
+  
+1. That's too expensive
+2. We wouldn't see the counterfactual
+
+- High income households are a bad counterfactual too
+
+- Given we likely won't give it to everyone immediately (budget constraints):
+
+- Why not randomize the stages?
+
+---
+class: white-slide
+
+```{r, sample_size, echo = F}
+xd <- 9
+yd <- 6
+sample_size <- xd * yd
+emoji_type <- "1f4b5"
+house_emoji <- "1f3e0"
+periods <- 2
+```
+
+.hi-slate[`r sample_size` households of varying starting rents (the color of the squares)]
+```{r, house_plot1, echo = F}
+set.seed(123)
+house_df <- expand.grid(x = 1:xd, y = 1:yd) %>%
+  mutate(
+    trt = sample(x =c(1,0), size = xd*yd, replace = T, prob = c(0.51, 0.49)),
+    income = 50000 + 15000 * rnorm(xd*yd),
+    age = round(45 + 12 * rnorm(xd*yd)),
+    family_size = round(pmax(1, 2.5 + rnorm(xd*yd))),
+    years_in_residence = round(pmax(0, 5 + 3 * rnorm(xd*yd)),1),
+    black = sample(x = c(T, F), size = xd*yd, replace = T, prob = c(0.6, 0.4))
+  ) %>%
+  arrange(-y, x) %>%
+  mutate(hh = 1:(xd*yd) %>% str_pad(2, "left", "0")) %>%
+  arrange(y, x)
+
+house_did <- rbind(
+  house_df %>% mutate(t=1),
+    house_df %>% mutate(t=2)
+  ) %>%
+    mutate(after=t-1,
+      rent=3+x+y-trt-5*trt*after+2*after+rnorm(xd*yd))
+
+house_plot <- ggplot(data = filter(house_did,after==0), aes(x, y,fill=rent)) +
+  geom_tile(color = "grey40", size = 0.2) +
+  geom_emoji(emoji = house_emoji, size=0.1) +
+  scale_fill_viridis(option = "magma", direction = -1) +
+  theme_void() +
+  theme(legend.position = "none") +
+  coord_equal()
+house_plot
+```
+
+---
+class: white-slide
+count: false
+
+.hi-orange[Randomly assign treatment] in period 1
+```{r, house_plot2, echo = F}
+house_plot +
+  geom_emoji(data = filter(house_did,trt==1,after==0), emoji = emoji_type)
+```
+
+Give to the rest in period 2
+
+---
+# Balance test
+
+- After a randomization, we can check if the treated and control groups are balanced.
+
+- We can do this by looking at the distribution of the covariates between the two groups.
+
+- If there is no balance, we may need to re-randomize.
+
+- Easiest way is to do a two-sample t-test
+
+```{r balance_test, echo = F}
+house_df %>% select(rent,income,age,family_size,years_in_residence,black) %>% 
+  map(~ t.test(.x ~ house_df$trt)) %>% 
+  map_dfr(~ tidy(.), .id = "variable") %>% 
+  mutate(estimate = -round(estimate,2),
+    Difference = case_when(p.value<0.01 ~ paste0(estimate,"***"),
+                           p.value<0.05 ~ paste0(estimate,"**"),
+                           p.value<0.1 ~ paste0(estimate,"*"),
+                           TRUE ~ as.character(estimate)),
+                           Treated = estimate2,
+                           Untreated = estimate1) %>% 
+  select(variable, estimate, p.value, Treated, Untreated) %>%
+  kable(caption = "Two-sample t-test balance test between treated and control households (hundreds of $)")
+```
+
+
+
+---
+# Easiest analysis two-sample t-test
+
+- Two-sample t-test is the easiest analysis to compare means between two groups
+
+```{r two_sample_ttest, echo = T}
+ttest <- t.test(rent ~ trt, data = filter(house_did,after==1))
+ttest %>% 
+  tidy() %>% 
+  mutate(estimate = -round(estimate,2),
+    Difference = case_when(p.value<0.01 ~ paste0(estimate,"***"),
+                           p.value<0.05 ~ paste0(estimate,"**"),
+                           p.value<0.1 ~ paste0(estimate,"*"),
+                           TRUE ~ as.character(estimate)),
+     Treated = estimate2,
+     Untreated = estimate1) %>% 
+  select(Difference, Untreated, Treated) %>% 
+  kable(caption = "Two-sample t-test of neighborhood quality between treated and control households (hundreds of $)")
+```
+
+---
+name: power-analysis
+class: inverse, center, middle
+
+# Power Analysis
+
+---
+
+# Power Analysis
+
+- We have statistical significance, but how much can we trust it?
+
+- How likely is it that this is a fluke and the true effect is actually zero? 
+  - A false positive or Type I error, let's say $\alpha = Pr(\text{reject } H_0 | H_0 \text{ is true})$
+
+- If we had failed to reject the null hypothesis of 0, how likely is it that the true effect is actually 0?
+  - A false negative or Type II error, let's say $\beta = Pr(\text{fail to reject } H_0 | H_0 \text{ is false})$
+
+- Statistical power is defined as: $1 - \beta$
+
+- Power analysis helps understand the probability of these errors -- given some assumptions:
+
+- We can use power analysis to determine the sample size required to detect an effect of a given size with a certain degree of confidence.
+
+- Alternatively, we can use power analysis to determine the power of a given sample size to detect an effect of a given size.
+
+---
+# How does it work? 
+
+- Scientists determine the type I error rate, $\alpha$ -- that's 
+
+- But type II errors depend on a ton of factors:
+  - Effect size
+  - Sample size
+  - Variability of the outcome
+  - Type I error rate
+
+---
+# Effect: Magnitude of difference
+
+```{r densities,echo=FALSE}
+# Create two groups with different means
+set.seed(123) # For reproducibility
+tibble(
+  id = 1:10000,
+  trt = rep(c(0,1), each=5000),
+  rent = rnorm(10000, mean = ifelse(trt==1, 12, 13), sd=2)
+) -> small_treatment
+
+# Create another dataset with more overlap
+tibble(
+  id = 1:10000, 
+  trt = rep(c(0,1), each=5000),
+  rent = rnorm(10000, mean = ifelse(trt==1, 8, 13), sd=2)
+) -> big_treatment
+
+bind_rows(
+  small_treatment %>% mutate(plot = "Hard"),
+  big_treatment %>% mutate(plot = "Easy")
+) %>%
+  mutate(trt = ifelse(trt==1, "Treatment", "Control")) %>%
+  ggplot(aes(x=rent, color=trt)) +
+  geom_density(alpha=0.5) +
+  facet_wrap(~plot) +
+  theme_metro() +
+  labs(x="Rent", y="")
+```
+
+---
+# Standard deviation: Variability of the outcome
+
+```{r densities-sd,echo=FALSE}
+# Create two groups with different means
+set.seed(123) # For reproducibility
+tibble(
+  id = 1:10000, 
+  trt = rep(c(0,1), each=5000),
+  rent = rnorm(10000, mean = ifelse(trt==1, 8, 13), sd=5)
+) -> high_sd_treatment
+
+bind_rows(
+  high_sd_treatment %>% mutate(plot = "High SD: Hard to tell difference"),
+  big_treatment %>% mutate(plot = "Low SD: Easy to tell difference")
+) %>%
+  mutate(trt = ifelse(trt==1, "Treatment", "Control")) %>%
+  ggplot(aes(x=rent, color=trt)) +
+  geom_density(alpha=0.5) +
+  facet_wrap(~plot) +
+  theme_metro() +
+  labs(x="Rent", y="")
+```
+
+---
+# Sample Size:
+
+```{r sample_size,echo=FALSE}
+tibble(
+  id = 1:10, 
+  trt = rep(c(0,1), each=5),
+  rent = rnorm(10, mean = ifelse(trt==1, 8, 13), sd=2)
+) -> low_sample
+
+bind_rows(
+  low_sample %>% mutate(plot = "Low Sample (n=10)"),
+  big_treatment %>% mutate(plot = "High Sample (n=10000)")
+) %>%
+  mutate(trt = ifelse(trt==1, "Treatment", "Control")) %>%
+  ggplot(aes(x=rent, color=trt)) +
+  geom_density(alpha=0.5) +
+  facet_wrap(~plot) +
+  theme_metro() +
+  labs(x="Rent", y="")
+
+```
+
+---
+# Type I error rate: $\alpha=0.05$ vs. $\alpha=0.001$
+
+```{r type_i_error,echo=FALSE}
+t_values <- seq(-4, 4, length.out = 1000)
+t_dist <- dt(t_values, df = 30)  # df = degrees of freedom
+
+# Define critical values for a two-tailed test at alpha = 0.05
+critical_value <- qt(0.975, df = 30)
+critical_value_0.001 <- qt(0.9995, df = 30)
+
+# Create the plot
+alpha0.05 <- ggplot(data.frame(t_values, t_dist), aes(x = t_values, y = t_dist)) +
+  geom_area(fill = "grey", alpha = 0.5) +
+  geom_area(data = subset(data.frame(t_values, t_dist), t_values < -critical_value),
+            aes(x = t_values, y = t_dist), fill = "darkcyan", alpha = 0.8) +
+  geom_area(data = subset(data.frame(t_values, t_dist), t_values > critical_value),
+            aes(x = t_values, y = t_dist), fill = "darkcyan", alpha = 0.8) +
+  geom_vline(xintercept = c(-critical_value, critical_value), linetype = "dashed", color = "grey") +
+  labs(x = "t", y = NULL, title = "Type I error rate α = 0.05") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+
+alpha0.001 <- ggplot(data.frame(t_values, t_dist), aes(x = t_values, y = t_dist)) +
+  geom_area(fill = "grey", alpha = 0.5) +
+  geom_area(data = subset(data.frame(t_values, t_dist), t_values < -critical_value_0.001),
+            aes(x = t_values, y = t_dist), fill = "darkcyan", alpha = 0.8) +
+  geom_area(data = subset(data.frame(t_values, t_dist), t_values > critical_value_0.001),
+            aes(x = t_values, y = t_dist), fill = "darkcyan", alpha = 0.8) +
+  geom_vline(xintercept = c(-critical_value_0.001, critical_value_0.001), linetype = "dashed", color = "grey") +
+  labs(x = "t", y = NULL, title = "Type I error rate α = 0.001") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+
+grid.arrange(alpha0.05, alpha0.001, nrow = 1)
+```
+
+---
+# How do we calculate power?
+
+The power calculations vary by test statistic, which can make them pretty tedious!
+
+T-test:
+
+$$
+1-\beta \approx 1 - \Phi \left(1.64 - \frac{\text{Effect}}{\text{SD}/\sqrt{n}}\right)
+$$
+
+where $\Phi$ is the cumulative distribution function of the standard normal distribution.
+
+You can invert that to solve for the sample size for a given power:
+
+$$
+n \approx \left(\frac{\text{Effect}}{\text{SD}}\right)^2 \left(1.64 + \Phi^{-1}(1-\beta)\right)^2
+$$
+
+---
+# Using tools like `pwr`
+
+Thankfully, you don't have to do this by hand! `pwr` is a package that can help you calculate power for a variety of tests (but not all of them).
+
+```{r pwr, echo = T}
+pwr::pwr.t.test(d = 0.5, power = 0.8, sig.level = 0.05, type = "two.sample", alternative = "two.sided")
+```
+
+- A software called G*Power can do a lot more, but it is limited by what is pre-programmed
+
+- But what happens when it gets more complex?
+
+---
+# Power Analysis for more Complex Designs
+
+- So before we did a two-way t-test and got a difference of
+
+- But that may be insufficient if the households were not perfectly balanced too start.
+
+- Plus, maybe household rents are correlated over time (need clustering)
+
+- Then we'd do a diff-in-diff analysis
+
+```{r diff_in_diff, echo = T}
+feols(rent ~ after*trt | hh + t, data = house_did,cluster=~hh) %>% 
+  etable() %>%
+  kable(caption = "Diff-in-diff analysis of neighborhood\nquality between treated and control households (hundreds of $)")
+```
+
+---
+# Power Analysis
+
+- Uh oh, how do you do power analysis for diff-in-diff with clustering?
+
+- The calculation is going to more complex
+
+---
+
+
+
+
+
+
+
+---
+
+
+---
+name: simulation-ai
+class: inverse, center, middle
+
+# Simulation
+
+---
+
+# Simulation Basics in R
+
+- Simulations are a powerful tool for modeling complex systems and testing hypotheses.
+- In R, you can generate random data using functions like `rnorm()`, `runif()`, and `rbinom()`.
+- Simulations often involve running multiple iterations to assess variability and robustness.
+- Results can be analyzed using summary statistics, visualizations, and statistical tests.
+
+---
+
+# AI in Simulation
+
+- AI can enhance simulation by automating the writing and execution of simulation code.
+- With carefully worded instructions, AI can generate complex simulations efficiently.
+- This approach can improve the robustness and reliability of research findings by exploring a wider range of scenarios.
+
+```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
+infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
+print(infile)
+pagedown::chrome_print(input = infile, timeout = 100)
+```
