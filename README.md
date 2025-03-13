@@ -173,9 +173,12 @@ Thursday (2025-03-13): Catch-up, potentially power tests/experimental design
 
 ## Machine Learning
 
-### Week 11: Bootstrapping
+### Week 11: Hack-a-thon prep
 
 Tuesday (2025-03-18): Catch-up, potentially rental assistance topic discussion
+
+- Exercise due before class: Read the Direct Rental Assistance Pilot Document on [post](https://github.com/orgs/big-data-and-economics/discussions/46) and respond to questions
+- Class activity: Meet with Travis Heynen
 
 Thursday (2025-03-20): Break
 
