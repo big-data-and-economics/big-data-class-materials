@@ -178,7 +178,7 @@ Thursday (2025-03-13): Catch-up, potentially power tests/experimental design
 Tuesday (2025-03-18): Catch-up, potentially rental assistance topic discussion
 
 - Exercise due before class: Read the Direct Rental Assistance Pilot Document on [post](https://github.com/orgs/big-data-and-economics/discussions/46) and respond to questions
-- Class activity: Meet with Travis Heynen
+- Class activity: Meet with Travis Heynen, select hackathon groups, complete [hackathon prep questions](https://github.com/big-data-and-economics/exercises/blob/main/18-dra-hackathon-prep/dra-hackathon-prep.md)
 
 Thursday (2025-03-20): Break
 
@@ -186,6 +186,7 @@ Thursday (2025-03-20): Break
 
 Tuesday (2025-03-25): Hackathon Kickoff and Catchup day
 - Problem Set 4 due before class
+- Complete hackathon prep questions
 
 Thursday (2025-03-27): Hackathon presentations
 - Problem Set 5 assigned
