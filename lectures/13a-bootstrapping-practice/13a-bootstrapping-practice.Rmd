@@ -175,7 +175,7 @@ Can you repeat the above process, but now with a function that calculates the di
 You can include other functions that you wrote in the functions you create just like including pre-defined functions from packages in your functions. This is incredibly useful for any iteration work you're doing that automatically feeds the value it iterates over to the function you include. Here's the basic syntax:
 
 ```{r wrapper-function,eval=FALSE}
-function_that_uses_x <- functiion(x) {
+function_that_uses_x <- function(x) {
   # Do something with x
   return(something_with_x)
 }
