@@ -64,7 +64,7 @@ name: prologue
 - By the end of class you will:
   - Be able to write basic functions in R
   - Be able to iterate tasks serially and in parallel in R
-  - Be able to bootstrap in parallel in R
+  - Be able to power test your code in parallel in R
 
 ---
 # Attribution
@@ -170,29 +170,46 @@ print(square_ifelse(2))
 This function has a default value of 1 for when you fail to provide a value. 
 
 ---
-# Each step of bootstrap
+# Each step of power simulation
 
+.scroll-output[
 
 ``` r
 # library(tidyverse) # Already loaded
 set.seed(1)
-df &lt;- tibble(x = rnorm(1000, mean = 0, sd = 1),
-  y= x+rnorm(1000, mean = 0, sd = 1))
-
-bootstrap_sample &lt;- function(df) {
-  # 1. Draw a random sample with replacement of size N from your sample.
-  sample &lt;- df %&gt;% sample_frac(1, replace = TRUE)
-  # 2. Perform the same analysis, here a median, on the new sample.
-  return(coef(feols(y ~ x, data = sample))[2])
+power_simulation &lt;- function(n=100, true_effect=1, std_dev=1, alpha=0.05) {
+  # Generate data using tibble
+  sim_data &lt;- tibble(
+    id = 1:n,
+    x = rnorm(n, mean = 0, sd = 1),
+    epsilon = rnorm(n, mean = 0, sd = std_dev)
+  ) %&gt;%
+    mutate(y = true_effect * x + epsilon)
+  
+  # Run fixed effects regression using feols
+  model &lt;- feols(y ~ x, data = sim_data)
+  
+  # Extract results
+  results &lt;- tibble(
+    coefficient = coef(model)["x"],
+    std_error = se(model)["x"],
+    t_stat = tstat(model)["x"],
+    p_value = pvalue(model)["x"],
+    significant = p_value &lt; alpha
+  )
+  
+  return(results)
 }
-
-bootstrap_sample(df)
+power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05)
 ```
 
 ```
-##         x 
-## 0.9671832
+## # A tibble: 1 × 5
+##   coefficient std_error t_stat  p_value significant
+##         &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;      
+## 1       0.999     0.108   9.27 4.58e-15 TRUE
 ```
+]
 
 ### Aside: What's a seed?
 
@@ -245,33 +262,33 @@ for(i in 1:10) {
 ```
 
 ---
-# Bootstrapping for loop
+# Power simulation for loop
 
 To save output, you have to pre-define a list where you deposit the output
 
 
-```r
+``` r
 deposit &lt;- vector("list",10) # preallocate list of 10 values
 set.seed(1)
 for (i in 1:10) {
-  # perform bootstrap
-  deposit[[i]] &lt;- bootstrap_sample(df)
+  # perform powersim
+  deposit[[i]] &lt;- power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05) 
 }
 
-bootstrapped_for &lt;- bind_rows(deposit)
-head(bootstrapped_for)
+power_sim_for &lt;- bind_rows(deposit)
+head(power_sim_for)
 ```
 
 ```
-## # A tibble: 6 × 1
-##       x
-##   &lt;dbl&gt;
-## 1 1.02 
-## 2 0.987
-## 3 0.997
-## 4 0.987
-## 5 0.947
-## 6 0.999
+## # A tibble: 6 × 5
+##   coefficient std_error t_stat  p_value significant
+##         &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;      
+## 1       0.999    0.108    9.27 4.58e-15 TRUE       
+## 2       1.11     0.0963  11.5  7.27e-20 TRUE       
+## 3       0.925    0.0831  11.1  4.32e-19 TRUE       
+## 4       1.10     0.102   10.8  2.43e-18 TRUE       
+## 5       1.19     0.0959  12.4  7.10e-22 TRUE       
+## 6       1.11     0.0961  11.6  4.46e-20 TRUE
 ```
 
 ---
@@ -395,32 +412,32 @@ lapply(1:10, exponentiate,p=2)
 ]
 
 ---
-# Bootstrapping lapply
+# Power simulation lapply
 
 - One trick: `*apply` insists on iterating over some sequence indexed `i` like a for-loop
 - But you can ignore it by using `function(i)` and then not using `i` in the function
 
 
-```r
+``` r
 set.seed(1)
-lapply(1:10, function(i) bootstrap_sample(df=df)) %&gt;%
+lapply(1:10, function(i) power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05)) %&gt;%
   bind_rows()
 ```
 
 ```
-## # A tibble: 10 × 1
-##        x
-##    &lt;dbl&gt;
-##  1 1.02 
-##  2 0.987
-##  3 0.997
-##  4 0.987
-##  5 0.947
-##  6 0.999
-##  7 0.966
-##  8 0.983
-##  9 0.987
-## 10 0.987
+## # A tibble: 10 × 5
+##    coefficient std_error t_stat  p_value significant
+##          &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;      
+##  1       0.999    0.108    9.27 4.58e-15 TRUE       
+##  2       1.11     0.0963  11.5  7.27e-20 TRUE       
+##  3       0.925    0.0831  11.1  4.32e-19 TRUE       
+##  4       1.10     0.102   10.8  2.43e-18 TRUE       
+##  5       1.19     0.0959  12.4  7.10e-22 TRUE       
+##  6       1.11     0.0961  11.6  4.46e-20 TRUE       
+##  7       1.14     0.0797  14.3  1.17e-25 TRUE       
+##  8       1.01     0.103    9.76 3.94e-16 TRUE       
+##  9       1.14     0.119    9.56 1.07e-15 TRUE       
+## 10       0.858    0.0997   8.61 1.22e-13 TRUE
 ```
 
 ---
@@ -432,27 +449,27 @@ lapply(1:10, function(i) bootstrap_sample(df=df)) %&gt;%
 
 ``` r
 set.seed(1)
-wrapper_bootstrap &lt;- function(i, df) {
-  bootstrap_sample(df)
+wrapper_powerstrap &lt;- function(i, df) {
+  power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05)
 }
-lapply(1:10, wrapper_bootstrap, df=df) %&gt;%
+lapply(1:10, wrapper_powerstrap, df=df) %&gt;%
   bind_rows()
 ```
 
 ```
-## # A tibble: 10 × 1
-##        x
-##    &lt;dbl&gt;
-##  1 1.02 
-##  2 0.987
-##  3 0.997
-##  4 0.987
-##  5 0.947
-##  6 0.999
-##  7 0.966
-##  8 0.983
-##  9 0.987
-## 10 0.987
+## # A tibble: 10 × 5
+##    coefficient std_error t_stat  p_value significant
+##          &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;      
+##  1       0.999    0.108    9.27 4.58e-15 TRUE       
+##  2       1.11     0.0963  11.5  7.27e-20 TRUE       
+##  3       0.925    0.0831  11.1  4.32e-19 TRUE       
+##  4       1.10     0.102   10.8  2.43e-18 TRUE       
+##  5       1.19     0.0959  12.4  7.10e-22 TRUE       
+##  6       1.11     0.0961  11.6  4.46e-20 TRUE       
+##  7       1.14     0.0797  14.3  1.17e-25 TRUE       
+##  8       1.01     0.103    9.76 3.94e-16 TRUE       
+##  9       1.14     0.119    9.56 1.07e-15 TRUE       
+## 10       0.858    0.0997   8.61 1.22e-13 TRUE
 ```
 
 ---
@@ -463,25 +480,25 @@ lapply(1:10, wrapper_bootstrap, df=df) %&gt;%
   - The same iteration syntax applies here too. 
 
 
-```r
+``` r
 set.seed(1)
-map_df(1:10, function(i) bootstrap_sample(df=df))
+map_df(1:10, function(i) power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05))
 ```
 
 ```
-## # A tibble: 10 × 1
-##        x
-##    &lt;dbl&gt;
-##  1 1.02 
-##  2 0.987
-##  3 0.997
-##  4 0.987
-##  5 0.947
-##  6 0.999
-##  7 0.966
-##  8 0.983
-##  9 0.987
-## 10 0.987
+## # A tibble: 10 × 5
+##    coefficient std_error t_stat  p_value significant
+##          &lt;dbl&gt;     &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt;      
+##  1       0.999    0.108    9.27 4.58e-15 TRUE       
+##  2       1.11     0.0963  11.5  7.27e-20 TRUE       
+##  3       0.925    0.0831  11.1  4.32e-19 TRUE       
+##  4       1.10     0.102   10.8  2.43e-18 TRUE       
+##  5       1.19     0.0959  12.4  7.10e-22 TRUE       
+##  6       1.11     0.0961  11.6  4.46e-20 TRUE       
+##  7       1.14     0.0797  14.3  1.17e-25 TRUE       
+##  8       1.01     0.103    9.76 3.94e-16 TRUE       
+##  9       1.14     0.119    9.56 1.07e-15 TRUE       
+## 10       0.858    0.0997   8.61 1.22e-13 TRUE
 ```
 
 ---
@@ -512,7 +529,7 @@ name: parallel
 ---
 # A warning
 
-- Parallel Programming is an incredibly exponentiateful tool, but it is full of pitfalls
+- Parallel Programming is an incredibly useful tool, but it is full of pitfalls
 
 - A friend of mine from the PhD said that he did not understand it until the 4th year of his PhD
 
@@ -530,9 +547,10 @@ name: parallel
 - Parallel Programming is the act of using multiple cores to do the same task at the same time
 
 --
-- Many coding tasks are "embarassingly parallel"
+- Many coding tasks are "embarrassingly parallel"
   - That means they can be broken up into many small tasks that can be done at the same time
-  - Bootstrapping is one such example
+  - Power simulation is one such example
+  - Bootstrap is another
 
 - Some "serial" tasks are not "embarrassingly parallel"
   - Still, parts of these tasks may be possible to do in parallel
@@ -555,11 +573,11 @@ name: parallel
   - In practice, there are "overhead" costs to Parallel Programming that can slow things down
   - **Overhead costs**: reading in and subsetting data, tracking each node 
   - A 10-minute task on one core, might take 6 minutes on 2 cores, 4 minutes on 4 cores, etc.
-  - `parallel::detectCores()` function shows how many cores there are
+  - `future::availableCores()` function shows how many cores there are
 
 
 ``` r
-print(paste("I have", parallel::detectCores(), "cores on my computer"))
+print(paste("I have", future::availableCores(), "cores on my computer"))
 ```
 
 ```
@@ -634,37 +652,60 @@ all.equal(serial_ex, future_ex)
 ## [1] TRUE
 ```
 
+
 ---
-# Example: bootstrapping in parallel
+# Example: power simulation in parallel
 
 - The future_lapply works the same, but now I have to set the seed inside the function with `future.seed`
+  - Note, this `future.seed` calls seeds independently in each node, while they are called sequentially in serial programming
+  - That means the same seed will not give the same results in parallel programming, but will be consistent within each approach
 - Why? Because each node is a separate R session, so they need to coordinate their random numbers
 
 
 ``` r
 set.seed(1)
 tic()
-serial_boot &lt;- lapply(1:1e4, function(i) bootstrap_sample(df)) %&gt;%
+serial_power &lt;- lapply(1:1e4, function(i) power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05)) %&gt;%
   bind_rows()
 toc(log = TRUE)
 ```
 
 ```
-## 220.22 sec elapsed
+## 225.95 sec elapsed
 ```
 
 ``` r
 tic()
-parallel_boot &lt;- future_lapply(1:1e4, 
-  function(i) bootstrap_sample(df), 
+parallel_power &lt;- future_lapply(1:1e4, 
+  function(i) power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05), 
   future.seed=1) %&gt;%
   bind_rows()
 toc(log = TRUE)
 ```
 
 ```
-## 82.45 sec elapsed
+## 127.16 sec elapsed
 ```
+
+``` r
+print("Results differ by:")
+```
+
+```
+## [1] "Results differ by:"
+```
+
+``` r
+kable(all.equal(serial_power, parallel_power))
+```
+
+
+
+|x                                                            |
+|:------------------------------------------------------------|
+|Component "coefficient": Mean relative difference: 0.1139899 |
+|Component "std_error": Mean relative difference: 0.1150306   |
+|Component "t_stat": Mean relative difference: 0.1603855      |
 
 ---
 # Want to use `map`? Try **furrr**
@@ -676,25 +717,48 @@ The **furrr** package, i.e. future **purrrr** is a Parallel Programming version 
 
 ``` r
 tic()
-furrr_boot = future_map_dfr(1:1e4, 
-  function(i) bootstrap_sample(df), 
+furrr_power = future_map_dfr(1:1e4, 
+  function(i) power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05), 
   .options = furrr_options(seed=1))
 toc(log = TRUE)
 ```
 
 ```
-## 92.55 sec elapsed
+## 80.78 sec elapsed
 ```
 
 ---
-# Get standard errors from results
+# Get density of coefficients
 
-- Now that we have a bunch of estimates, we can get the standard error of our estimates
+&lt;img src="13b-functions-parallel-programming_files/figure-html/power-density-1.png" style="display: block; margin: auto;" /&gt;
 
-&lt;img src="13b-functions-parallel-programming_files/figure-html/bootstrapping-density-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-# Many R packages use Parallel Programming
+# "Embarrassingly" vs "asynchronous"
+
+- "Embarrassingly parallel" programming is when each node can do the same task independently
+
+- The code can literally execute on every task on its own because the task is isolated from the others
+
+- Think about the grocery example -- is that embarrassingly parallel?
+
+--
+
+- Maybe, but it depends on a few factors:
+
+1. Do you have to gather your friends?
+  - That creates an overhead cost to start the parallel programming, but after that each friend can do their own task independently -- after that, it is embarrassingly parallel
+2. Do you have to hand each of them two bags of groceries?
+  - That creates a dependency cost because you have to wait for each friend to get two bags of groceries before you can start gathering your friends
+3. Do you end up colliding at the door of your house?
+  - That creates a communication cost because you have to coordinate your arrival at the door
+4. Do you need to bring your friends candy from the store?
+  - That creates a dependency cost because you have to wait for each friend to get candy before you can start gathering your friends
+
+The same thing happens in parallel programming on a computer! 
+
+---
+# Packages using Parallel Programming
 
 - Many R packages already use Parallel Programming
 - `feols()` from **fixest** uses Parallel Programming to speed up regressions
@@ -702,23 +766,6 @@ toc(log = TRUE)
 - **data.table** uses Parallel Programming to speed up data wrangling
 - **boot** and **sandwich** can use Parallel Programming to speed up bootstrapping
 - And many others do the same
-
----
-# What next?
-
-- Go try how to bootstrap in R!
-
-- Better yet, learn to do it in parallel
-
-- Navigate to the lecture activity [13a-bootstrapping-functions-practice](https://github.com/big-data-and-economics/big-data-class-materials/blob/main/lectures/12a-rdd-class-sizes/13a-bootstrapping-practice.Rmd)
-
----
-class: inverse, center, middle
-
-# Next lecture: Machine Learning Intro
-&lt;html&gt;&lt;div style='float:left'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
-
-
 
 ---
 # Parallel Programming vocab

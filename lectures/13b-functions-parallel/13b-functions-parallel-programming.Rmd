@@ -26,7 +26,7 @@ name: toc
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(tidyverse,boot,tictoc,future.apply,furrr,fixest,knitr)
+pacman::p_load(tidyverse,boot,tictoc,future.apply,furrr,fixest,knitr,fixest)
 opts_chunk$set(
   fig.align="center", fig.width=5.5, fig.height=3.5, 
   # out.width="748px", #out.length="520.75px",
@@ -60,7 +60,7 @@ name: prologue
 - By the end of class you will:
   - Be able to write basic functions in R
   - Be able to iterate tasks serially and in parallel in R
-  - Be able to bootstrap in parallel in R
+  - Be able to power test your code in parallel in R
 
 ---
 # Attribution
@@ -142,23 +142,38 @@ print(square_ifelse(2))
 This function has a default value of 1 for when you fail to provide a value. 
 
 ---
-# Each step of bootstrap
+# Each step of power simulation
 
-```{r bootstrapping-example}
+.scroll-output[
+```{r power-testing-example}
 # library(tidyverse) # Already loaded
 set.seed(1)
-df <- tibble(x = rnorm(1000, mean = 0, sd = 1),
-  y= x+rnorm(1000, mean = 0, sd = 1))
-
-bootstrap_sample <- function(df) {
-  # 1. Draw a random sample with replacement of size N from your sample.
-  sample <- df %>% sample_frac(1, replace = TRUE)
-  # 2. Perform the same analysis, here a median, on the new sample.
-  return(coef(feols(y ~ x, data = sample))[2])
+power_simulation <- function(n=100, true_effect=1, std_dev=1, alpha=0.05) {
+  # Generate data using tibble
+  sim_data <- tibble(
+    id = 1:n,
+    x = rnorm(n, mean = 0, sd = 1),
+    epsilon = rnorm(n, mean = 0, sd = std_dev)
+  ) %>%
+    mutate(y = true_effect * x + epsilon)
+  
+  # Run fixed effects regression using feols
+  model <- feols(y ~ x, data = sim_data)
+  
+  # Extract results
+  results <- tibble(
+    coefficient = coef(model)["x"],
+    std_error = se(model)["x"],
+    t_stat = tstat(model)["x"],
+    p_value = pvalue(model)["x"],
+    significant = p_value < alpha
+  )
+  
+  return(results)
 }
-
-bootstrap_sample(df)
+power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05)
 ```
+]
 
 ### Aside: What's a seed?
 
@@ -197,20 +212,20 @@ for(i in 1:10) {
 ```
 
 ---
-# Bootstrapping for loop
+# Power simulation for loop
 
 To save output, you have to pre-define a list where you deposit the output
 
-```{r bootstrapping-forloop}
+```{r power-simulation-forloop}
 deposit <- vector("list",10) # preallocate list of 10 values
 set.seed(1)
 for (i in 1:10) {
-  # perform bootstrap
-  deposit[[i]] <- bootstrap_sample(df)
+  # perform powersim
+  deposit[[i]] <- power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05) 
 }
 
-bootstrapped_for <- bind_rows(deposit)
-head(bootstrapped_for)
+power_sim_for <- bind_rows(deposit)
+head(power_sim_for)
 ```
 
 ---
@@ -294,14 +309,14 @@ lapply(1:10, exponentiate,p=2)
 ]
 
 ---
-# Bootstrapping lapply
+# Power simulation lapply
 
 - One trick: `*apply` insists on iterating over some sequence indexed `i` like a for-loop
 - But you can ignore it by using `function(i)` and then not using `i` in the function
 
-```{r bootstrapping-lapply}
+```{r power-simulation-lapply}
 set.seed(1)
-lapply(1:10, function(i) bootstrap_sample(df=df)) %>%
+lapply(1:10, function(i) power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05)) %>%
   bind_rows()
 ```
 
@@ -313,10 +328,10 @@ lapply(1:10, function(i) bootstrap_sample(df=df)) %>%
 
 ```{r wrapper-function-iteration}
 set.seed(1)
-wrapper_bootstrap <- function(i, df) {
-  bootstrap_sample(df)
+wrapper_powerstrap <- function(i, df) {
+  power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05)
 }
-lapply(1:10, wrapper_bootstrap, df=df) %>%
+lapply(1:10, wrapper_powerstrap, df=df) %>%
   bind_rows()
 ```
 
@@ -329,7 +344,7 @@ lapply(1:10, wrapper_bootstrap, df=df) %>%
 
 ```{r map_df}
 set.seed(1)
-map_df(1:10, function(i) bootstrap_sample(df=df))
+map_df(1:10, function(i) power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05))
 ```
 
 ---
@@ -359,7 +374,7 @@ knitr::include_graphics("imgs/maxresdefault.jpg")
 ---
 # A warning
 
-- Parallel Programming is an incredibly exponentiateful tool, but it is full of pitfalls
+- Parallel Programming is an incredibly useful tool, but it is full of pitfalls
 
 - A friend of mine from the PhD said that he did not understand it until the 4th year of his PhD
 
@@ -377,9 +392,10 @@ knitr::include_graphics("imgs/maxresdefault.jpg")
 - Parallel Programming is the act of using multiple cores to do the same task at the same time
 
 --
-- Many coding tasks are "embarassingly parallel"
+- Many coding tasks are "embarrassingly parallel"
   - That means they can be broken up into many small tasks that can be done at the same time
-  - Bootstrapping is one such example
+  - Power simulation is one such example
+  - Bootstrap is another
 
 - Some "serial" tasks are not "embarrassingly parallel"
   - Still, parts of these tasks may be possible to do in parallel
@@ -402,10 +418,10 @@ knitr::include_graphics("imgs/maxresdefault.jpg")
   - In practice, there are "overhead" costs to Parallel Programming that can slow things down
   - **Overhead costs**: reading in and subsetting data, tracking each node 
   - A 10-minute task on one core, might take 6 minutes on 2 cores, 4 minutes on 4 cores, etc.
-  - `parallel::detectCores()` function shows how many cores there are
+  - `future::availableCores()` function shows how many cores there are
 
 ```{r core-count}
-print(paste("I have", parallel::detectCores(), "cores on my computer"))
+print(paste("I have", future::availableCores(), "cores on my computer"))
 ```
 
 ### Distributed computing across computer clusters
@@ -460,26 +476,31 @@ toc(log = TRUE)
 all.equal(serial_ex, future_ex)
 ```
 
+
 ---
-# Example: bootstrapping in parallel
+# Example: power simulation in parallel
 
 - The future_lapply works the same, but now I have to set the seed inside the function with `future.seed`
+  - Note, this `future.seed` calls seeds independently in each node, while they are called sequentially in serial programming
+  - That means the same seed will not give the same results in parallel programming, but will be consistent within each approach
 - Why? Because each node is a separate R session, so they need to coordinate their random numbers
 
-```{r parallel-bootstrap}
+```{r parallel-power}
 set.seed(1)
 tic()
-serial_boot <- lapply(1:1e4, function(i) bootstrap_sample(df)) %>%
+serial_power <- lapply(1:1e4, function(i) power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05)) %>%
   bind_rows()
 toc(log = TRUE)
 
 tic()
-parallel_boot <- future_lapply(1:1e4, 
-  function(i) bootstrap_sample(df), 
+parallel_power <- future_lapply(1:1e4, 
+  function(i) power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05), 
   future.seed=1) %>%
   bind_rows()
 toc(log = TRUE)
 
+print("Results differ by:")
+kable(all.equal(serial_power, parallel_power))
 ```
 
 ---
@@ -491,38 +512,53 @@ The **furrr** package, i.e. future **purrrr** is a Parallel Programming version 
 
 ```{r furrr}
 tic()
-furrr_boot = future_map_dfr(1:1e4, 
-  function(i) bootstrap_sample(df), 
+furrr_power = future_map_dfr(1:1e4, 
+  function(i) power_simulation(n=100, true_effect=1, std_dev=1, alpha=0.05), 
   .options = furrr_options(seed=1))
 toc(log = TRUE)
 ```
 
 ---
-# Get standard errors from results
+# Get density of coefficients
 
-- Now that we have a bunch of estimates, we can get the standard error of our estimates
-
-```{r bootstrapping-density,echo=FALSE}
-lwr <- furrr_boot %>% pull(x) %>% quantile(0.025)
-upr <- furrr_boot %>% pull(x) %>% quantile(0.975)
-
-furrr_boot %>%
-  ggplot(aes(x)) +
-    geom_density(col=NA, fill="gray25", alpha=0.3) +
-    geom_vline(xintercept=1, col="blue") +
-    geom_vline(xintercept=lwr, col="red", linetype="dashed") +
-    geom_text(x=lwr+.01, y=5, label="Lower 95% CI", hjust=0, col="red") +
-    geom_vline(xintercept=upr, col="red", linetype="dashed") +
-    geom_text(x=upr+.01, y=5, label="Upper 95% CI", hjust=0, col="red") +
+```{r power-density,echo=FALSE}
+bind_rows(serial_power, parallel_power, furrr_power, .id="method") %>%
+  mutate(method = factor(method, labels = c("serial", "parallel", "furrr"),levels=c("1","2","3"))) %>%
+  ggplot(aes(x=coefficient, fill=method)) +
+    geom_density(col=NA, alpha=0.3) +
     labs(
-      title = "Bootstrapping example",
-      x="Coefficient values", y="Density",
-      caption = "Notes: Density based on 1,000 draws with sample size of 10,000 each."
-      )
+      title = "Power simulation example",
+      x="Coefficients", y="Density",
+      caption = "Notes: Density based on 1,000 draws with sample size of 100 each. Note the parallel and furrr results are identical because they use the same seed, but the serial results are different because the seed is called sequentially.")
 ```
 
+
 ---
-# Many R packages use Parallel Programming
+# "Embarrassingly" vs "asynchronous"
+
+- "Embarrassingly parallel" programming is when each node can do the same task independently
+
+- The code can literally execute on every task on its own because the task is isolated from the others
+
+- Think about the grocery example -- is that embarrassingly parallel?
+
+--
+
+- Maybe, but it depends on a few factors:
+
+1. Do you have to gather your friends?
+  - That creates an overhead cost to start the parallel programming, but after that each friend can do their own task independently -- after that, it is embarrassingly parallel
+2. Do you have to hand each of them two bags of groceries?
+  - That creates a dependency cost because you have to wait for each friend to get two bags of groceries before you can start gathering your friends
+3. Do you end up colliding at the door of your house?
+  - That creates a communication cost because you have to coordinate your arrival at the door
+4. Do you need to bring your friends candy from the store?
+  - That creates a dependency cost because you have to wait for each friend to get candy before you can start gathering your friends
+
+The same thing happens in parallel programming on a computer! 
+
+---
+# Packages using Parallel Programming
 
 - Many R packages already use Parallel Programming
 - `feols()` from **fixest** uses Parallel Programming to speed up regressions
@@ -530,27 +566,6 @@ furrr_boot %>%
 - **data.table** uses Parallel Programming to speed up data wrangling
 - **boot** and **sandwich** can use Parallel Programming to speed up bootstrapping
 - And many others do the same
-
----
-# What next?
-
-- Go try how to bootstrap in R!
-
-- Better yet, learn to do it in parallel
-
-- Navigate to the lecture activity [13a-bootstrapping-functions-practice](https://github.com/big-data-and-economics/big-data-class-materials/blob/main/lectures/12a-rdd-class-sizes/13a-bootstrapping-practice.Rmd)
-
----
-class: inverse, center, middle
-
-# Next lecture: Machine Learning Intro
-<html><div style='float:left'></div><hr color='#EB811B' size=1px width=796px></html>
-
-```{r gen_pdf, include = FALSE, cache = FALSE, eval = TRUE}
-infile=knitr::current_input() %>% stringr::str_replace('.Rmd', '.html')
-print(infile)
-pagedown::chrome_print(input = infile, timeout = 100)
-```
 
 ---
 # Parallel Programming vocab
