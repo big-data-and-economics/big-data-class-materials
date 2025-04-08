@@ -198,24 +198,22 @@ Tuesday (2025-04-01): Functions & Iteration ([.html][13b-functions-parallel-prog
 - Exercise due before class: [Datacamp: Intermediate R Chapters 3 and 4][datacamp]
 - Class activity: [Function writing](https://github.com/big-data-and-economics/exercises/tree/main/19-function-writing)
 
-Thursday (2025-04-03): Parallel Programming ([.html][13-bootstrapping.html], [.pdf][13-bootstrapping.pdf], [.Rmd](lectures/13-bootstrapping/13-bootstrapping.Rmd))
+Thursday (2025-04-03): Parallel Programming ([.html][13b-functions-parallel-programming.html], [.pdf][13b-functions-parallel-programming.pdf], [.Rmd](lectures/13b-functions-parallel/13b-functions-parallel-programming.Rmd))
 
 - Exercise due before class: [Datacamp: Parallel Programming in R Chapters 1 and 3][datacamp]
 - Class activity: [Parallel programming](https://github.com/big-data-and-economics/exercises/tree/main/20-parallel-programming)
 
 ### Week 14: Introduction to Machine Learning
 
-Tuesday (2025-04-08): Bootstrapping ([.html][13b-functions-parallel-programming.html], [.pdf][13b-functions-parallel-programming.pdf], [.Rmd](lectures/13b-functions-parallel/13b-functions-parallel-programming.Rmd))
+Tuesday (2025-04-08): Bootstrapping ([.html][13-bootstrapping.html], [.pdf][13-bootstrapping.pdf], [.Rmd](lectures/13-bootstrapping/13-bootstrapping.Rmd))
 
 - Exercise due before class: [Read Brownstone & Valletta (2001)](https://www.aeaweb.org/articles?id=10.1257/jep.15.4.129) and give an intuitive use case for bootstrapping and multiple imputation on [discussion post](https://github.com/orgs/big-data-and-economics/discussions/55)
-- Class activity: [Bootstrapping practice](https://github.com/big-data-and-economics/exercises/tree/main/21-bootstrapping-practice)
-  
-- ISLR tidymodels lab ([.html](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/05-resampling-methods.html))
+- Class activity: [Bootstrapping practice](https://github.com/big-data-and-economics/exercises/tree/main/21-bootstrapping)
 
 Thursday (2025-04-10): Introduction to Machine Learning ([.html][14-intro-to-ml.html], [.pdf][14-intro-to-ml.pdf], [.Rmd](lectures/14-intro-to-ml/14-intro-to-ml.Rmd))
 
 - Problem Set 5 due 4/15
-- Exercise due before class: Read [Machine Learning: An Applied Econometric Approach](https://pubs.aeaweb.org/doi/pdfplus/10.1257/jep.31.2.87) and give an intuitive use case for machine learning on [discussion post](https://github.com/orgs/big-data-and-economics/discussions/TK)
+- Exercise due before class: Read [Machine Learning: An Applied Econometric Approach](https://pubs.aeaweb.org/doi/pdfplus/10.1257/jep.31.2.87) and give an intuitive use case for machine learning on [discussion post](https://github.com/orgs/big-data-and-economics/discussions/56)
 - Class activity: [Introduction to machine learning](https://github.com/big-data-and-economics/exercises/tree/main/22-intro-to-ml)
 
 ## If time
