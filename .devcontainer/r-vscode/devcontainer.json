@@ -1,0 +1,66 @@
+{
+    "name": "R",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "GitHub.copilot",
+                "GitHub.copilot-chat",
+                "REditorSupport.r",
+                "REditorSupport.r-lsp",
+                "RDebugger.r-debugger",
+                "janisdd.vscode-edit-csv",
+                "mechatroner.rainbow-csv",
+                "formulahendry.code-runner",
+                "Posit.air-vscode"
+            ],
+            "settings": {
+                "editor.tabSize": 2,
+                "editor.insertSpaces": true,
+                "r.rterm.linux": "/usr/local/bin/radian",
+                "r.bracketedPaste": true,
+                "r.sessionWatcher": true,
+                "r.plot.useHttpgd": true,
+                "r.alwaysUseActiveTerminal": true,
+                "r.plot.viewer": "Viewer",
+                "r.rterm.option": [
+                    "--no-save",
+                    "--no-restore",
+                    "--quiet"
+                ],
+                "r.editor.tabSize": 2,
+                "r.editor.insertSpaces": true,
+                "r.editor.formatOnSave": true,
+                "r.editor.formatOnType": true,
+                "r.lsp.enabled": true,
+                "keyboard.dispatch": "keyCode",
+                "editor.formatOnSave": true,
+                "editor.formatOnType": true,
+                "files.associations": {
+                    "*.rmd": "rmd"
+                },
+                "[rmd]": {
+                    "editor.wordWrap": "on"
+                },
+                "[r]": {
+                    "editor.defaultFormatter": "Posit.air-vscode",
+                    "editor.formatOnSave": true,
+                    "editor.tabSize": 2,
+                    "editor.insertSpaces": true,
+                    "editor.detectIndentation": false,
+                    "editor.shortcuts.r.pipe": true,
+                    "editor.snippets.codeActions.enabled": true
+                },
+                "editor.wordSeparators": "`~!@#%^&*()-=+[{]}\\|;:'\",.<>/?",
+                "terminal.integrated.defaultProfile.linux": "R Terminal",
+                "terminal.integrated.tabs.focusMode": "singleClick",
+                "extensions.ignoreRecommendations": true
+            }
+        }
+    }
+}
