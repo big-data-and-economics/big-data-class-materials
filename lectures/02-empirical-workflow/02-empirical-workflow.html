@@ -44,6 +44,8 @@ class: center, middle, inverse, title-slide
 
 1. [Prologue](#prologue)
 
+2. [AI and the Empirical Workflow](#ai-workflow)
+
 3. [Clean Code](#clean_code)
   - [Automation](#automation)
   - [Version Control](https://raw.githack.com/big-data-and-economics/big-data-class-materials/main/lectures/02-git/02-Git.html#1)
@@ -83,6 +85,54 @@ Source: [xkcd](http://xkcd.com/1513/)
 4. [Jenny Bryan's UseR 2018 keynote address](https://www.youtube.com/watch?v=7oyiPBjLAWY)
 
 Also a small contribution from [here](https://garywoodfine.com/what-is-clean-code/) and other sundry internet pages
+
+---
+class: inverse, center, middle
+name: ai-workflow
+
+# AI and the Empirical Workflow
+
+&lt;html&gt;&lt;div style='float:right'&gt;&lt;/div&gt;&lt;hr color='#EB811B' size=1px width=796px&gt;&lt;/html&gt;
+
+---
+# Your Brain on AI
+
+- AI coding assistants (Copilot, ChatGPT, Claude) are genuinely useful
+
+- But a 2025 MIT study finds a hidden cost: .hi[cognitive debt]
+
+#### [MIT Media Lab, "Your Brain on ChatGPT" (2025)](https://www.media.mit.edu/publications/your-brain-on-chatgpt/)
+
+- Participants using ChatGPT showed **significantly reduced frontal lobe engagement** (measured by EEG)
+- Less recall of their own work; weaker sense of authorship: *"this doesn't feel like mine"*
+
+--
+
+#### What this means for coding
+
+- You get working code, but you didn't build the mental model to understand it
+
+- .hi[Cognitive debt accumulates:] each AI-assisted session adds code you don't fully understand
+
+- Fine... until you need to modify, debug, or extend your code
+
+- Eventually, your own codebase becomes a black box to you
+
+---
+# This lecture is your countermeasure
+
+The workflow in this lecture **forces cognitive engagement**:
+
+- .hi[Organization]: you designed the structure, you understand it
+- .hi[Automation]: write the pipeline once yourself — know what each step does
+- .hi[Abstraction rules]: only keep code you can explain to a classmate
+- .hi[Documentation]: articulate what your code does in plain language
+- .hi[Test-driven development]: define success *before* you write (or ask AI to write) code
+- .hi[MREs]: isolate and understand problems yourself before handing them off
+
+--
+
+**Goal**: not to avoid AI, but to use it without surrendering understanding of your own work
 
 ---
 # Reducing empirical chaos
@@ -216,18 +266,50 @@ name: organization
 Source: [xkcd](http://xkcd.com/1459/)
 
 ---
+
+# Agentic AI produces without a workflow
+
+Without a structured workflow, agentic AI creates a new form of chaos:
+
+&lt;!-- Replace with a screenshot from one of your own AI-generated project folders --&gt;
+```bash
+project/
+├── analysis.R
+├── analysis_v2.R
+├── analysis_fixed.R
+├── analysis_FINAL.R
+├── analysis_FINAL_v2.R
+├── analysis_FINAL_working_for_real.R   # which one is current?
+├── helper_functions.R
+├── helper_functions_refactored.R
+├── utilities.R                          # same as above?
+├── data.csv
+├── data_clean.csv
+├── data_clean_updated.csv
+├── output.png
+└── output_fixed.png
+```
+
+- AI has no concept of "clean up after yourself"
+- Each new request generates a new file; old ones are never deleted
+- No planned structure; no human understanding of what each piece does
+
+.hi[Which `analysis_FINAL*.R` is the one that actually works?]
+
+---
+
 # What is a working directory?
 
 - All the files on your computer are organized in directories or folders
 
 - When you are running a script, you are working from a particular directory
   - This is *not necessarily* the directory where the script is located
-  - Your computer looks for `my_data.csv` in this directory when you execute `read.csv('my_data.csv')`
+  - Your computer looks for a file called `file.csv` in the working directory
   - If that file is not in that directory, you will get a `FileNotFound` error
-  - In **R**, you can see what directory you are in using the `getwd()` function
-    - It is also above the console in RStudio
+  - You can see what directory with `getwd()` in R, `pwd` in Stata/terminal function
+    - Often listed above the coding console in RStudio, Stata, Jupyter, etc.
     - You can double click the `.Rproj` file to set the working directory to the root of the project
-    - You can also change your working directory using the `setwd()` function (avoid this within scripts)
+    - You can also change your working directory (`setwd()` in R, `cd` in terminal, `chdir` in Stata, etc.) but this is not recommended
 
 
 ``` r
@@ -239,13 +321,15 @@ getwd()
 ```
 
 ``` r
+# new directory is the lectures/02-empirical-workflow folder
 setwd('lectures/02-empirical-workflow')
 ```
 
 ---
+
 # What is a directory path?
 
-A path defines the location of a file or directory in a file system tree. If I navigate to this file in my computer, it is: 
+A "path" is the location of a file or directory on your computer. On my computer, the path to this file is:
 
 `C:\Users\kgcsp\OneDrive\Documents\Education\ECON368-DSE\big-data-class-materials\lectures\02-empirical-workflow\02-empirical-workflow.Rmd`&lt;sup&gt;1&lt;/sup&gt;
 
@@ -253,17 +337,17 @@ The name separates folders that chart the path from the .hi[root] to the file
   - .hi[root]: the start of the file system tree (above that is `C:\`)
   - Each folder along the tree is separated by a `\` or `/`
 
-This is called an .hi[absolute path]:
-  - It is long, hard to remember, and not portable across computers
+This is called an .hi[absolute path]: long, hard to remember, not portable
 
-.hi[Relative paths] solve a lot of this:
-  - The path to a file or directory starting from the current working directory
+Relative paths solve a lot of this:
+  - The path to a file or directory starting from the current .hi[working directory]
   - If my working directory is `/big-data-class-materials`, then I can write `lectures/02-empirical-workflow/02-empirical-workflow.Rmd`
-  - **This is portable**: if you have a copy of the `big-data-class-materials` repository, this script will work
+  - **Portable**: on another computer with `big-data-class-materials`, it works!
 
 .footnote[&lt;sup&gt;1&lt;/sup&gt; This is a Windows path, Mac and Linux paths use `/` instead of `\`. See appendix for slides on how to move between them using `..`]
 
 ---
+
 # How I organize research projects
 
 - Entire projects should *ideally* live within the same directory
@@ -274,21 +358,20 @@ This is called an .hi[absolute path]:
           b. `clean` or `work` for cleaned data files
           c. `temp` for temporary data files
       2. `code` for all code files, and sometimes:
-          a. `code/analysis` for code files that build/clean code
-          a. `code/build` for code files that do analysis
-      3. `output` for all output files
+          a. `code/build` for code files that build/clean code
+          b. `code/analysis` for code files that do analysis
+      3. `output` for all output files, _optionally_:
           a. `output/figures` for code files that make figures
           b. `output/tables` for code files that make tables
       4. `literature` or `articles` for all relevant literature
-      5. `writing` for all writing files
+      5. `writing` for all writing files, _optionally_:
           a. `writing/notes` for notes
           b. `writing/drafts` for drafts
           c. `writing/edits` for edits
-      6. `presentations` for all presentations
+      6. `presentations` for all presentations, _optionally_:
           a. `presentations/slides` for slides
           b. `presentations/notes` for notes
-- I'll further more or less as needed
-- See [the `my_project` folder](https://github.com/big-data-and-economics/big-data-class-materials/tree/main/lectures/02-empirical-workflow/my_project) on GitHub (in the same folder as this lecture) as an example
+- See [my starter project template](https://github.com/kgcsport/starter-project-repo) on GitHub as an example
 
 ---
 # What is the value of directories?
@@ -303,23 +386,9 @@ This is called an .hi[absolute path]:
 - Then you do not need to worry about shifting around directories 
 
 ---
-
 # 1b. Data organization
 
-- The key idea is to practice .hi[relational data base management]
-
-- A relational database consists of many smaller data sets
-
-- Each data set is tabular and has a unique, non-missing key
-
-- Data sets "relate" to each other based on these keys
-
-- You can implement these practices in any modern statistical analysis software (R, Stata, SAS, Python, Julia, SQL, ...)
-
-- Gentzkow &amp; Shapiro recommend not merging data sets until as far into your code pipeline as possible
-
----
-# What problems would this create?
+#### What problems would this create?
 
 
 ```
@@ -336,9 +405,33 @@ This is called an .hi[absolute path]:
 ## 10     NA    VA       NA   7173000            3             3
 ```
 
+- What share of NY population lives in county 36039? 
+
+- What would a human say? What would a computer say? 
+
 --
 
-### Why is RDBM better?
+- **Human:** The share is 324920/43320903 = 0.0075
+- **Computer:** The share is NA/43320903 = NA
+
+---
+
+# 1b. Relational database management
+
+- The key idea is to practice .hi[relational data base management]
+
+- A relational database consists of many smaller data sets
+
+- Each data set is tabular and has a unique, non-missing key
+
+- Data sets "relate" to each other based on these keys
+
+- RDBM works in any modern statistical analysis software (R, Stata, SAS, Python, Julia, SQL, ...)
+
+- Gentzkow &amp; Shapiro suggest merging data sets as late as possible to avoid redundancy and mistakes
+
+
+#### RDBM organizes data by unit of observation and avoids redundancy (and hence mistakes)
 
 .pull-left[
 
@@ -365,6 +458,7 @@ This is called an .hi[absolute path]:
 
 Source: [Example from Code and Data for the Social Sciences](https://web.stanford.edu/~gentzkow/research/CodeAndData.pdf) (p. 19)
 
+
 ---
 name: automation
 # 3. Automation
@@ -384,7 +478,7 @@ name: automation
 ---
 # How to write scripts
 
-#### Keep them modular
+### Keep them modular
 - Each script should do one thing and one thing only
 - e.g. It takes an input in, it returns an output
 
@@ -395,10 +489,9 @@ name: automation
 - This is somewhat aligned with the structure of an essay
 
     - intro paragraph =/= body paragraph 1 =/= ... =/= conclusion
-  
-- Much like essays revisions, modular code makes it easier to debug and revise
+    - Like essays revisions, modular code is easier to debug and revise
 
-#### Have a main script that runs all scripts in order
+### Have a main script that runs all scripts in order
 
 - A single script that shows the sequence of steps, i.e. "shows your work"
   - This script will run modular scripts in sequence to exactly reproduce your analysis
@@ -419,10 +512,10 @@ class: white-slide
 .scroll-output[
 
 ``` r
-#File: main.R.R
-#By: Kyle Coombs
-#What: Runs the project from start to finish in Python
-#Date: 2024-09-0
+# File: main.R
+# By: Kyle Coombs
+# What: Runs the project from start to finish in R
+# Date: 2024-09-0
 # Instructions:
 # Run this code from the root directory of your project
 
@@ -498,12 +591,12 @@ library(tidyverse)
 library(haven) # installed by tidyverse
 
 ## Directory objects
-data_dir &lt;- file.path('data')
+data_dir &lt;- file.path('data') # could instead be where your dropbox lives
 raw_dir &lt;- file.path(data_dir,'raw')
 clean_dir &lt;- file.path(data_dir,'clean')
 output_dir &lt;- file.path('output')
 code_dir &lt;- file.path('code')
-processing_dir &lt;- file.path(code_dir,'processing')
+build_dir &lt;- file.path(code_dir,'build')
 analysis_dir &lt;- file.path(code_dir,'analysis')
 documentation_dir &lt;- file.path('documentation')
 
@@ -514,7 +607,7 @@ suppressWarnings({
     dir.create(clean_dir)
     dir.create(documentation_dir)
     dir.create(code_dir)
-    dir.create(processing_dir)
+    dir.create(build_dir)
     dir.create(analysis_dir)
     dir.create(output_dir)
 })
@@ -566,9 +659,9 @@ Notice any problems?
 
 ``` r
 # Downloading a sequence of files from 20 wih a loop
-lapply(2004:2020,function(y) {
+for (y in 2004:2020) { # typically you'd use lapply in R, but this is more intuitive across languages
     download.file(paste0('https://data.nber.org/tax-stats/zipcode/',y,'/zipcode',y,'.zip'),destfile=paste0(data_dir,'zipcode',y,'.zip',sep='/'))
-})
+}
 ```
 
 - We'll learn more about iteration/for loops/appy statements later
@@ -584,17 +677,18 @@ Say you want to round a number to the nearest of different integers:
 2. Round the result to the nearest whole number
 3. Multiply by the base integer
 
-I start coding and copy and paste the code for each integer:
+I copy/paste for each integer, but uh oh:
 
 
 ``` r
-rounded_157_nearest_5 &lt;- round(157/5)*5
+rounded_157_nearest_6 &lt;- round(157/5)*6
 rounded_157_nearest_7 &lt;- round(157/5)*7
 ```
 
---
 
-Notice a problem? 
+```
+## [1] "rounded_157_nearest_6: 186 ; rounded_157_nearest_7: 217"
+```
 
 --
 
@@ -606,8 +700,13 @@ round_to_nearest &lt;- function(x,base=5) {
     return(round(x/base)*base)
 }
 
-rounded_157_nearest_5 &lt;- round_to_nearest(157,base=5)
+rounded_157_nearest_6 &lt;- round_to_nearest(157,base=6)
 rounded_157_nearest_7 &lt;- round_to_nearest(157,base=7)
+```
+
+
+```
+## [1] "rounded_157_nearest_6: 156 ; rounded_157_nearest_7: 154"
 ```
 
 The second approach is easier to read and understand what the code is doing!
@@ -618,12 +717,25 @@ The second approach is easier to read and understand what the code is doing!
 1. Write/use functions for tasks that are repeated
 2. Write thoughtful variable names (e.g. `x100, x101` versus `household_income`, `household_size`)
 
-- If we're only doing it once in our script, then it may not make sense to use the function version
+- If we're only doing it once in our script, then it may not make sense to write a function
 
-- This discussion points out that it can be difficult to know if one has reached the optimal level of abstraction
+- It can be difficult to know if one has reached the optimal level of abstraction
 
-- As you're starting out programming, I would advise doing almost everything inside of a function (i.e. err on the side of over-abstraction when starting out)
-  - And look for opportunities to loop (or use apply functions)
+--
+
+#### Note: AI abstracts at a senior developer level
+
+- AI tools are trained on code written by experienced developers
+
+- They naturally produce *senior-level* abstractions you may not yet recognize:
+  - R6 classes, factory patterns, complex closures, generic utility frameworks
+  - Full error handling, retry logic, logging, plugin interfaces
+
+- The code does what you want. Until you need to change it. Then you have no idea where to look.
+
+- This is abstraction working against you: it hides complexity you haven't mastered yet
+
+#### Rule: only use abstractions you can explain to a classmate in 30 seconds
 
 ---
 name: documentation
@@ -785,6 +897,35 @@ stopifnot(y)
 ```
 ## Error: y is not TRUE
 ```
+
+---
+# Test-driven management with AI
+
+When working with AI, .hi[define success before asking for code]
+
+Write assertions first, then ask AI to write code that passes them:
+
+
+``` r
+# STEP 1: Write assertions describing what success looks like
+test_clean_wages &lt;- function(df_raw, df_clean) {
+  stopifnot(nrow(df_clean) == nrow(df_raw))     # no dropped rows
+  stopifnot(all(!is.na(df_clean$wage)))          # no missing wages
+  stopifnot(all(df_clean$wage &gt; 0))              # wages are positive
+  cat("All tests passed!\n")
+}
+
+# STEP 2: Tell AI: "write clean_wages() so test_clean_wages() passes"
+# STEP 3: Run test_clean_wages(raw_data, clean_wages(raw_data))
+# STEP 4: Ask AI: "walk me through clean_wages() line by line"
+```
+
+--
+
+- Tests pass AND you can explain the code → proceed
+- Tests pass but you can't explain the code → **slow down**
+- Tests fail → you have a specific, concrete error and a ready-made MRE
+
 ---
 
 # 8. Pair programming - work with a buddy
@@ -897,6 +1038,46 @@ dput(iris[1:4,]) # copy/paste output of dput into your MRE
 ## "versicolor", "virginica"), class = "factor")), row.names = c(NA, 
 ## 4L), class = "data.frame")
 ```
+
+---
+# MREs make better AI prompts
+
+Instead of pasting 500 lines and asking AI to "fix it", write an MRE first:
+
+1. **Isolates the problem** — AI focuses on the issue, not 490 unrelated lines
+2. **Becomes a test** — run it to verify AI's fix actually works
+3. **You often find the bug yourself** while writing it (Postel's Law in action)
+
+--
+
+
+``` r
+# Bad AI prompt:
+# "here is my 500-line script, something is wrong with the merge"
+```
+
+--
+
+
+``` r
+# Good AI prompt — write this MRE first:
+library(dplyr)
+df1 &lt;- data.frame(id = c(1, 2, 3), wage = c(50, 60, 70))
+df2 &lt;- data.frame(id = c(1, 2, 4), industry = c("A", "B", "C"))
+result &lt;- left_join(df1, df2, by = "id")
+# Expected: 3 rows, all with industry filled in
+# Actual: id=3 has NA for industry — why?
+nrow(result)
+```
+
+```
+## [1] 3
+```
+
+--
+
+- Structured this way, AI's answer is **verifiable** and **targeted**
+- Use `dput()` to share your data reproducibly: `dput(df1)`
 
 ---
 # A complete MRE&lt;sup&gt;1&lt;/sup&gt;
@@ -1400,9 +1581,9 @@ here('data/raw','my_data.csv')
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
-"highlightStyle": "github",
-"highlightLines": true,
-"countIncrementalSlides": false
+  "highlightStyle": "github",
+  "highlightLines": true,
+  "countIncrementalSlides": false
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
